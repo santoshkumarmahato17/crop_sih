@@ -92,17 +92,17 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
   });
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-md flex justify-end animate-in fade-in duration-200">
-      <div className="w-full max-w-md bg-slate-900/85 dark:bg-slate-950/85 backdrop-blur-2xl border-l border-white/15 h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
+    <div className="fixed inset-0 z-50 bg-slate-950/40 backdrop-blur-md flex justify-end animate-in fade-in duration-200">
+      <div className="w-full max-w-md bg-slate-900/60 dark:bg-slate-950/60 backdrop-blur-2xl border-l border-white/20 h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between">
+        <div className="p-5 border-b border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+            <div className="p-2 rounded-xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 backdrop-blur-sm">
               <Bell className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-bold text-slate-100 text-sm">Notification Center</h3>
-              <p className="text-[11px] text-slate-400 font-mono">
+              <h3 className="font-bold text-white text-sm tracking-tight drop-shadow">Notification Center</h3>
+              <p className="text-[11px] text-slate-300 font-mono">
                 {data?.total_unread || 0} unread alerts
               </p>
             </div>
@@ -113,7 +113,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
               <button
                 type="button"
                 onClick={handleMarkAllRead}
-                className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[11px] text-slate-300 transition flex items-center gap-1 font-medium"
+                className="px-2.5 py-1 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-[11px] text-slate-200 transition flex items-center gap-1 font-medium backdrop-blur-sm"
               >
                 <CheckCheck className="w-3 h-3 text-emerald-400" />
                 <span>Mark all read</span>
@@ -122,7 +122,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition"
+              className="p-1.5 rounded-xl text-slate-300 hover:text-white bg-white/5 hover:bg-white/15 border border-white/10 transition backdrop-blur-sm"
             >
               <X className="w-4 h-4" />
             </button>
@@ -130,7 +130,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
         </div>
 
         {/* Filter Tabs */}
-        <div className="px-5 py-2.5 border-b border-slate-800/80 bg-slate-950/40 flex items-center gap-1.5 text-xs">
+        <div className="px-5 py-2.5 border-b border-white/10 bg-white/5 backdrop-blur-md flex items-center gap-1.5 text-xs">
           {[
             { key: 'ALL', label: 'All' },
             { key: 'UNREAD', label: `Unread (${data?.total_unread || 0})` },
@@ -140,10 +140,10 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
               key={tab.key}
               type="button"
               onClick={() => setFilter(tab.key as any)}
-              className={`px-3 py-1 rounded-lg font-semibold transition ${
+              className={`px-3 py-1 rounded-xl font-bold transition backdrop-blur-sm ${
                 filter === tab.key
-                  ? 'bg-slate-800 text-emerald-400 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 shadow-sm'
+                  : 'text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 border border-transparent'
               }`}
             >
               {tab.label}
@@ -152,27 +152,27 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
         </div>
 
         {/* Notification List */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-2.5">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {isLoading ? (
-            <div className="p-12 text-center text-slate-500 space-y-2">
-              <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
+            <div className="p-12 text-center text-slate-300 space-y-2">
+              <div className="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin mx-auto" />
               <p className="text-xs">Loading alerts...</p>
             </div>
           ) : filteredNotifications.length === 0 ? (
-            <div className="p-12 text-center text-slate-500 space-y-1">
-              <CheckCircle className="w-8 h-8 mx-auto text-slate-600 mb-2" />
-              <p className="text-xs font-semibold text-slate-400">No notifications in this view</p>
-              <p className="text-[11px]">All crop health telemetry is currently nominal.</p>
+            <div className="p-12 text-center text-slate-300 space-y-2 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-md my-4">
+              <CheckCircle className="w-9 h-9 mx-auto text-emerald-400/80 mb-2" />
+              <p className="text-xs font-bold text-white">No notifications in this view</p>
+              <p className="text-[11px] text-slate-300">All crop health telemetry is currently nominal.</p>
             </div>
           ) : (
             filteredNotifications.map((notif) => (
               <div
                 key={notif.id}
                 onClick={() => !notif.is_read && handleMarkRead(notif.id)}
-                className={`p-3.5 rounded-2xl border transition cursor-pointer space-y-2 ${
+                className={`p-4 rounded-2xl border transition cursor-pointer space-y-2 backdrop-blur-xl ${
                   !notif.is_read
-                    ? 'bg-slate-950/90 border-emerald-500/40 shadow-sm shadow-emerald-950/20'
-                    : 'bg-slate-950/40 border-slate-800/80 opacity-75 hover:opacity-100'
+                    ? 'bg-emerald-950/40 border-emerald-400/40 shadow-lg shadow-emerald-950/30'
+                    : 'bg-white/5 border-white/10 opacity-80 hover:opacity-100 hover:bg-white/10'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
@@ -180,23 +180,23 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                     {!notif.is_read && (
                       <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
                     )}
-                    <h4 className="font-bold text-slate-200 text-xs">{notif.title}</h4>
+                    <h4 className="font-bold text-white text-xs">{notif.title}</h4>
                   </div>
-                  <span className="text-[10px] text-slate-500 font-mono">
+                  <span className="text-[10px] text-slate-400 font-mono">
                     {new Date(notif.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-400 leading-relaxed">{notif.content}</p>
+                <p className="text-xs text-slate-200 leading-relaxed">{notif.content}</p>
 
                 {/* Delivery Channel Tags */}
-                <div className="flex items-center justify-between pt-1 border-t border-slate-800/60 text-[10px] text-slate-500">
+                <div className="flex items-center justify-between pt-1 border-t border-white/10 text-[10px] text-slate-400">
                   <div className="flex items-center gap-2 font-mono">
-                    <span className="flex items-center gap-1 text-slate-400">
+                    <span className="flex items-center gap-1 text-emerald-300">
                       <Radio className="w-3 h-3 text-emerald-400" />
                       <span>In-System</span>
                     </span>
-                    <span className="text-slate-600">•</span>
+                    <span className="text-slate-500">•</span>
                     <span>SMS / Email Ready</span>
                   </div>
 
