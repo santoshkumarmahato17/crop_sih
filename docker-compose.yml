@@ -1,0 +1,173 @@
+services:
+  # ----------------------------------------------------------------------------
+  # 1. PostGIS Database (Spatial & Relational Storage)
+  # ----------------------------------------------------------------------------
+  postgis:
+    image: postgis/postgis:16-3.4
+    container_name: agrishield_postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-agrishield_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agrishield_secure_password}
+      POSTGRES_DB: ${POSTGRES_DB:-agrishield_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-agrishield_user} -d ${POSTGRES_DB:-agrishield_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agrishield_network
+
+  # ----------------------------------------------------------------------------
+  # 2. Redis (Cache & Celery Message Broker)
+  # ----------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: agrishield_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agrishield_network
+
+  # ----------------------------------------------------------------------------
+  # 3. MinIO (S3-Compatible Object Storage for Drone Rasters)
+  # ----------------------------------------------------------------------------
+  minio:
+    image: minio/minio:latest
+    container_name: agrishield_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minio_admin_user}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minio_admin_secure_password}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agrishield_network
+
+  # ----------------------------------------------------------------------------
+  # 4. AGRI SHIELD Backend API (FastAPI)
+  # ----------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: agrishield_backend
+    restart: unless-stopped
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - POSTGRES_SERVER=postgis
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=${POSTGRES_USER:-agrishield_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-agrishield_secure_password}
+      - POSTGRES_DB=${POSTGRES_DB:-agrishield_db}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-minio_admin_user}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-minio_admin_secure_password}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgis:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - agrishield_network
+
+  # ----------------------------------------------------------------------------
+  # 5. AGRI SHIELD Celery Worker (Asynchronous Geospatial & ML Inference)
+  # ----------------------------------------------------------------------------
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: agrishield_celery_worker
+    restart: unless-stopped
+    command: celery -A app.workers.celery_app worker --loglevel=info -c 4
+    environment:
+      - ENVIRONMENT=development
+      - POSTGRES_SERVER=postgis
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=${POSTGRES_USER:-agrishield_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-agrishield_secure_password}
+      - POSTGRES_DB=${POSTGRES_DB:-agrishield_db}
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-minio_admin_user}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY:-minio_admin_secure_password}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgis:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks:
+      - agrishield_network
+
+  # ----------------------------------------------------------------------------
+  # 6. AGRI SHIELD Frontend (React + TypeScript + Vite)
+  # ----------------------------------------------------------------------------
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: agrishield_frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000/api/v1
+    depends_on:
+      - backend
+    networks:
+      - agrishield_network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  minio_data:
+    driver: local
+
+networks:
+  agrishield_network:
+    driver: bridge
