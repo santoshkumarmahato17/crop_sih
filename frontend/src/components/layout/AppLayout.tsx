@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { AuthBackground } from './AuthBackground';
 import { AgriculturalAssistantWidget } from '@/features/assistant/AgriculturalAssistantWidget';
 import { OnboardingWizard } from '@/features/onboarding/OnboardingWizard';
 import { useAuth } from '@/context/AuthContext';
@@ -43,18 +44,18 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         />
       </div>
 
-      {/* 2. Main Body Container with Conditional Sidebar */}
+      {/* 2. Main Body Container with Conditional Sidebar & Background */}
       <div className="flex flex-1 relative z-10">
         {shouldShowAuthenticatedChrome && isSidebarVisible && <Sidebar />}
 
-        <main
-          className={`flex-1 overflow-y-auto max-w-full ${
-            isAuthPage
-              ? 'flex items-center justify-center p-4 sm:p-8 min-h-[calc(100vh-4rem)]'
-              : 'p-4 sm:p-6 md:p-8'
-          }`}
-        >
-          <Outlet />
+        <main className={`flex-1 max-w-full ${isAuthPage ? 'p-0 flex items-center justify-center' : 'p-4 sm:p-6 md:p-8 overflow-y-auto'}`}>
+          {isAuthPage ? (
+            <AuthBackground>
+              <Outlet />
+            </AuthBackground>
+          ) : (
+            <Outlet />
+          )}
         </main>
       </div>
 
