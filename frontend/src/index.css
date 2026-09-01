@@ -126,3 +126,68 @@
 .hero-bg {
   animation: kenburns 18s ease-in-out infinite alternate;
 }
+
+/* ─── Weather Microclimate Animation Keyframes ─── */
+@keyframes cloudFloat {
+  0% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+  33% {
+    transform: translateY(-3px) translateX(3px) scale(1.02);
+  }
+  66% {
+    transform: translateY(1.5px) translateX(-2px) scale(0.99);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+  }
+}
+
+@keyframes sunGlow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.75;
+    box-shadow: 0 0 12px 2px rgba(251, 191, 36, 0.5);
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+    box-shadow: 0 0 20px 6px rgba(251, 191, 36, 0.85);
+  }
+}
+
+@keyframes atmosphericGlow {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(1.15) translate(-4px, 4px);
+  }
+}
+
+@keyframes metricPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
+.animate-cloud-float {
+  animation: cloudFloat 6s ease-in-out infinite;
+}
+
+.animate-sun-glow {
+  animation: sunGlow 3.5s ease-in-out infinite;
+}
+
+.animate-atmospheric-glow {
+  animation: atmosphericGlow 5s ease-in-out infinite;
+}
+
+.animate-metric-pulse {
+  animation: metricPulse 4s ease-in-out infinite;
+}
