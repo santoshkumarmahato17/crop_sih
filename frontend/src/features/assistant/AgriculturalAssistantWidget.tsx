@@ -22,7 +22,7 @@ import { ChatMessage } from '@/types';
 export const AgriculturalAssistantWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isMaximized, setIsMaximized] = useState<boolean>(false);
-  const [language, setLanguage] = useState<'en' | 'hi' | 'ta'>('en');
+  const [language, setLanguage] = useState<'en' | 'hi' | 'mr' | 'ta'>('mr');
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
@@ -216,7 +216,8 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
   const cycleLanguage = () => {
     setLanguage((prev) => {
-      if (prev === 'en') return 'hi';
+      if (prev === 'en') return 'mr';
+      if (prev === 'mr') return 'hi';
       if (prev === 'hi') return 'ta';
       return 'en';
     });
@@ -290,7 +291,8 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
     try {
       const recognition = new SpeechRecognition();
-      recognition.lang = language === 'hi' ? 'hi-IN' : language === 'ta' ? 'ta-IN' : 'en-US';
+      recognition.lang =
+        language === 'mr' ? 'mr-IN' : language === 'hi' ? 'hi-IN' : language === 'ta' ? 'ta-IN' : 'en-US';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
 
@@ -334,8 +336,9 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = language === 'hi' ? 'hi-IN' : language === 'ta' ? 'ta-IN' : 'en-US';
-    utterance.rate = 1.0;
+    utterance.lang =
+      language === 'mr' ? 'mr-IN' : language === 'hi' ? 'hi-IN' : language === 'ta' ? 'ta-IN' : 'en-US';
+    utterance.rate = 0.95;
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
@@ -356,7 +359,9 @@ export const AgriculturalAssistantWidget: React.FC = () => {
         id: `welcome-${Date.now()}`,
         sender: 'assistant',
         text:
-          language === 'hi'
+          language === 'mr'
+            ? 'नमस्कार! संवाद साफ करण्यात आला आहे. आज आपल्या शेतातील पीक आरोग्य, हवामान धोका किंवा कीड नियंत्रणात मी कशी मदत करू शकतो?'
+            : language === 'hi'
             ? 'बातचीत साफ़ कर दी गई है। आज मैं आपकी फसल के स्वास्थ्य और ड्रोन निगरानी में कैसे सहायता कर सकता हूँ?'
             : language === 'ta'
             ? 'அரட்டை அழிக்கப்பட்டது. உங்கள் பண்ணை மேலாண்மையில் நான் எவ்வாறு உதவ முடியும்?'
@@ -367,7 +372,15 @@ export const AgriculturalAssistantWidget: React.FC = () => {
   };
 
   const promptChips =
-    language === 'hi'
+    language === 'mr'
+      ? [
+          '🌿 कापूस बोंडअळी व कीड नियंत्रण उपाय',
+          '💧 कोणत्या झोनला पाण्याचा ताण (Water Stress) आहे?',
+          '🍇 द्राक्ष बागेत डाऊनी मिल्ड्यू हवामान धोका',
+          '🎋 उसातील हुमणी अळी जैविक उपचार',
+          '🚁 पुढील ड्रोन सर्वेक्षण मोहीम कधी आहे?',
+        ]
+      : language === 'hi'
       ? [
           '🌾 जोन Z03 लाल क्यों है?',
           '💧 किस जोन में पानी की जरूरत है?',
@@ -500,7 +513,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
             {/* Header Controls (Isolated from Pointer Dragging) */}
             <div className="flex items-center gap-1.5" onPointerDown={(e) => e.stopPropagation()}>
-              {/* Language Switcher (EN / हिन्दी / தமிழ்) */}
+              {/* Language Switcher (EN / मराठी / हिन्दी / தமிழ்) */}
               <button
                 type="button"
                 onClick={(e) => {
@@ -508,10 +521,18 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                   cycleLanguage();
                 }}
                 className="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 text-[10px] font-bold border border-slate-700 transition flex items-center gap-1 shadow-sm active:scale-95"
-                title="Switch Language (English / हिन्दी / தமிழ்)"
+                title="Switch Language (English / मराठी / हिन्दी / தமிழ்)"
               >
                 <Globe className="w-3 h-3 text-emerald-400" />
-                <span>{language === 'en' ? 'EN' : language === 'hi' ? 'हिन्दी' : 'தமிழ்'}</span>
+                <span>
+                  {language === 'en'
+                    ? 'EN'
+                    : language === 'mr'
+                    ? 'मराठी'
+                    : language === 'hi'
+                    ? 'हिन्दी'
+                    : 'தமிழ்'}
+                </span>
               </button>
 
               {/* Dock options dropdown */}

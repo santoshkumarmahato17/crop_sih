@@ -9,14 +9,24 @@ const GEMINI_API_KEY = 'AQ.Ab8RN6JjzG6wKeLfBU2gP1tsLpO5dxowlfSGXKt6J_a-oNYI_A';
 
 async function callDirectGeminiAPI(
   prompt: string,
-  language: 'en' | 'hi' | 'ta' = 'en'
+  language: 'en' | 'hi' | 'mr' | 'ta' = 'en'
 ): Promise<string | null> {
+  const isMarathi =
+    language === 'mr' ||
+    prompt.toLowerCase().includes('marathi') ||
+    prompt.toLowerCase().includes('मराठी') ||
+    prompt.toLowerCase().includes('महाराष्ट्र') ||
+    prompt.toLowerCase().includes('कापूस') ||
+    prompt.toLowerCase().includes('सोयाबीन') ||
+    prompt.toLowerCase().includes('ऊस');
+
   const isHindi =
-    language === 'hi' ||
-    prompt.toLowerCase().includes('hindi') ||
-    prompt.toLowerCase().includes('हिंदी') ||
-    prompt.toLowerCase().includes('हिन्दी') ||
-    /[\u0900-\u097F]/.test(prompt);
+    !isMarathi &&
+    (language === 'hi' ||
+      prompt.toLowerCase().includes('hindi') ||
+      prompt.toLowerCase().includes('हिंदी') ||
+      prompt.toLowerCase().includes('हिन्दी') ||
+      /[\u0900-\u097F]/.test(prompt));
 
   const isTamil =
     language === 'ta' ||
@@ -25,21 +35,19 @@ async function callDirectGeminiAPI(
     /[\u0B80-\u0BFF]/.test(prompt);
 
   let langInstruction = 'English';
-  if (isHindi) {
+  if (isMarathi) {
+    langInstruction = 'Marathi (मराठी) using clear, respectful, and authentic agricultural terms for Maharashtra farmers';
+  } else if (isHindi) {
     langInstruction = 'Hindi (हिन्दी) using clear Devanagari script and practical agricultural terms';
   } else if (isTamil) {
     langInstruction = 'Tamil (தமிழ்) with natural Tamil phrasing and key technical terms';
   }
 
   const systemInstruction = `You are the AgriShield Expert Agronomist & Agricultural AI Assistant.
-You provide highly accurate, practical, and scientific crop health, disease identification, irrigation, and drone monitoring guidance for farmers.
+You provide highly accurate, practical, and scientific crop health, disease identification, irrigation, and drone monitoring guidance for farmers across Maharashtra and India.
 Language: Respond fluently and clearly in ${langInstruction}.
-If the user asks questions like "check there is any risk or not" or "analysis the dashboard in hindi", provide a clear structured breakdown covering:
-1. High risk zones (Zone Z03 - Yellow Rust / Chlorosis, NDVI 0.62)
-2. Water stress zones (Zones Z04 & Z05 - Urgent drip irrigation needed, CWSI 0.78)
-3. Healthy zones (Zones Z01 & Z02 - 94% health score)
-4. Upcoming drone autonomous scan mission.
-Structure your advice with concise bullet points, specific dosage/preventative actions, and clear reasoning.`;
+Key focus: Weather-based disease and pest risk forecasting, crop monitoring (Bt Cotton, Sugarcane, Soybean, Onion, Grapes, Pomegranate, Paddy, Wheat), soil health (Black Cotton Regur soil), and microclimate CWSI water stress mitigation.
+Structure your advice with concise bullet points, specific dosage/preventative bio-actions, and clear reasoning.`;
 
   const models = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-2.0-flash', 'gemini-1.5-pro'];
 
