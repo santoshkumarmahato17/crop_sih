@@ -1,16 +1,28 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { RoleProtectedRoute } from '@/components/auth/RoleProtectedRoute';
+import { useAuth } from '@/context/AuthContext';
+
+// Auth Pages
+import { LoginPage } from '@/features/auth/LoginPage';
+import { RegisterPage } from '@/features/auth/RegisterPage';
+import { UnauthorizedPage } from '@/features/auth/UnauthorizedPage';
+import { OnboardingWizard } from '@/features/onboarding/OnboardingWizard';
+import { UserProfilePage } from '@/features/profile/UserProfilePage';
+import { SettingsPage } from '@/features/settings/SettingsPage';
+
+// Dashboards
 import { FarmerDashboardPage } from '@/features/dashboard/FarmerDashboardPage';
+import { GovernmentDashboardShell } from '@/features/government/GovernmentDashboardShell';
+import { AdminDashboardShell } from '@/features/admin/AdminDashboardShell';
 import { ExtensionOfficerDashboardPage } from '@/features/officer/ExtensionOfficerDashboardPage';
+
+// Operational Modules
 import { PhotoVideoUploadPage } from '@/features/imagery/PhotoVideoUploadPage';
 import { AIDiseaseAnalysisPage } from '@/features/detection/AIDiseaseAnalysisPage';
 import { SymptomDiseaseIdentificationPage } from '@/features/diagnosis/SymptomDiseaseIdentificationPage';
 import { FarmerCommunityPage } from '@/features/community/FarmerCommunityPage';
-import { LoginPage } from '@/features/auth/LoginPage';
-import { RegisterPage } from '@/features/auth/RegisterPage';
-import { UserProfilePage } from '@/features/profile/UserProfilePage';
-import { SettingsPage } from '@/features/settings/SettingsPage';
 import { FieldMapViewerPage } from '@/features/farms/FieldMapViewerPage';
 import { FarmsListPage } from '@/features/farms/FarmsListPage';
 import { CreateFarmPage } from '@/features/farms/CreateFarmPage';
@@ -20,18 +32,213 @@ import { DronesListPage } from '@/features/drones/DronesListPage';
 import { MissionsListPage } from '@/features/drones/MissionsListPage';
 import { CreateMissionPage } from '@/features/drones/CreateMissionPage';
 import { MissionDetailsPage } from '@/features/drones/MissionDetailsPage';
-import { OnboardingWizard } from '@/features/onboarding/OnboardingWizard';
+
+/**
+ * Root Index Dispatcher: Automatically routes authenticated user to their role's dashboard.
+ */
+const RootRoleRedirect: React.FC = () => {
+  const { user, isAuthenticated } = useAuth();
+  if (!isAuthenticated || !user) {
+    return <FarmerDashboardPage />;
+  }
+  if (user.role === 'ADMIN') {
+    return <AdminDashboardShell />;
+  }
+  if (user.role === 'GOVERNMENT') {
+    return <GovernmentDashboardShell />;
+  }
+  return <FarmerDashboardPage />;
+};
 
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<AppLayout />}>
-        {/* Default Dashboard & Core Operations */}
-        <Route index element={<FarmerDashboardPage />} />
-        <Route path="dashboard" element={<FarmerDashboardPage />} />
+        {/* ── Dynamic Index Dispatcher ── */}
+        <Route index element={<RootRoleRedirect />} />
+        <Route path="dashboard" element={<RootRoleRedirect />} />
+
+        {/* ── Public Auth & Error Routes ── */}
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="unauthorized" element={<UnauthorizedPage />} />
         <Route path="onboarding" element={<OnboardingWizard />} />
+
+        {/* ── FARMER Role Routes ── */}
+        <Route
+          path="farmer/dashboard"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <FarmerDashboardPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farmer/farms"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <FieldMapViewerPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farmer/crop-health"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <SymptomDiseaseIdentificationPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farmer/drones"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <DronesListPage />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* ── GOVERNMENT Role Routes ── */}
+        <Route
+          path="government/dashboard"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <GovernmentDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/regional"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <GovernmentDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/disease-hotspots"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <ExtensionOfficerDashboardPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/pest-hotspots"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <ExtensionOfficerDashboardPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/water-stress"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <ExtensionOfficerDashboardPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/spread-risk"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <ExtensionOfficerDashboardPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/analytics"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <GovernmentDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/reports"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <GovernmentDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* ── ADMIN Role Routes ── */}
+        <Route
+          path="admin/dashboard"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/users"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/farmers"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/government-users"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/system"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/ai-models"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/drones"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/audit-logs"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/settings"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* ── Shared Operations & Diagnostics ── */}
         <Route path="profile" element={<UserProfilePage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="upload" element={<PhotoVideoUploadPage />} />
@@ -49,13 +256,13 @@ export const AppRoutes: React.FC = () => {
         <Route path="farms/:id" element={<FarmDetailsPage />} />
         <Route path="farms/:id/edit" element={<EditFarmPage />} />
 
-        {/* Drone Fleet & Autonomous Mission Management Routes */}
+        {/* Drone Fleet & Missions */}
         <Route path="drones" element={<DronesListPage />} />
         <Route path="missions" element={<MissionsListPage />} />
         <Route path="missions/new" element={<CreateMissionPage />} />
         <Route path="missions/:id" element={<MissionDetailsPage />} />
 
-        {/* Sub-module Aliases & Clean Route Mapping */}
+        {/* Sub-module Aliases */}
         <Route path="zones" element={<FieldMapViewerPage />} />
         <Route path="observations" element={<AIDiseaseAnalysisPage />} />
         <Route path="spread" element={<ExtensionOfficerDashboardPage />} />

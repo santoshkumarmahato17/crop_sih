@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_active_user
@@ -24,13 +24,16 @@ router = APIRouter(prefix="/auth", tags=["Authentication & Identity"])
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Register New User Account",
-    description="Registers a new Farmer, Agronomist, or Agricultural Authority account.",
+    description="Registers a new Farmer or Government official account. Normal ADMIN registration is prohibited.",
 )
 async def register(
     req: UserRegisterRequest,
+    request: Request,
     db: AsyncSession = Depends(get_db),
 ) -> UserResponse:
-    return await auth_service.register_user(db, req)
+    client_ip = request.client.host if request.client else None
+    user_agent = request.headers.get("user-agent")
+    return await auth_service.register_user(db, req, ip_address=client_ip, user_agent=user_agent)
 
 
 @router.post(
@@ -38,13 +41,18 @@ async def register(
     response_model=TokenResponse,
     status_code=status.HTTP_200_OK,
     summary="User Login",
-    description="Authenticates credentials and issues signed JWT access and refresh token pair.",
+    description="Authenticates credentials and verifies ADMIN allowlist. Issues signed JWT tokens.",
 )
 async def login(
     req: UserLoginRequest,
+    request: Request,
     db: AsyncSession = Depends(get_db),
 ) -> TokenResponse:
-    return await auth_service.authenticate_user(db, req.email, req.password)
+    client_ip = request.client.host if request.client else None
+    user_agent = request.headers.get("user-agent")
+    return await auth_service.authenticate_user(
+        db, req.email, req.password, ip_address=client_ip, user_agent=user_agent
+    )
 
 
 @router.post(
@@ -66,11 +74,27 @@ async def refresh_token(
     response_model=LogoutResponse,
     status_code=status.HTTP_200_OK,
     summary="User Logout",
-    description="Invalidates current client session.",
+    description="Invalidates current client session and logs security audit event.",
 )
 async def logout(
+    request: Request,
     current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db),
 ) -> LogoutResponse:
+    client_ip = request.client.host if request.client else None
+    user_agent = request.headers.get("user-agent")
+    from app.models.audit import AuditEventType
+
+    await auth_service.log_audit_event(
+        db,
+        AuditEventType.LOGOUT,
+        user_id=current_user.id,
+        user_email=current_user.email,
+        ip_address=client_ip,
+        user_agent=user_agent,
+    )
+    await db.commit()
+
     return LogoutResponse(
         success=True,
         message=f"Session for user '{current_user.email}' terminated successfully.",
@@ -81,13 +105,28 @@ async def logout(
     "/me",
     response_model=UserResponse,
     status_code=status.HTTP_200_OK,
-    summary="Get Current User Profile",
-    description="Returns the profile and role metadata of the authenticated user.",
+    summary="Get Current User Profile & Permissions",
+    description="Returns the profile, primary role, and permissions list of the authenticated user (never exposes credentials).",
 )
 async def get_current_user_profile(
     current_user: User = Depends(get_current_active_user),
 ) -> UserResponse:
-    return UserResponse.model_validate(current_user)
+    return UserResponse(
+        id=current_user.id,
+        email=current_user.email,
+        full_name=current_user.full_name,
+        phone_number=current_user.phone_number,
+        address=current_user.address,
+        role=current_user.role,
+        permissions=current_user.permissions,
+        organization_name=current_user.organization_name,
+        department=current_user.department,
+        assigned_region=current_user.assigned_region,
+        is_active=current_user.is_active,
+        is_verified=current_user.is_verified,
+        created_at=current_user.created_at,
+        last_login_at=current_user.last_login_at,
+    )
 
 
 @router.put(
@@ -99,8 +138,8 @@ async def get_current_user_profile(
 )
 async def update_profile(
     req: UserProfileUpdateRequest,
-    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
 ) -> UserResponse:
     return await auth_service.update_profile(db, current_user.id, req)
 
@@ -108,12 +147,12 @@ async def update_profile(
 @router.put(
     "/password",
     status_code=status.HTTP_200_OK,
-    summary="Change User Password",
-    description="Updates user password after verifying current password.",
+    summary="Update User Password",
+    description="Verifies current password and updates to new password.",
 )
 async def update_password(
     req: UserPasswordUpdateRequest,
-    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-):
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
     return await auth_service.update_password(db, current_user.id, req)

@@ -1,6 +1,8 @@
+export type RoleType = 'FARMER' | 'GOVERNMENT' | 'ADMIN';
+
 export interface UserRole {
-  id: string;
-  name: 'FARMER' | 'EXTENSION_OFFICER' | 'AGRICULTURE_ADMIN' | 'SYSTEM_ADMIN' | string;
+  id?: string;
+  name: RoleType | string;
   description?: string;
 }
 
@@ -10,10 +12,15 @@ export interface UserProfile {
   full_name: string;
   phone_number?: string;
   address?: string;
+  role: RoleType;
+  permissions: string[];
+  organization_name?: string;
+  department?: string;
+  assigned_region?: string;
   is_active: boolean;
-  is_superuser: boolean;
-  role?: UserRole;
+  is_verified: boolean;
   created_at: string;
+  last_login_at?: string;
 }
 
 export interface AuthTokenResponse {
@@ -27,10 +34,14 @@ export interface AuthTokenResponse {
 export interface UserRegisterPayload {
   email: string;
   password: string;
+  confirm_password?: string;
   full_name: string;
   phone_number?: string;
   address?: string;
-  role_name?: string;
+  role: 'FARMER' | 'GOVERNMENT';
+  organization_name?: string;
+  department?: string;
+  assigned_region?: string;
 }
 
 export interface UserProfileUpdatePayload {
@@ -38,6 +49,8 @@ export interface UserProfileUpdatePayload {
   email?: string;
   phone_number?: string;
   address?: string;
+  organization_name?: string;
+  department?: string;
 }
 
 export interface UserPasswordUpdatePayload {

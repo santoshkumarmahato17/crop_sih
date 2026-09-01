@@ -11,20 +11,25 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
+  Building2,
+  Sprout,
 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, getRoleDashboardPath } from '@/context/AuthContext';
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { register, isLoading } = useAuth();
 
+  const [role, setRole] = useState<'FARMER' | 'GOVERNMENT'>('FARMER');
   const [fullName, setFullName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [phone, setPhone] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [phone, setPhone] = useState<string>('');
+  const [organizationName, setOrganizationName] = useState<string>('');
+  const [department, setDepartment] = useState<string>('');
+  const [assignedRegion, setAssignedRegion] = useState<string>('');
   const [address, setAddress] = useState<string>('');
-  const [roleName, setRoleName] = useState<string>('FARMER');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -42,18 +47,33 @@ export const RegisterPage: React.FC = () => {
       return;
     }
 
+    if (role === 'GOVERNMENT' && !organizationName.trim()) {
+      setErrorMsg('Please specify your Government Organization or Ministry.');
+      return;
+    }
+
     try {
-      await register({
+      const assignedRole = await register({
         full_name: fullName,
         email,
-        password,
         phone_number: phone || undefined,
+        password,
+        confirm_password: confirmPassword,
+        role,
+        organization_name: role === 'GOVERNMENT' ? organizationName : undefined,
+        department: role === 'GOVERNMENT' ? department : undefined,
+        assigned_region: role === 'GOVERNMENT' ? assignedRegion : undefined,
         address: address || undefined,
-        role_name: roleName,
       });
-      navigate('/onboarding');
-    } catch {
-      setErrorMsg('Registration failed. Please check your details and try again.');
+
+      const destination = getRoleDashboardPath(assignedRole);
+      navigate(destination, { replace: true });
+    } catch (err: any) {
+      setErrorMsg(
+        err?.response?.data?.message ||
+          err?.response?.data?.detail ||
+          'Registration failed. Please check your details and try again.'
+      );
     }
   };
 
@@ -69,8 +89,42 @@ export const RegisterPage: React.FC = () => {
             Create AGRI SHIELD Account
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Join the precision agricultural monitoring & disease defense network
+            Register your verified account for precision agricultural monitoring
           </p>
+        </div>
+
+        {/* Role Selector Tabs (Only FARMER and GOVERNMENT allowed) */}
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block text-center">
+            Select Your Account Role
+          </label>
+          <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+            <button
+              type="button"
+              onClick={() => setRole('FARMER')}
+              className={`py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 ${
+                role === 'FARMER'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Sprout className="w-4 h-4" />
+              <span>Farmer Account</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setRole('GOVERNMENT')}
+              className={`py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 ${
+                role === 'GOVERNMENT'
+                  ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Building2 className="w-4 h-4" />
+              <span>Government Official</span>
+            </button>
+          </div>
         </div>
 
         {errorMsg && (
@@ -93,7 +147,7 @@ export const RegisterPage: React.FC = () => {
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Farmer Ramanathan"
+                  placeholder={role === 'FARMER' ? 'Farmer Ramanathan' : 'Dr. Sundaram M.'}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
                 />
               </div>
@@ -101,7 +155,7 @@ export const RegisterPage: React.FC = () => {
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Email ID *
+                Email Address *
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -110,7 +164,7 @@ export const RegisterPage: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ramanathan@agrishield.farm"
+                  placeholder={role === 'FARMER' ? 'farmer@agrishield.farm' : 'officer@gov.in'}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
                 />
               </div>
@@ -136,39 +190,74 @@ export const RegisterPage: React.FC = () => {
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Account Role *
+                Location / District
               </label>
-              <select
-                value={roleName}
-                onChange={(e) => setRoleName(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-semibold"
-              >
-                <option value="FARMER">🌱 Farmer (Holding Owner)</option>
-                <option value="EXTENSION_OFFICER">🛡️ Extension Officer / Agronomist</option>
-                <option value="AGRICULTURE_ADMIN">🏛️ Agricultural Authority</option>
-              </select>
+              <div className="relative">
+                <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <input
+                  type="text"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Coimbatore, Tamil Nadu"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Address */}
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Farm & Residence Address *
-            </label>
-            <div className="relative">
-              <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <input
-                type="text"
-                required
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Plot 14, West Valley Sector, Coimbatore District, Tamil Nadu 641001"
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-medium"
-              />
-            </div>
-          </div>
+          {/* Government Specific Fields */}
+          {role === 'GOVERNMENT' && (
+            <div className="p-4 rounded-2xl bg-sky-500/10 border border-sky-500/25 space-y-3">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-sky-700 dark:text-sky-300">
+                <Building2 className="w-4 h-4" />
+                <span>Government Official Verification Details</span>
+              </div>
 
-          {/* Password & Confirm Password */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                    Organization / Ministry *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={organizationName}
+                    onChange={(e) => setOrganizationName(e.target.value)}
+                    placeholder="e.g. Dept of Agriculture, TN"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                    Department / Division
+                  </label>
+                  <input
+                    type="text"
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                    placeholder="e.g. Plant Pathology Div"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs"
+                  />
+                </div>
+
+                <div className="space-y-1 sm:col-span-2">
+                  <label className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                    Assigned Region / District
+                  </label>
+                  <input
+                    type="text"
+                    value={assignedRegion}
+                    onChange={(e) => setAssignedRegion(e.target.value)}
+                    placeholder="e.g. Coimbatore Agri-Sector"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Passwords */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -181,13 +270,13 @@ export const RegisterPage: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Min 8 characters"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-10 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-medium"
+                  placeholder="Min 8 chars"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-10 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -205,8 +294,8 @@ export const RegisterPage: React.FC = () => {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Repeat password"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-medium"
+                  placeholder="Re-enter password"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -215,18 +304,30 @@ export const RegisterPage: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-98 disabled:opacity-50"
+            className={`w-full py-3 rounded-2xl text-white font-extrabold text-xs transition shadow-lg flex items-center justify-center gap-2 mt-2 ${
+              role === 'FARMER'
+                ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/30'
+                : 'bg-sky-600 hover:bg-sky-500 shadow-sky-600/30'
+            }`}
           >
-            <span>{isLoading ? 'Creating Account...' : 'Complete Registration & Open Dashboard'}</span>
-            <ArrowRight className="w-4 h-4" />
+            {isLoading ? (
+              <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+            ) : (
+              <>
+                <span>Create {role === 'FARMER' ? 'Farmer' : 'Government'} Account</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </form>
 
-        <div className="text-center text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
-          <span>Already registered? </span>
-          <Link to="/login" className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">
-            Sign In Here
-          </Link>
+        <div className="text-center pt-2">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Already have an account?{' '}
+            <Link to="/login" className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">
+              Sign in here
+            </Link>
+          </p>
         </div>
       </div>
     </div>

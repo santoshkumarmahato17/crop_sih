@@ -6,7 +6,9 @@ All 24 relational and PostGIS spatial models register metadata on Base.
 from app.db.base import Base, TimestampMixin
 
 # Auth Models
+from app.core.permissions import RoleType
 from app.models.auth import Role, User
+from app.models.audit import AuditLog, AuditEventType
 
 # Farm & Agronomic Topology Models
 from app.models.farm import Crop, CropCycle, CropCycleStatus, Farm, FarmMember, FarmZone, MemberRole

@@ -1,44 +1,69 @@
 from datetime import datetime
-from typing import Optional
-from pydantic import BaseModel, EmailStr, Field
+from typing import List, Optional
+from pydantic import BaseModel, EmailStr, Field, model_validator
 
+from app.core.permissions import RoleType
 from app.schemas.common import BaseSchema
 
 
 class RoleResponse(BaseSchema):
     """Role definition schema."""
-
     id: str
     name: str
     description: Optional[str] = None
 
 
 class UserResponse(BaseSchema):
-    """Public user identity schema."""
+    """Public user identity and authorization schema (strictly hides credentials)."""
 
     id: str
     email: EmailStr
     full_name: str
     phone_number: Optional[str] = None
     address: Optional[str] = None
+    role: RoleType
+    permissions: List[str] = Field(default_factory=list)
+    organization_name: Optional[str] = None
+    department: Optional[str] = None
+    assigned_region: Optional[str] = None
     is_active: bool
-    is_superuser: bool
-    role: Optional[RoleResponse] = None
+    is_verified: bool = False
     created_at: datetime
+    last_login_at: Optional[datetime] = None
 
 
 class UserRegisterRequest(BaseModel):
-    """User self-registration payload."""
+    """User self-registration payload (Restricted to FARMER or GOVERNMENT)."""
 
     email: EmailStr
     password: str = Field(min_length=8, description="Password must be at least 8 characters long")
+    confirm_password: Optional[str] = Field(default=None, description="Password confirmation")
     full_name: str = Field(min_length=2, max_length=150)
     phone_number: Optional[str] = None
     address: Optional[str] = None
-    role_name: str = Field(
-        default="FARMER",
-        description="Assigned role: FARMER, EXTENSION_OFFICER, AGRICULTURE_ADMIN, or SYSTEM_ADMIN",
+    role: RoleType = Field(
+        default=RoleType.FARMER,
+        description="Assigned role: Only FARMER or GOVERNMENT allowed for self-registration.",
     )
+    organization_name: Optional[str] = Field(
+        default=None, description="Department or Organization for Government users"
+    )
+    department: Optional[str] = None
+    assigned_region: Optional[str] = None
+
+    @model_validator(mode="after")
+    def validate_registration_payload(self) -> "UserRegisterRequest":
+        # Check confirm password if provided
+        if self.confirm_password and self.password != self.confirm_password:
+            raise ValueError("Password and confirmation password do not match.")
+
+        # Disallow self-registration as ADMIN
+        if self.role == RoleType.ADMIN:
+            raise ValueError(
+                "Self-registration as ADMIN is strictly prohibited. Administrator accounts must be provisioned by system operations."
+            )
+
+        return self
 
 
 class UserProfileUpdateRequest(BaseModel):
@@ -48,6 +73,8 @@ class UserProfileUpdateRequest(BaseModel):
     email: Optional[EmailStr] = None
     phone_number: Optional[str] = None
     address: Optional[str] = None
+    organization_name: Optional[str] = None
+    department: Optional[str] = None
 
 
 class UserPasswordUpdateRequest(BaseModel):
@@ -65,7 +92,7 @@ class UserLoginRequest(BaseModel):
 
 
 class TokenResponse(BaseModel):
-    """JWT Access and Refresh token response."""
+    """JWT Access and Refresh token response with authorized user identity."""
 
     access_token: str
     refresh_token: str

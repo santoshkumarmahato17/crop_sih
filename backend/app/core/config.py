@@ -103,6 +103,29 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 30 minutes short-lived access token
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7    # 7 days refresh token
+    ADMIN_EMAIL_ALLOWLIST: Union[List[str], str] = [
+        "admin@agrishield.com",
+        "admin@example.com",
+        "admin1@example.com",
+        "admin2@example.com",
+        "security@agrishield.com",
+    ]
+
+    @field_validator("ADMIN_EMAIL_ALLOWLIST", mode="before")
+    @classmethod
+    def assemble_admin_allowlist(cls, v: Union[str, List[str]]) -> List[str]:
+        if isinstance(v, str):
+            if v.startswith("["):
+                try:
+                    parsed = json.loads(v)
+                    if isinstance(parsed, list):
+                        return [item.lower().strip() for item in parsed if item]
+                except Exception:
+                    pass
+            return [email.lower().strip() for email in v.split(",") if email.strip()]
+        elif isinstance(v, list):
+            return [str(email).lower().strip() for email in v if email]
+        return []
 
     # 7. Geospatial & AI Engine Settings
     MODEL_WEIGHTS_DIR: str = "./weights"

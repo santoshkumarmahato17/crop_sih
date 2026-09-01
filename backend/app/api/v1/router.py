@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
     adaptive,
+    admin,
     ai,
     alerts,
     assistant,
@@ -11,6 +12,7 @@ from app.api.v1.endpoints import (
     diagnosis,
     drones,
     farms,
+    government,
     health,
     images,
     officer,
@@ -26,6 +28,8 @@ api_router = APIRouter()
 # Register core system endpoints
 api_router.include_router(health.router)
 api_router.include_router(auth.router)
+api_router.include_router(admin.router)
+api_router.include_router(government.router)
 api_router.include_router(community.router)
 api_router.include_router(assistant.router)
 api_router.include_router(dashboard.router)

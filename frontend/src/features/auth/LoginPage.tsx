@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
   ShieldCheck,
   Mail,
@@ -9,11 +9,14 @@ import {
   Eye,
   EyeOff,
   User,
+  Briefcase,
+  KeyRound,
 } from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, getRoleDashboardPath } from '@/context/AuthContext';
 
 export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login, isLoading } = useAuth();
 
   const [email, setEmail] = useState<string>('ramanathan@agrishield.farm');
@@ -25,21 +28,29 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     setErrorMsg(null);
     try {
-      await login(email, password);
-      navigate('/');
-    } catch {
-      setErrorMsg('Invalid email or password credentials. Please try again.');
+      const userRole = await login(email, password);
+      // Determine destination route
+      const destination = location.state?.from?.pathname || getRoleDashboardPath(userRole);
+      navigate(destination, { replace: true });
+    } catch (err: any) {
+      setErrorMsg(
+        err?.response?.data?.message ||
+          err?.response?.data?.detail ||
+          'Invalid email or password credentials. Please try again.'
+      );
     }
   };
 
-  const handleDemoLogin = async (demoEmail: string, demoPass: string) => {
+  const handleQuickDemo = async (demoEmail: string, demoPass: string) => {
     setEmail(demoEmail);
     setPassword(demoPass);
+    setErrorMsg(null);
     try {
-      await login(demoEmail, demoPass);
-      navigate('/');
-    } catch (err) {
-      console.error(err);
+      const userRole = await login(demoEmail, demoPass);
+      const destination = getRoleDashboardPath(userRole);
+      navigate(destination, { replace: true });
+    } catch (err: any) {
+      setErrorMsg('Demo authentication error. Please try again.');
     }
   };
 
@@ -55,7 +66,7 @@ export const LoginPage: React.FC = () => {
             Sign In to AGRI SHIELD
           </h1>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            AI-Powered Crop Health Monitoring & Diagnostic System
+            Precision Agricultural Security & Diagnostic System
           </p>
         </div>
 
@@ -69,7 +80,7 @@ export const LoginPage: React.FC = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Email ID *
+              Email Address *
             </label>
             <div className="relative">
               <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -89,16 +100,6 @@ export const LoginPage: React.FC = () => {
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                 Password *
               </label>
-              <a
-                href="#forgot"
-                onClick={(e) => {
-                  e.preventDefault();
-                  alert('For demo accounts, use password: FarmerSecure2026!');
-                }}
-                className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:underline font-semibold"
-              >
-                Forgot Password?
-              </a>
             </div>
             <div className="relative">
               <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -113,7 +114,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -123,51 +124,80 @@ export const LoginPage: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-98 disabled:opacity-50"
+            className="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-extrabold text-xs transition shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 mt-2"
           >
-            <span>{isLoading ? 'Signing In...' : 'Sign In to Dashboard'}</span>
-            <ArrowRight className="w-4 h-4" />
+            {isLoading ? (
+              <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+            ) : (
+              <>
+                <span>Sign In to Dashboard</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
         </form>
 
-        {/* 1-Click Demo Profiles */}
-        <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
-          <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block text-center">
-            Quick 1-Click Demo Accounts:
+        {/* Quick Role-Switcher Cards for Testing / Evaluation */}
+        <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block text-center">
+            Quick Demo Role Switcher
           </span>
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
-              onClick={() => handleDemoLogin('ramanathan@agrishield.farm', 'FarmerSecure2026!')}
-              className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-left transition space-y-0.5"
+              onClick={() => handleQuickDemo('ramanathan@agrishield.farm', 'FarmerSecure2026!')}
+              className="p-2.5 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-left transition group"
             >
-              <div className="font-bold flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+              <span className="flex items-center gap-1 text-[11px] font-black text-emerald-700 dark:text-emerald-400">
                 <User className="w-3.5 h-3.5" />
-                <span>Farmer Account</span>
-              </div>
-              <p className="text-[10px] text-slate-500 truncate">ramanathan@agrishield.farm</p>
+                <span>FARMER</span>
+              </span>
+              <span className="text-[9px] text-slate-500 dark:text-slate-400 block truncate mt-0.5">
+                My Holdings
+              </span>
             </button>
 
             <button
               type="button"
-              onClick={() => handleDemoLogin('meenakshi.officer@agrishield.gov.in', 'OfficerSecure2026!')}
-              className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-left transition space-y-0.5"
+              onClick={() => handleQuickDemo('sundaram@gov.agrishield.in', 'GovSecure2026!')}
+              className="p-2.5 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-left transition group"
             >
-              <div className="font-bold flex items-center gap-1 text-blue-600 dark:text-blue-400">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Extension Officer</span>
-              </div>
-              <p className="text-[10px] text-slate-500 truncate">meenakshi.officer@...</p>
+              <span className="flex items-center gap-1 text-[11px] font-black text-sky-700 dark:text-sky-400">
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>GOVT</span>
+              </span>
+              <span className="text-[9px] text-slate-500 dark:text-slate-400 block truncate mt-0.5">
+                Regional Data
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleQuickDemo('admin@agrishield.com', 'AdminRoot2026!')}
+              className="p-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-left transition group"
+            >
+              <span className="flex items-center gap-1 text-[11px] font-black text-purple-700 dark:text-purple-400">
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>ADMIN</span>
+              </span>
+              <span className="text-[9px] text-slate-500 dark:text-slate-400 block truncate mt-0.5">
+                Full Control
+              </span>
             </button>
           </div>
         </div>
 
-        {/* Register Prompt */}
-        <div className="text-center text-xs text-slate-600 dark:text-slate-400">
-          <span>Don't have an account yet? </span>
-          <Link to="/register" className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline">
-            Register New Farmer Account
-          </Link>
+        {/* Footer Link to Register */}
+        <div className="text-center pt-2">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Don't have an account?{' '}
+            <Link
+              to="/register"
+              className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline"
+            >
+              Register here
+            </Link>
+          </p>
         </div>
       </div>
     </div>

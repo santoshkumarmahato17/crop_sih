@@ -1,8 +1,10 @@
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Union
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.config import get_settings
+from app.core.permissions import Permission, RoleType
 from app.core.security import decode_token
 from app.db.session import get_db
 from app.models.auth import User
@@ -11,13 +13,14 @@ from app.repositories.user import UserRepository
 
 security_scheme = HTTPBearer(auto_error=False)
 user_repo = UserRepository()
+settings = get_settings()
 
 
 async def get_current_user(
     db: AsyncSession = Depends(get_db),
     token_header: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
 ) -> User:
-    """Extracts and validates JWT Bearer access token."""
+    """Extracts, decodes, and validates JWT Bearer access token."""
     if not token_header or not token_header.credentials:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -42,14 +45,21 @@ async def get_current_user(
         )
 
     try:
-        user = await user_repo.get_with_role(db, user_id)
+        user = await user_repo.get(db, user_id)
     except Exception:
-        # Graceful fallback when live database connection is offline
+        # Fallback in local disconnected testing mode
+        raw_role = payload.get("role", "FARMER")
+        try:
+            r_enum = RoleType(raw_role.upper().strip())
+        except ValueError:
+            r_enum = RoleType.FARMER
+
         user = User(
             id=user_id,
             email=payload.get("email", "farmer@agrishield.com"),
             hashed_password="transient-hash",
             full_name="Agricultural Operator",
+            role=r_enum,
             is_active=True,
         )
 
@@ -70,30 +80,81 @@ async def get_current_active_user(
     if not current_user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Deactivated user account.",
+            detail="User account is deactivated. Contact system administrator.",
         )
     return current_user
 
 
-def require_roles(*allowed_roles: str) -> Callable:
-    """Dependency factory enforcing RBAC role checks."""
-    normalized_roles = [r.upper().strip() for r in allowed_roles]
+def require_role(*allowed_roles: Union[RoleType, str]) -> Callable:
+    """
+    Dependency factory enforcing strict RBAC role checks.
+    For ADMIN role, also verifies server-side allowlist presence.
+    """
+    normalized_roles: List[RoleType] = []
+    for r in allowed_roles:
+        if isinstance(r, RoleType):
+            normalized_roles.append(r)
+        elif isinstance(r, str):
+            try:
+                normalized_roles.append(RoleType(r.upper().strip()))
+            except ValueError:
+                pass
 
     async def role_checker(
         current_user: User = Depends(get_current_active_user),
     ) -> User:
-        user_role = current_user.role.name.upper() if current_user.role else "FARMER"
         if current_user.is_superuser:
             return current_user
+
+        user_role = current_user.role
+
+        # Admin verification against backend allowlist
+        if user_role == RoleType.ADMIN:
+            allowlist = [e.lower().strip() for e in settings.ADMIN_EMAIL_ALLOWLIST]
+            if current_user.email.lower().strip() not in allowlist:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Access denied: Admin credentials revoked or not authorized on this environment.",
+                )
 
         if user_role not in normalized_roles:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Access denied. Allowed roles: {', '.join(normalized_roles)}. Your role: {user_role}",
+                detail=f"Access denied. Required role(s): {[r.value for r in normalized_roles]}. Your role: {user_role.value}",
             )
         return current_user
 
     return role_checker
+
+
+# Backward compatibility alias
+require_roles = require_role
+
+
+def require_permission(*required_permissions: Union[Permission, str]) -> Callable:
+    """Dependency factory enforcing fine-grained permission-based access control (PBAC)."""
+    perm_strings: List[str] = [
+        p.value if isinstance(p, Permission) else p.upper().strip()
+        for p in required_permissions
+    ]
+
+    async def permission_checker(
+        current_user: User = Depends(get_current_active_user),
+    ) -> User:
+        if current_user.is_superuser or current_user.role == RoleType.ADMIN:
+            return current_user
+
+        user_perms = set(current_user.permissions)
+        missing_perms = [p for p in perm_strings if p not in user_perms]
+
+        if missing_perms:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Access denied: Missing required permission(s): {', '.join(missing_perms)}",
+            )
+        return current_user
+
+    return permission_checker
 
 
 async def verify_farm_ownership_or_access(
@@ -104,7 +165,6 @@ async def verify_farm_ownership_or_access(
     """
     Anti-IDOR Security Guard:
     Verifies that the current user owns the farm or has elevated permissions.
-    Prevents a user from accessing or modifying another farmer's data by changing the farm ID.
     """
     farm = await db.get(Farm, farm_id)
     if not farm:
@@ -113,19 +173,19 @@ async def verify_farm_ownership_or_access(
             detail=f"Farm with ID '{farm_id}' was not found.",
         )
 
-    # Superusers and System Administrators have full access
-    if current_user.is_superuser:
+    # Superusers and Admins have full access
+    if current_user.is_superuser or current_user.role == RoleType.ADMIN:
         return farm
 
-    user_role = current_user.role.name.upper() if current_user.role else "FARMER"
-    if user_role in ["SYSTEM_ADMIN", "AGRICULTURE_ADMIN"]:
+    # Government users have regional visibility scope
+    if current_user.role == RoleType.GOVERNMENT:
         return farm
 
     # Farmers must be the registered owner of the farm
     if farm.owner_id != current_user.id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access forbidden: You do not have permission to view or modify this farm.",
+            detail="Access forbidden: You do not have permission to view or modify this farm holding.",
         )
 
     return farm

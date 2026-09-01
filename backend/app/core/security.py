@@ -1,24 +1,30 @@
+import bcrypt
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional, Union
-
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 from app.core.config import get_settings
 
 settings = get_settings()
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plaintext password against a stored bcrypt hash."""
-    return pwd_context.verify(plain_password, hashed_password)
+    try:
+        return bcrypt.checkpw(
+            plain_password.encode("utf-8")[:72],
+            hashed_password.encode("utf-8"),
+        )
+    except Exception:
+        return False
 
 
 def get_password_hash(password: str) -> str:
     """Generate a bcrypt hash from a plaintext password."""
-    return pwd_context.hash(password)
+    # Truncate to 72 bytes as per bcrypt specification
+    pw_bytes = password.encode("utf-8")[:72]
+    salt = bcrypt.gensalt()
+    return bcrypt.hashpw(pw_bytes, salt).decode("utf-8")
 
 
 def create_access_token(
@@ -72,10 +78,12 @@ def create_refresh_token(
 
 
 def decode_token(token: str) -> Optional[Dict[str, Any]]:
-    """Decodes and validates a JWT token signature and expiration."""
+    """Decodes and validates a JWT token string."""
     try:
         payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
         )
         return payload
     except JWTError:

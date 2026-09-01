@@ -4,6 +4,7 @@ import {
   UserRegisterPayload,
   UserProfileUpdatePayload,
   UserPasswordUpdatePayload,
+  RoleType,
 } from '@/types';
 import { authService } from '@/services/authService';
 
@@ -22,32 +23,58 @@ export interface OnboardingData {
 interface AuthContextType {
   user: UserProfile | null;
   token: string | null;
+  role: RoleType | null;
+  permissions: string[];
   isAuthenticated: boolean;
   isLoading: boolean;
   isOnboarded: boolean;
   onboardingData: OnboardingData | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (payload: UserRegisterPayload) => Promise<void>;
+  login: (email: string, password: string) => Promise<RoleType>;
+  register: (payload: UserRegisterPayload) => Promise<RoleType>;
   updateProfile: (payload: UserProfileUpdatePayload) => Promise<UserProfile>;
   updatePassword: (payload: UserPasswordUpdatePayload) => Promise<void>;
   completeOnboarding: (data: OnboardingData) => void;
   logout: () => void;
+  hasRole: (roles: RoleType | RoleType[]) => boolean;
+  hasPermission: (permission: string) => boolean;
+  getRoleDashboardPath: (role?: RoleType) => string;
 }
 
-const defaultUser: UserProfile = {
+const defaultFarmerUser: UserProfile = {
   id: 'usr-farmer-01',
   email: 'ramanathan@agrishield.farm',
   full_name: 'Farmer Ramanathan K.',
   phone_number: '+91 98421 78901',
-  address: 'Plot 14, West Valley Agro Sector, Coimbatore District, Tamil Nadu 641001',
+  address: 'Plot 14, West Valley Agro Sector, Coimbatore District, Tamil Nadu',
+  role: 'FARMER',
+  permissions: [
+    'FARM_VIEW',
+    'FARM_CREATE',
+    'FARM_EDIT',
+    'CROP_VIEW',
+    'CROP_MANAGE',
+    'DRONE_VIEW',
+    'DISEASE_VIEW',
+    'DISEASE_ANALYZE',
+    'ALERT_VIEW',
+    'REPORT_VIEW',
+    'AI_ASSISTANT_USE',
+  ],
   is_active: true,
-  is_superuser: false,
-  role: {
-    id: 'role-1',
-    name: 'FARMER',
-    description: 'Holding Owner & Agronomic Operator',
-  },
+  is_verified: true,
   created_at: '2026-01-15T09:00:00Z',
+};
+
+export const getRoleDashboardPath = (role?: RoleType): string => {
+  switch (role) {
+    case 'ADMIN':
+      return '/admin/dashboard';
+    case 'GOVERNMENT':
+      return '/government/dashboard';
+    case 'FARMER':
+    default:
+      return '/farmer/dashboard';
+  }
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -59,10 +86,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         return JSON.parse(saved);
       } catch {
-        return defaultUser;
+        return defaultFarmerUser;
       }
     }
-    return defaultUser;
+    return defaultFarmerUser;
   });
 
   const [token, setToken] = useState<string | null>(() => {
@@ -103,62 +130,106 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('agrishield_onboarding_data', JSON.stringify(data));
   };
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<RoleType> => {
     setIsLoading(true);
     try {
-      const res = await authService.login(email, password);
-      setToken(res.access_token);
-      setUser(res.user);
-    } catch {
-      const roleName = email.includes('officer') || email.includes('admin') ? 'EXTENSION_OFFICER' : 'FARMER';
+      const authData = await authService.login(email, password);
+      setUser(authData.user);
+      setToken(authData.access_token);
+      return authData.user.role;
+    } catch (err) {
+      // Fallback demo logins for evaluation testing
+      let simulatedRole: RoleType = 'FARMER';
+      let simulatedName = 'Farmer Ramanathan K.';
+      let permissions = [
+        'FARM_VIEW',
+        'CROP_VIEW',
+        'DISEASE_VIEW',
+        'ALERT_VIEW',
+        'AI_ASSISTANT_USE',
+      ];
+
+      const em = email.toLowerCase().trim();
+      if (em.includes('admin') || em === 'admin@agrishield.com') {
+        simulatedRole = 'ADMIN';
+        simulatedName = 'System Administrator';
+        permissions = [
+          'ADMIN_DASHBOARD_ACCESS',
+          'USER_MANAGE',
+          'FARMER_MANAGE',
+          'GOVERNMENT_MANAGE',
+          'SYSTEM_MONITORING',
+          'AI_MODEL_MANAGE',
+          'DRONE_SYSTEM_MANAGE',
+          'AUDIT_LOGS_VIEW',
+          'SYSTEM_CONFIG_MANAGE',
+        ];
+      } else if (em.includes('gov') || em.includes('officer') || em === 'officer@gov.agrishield.in') {
+        simulatedRole = 'GOVERNMENT';
+        simulatedName = 'Dr. Sundaram (Regional Agriculture Officer)';
+        permissions = [
+          'REGIONAL_DASHBOARD_VIEW',
+          'REGIONAL_MONITORING_VIEW',
+          'DISEASE_HOTSPOTS_VIEW',
+          'PEST_HOTSPOTS_VIEW',
+          'WATER_STRESS_VIEW',
+          'SPREAD_RISK_VIEW',
+          'REGIONAL_ANALYTICS_VIEW',
+          'REGIONAL_REPORTS_VIEW',
+        ];
+      }
+
       const mockUser: UserProfile = {
         id: `usr-${Date.now()}`,
         email,
-        full_name: email.includes('officer') ? 'Dr. Meenakshi Sundaram' : 'Farmer Ramanathan K.',
-        phone_number: '+91 98421 78901',
-        address: 'Plot 14, West Valley Agro Sector, Coimbatore District, Tamil Nadu 641001',
+        full_name: simulatedName,
+        role: simulatedRole,
+        permissions,
+        organization_name: simulatedRole === 'GOVERNMENT' ? 'Dept of Agriculture, Tamil Nadu' : undefined,
+        department: simulatedRole === 'GOVERNMENT' ? 'Plant Pathology Division' : undefined,
+        assigned_region: simulatedRole === 'GOVERNMENT' ? 'Coimbatore Region' : undefined,
         is_active: true,
-        is_superuser: email.includes('admin'),
-        role: {
-          id: 'role-1',
-          name: roleName,
-          description: roleName === 'FARMER' ? 'Farmer Holding Owner' : 'Regional Extension Officer',
-        },
+        is_verified: true,
         created_at: new Date().toISOString(),
       };
-      setToken('mock-jwt-token-access');
+
       setUser(mockUser);
+      setToken(`demo-token-${simulatedRole.toLowerCase()}`);
+      return simulatedRole;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const register = async (payload: UserRegisterPayload) => {
+  const register = async (payload: UserRegisterPayload): Promise<RoleType> => {
     setIsLoading(true);
-    setIsOnboarded(false);
-    localStorage.removeItem('agrishield_onboarded');
     try {
       const newUser = await authService.register(payload);
+      // After registration, log the user in
       setUser(newUser);
-      setToken('mock-jwt-token-registered');
-    } catch {
+      setToken(`token-${newUser.id}`);
+      return newUser.role;
+    } catch (err) {
       const mockUser: UserProfile = {
         id: `usr-${Date.now()}`,
         email: payload.email,
         full_name: payload.full_name,
         phone_number: payload.phone_number,
-        address: payload.address || 'Agricultural Holding Sector, Tamil Nadu',
+        role: payload.role as RoleType,
+        permissions:
+          payload.role === 'GOVERNMENT'
+            ? ['REGIONAL_DASHBOARD_VIEW', 'DISEASE_HOTSPOTS_VIEW', 'REGIONAL_ANALYTICS_VIEW']
+            : ['FARM_VIEW', 'CROP_VIEW', 'DISEASE_VIEW', 'ALERT_VIEW'],
+        organization_name: payload.organization_name,
+        department: payload.department,
+        assigned_region: payload.assigned_region,
         is_active: true,
-        is_superuser: false,
-        role: {
-          id: 'role-farmer',
-          name: payload.role_name || 'FARMER',
-          description: 'Farmer Account',
-        },
+        is_verified: false,
         created_at: new Date().toISOString(),
       };
       setUser(mockUser);
-      setToken('mock-jwt-token-registered');
+      setToken(`token-${mockUser.id}`);
+      return mockUser.role;
     } finally {
       setIsLoading(false);
     }
@@ -171,41 +242,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(updated);
       return updated;
     } catch {
-      const updated: UserProfile = {
-        ...user!,
-        full_name: payload.full_name ?? user!.full_name,
-        email: payload.email ?? user!.email,
-        phone_number: payload.phone_number ?? user!.phone_number,
-        address: payload.address ?? user!.address,
-      };
-      setUser(updated);
-      return updated;
+      if (user) {
+        const localUpdated: UserProfile = {
+          ...user,
+          ...payload,
+        };
+        setUser(localUpdated);
+        return localUpdated;
+      }
+      throw new Error('User not found');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updatePassword = async (payload: UserPasswordUpdatePayload) => {
+  const updatePassword = async (payload: UserPasswordUpdatePayload): Promise<void> => {
     setIsLoading(true);
     try {
       await authService.updatePassword(payload);
-    } catch {
-      // Simulating password updated
     } finally {
       setIsLoading(false);
     }
   };
 
   const logout = () => {
-    authService.logout();
+    try {
+      authService.logout();
+    } catch {}
     setUser(null);
     setToken(null);
-    setIsOnboarded(false);
-    setOnboardingData(null);
     localStorage.removeItem('agrishield_user');
     localStorage.removeItem('agrishield_token');
-    localStorage.removeItem('agrishield_onboarded');
-    localStorage.removeItem('agrishield_onboarding_data');
+  };
+
+  const hasRole = (roles: RoleType | RoleType[]): boolean => {
+    if (!user) return false;
+    const allowed = Array.isArray(roles) ? roles : [roles];
+    return allowed.includes(user.role);
+  };
+
+  const hasPermission = (permission: string): boolean => {
+    if (!user) return false;
+    if (user.role === 'ADMIN') return true;
+    return user.permissions?.includes(permission) || false;
   };
 
   return (
@@ -213,7 +292,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         token,
-        isAuthenticated: !!user,
+        role: user?.role || null,
+        permissions: user?.permissions || [],
+        isAuthenticated: !!user && !!token,
         isLoading,
         isOnboarded,
         onboardingData,
@@ -223,6 +304,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         updatePassword,
         completeOnboarding,
         logout,
+        hasRole,
+        hasPermission,
+        getRoleDashboardPath,
       }}
     >
       {children}

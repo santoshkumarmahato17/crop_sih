@@ -325,7 +325,7 @@ export const SettingsPage: React.FC = () => {
               Signed in as: <span className="text-emerald-700 dark:text-emerald-400">{user?.email || 'farmer@agrishield.farm'}</span>
             </p>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Role: <span className="font-mono font-semibold">{user?.role?.name || 'FARMER'}</span> • Device: Current Browser Session
+              Role: <span className="font-mono font-semibold">{user?.role || 'FARMER'}</span> • Device: Current Browser Session
             </p>
           </div>
 
