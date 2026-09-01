@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Shield,
   Radio,
@@ -19,18 +19,23 @@ interface HeaderProps {
   systemStatus?: 'healthy' | 'degraded' | 'unhealthy' | string;
   version?: string;
   onToggleSidebar?: () => void;
+  isMinimal?: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   systemStatus = 'healthy',
   version = '0.1.0',
   onToggleSidebar,
+  isMinimal = false,
 }) => {
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isNotifOpen, setIsNotifOpen] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState<number>(3);
+
+  const isAuthRoute = isMinimal || location.pathname === '/login' || location.pathname === '/register';
 
   const roleColorBadge = (role: string) => {
     switch (role) {
@@ -48,20 +53,28 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/90 backdrop-blur px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 transition-colors duration-200 shadow-sm dark:shadow-none">
         <div className="flex items-center gap-3">
-          {/* Mobile Sidebar Toggle */}
-          <button
-            type="button"
-            onClick={onToggleSidebar}
-            aria-label="Toggle Navigation Menu"
-            title="Toggle Sidebar"
-            className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+          {/* Mobile Sidebar Toggle (Only on authenticated pages) */}
+          {!isAuthRoute && (
+            <button
+              type="button"
+              onClick={onToggleSidebar}
+              aria-label="Toggle Navigation Menu"
+              title="Toggle Sidebar"
+              className="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 transition"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
 
           {/* Logo & Brand Identity */}
           <div
-            onClick={() => navigate(getRoleDashboardPath(user?.role))}
+            onClick={() => {
+              if (isAuthRoute) {
+                navigate('/login');
+              } else {
+                navigate(getRoleDashboardPath(user?.role));
+              }
+            }}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm shadow-emerald-600/30">
@@ -84,12 +97,14 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* System State Badge */}
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
-            <Radio className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
-            <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">State:</span>
-            <StatusBadge status={systemStatus} size="sm" />
-          </div>
+          {/* System State Badge (Only on authenticated pages) */}
+          {!isAuthRoute && (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700">
+              <Radio className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+              <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">State:</span>
+              <StatusBadge status={systemStatus} size="sm" />
+            </div>
+          )}
 
           {/* Theme Switcher Toggle */}
           <button
@@ -106,23 +121,25 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </button>
 
-          {/* Notifications Bell */}
-          <button
-            type="button"
-            aria-label="Alerts"
-            onClick={() => setIsNotifOpen(true)}
-            className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition relative"
-          >
-            <Bell className="w-4 h-4" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-bold flex items-center justify-center">
-                {unreadCount}
-              </span>
-            )}
-          </button>
+          {/* Notifications Bell (Only on authenticated pages) */}
+          {!isAuthRoute && (
+            <button
+              type="button"
+              aria-label="Alerts"
+              onClick={() => setIsNotifOpen(true)}
+              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-800 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white border border-slate-200 dark:border-slate-700 transition relative"
+            >
+              <Bell className="w-4 h-4" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-bold flex items-center justify-center">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+          )}
 
           {/* User Profile Avatar / Sign In Button & Role Badge */}
-          {isAuthenticated && user ? (
+          {!isAuthRoute && isAuthenticated && user ? (
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -167,6 +184,24 @@ export const Header: React.FC<HeaderProps> = ({
                 <LogOut className="w-4 h-4" />
               </button>
             </div>
+          ) : isAuthRoute ? (
+            location.pathname === '/login' ? (
+              <button
+                type="button"
+                onClick={() => navigate('/register')}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold transition border border-emerald-500/30"
+              >
+                Register
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-600/10 hover:bg-emerald-600/20 text-emerald-600 dark:text-emerald-400 text-xs font-bold transition border border-emerald-500/30"
+              >
+                Sign In
+              </button>
+            )
           ) : (
             <button
               type="button"
@@ -180,11 +215,13 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </header>
 
-      <NotificationCenterModal
-        isOpen={isNotifOpen}
-        onClose={() => setIsNotifOpen(false)}
-        onUpdateCount={(c) => setUnreadCount(c)}
-      />
+      {!isAuthRoute && (
+        <NotificationCenterModal
+          isOpen={isNotifOpen}
+          onClose={() => setIsNotifOpen(false)}
+          onUpdateCount={(c) => setUnreadCount(c)}
+        />
+      )}
     </>
   );
 };
