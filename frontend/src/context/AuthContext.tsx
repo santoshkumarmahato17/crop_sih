@@ -183,6 +183,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const cleanUser = normalizeUser(authData.user) || defaultFarmerUser;
       setUser(cleanUser);
       setToken(authData.access_token);
+      setIsOnboarded(true);
+      localStorage.setItem('agrishield_onboarded', 'true');
       return cleanUser.role;
     } catch (err) {
       // Fallback demo logins for evaluation testing
@@ -243,6 +245,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const cleanMock = normalizeUser(mockUser) || defaultFarmerUser;
       setUser(cleanMock);
       setToken(`demo-token-${simulatedRole.toLowerCase()}`);
+      setIsOnboarded(true);
+      localStorage.setItem('agrishield_onboarded', 'true');
       return cleanMock.role;
     } finally {
       setIsLoading(false);
@@ -256,6 +260,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const cleanUser = normalizeUser(newUser) || defaultFarmerUser;
       setUser(cleanUser);
       setToken(`token-${cleanUser.id}`);
+      setIsOnboarded(false);
+      localStorage.setItem('agrishield_onboarded', 'false');
       return cleanUser.role;
     } catch (err) {
       const mockUser: UserProfile = {
@@ -278,6 +284,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const cleanMock = normalizeUser(mockUser) || defaultFarmerUser;
       setUser(cleanMock);
       setToken(`token-${cleanMock.id}`);
+      setIsOnboarded(false);
+      localStorage.setItem('agrishield_onboarded', 'false');
       return cleanMock.role;
     } finally {
       setIsLoading(false);

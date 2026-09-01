@@ -4,7 +4,6 @@ import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 import { AuthBackground } from './AuthBackground';
 import { AgriculturalAssistantWidget } from '@/features/assistant/AgriculturalAssistantWidget';
-import { OnboardingWizard } from '@/features/onboarding/OnboardingWizard';
 import { useAuth } from '@/context/AuthContext';
 
 interface AppLayoutProps {
@@ -17,17 +16,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   version = '0.1.0',
 }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
-  const { user, isAuthenticated, isOnboarded } = useAuth();
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
 
   const isAuthPage =
     location.pathname === '/login' ||
     location.pathname === '/register' ||
     location.pathname === '/onboarding';
-
-  const isExplicitOnboardingPage = location.pathname === '/onboarding';
-  const shouldShowOnboardingModal =
-    isAuthenticated && user && !isOnboarded && !isAuthPage && !isExplicitOnboardingPage;
 
   // Hide authenticated navigation, sidebar, and assistant on login/register pages
   const shouldShowAuthenticatedChrome = !isAuthPage && isAuthenticated;
@@ -65,9 +60,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           <AgriculturalAssistantWidget />
         </div>
       )}
-
-      {/* 4. First-Time Registration Onboarding Setup Wizard Overlay */}
-      {shouldShowOnboardingModal && <OnboardingWizard />}
     </div>
   );
 };

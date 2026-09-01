@@ -65,8 +65,12 @@ export const RegisterPage: React.FC = () => {
         address: address || undefined,
       });
 
-      const destination = getRoleDashboardPath(assignedRole);
-      navigate(destination, { replace: true });
+      if (assignedRole === 'FARMER') {
+        navigate('/onboarding', { replace: true });
+      } else {
+        const destination = getRoleDashboardPath(assignedRole);
+        navigate(destination, { replace: true });
+      }
     } catch (err: any) {
       setErrorMsg(
         err?.response?.data?.message ||
