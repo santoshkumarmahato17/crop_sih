@@ -33,12 +33,12 @@ export interface LanguageOption {
 
 export const INDIAN_LANGUAGES: LanguageOption[] = [
   {
-    id: 'mr',
-    name: 'Marathi',
-    nativeName: 'मराठी (महाराष्ट्र)',
-    code: 'mr-IN',
-    samplePhrase: 'नमस्कार! एग्री शील्ड महाराष्ट्र पीक संरक्षण आणि हवामान अंदाज प्रणालीमध्ये आपले स्वागत आहे.',
-    region: 'Maharashtra (State Priority)',
+    id: 'en',
+    name: 'English',
+    nativeName: 'English (Default)',
+    code: 'en-US',
+    samplePhrase: 'Welcome to AGRI SHIELD precision crop health, weather risk, and pest forecasting platform.',
+    region: 'Global / All-India',
     isPriority: true,
   },
   {
@@ -50,12 +50,12 @@ export const INDIAN_LANGUAGES: LanguageOption[] = [
     region: 'North & Central India',
   },
   {
-    id: 'en',
-    name: 'English',
-    nativeName: 'English (Global / India)',
-    code: 'en-US',
-    samplePhrase: 'Welcome to AGRI SHIELD precision crop health, weather risk, and pest forecasting platform.',
-    region: 'All-India / Technical',
+    id: 'mr',
+    name: 'Marathi',
+    nativeName: 'मराठी (महाराष्ट्र)',
+    code: 'mr-IN',
+    samplePhrase: 'नमस्कार! एग्री शील्ड महाराष्ट्र पीक संरक्षण आणि हवामान अंदाज प्रणालीमध्ये आपले स्वागत आहे.',
+    region: 'Maharashtra (Regional)',
   },
   {
     id: 'gu',
@@ -339,7 +339,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Step 1: Language
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('mr'); // Default to Marathi for Maharashtra
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('en'); // Default to English
   const [langSearch, setLangSearch] = useState<string>('');
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
 
@@ -393,7 +393,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           const coords = `${pos.coords.latitude.toFixed(4)}° N, ${pos.coords.longitude.toFixed(4)}° E (GPS Live Detected)`;
           setDetectedCoords(coords);
           setPermissions((prev) => ({ ...prev, location: true }));
-          setPermFeedback('📍 थेट GPS स्थान यशस्वीरित्या प्राप्त झाले (Live GPS Location Detected)!');
+          setPermFeedback('📍 Live GPS Location Detected Successfully!');
           setTimeout(() => setPermFeedback(null), 3500);
         },
         () => {

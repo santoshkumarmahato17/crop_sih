@@ -99,7 +99,7 @@ export const EvidenceInspectionTabs: React.FC<EvidenceInspectionTabsProps> = ({ 
             <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs space-y-1.5">
               <span className="font-extrabold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
                 <AlertTriangle className="w-4 h-4" />
-                <span>Validation Trigger Rationale / तपासणीचे कारण:</span>
+                <span>Validation Trigger Rationale:</span>
               </span>
               <p className="text-slate-800 dark:text-slate-200 leading-relaxed font-medium">
                 {request.reason}

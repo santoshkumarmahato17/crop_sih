@@ -138,10 +138,10 @@ export const SettingsPage: React.FC = () => {
                   onChange={(e) => setLanguage(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-semibold"
                 >
-                  <option value="en">English (US / Global)</option>
-                  <option value="ta">Tamil (தமிழ் • தமிழ்நாடு)</option>
+                  <option value="en">English (Default)</option>
                   <option value="hi">Hindi (हिन्दी)</option>
-                  <option value="te">Telugu (తెలుగు)</option>
+                  <option value="mr">Marathi (मराठी)</option>
+                  <option value="ta">Tamil (தமிழ்)</option>
                 </select>
               </div>
             </div>

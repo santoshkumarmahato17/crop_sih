@@ -133,9 +133,9 @@ export const RequestValidationModal: React.FC<RequestValidationModalProps> = ({
                 onChange={(e) => setCropStage(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
-                <option value="Vegetative Stage">Vegetative Stage (वाढ अवस्था)</option>
-                <option value="Flowering & Fruiting Stage">Flowering & Fruiting (फुलधारणा व फळधारणा)</option>
-                <option value="Maturity & Harvest">Maturity & Ripening (पक्वता अवस्था)</option>
+                <option value="Vegetative Stage">Vegetative Stage</option>
+                <option value="Flowering & Fruiting Stage">Flowering & Fruiting Stage</option>
+                <option value="Maturity & Harvest">Maturity & Ripening Stage</option>
               </select>
             </div>
 

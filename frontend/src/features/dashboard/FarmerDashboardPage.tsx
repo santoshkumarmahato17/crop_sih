@@ -956,7 +956,7 @@ export const FarmerDashboardPage: React.FC = () => {
             </div>
             <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
               <Activity className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-              <span>Follow-up Monitoring (पाठपुरावा व तपासणी)</span>
+              <span>Follow-up Monitoring & Health Tracking</span>
             </h3>
           </div>
 

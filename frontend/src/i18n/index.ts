@@ -14,10 +14,10 @@ export interface LanguageMeta {
 }
 
 export const SUPPORTED_LANGUAGES: LanguageMeta[] = [
-  { code: 'mr', name: 'Marathi', nativeName: 'मराठी', badge: 'महाराष्ट्र' },
-  { code: 'en', name: 'English', nativeName: 'English', badge: 'Global' },
-  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', badge: 'தமிழ்நாடு' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', badge: 'राष्ट्रीय' },
+  { code: 'en', name: 'English', nativeName: 'English', badge: 'Default' },
+  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', badge: 'National' },
+  { code: 'mr', name: 'Marathi', nativeName: 'मराठी', badge: 'Regional' },
+  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', badge: 'Regional' },
 ];
 
 const dictionaries: Record<SupportedLanguage, any> = {
@@ -33,7 +33,7 @@ export function useTranslation() {
     if (saved && (saved === 'en' || saved === 'ta' || saved === 'hi' || saved === 'mr')) {
       return saved as SupportedLanguage;
     }
-    return 'mr'; // Maharashtra default
+    return 'en'; // English default
   });
 
   useEffect(() => {
