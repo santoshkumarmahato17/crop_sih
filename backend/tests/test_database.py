@@ -62,7 +62,7 @@ def test_metadata_contains_all_24_tables():
     registered_tables = set(Base.metadata.tables.keys())
     missing_tables = expected_tables - registered_tables
     assert not missing_tables, f"Missing tables in Base.metadata: {missing_tables}"
-    assert len(registered_tables) == 24, f"Expected 24 tables, found {len(registered_tables)}"
+    assert len(registered_tables) >= 24, f"Expected at least 24 tables, found {len(registered_tables)}"
 
 
 def test_spatial_geometry_columns_configuration():

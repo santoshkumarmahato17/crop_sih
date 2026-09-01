@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.logging import logger
-from app.models.audit import AuditLog
+from app.models.audit import AuditLog, AuditEventType
 from app.models.auth import User
 from app.models.farm import Farm
 from app.models.intelligence import ExpertValidation
@@ -134,17 +134,19 @@ class OfficerService:
         audit = AuditLog(
             id=audit_id,
             user_id=current_user.id,
-            action=f"OFFICER_ACTION_{request.validation_status}",
-            entity_type=f"{request.observation_type}_Observation",
-            entity_id=request.observation_id,
-            changes={
+            user_email=current_user.email,
+            event_type=AuditEventType.SECURITY_CONFIG_MODIFIED,
+            details={
+                "action": f"OFFICER_ACTION_{request.validation_status}",
+                "entity_type": f"{request.observation_type}_Observation",
+                "entity_id": request.observation_id,
                 "validation_status": request.validation_status,
                 "notes": request.notes,
                 "override_pathogen": request.override_pathogen,
                 "create_field_visit": request.create_field_visit,
                 "visit_scheduled_date": request.visit_scheduled_date.isoformat() if request.visit_scheduled_date else None,
             },
-            timestamp=now,
+            created_at=now,
         )
 
         try:
@@ -155,7 +157,7 @@ class OfficerService:
             pass
 
         logger.info(
-            f"Extension Officer {current_user.id} logged audit action {audit.action} "
+            f"Extension Officer {current_user.id} logged validation "
             f"for observation {request.observation_id} -> {request.validation_status}"
         )
 
@@ -172,7 +174,7 @@ class OfficerService:
             observation_id=request.observation_id,
             validation_status=request.validation_status,
             audit_log_id=audit_id,
-            audit_action=audit.action,
+            audit_action=f"OFFICER_ACTION_{request.validation_status}",
             notes=request.notes,
             created_at=now,
             message=msg_map.get(request.validation_status, "Officer action processed."),

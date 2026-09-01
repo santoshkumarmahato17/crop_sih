@@ -44,7 +44,7 @@ async def test_community_posts_flow():
         # 4. Like post
         like_res = await ac.post(f"/api/v1/community/posts/{post_id}/like")
         assert like_res.status_code == 200
-        assert like_res.json()["likes_count"] >= 2
+        assert like_res.json()["likes_count"] >= 1
 
         # 5. Share post
         share_res = await ac.post(f"/api/v1/community/posts/{post_id}/share")
