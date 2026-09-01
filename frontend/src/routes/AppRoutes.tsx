@@ -25,7 +25,6 @@ import { SymptomDiseaseIdentificationPage } from '@/features/diagnosis/SymptomDi
 import { FarmerCommunityPage } from '@/features/community/FarmerCommunityPage';
 import { FieldMapViewerPage } from '@/features/farms/FieldMapViewerPage';
 import { FarmsListPage } from '@/features/farms/FarmsListPage';
-import { CreateFarmPage } from '@/features/farms/CreateFarmPage';
 import { FarmDetailsPage } from '@/features/farms/FarmDetailsPage';
 import { EditFarmPage } from '@/features/farms/EditFarmPage';
 import { DronesListPage } from '@/features/drones/DronesListPage';
@@ -37,6 +36,7 @@ import { MissionDetailsPage } from '@/features/drones/MissionDetailsPage';
 import { AdvisoriesPage } from '@/features/advisories/AdvisoriesPage';
 import { ExpertValidationPage } from '@/features/validation/ExpertValidationPage';
 import { MonitoringWorkspacePage } from '@/features/monitoring/MonitoringWorkspacePage';
+import { EOSCreateFieldOnboarding } from '@/features/farms/EOSCreateFieldOnboarding';
 
 /**
  * Root Index Dispatcher: Automatically routes authenticated user to their role's dashboard.
@@ -311,9 +311,12 @@ export const AppRoutes: React.FC = () => {
 
         {/* Spatial Field Map & Precision Monitoring */}
         <Route path="field-map" element={<FieldMapViewerPage />} />
+        <Route path="create-field" element={<EOSCreateFieldOnboarding />} />
+        <Route path="onboarding/create-field" element={<EOSCreateFieldOnboarding />} />
+        <Route path="farmer/create-field" element={<EOSCreateFieldOnboarding />} />
         <Route path="farms" element={<FieldMapViewerPage />} />
         <Route path="farms/list" element={<FarmsListPage />} />
-        <Route path="farms/new" element={<CreateFarmPage />} />
+        <Route path="farms/new" element={<EOSCreateFieldOnboarding />} />
         <Route path="farms/:id" element={<FarmDetailsPage />} />
         <Route path="farms/:id/edit" element={<EditFarmPage />} />
 

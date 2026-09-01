@@ -229,6 +229,15 @@ export const FieldMapViewerPage: React.FC = () => {
             <MapIcon className="w-4 h-4" />
             <span>📊 Zone Telemetry Grid</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => navigate('/onboarding/create-field')}
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black shadow-md flex items-center gap-1.5 transition active:scale-95 ml-1"
+          >
+            <Plus className="w-4 h-4" />
+            <span>+ Draw Field (EOS Tool)</span>
+          </button>
         </div>
       </div>
 

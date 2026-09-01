@@ -18,6 +18,7 @@ import {
   ShieldAlert,
   Sprout,
   ShieldCheck,
+  Pentagon,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { RoleType } from '@/types';
@@ -45,6 +46,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
   // 1. Farmer Specific Navigation
   const farmerNavItems: NavItem[] = [
     { to: '/farmer/dashboard', label: 'Farmer Dashboard', icon: LayoutDashboard },
+    { to: '/onboarding/create-field', label: 'Draw Satellite Field', icon: Pentagon, badge: 'EOS' },
+    { to: '/field-map', label: 'Precision Field Map', icon: Map },
     { to: '/monitoring', label: 'Follow-Up Tracking', icon: Activity, badge: 'Loop' },
     { to: '/advisories', label: 'Crop Advisories', icon: Sprout, badge: 'IPM' },
     { to: '/validation', label: 'Expert Validation', icon: ShieldCheck },
@@ -52,7 +55,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
     { to: '/upload', label: 'Upload Studio', icon: UploadCloud },
     { to: '/analysis', label: 'AI Disease Analysis', icon: BrainCircuit },
     { to: '/community', label: 'Community Hub', icon: MessageSquare },
-    { to: '/field-map', label: 'Precision Field Map', icon: Map },
     { to: '/drones', label: 'Drone Fleet & Missions', icon: Plane },
     { to: '/profile', label: 'Account Profile', icon: User },
     { to: '/settings', label: 'System Settings', icon: Settings },
