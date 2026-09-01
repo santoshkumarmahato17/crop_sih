@@ -70,7 +70,26 @@ from app.models.diagnosis import (
     DiagnosisStatus,
     SymptomSeverity,
     SymptomDistribution,
+)
+
+# Expert Ground-Truth Validation Models
+from app.models.validation import (
+    ExpertValidationRequest,
+    ExpertValidationRecord,
+    LabReferral,
     ValidationRequestStatus,
+    ValidationPriority,
+    LabReferralStatus,
+)
+
+# Multilingual Agricultural Advisory Models
+from app.models.advisory import (
+    AdvisoryTemplate,
+    Advisory,
+    AdvisoryTranslation,
+    AdvisoryType,
+    AdvisoryPriority,
+    AdvisorySource,
 )
 
 __all__ = [
@@ -138,4 +157,19 @@ __all__ = [
     "SentStatus",
     # Audit
     "AuditLog",
+    "AuditEventType",
+    # Validation
+    "ExpertValidationRequest",
+    "ValidationRecord",
+    "LabReferral",
+    "ValidationRequestStatus",
+    "ValidationPriority",
+    "LabReferralStatus",
+    # Advisory
+    "AdvisoryTemplate",
+    "Advisory",
+    "AdvisoryTranslation",
+    "AdvisoryType",
+    "AdvisoryPriority",
+    "AdvisorySource",
 ]

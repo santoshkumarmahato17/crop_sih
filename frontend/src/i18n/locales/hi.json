@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "dashboard": "डैशबोर्ड",
+    "farms": "मेरे खेत",
+    "advisories": "कृषि परामर्श",
+    "validation": "विशेषज्ञ सत्यापन",
+    "cropHealth": "फसल स्वास्थ्य",
+    "drones": "ड्रोन निगरानी",
+    "weather": "मौसम जोखिम",
+    "community": "किसान समुदाय",
+    "settings": "सेटिंग्स",
+    "profile": "प्रोफाइल"
+  },
+  "trustLevels": {
+    "level1": "स्तर 1 • एआई संदिग्ध (Suspected)",
+    "level2": "स्तर 2 • मल्टी-सिग्नल जोखिम (Multi-Signal)",
+    "level3": "स्तर 3 • कृषि विशेषज्ञ सत्यापित (Validated)",
+    "level4": "स्तर 4 • प्रयोगशाला पुष्ट (Lab Confirmed)"
+  },
+  "validation": {
+    "title": "कृषि विशेषज्ञ प्रत्यक्ष सत्यापन",
+    "subtitle": "साक्ष्य समीक्षा एवं जमीनी हकीकत सत्यापन कार्यक्षेत्र",
+    "requestValidation": "विशेषज्ञ सहायता मांगें",
+    "case": "केस संख्या",
+    "priority": "प्राथमिकता",
+    "status": "स्थिति",
+    "evidence": "साक्ष्य",
+    "decision": "विशेषज्ञ निर्णय",
+    "confirm": "रोग की पुष्टि करें",
+    "reject": "एआई परिणाम अस्वीकार करें",
+    "uncertain": "अनिश्चित चिह्नित करें",
+    "labReferral": "प्रयोगशाला जांच हेतु भेजें",
+    "expertNotes": "विभागीय विशेषज्ञ नोट्स",
+    "farmerGuidance": "किसान के लिए सरल मार्गदर्शन",
+    "submit": "सत्यापन दर्ज करें"
+  },
+  "advisories": {
+    "title": "बहुभाषी कृषि परामर्श एवं निर्देश",
+    "subtitle": "एकीकृत कीट प्रबंधन (IPM) एवं वैज्ञानिक उपचार",
+    "filterByLanguage": "भाषा अनुसार चुनें",
+    "allPriorities": "सभी प्राथमिकताएं",
+    "whatToDoNow": "अभी क्या कदम उठाएं",
+    "whatToMonitor": "किन बातों पर नजर रखें",
+    "whatToAvoid": "किन कार्यों से बचें",
+    "whenToSeekHelp": "विशेषज्ञ सहायता कब लें",
+    "safetyWarnings": "सुरक्षा सावधानियां",
+    "nextCheck": "अगली खेत जाँच",
+    "listenAudio": "ऑडियो सुनें (Listen)",
+    "stopAudio": "ऑडियो रोकें",
+    "farmerView": "किसान दृश्य",
+    "technicalView": "तकनीकी दृश्य"
+  }
+}

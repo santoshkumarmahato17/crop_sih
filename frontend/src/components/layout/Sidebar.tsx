@@ -16,6 +16,8 @@ import {
   KeyRound,
   FileText,
   ShieldAlert,
+  Sprout,
+  ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { RoleType } from '@/types';
@@ -38,6 +40,8 @@ export const Sidebar: React.FC = () => {
   // 1. Farmer Specific Navigation
   const farmerNavItems: NavItem[] = [
     { to: '/farmer/dashboard', label: 'Farmer Dashboard', icon: LayoutDashboard },
+    { to: '/advisories', label: 'Crop Advisories', icon: Sprout, badge: 'IPM' },
+    { to: '/validation', label: 'Expert Validation', icon: ShieldCheck },
     { to: '/diagnosis', label: 'Symptom Disease ID', icon: Stethoscope, badge: 'AI' },
     { to: '/upload', label: 'Upload Studio', icon: UploadCloud },
     { to: '/analysis', label: 'AI Disease Analysis', icon: BrainCircuit },
@@ -51,6 +55,8 @@ export const Sidebar: React.FC = () => {
   // 2. Government Officer Navigation
   const governmentNavItems: NavItem[] = [
     { to: '/government/dashboard', label: 'Regional Command', icon: LayoutDashboard },
+    { to: '/validation', label: 'Expert Validation', icon: ShieldCheck, badge: 'Cases' },
+    { to: '/advisories', label: 'Regional Advisories', icon: Sprout },
     { to: '/officer', label: 'Extension Console', icon: Shield, badge: 'Official' },
     { to: '/field-map', label: 'Jurisdiction Map', icon: Map },
     { to: '/spread', label: 'Spread Risk Analysis', icon: Activity },
@@ -63,6 +69,8 @@ export const Sidebar: React.FC = () => {
   // 3. System Administrator Navigation
   const adminNavItems: NavItem[] = [
     { to: '/admin/dashboard', label: 'Admin Console', icon: KeyRound, badge: 'Root' },
+    { to: '/validation', label: 'Validation System', icon: ShieldCheck },
+    { to: '/advisories', label: 'Advisory Engine', icon: Sprout },
     { to: '/admin/users', label: 'User & RBAC Security', icon: Users },
     { to: '/admin/audit-logs', label: 'Security & Audit Logs', icon: FileText },
     { to: '/field-map', label: 'Global Field Grid', icon: Map },

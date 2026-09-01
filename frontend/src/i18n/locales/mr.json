@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "dashboard": "डॅशबोर्ड",
+    "farms": "माझी शेती",
+    "advisories": "पीक सल्ला",
+    "validation": "तज्ञ पडताळणी",
+    "cropHealth": "पीक आरोग्य",
+    "drones": "ड्रोन निरीक्षण",
+    "weather": "हवामान धोका",
+    "community": "शेतकरी समुदाय",
+    "settings": "सेटिंग्ज",
+    "profile": "माझी माहिती"
+  },
+  "trustLevels": {
+    "level1": "पातळी १ • एआय संशयित (Suspected)",
+    "level2": "पातळी २ • बहु-घटक धोका (Multi-Signal)",
+    "level3": "पातळी ३ • कृषी तज्ञांद्वारे प्रमाणित (Validated)",
+    "level4": "पातळी ४ • प्रयोगशाळा अहवाल (Lab Confirmed)"
+  },
+  "validation": {
+    "title": "कृषी विस्तार तज्ञ प्रत्यक्ष पडताळणी",
+    "subtitle": "पुरावे तपासणी, क्षेत्र पाहणी व निर्णय नोंदणी कक्ष",
+    "requestValidation": "तज्ञांची मदत मागा",
+    "case": "प्रकरण क्र.",
+    "priority": "प्राधान्य",
+    "status": "स्थिती",
+    "evidence": "पुरावे",
+    "decision": "तज्ञांचा निर्णय",
+    "confirm": "रोगाची पुष्टी करा",
+    "reject": "एआय निष्कर्ष नाकारा",
+    "uncertain": "अस्पष्ट म्हणून चिन्हांकित करा",
+    "labReferral": "प्रयोगशाळा तपासणीसाठी पाठवा",
+    "expertNotes": "तज्ञ अंतर्गत नोंदी",
+    "farmerGuidance": "शेतकऱ्यांसाठी कृती मार्गदर्शन",
+    "submit": "निर्णय नोंदवा"
+  },
+  "advisories": {
+    "title": "बहुभाषिक कृषी पीक संरक्षण सल्ला",
+    "subtitle": "एकात्मिक कीड व्यवस्थापन (IPM) आणि हवामान उपाययोजना",
+    "filterByLanguage": "भाषेनुसार निवडा",
+    "allPriorities": "सर्व प्राधान्ये",
+    "whatToDoNow": "सध्या काय करावे",
+    "whatToMonitor": "कशावर लक्ष ठेवावे",
+    "whatToAvoid": "काय टाळावे",
+    "whenToSeekHelp": "तज्ञांची मदत कधी घ्यावी",
+    "safetyWarnings": "सुरक्षा सूचना",
+    "nextCheck": "पुढील शेत पाहणी",
+    "listenAudio": "ऑडिओ ऐका (Listen)",
+    "stopAudio": "थांबवा",
+    "farmerView": "शेतकरी दृश्य",
+    "technicalView": "तांत्रिक दृश्य"
+  }
+}

@@ -29,6 +29,10 @@ import { weatherService, mockFarmWeatherRiskData } from '@/services/weatherServi
 import { WeatherRiskForecastCard } from '@/features/weather/WeatherRiskForecastCard';
 import { FarmWeatherRiskResponse } from '@/types/weatherRisk';
 import { ZoneTemporalAnalyticsModal } from '@/features/temporal/ZoneTemporalAnalyticsModal';
+import { LanguageSwitcher } from '@/features/advisories/LanguageSwitcher';
+import { AdvisoryCard } from '@/features/advisories/AdvisoryCard';
+import { advisoryService } from '@/services/advisoryService';
+import { Advisory } from '@/types/advisory';
 import {
   FarmerDashboardSummary,
   Farm,
@@ -189,6 +193,7 @@ export const FarmerDashboardPage: React.FC = () => {
   const [weatherRiskData, setWeatherRiskData] = useState<FarmWeatherRiskResponse>(mockFarmWeatherRiskData);
   const [weatherHorizon, setWeatherHorizon] = useState<number>(7);
   const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
+  const [advisories, setAdvisories] = useState<Advisory[]>([]);
 
   useEffect(() => {
     loadInitialData();
@@ -212,12 +217,14 @@ export const FarmerDashboardPage: React.FC = () => {
 
   const loadInitialData = async () => {
     try {
-      const [sumRes, farmsRes] = await Promise.all([
+      const [sumRes, farmsRes, advRes] = await Promise.all([
         dashboardService.getFarmerSummary(),
         farmService.listFarms(),
+        advisoryService.getAdvisories(),
       ]);
       setSummary(sumRes);
       setFarms(farmsRes.farms);
+      setAdvisories(advRes);
       if (farmsRes.farms.length > 0) {
         const firstFarmId = farmsRes.farms[0].id;
         setSelectedFarmId(firstFarmId);
@@ -899,6 +906,43 @@ export const FarmerDashboardPage: React.FC = () => {
             </div>
           </button>
         </div>
+      </div>
+
+      {/* ═══ MULTILINGUAL AGRICULTURAL ADVISORIES (IPM Precision Pipeline) ═══ */}
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-mono text-[10px] font-extrabold uppercase border border-emerald-500/30">
+                Precision Agricultural Guidance
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <Sprout className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+              <span>Active Agricultural Advisories (पीक संरक्षण सल्ला)</span>
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <LanguageSwitcher variant="minimal" />
+            <button
+              type="button"
+              onClick={() => navigate('/advisories')}
+              className="px-4 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-emerald-900/20 active:scale-95"
+            >
+              <span>View All ({advisories.length})</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Top Active Advisory Card */}
+        {advisories.length > 0 && (
+          <AdvisoryCard
+            advisory={advisories[0]}
+            onRequestValidation={() => navigate('/validation')}
+          />
+        )}
       </div>
 
       {/* 4. Actionable Field Recommendations Bento Section */}

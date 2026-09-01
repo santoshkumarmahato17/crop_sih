@@ -1,0 +1,53 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "farms": "My Farms",
+    "advisories": "Advisories",
+    "validation": "Expert Validation",
+    "cropHealth": "Crop Health",
+    "drones": "Drones",
+    "weather": "Weather Risk",
+    "community": "Community",
+    "settings": "Settings",
+    "profile": "Profile"
+  },
+  "trustLevels": {
+    "level1": "Level 1 • AI Suspected",
+    "level2": "Level 2 • Multi-Signal Risk",
+    "level3": "Level 3 • Expert Validated",
+    "level4": "Level 4 • Lab Confirmed"
+  },
+  "validation": {
+    "title": "Expert Ground-Truth Validation",
+    "subtitle": "Agronomic extension case queue & evidence review",
+    "requestValidation": "Request Expert Help",
+    "case": "Case",
+    "priority": "Priority",
+    "status": "Status",
+    "evidence": "Evidence",
+    "decision": "Expert Decision",
+    "confirm": "Confirm Condition",
+    "reject": "Reject AI Finding",
+    "uncertain": "Mark Uncertain",
+    "labReferral": "Refer to Laboratory",
+    "expertNotes": "Expert Notes (Internal)",
+    "farmerGuidance": "Guidance for Farmer",
+    "submit": "Submit Decision"
+  },
+  "advisories": {
+    "title": "Multilingual Agricultural Advisories",
+    "subtitle": "Integrated Pest Management (IPM) & climate guidance",
+    "filterByLanguage": "Filter by Language",
+    "allPriorities": "All Priorities",
+    "whatToDoNow": "What To Do Now",
+    "whatToMonitor": "What To Monitor",
+    "whatToAvoid": "What To Avoid",
+    "whenToSeekHelp": "When To Seek Expert Help",
+    "safetyWarnings": "Safety Warnings",
+    "nextCheck": "Next Field Check",
+    "listenAudio": "Listen (Audio)",
+    "stopAudio": "Stop Audio",
+    "farmerView": "Farmer View",
+    "technicalView": "Technical View"
+  }
+}
