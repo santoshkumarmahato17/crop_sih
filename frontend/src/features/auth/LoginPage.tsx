@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
-  ShieldCheck,
   Mail,
   Lock,
   ArrowRight,
@@ -57,8 +56,8 @@ export const LoginPage: React.FC = () => {
     <div className="w-full max-w-md p-8 sm:p-9 rounded-3xl bg-white/95 dark:bg-slate-900/90 border border-white/60 dark:border-slate-700/60 shadow-2xl shadow-emerald-950/20 backdrop-blur-2xl space-y-6">
       {/* Brand Header */}
       <div className="text-center space-y-2">
-        <div className="inline-flex p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 shadow-sm shadow-emerald-500/20">
-          <ShieldCheck className="w-8 h-8" />
+        <div className="inline-flex p-2 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-md">
+          <img src="/agri-logo.png" alt="AgriShield Logo" className="w-16 h-12 object-contain" />
         </div>
         <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
           Sign In to AGRI SHIELD

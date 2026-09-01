@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  Shield,
   Radio,
   Bell,
   Sun,
@@ -77,8 +76,8 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-3 cursor-pointer group"
           >
-            <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm shadow-emerald-600/30">
-              <Shield className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-0.5 overflow-hidden flex items-center justify-center shadow-md shadow-emerald-600/15 group-hover:scale-105 transition duration-200">
+              <img src="/agri-logo.png" alt="AgriShield Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <div className="flex items-center gap-2">
