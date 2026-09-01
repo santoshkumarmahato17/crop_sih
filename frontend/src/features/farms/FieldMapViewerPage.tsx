@@ -25,6 +25,7 @@ import {
   Flame,
 } from 'lucide-react';
 import { IndiaPesticideHeatmapViewer } from '@/features/spatial-map/IndiaPesticideHeatmapViewer';
+import { LiveSatelliteGISMap } from './LiveSatelliteGISMap';
 
 interface FieldZoneRecord {
   id: string;
@@ -52,8 +53,8 @@ interface FieldZoneRecord {
 export const FieldMapViewerPage: React.FC = () => {
   const navigate = useNavigate();
 
-  // Mode: 'india_heatmap' | 'local_gis'
-  const [viewMode, setViewMode] = useState<'india_heatmap' | 'local_gis'>('india_heatmap');
+  // Mode: 'satellite_gis' | 'india_heatmap' | 'local_gis'
+  const [viewMode, setViewMode] = useState<'satellite_gis' | 'india_heatmap' | 'local_gis'>('satellite_gis');
   const [riskLayerMode, setRiskLayerMode] = useState<'none' | 'current_risk' | 'forecast_risk'>('current_risk');
 
   // Search & Resource Tab state
@@ -177,43 +178,56 @@ export const FieldMapViewerPage: React.FC = () => {
   return (
     <div className="max-w-[1440px] mx-auto space-y-6 pb-20 transition-colors duration-200">
       {/* Top Map Viewport Mode Switcher Bar */}
-      <div className="p-4 rounded-3xl bg-slate-900/90 border border-slate-800 backdrop-blur-xl shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-4 rounded-3xl bg-slate-900/90 border border-slate-800 backdrop-blur-xl shadow-xl flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400">
-            <Flame className="w-5 h-5" />
+            <MapIcon className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-base font-extrabold text-white">Spatial Map Intelligence Hub</h2>
-            <p className="text-xs text-slate-400">Switch between nationwide pesticide diagnosis heatmap and local farm satellite GIS.</p>
+            <h2 className="text-base font-extrabold text-white">Precision Spatial Intelligence Hub</h2>
+            <p className="text-xs text-slate-400">High-resolution Sentinel-2 satellite imagery, NDVI multispectral health & nationwide pesticide heatmaps.</p>
           </div>
         </div>
 
         {/* Navigation Mode Switcher Tabs */}
-        <div className="p-1 rounded-2xl bg-slate-950 border border-slate-800 flex items-center gap-1.5 text-xs font-bold">
+        <div className="p-1.5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-wrap items-center gap-1.5 text-xs font-bold">
+          <button
+            type="button"
+            onClick={() => setViewMode('satellite_gis')}
+            className={`px-3.5 py-2 rounded-xl transition flex items-center gap-2 ${
+              viewMode === 'satellite_gis'
+                ? 'bg-emerald-500 text-slate-950 shadow-md font-extrabold'
+                : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>🛰️ Live Satellite GIS & NDVI</span>
+          </button>
+
           <button
             type="button"
             onClick={() => setViewMode('india_heatmap')}
-            className={`px-4 py-2 rounded-xl transition flex items-center gap-2 ${
+            className={`px-3.5 py-2 rounded-xl transition flex items-center gap-2 ${
               viewMode === 'india_heatmap'
                 ? 'bg-emerald-500 text-slate-950 shadow-md font-extrabold'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
             <Flame className="w-4 h-4" />
-            <span>🇮🇳 Full India Map & Pesticide Heatmap</span>
+            <span>🇮🇳 Nationwide Contagion Heatmap</span>
           </button>
 
           <button
             type="button"
             onClick={() => setViewMode('local_gis')}
-            className={`px-4 py-2 rounded-xl transition flex items-center gap-2 ${
+            className={`px-3.5 py-2 rounded-xl transition flex items-center gap-2 ${
               viewMode === 'local_gis'
                 ? 'bg-emerald-500 text-slate-950 shadow-md font-extrabold'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
             <MapIcon className="w-4 h-4" />
-            <span>🛰️ Local Farm GIS Monitoring</span>
+            <span>📊 Zone Telemetry Grid</span>
           </button>
         </div>
       </div>
@@ -226,8 +240,12 @@ export const FieldMapViewerPage: React.FC = () => {
         </div>
       )}
 
-      {/* Conditionally Render India Pesticide Heatmap Viewer OR Local GIS View */}
-      {viewMode === 'india_heatmap' ? (
+      {/* Conditionally Render: Satellite GIS View, India Pesticide Heatmap, OR Zone Grid */}
+      {viewMode === 'satellite_gis' ? (
+        <div className="space-y-4 animate-in fade-in duration-200">
+          <LiveSatelliteGISMap heightClass="h-[640px] sm:h-[700px]" />
+        </div>
+      ) : viewMode === 'india_heatmap' ? (
         <IndiaPesticideHeatmapViewer />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
