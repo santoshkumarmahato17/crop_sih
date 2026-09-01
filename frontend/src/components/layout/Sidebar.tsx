@@ -40,6 +40,7 @@ export const Sidebar: React.FC = () => {
   // 1. Farmer Specific Navigation
   const farmerNavItems: NavItem[] = [
     { to: '/farmer/dashboard', label: 'Farmer Dashboard', icon: LayoutDashboard },
+    { to: '/monitoring', label: 'Follow-Up Tracking', icon: Activity, badge: 'Loop' },
     { to: '/advisories', label: 'Crop Advisories', icon: Sprout, badge: 'IPM' },
     { to: '/validation', label: 'Expert Validation', icon: ShieldCheck },
     { to: '/diagnosis', label: 'Symptom Disease ID', icon: Stethoscope, badge: 'AI' },
@@ -55,6 +56,7 @@ export const Sidebar: React.FC = () => {
   // 2. Government Officer Navigation
   const governmentNavItems: NavItem[] = [
     { to: '/government/dashboard', label: 'Regional Command', icon: LayoutDashboard },
+    { to: '/monitoring', label: 'Follow-Up Monitoring', icon: Activity, badge: 'Active' },
     { to: '/validation', label: 'Expert Validation', icon: ShieldCheck, badge: 'Cases' },
     { to: '/advisories', label: 'Regional Advisories', icon: Sprout },
     { to: '/officer', label: 'Extension Console', icon: Shield, badge: 'Official' },
@@ -69,6 +71,7 @@ export const Sidebar: React.FC = () => {
   // 3. System Administrator Navigation
   const adminNavItems: NavItem[] = [
     { to: '/admin/dashboard', label: 'Admin Console', icon: KeyRound, badge: 'Root' },
+    { to: '/monitoring', label: 'Monitoring Engine', icon: Activity },
     { to: '/validation', label: 'Validation System', icon: ShieldCheck },
     { to: '/advisories', label: 'Advisory Engine', icon: Sprout },
     { to: '/admin/users', label: 'User & RBAC Security', icon: Users },

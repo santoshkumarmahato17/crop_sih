@@ -945,6 +945,72 @@ export const FarmerDashboardPage: React.FC = () => {
         )}
       </div>
 
+      {/* ═══ FOLLOW-UP MONITORING & CROP HEALTH TRACKING ═══ */}
+      <div className="p-6 rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-xl space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-500/15 text-blue-700 dark:text-blue-300 font-mono text-[10px] font-extrabold uppercase border border-blue-500/30">
+                Closed-Loop Tracking
+              </span>
+            </div>
+            <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <Activity className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <span>Follow-up Monitoring (पाठपुरावा व तपासणी)</span>
+            </h3>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate('/monitoring')}
+            className="px-4 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-emerald-900/20 active:scale-95"
+          >
+            <span>Open Monitoring Hub</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold uppercase text-slate-500">Scheduled Re-Check</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-rose-500/15 text-rose-700 border border-rose-500/30">HIGH PRIORITY</span>
+            </div>
+            <h4 className="text-sm font-black text-slate-900 dark:text-white">Zone Z17 (Greenhouse Block)</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Targeted Early Blight multispectral follow-up re-scan.</p>
+            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-800">
+              <span>Method: <strong>Drone Scan</strong></span>
+              <span className="text-rose-600 font-bold">Due Tomorrow</span>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-mono font-bold uppercase text-slate-500">Irrigation Recovery</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/15 text-amber-700 border border-amber-500/30">MEDIUM</span>
+            </div>
+            <h4 className="text-sm font-black text-slate-900 dark:text-white">Zone Z04 (Pomegranate South)</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400">Transpiration check after 2-hour drip flush.</p>
+            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200 dark:border-slate-800">
+              <span>Method: <strong>Field Scout</strong></span>
+              <span className="text-emerald-600 font-bold">In 3 Days</span>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2 flex flex-col justify-between">
+            <div>
+              <span className="text-[10px] font-mono font-bold uppercase text-emerald-800 dark:text-emerald-300">Latest Before vs After</span>
+              <h4 className="text-sm font-black text-emerald-950 dark:text-emerald-200 mt-1">Zone Z02 (Cotton Block)</h4>
+              <p className="text-xs text-emerald-800/80 dark:text-emerald-300/80 mt-1">Canopy vigor improved (+18 pts). Hotspot contracted.</p>
+            </div>
+            <div className="pt-2 border-t border-emerald-500/20 flex items-center justify-between text-xs font-bold text-emerald-700 dark:text-emerald-300">
+              <span>Trend: IMPROVING</span>
+              <button type="button" onClick={() => navigate('/monitoring')} className="underline">View Comparison</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* 4. Actionable Field Recommendations Bento Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: Actionable Smart Tasks */}

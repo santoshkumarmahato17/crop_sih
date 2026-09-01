@@ -49,5 +49,33 @@
     "stopAudio": "நிறுத்துக",
     "farmerView": "விவசாயி பார்வை",
     "technicalView": "தொழில்நுட்ப பார்வை"
+  },
+  "monitoring": {
+    "title": "தொடர் கள கண்காணிப்பு மற்றும் பயிர் நிலை கண்காணிப்பு",
+    "subtitle": "முந்தைய மற்றும் தற்போதைய கள நிலை ஒப்பீடு, மாற்றங்கள் கண்டறிதல்",
+    "schedule": "கண்காணிப்பு கால அட்டவணை",
+    "activeTasks": "செயலில் உள்ள பணிகள்",
+    "beforeAfter": "முந்தைய vs தற்போதைய நிலை",
+    "hotspots": "நோய் பரவல் பகுப்பாய்வு",
+    "droneTargets": "இலக்கு ட்ரோன் பணிகள்",
+    "trends": "ஆரோக்கியம் மற்றும் இடர் போக்கு",
+    "timeline": "பயிர் ஆரோக்கிய காலவரிசை",
+    "today": "இன்று",
+    "tomorrow": "நாளை",
+    "in3Days": "3 நாட்களில்",
+    "later": "பின்னர்",
+    "improving": "மேம்படுகிறது (IMPROVING)",
+    "stable": "நிலையானது (STABLE)",
+    "worsening": "மோசமடைகிறது (WORSENING)",
+    "spreading": "பரவுகிறது (SPREADING)",
+    "hotspotExpanding": "நோய் பகுதி விரிவடைகிறது",
+    "hotspotContracting": "நோய் பகுதி குறைகிறது",
+    "hotspotResolved": "நோய் குணமடைந்தது",
+    "escalationRequired": "நிபுணர் அவசர தலையீடு தேவை",
+    "fieldInspection": "நேரடி கள ஆய்வு",
+    "farmerImage": "விவசாயி புகைப்பட ஆய்வு",
+    "droneScan": "ட்ரோன் ஆய்வு",
+    "submitObservation": "கள முடிவை சமர்ப்பிக்கவும்",
+    "coverage": "கண்காணிப்பு பரப்பளவு %"
   }
 }

@@ -49,5 +49,33 @@
     "stopAudio": "ऑडियो रोकें",
     "farmerView": "किसान दृश्य",
     "technicalView": "तकनीकी दृश्य"
+  },
+  "monitoring": {
+    "title": "सतत निगरानी एवं फसल स्वास्थ्य अनुवर्तन",
+    "subtitle": "पूर्व बनाम पश्चात तुलनात्मक विश्लेषण, स्वास्थ्य रुझान एवं प्रसार पहचान",
+    "schedule": "निगरानी समय-सारिणी",
+    "activeTasks": "सक्रिय कार्य",
+    "beforeAfter": "पहले बनाम अब (तुलना)",
+    "hotspots": "हॉटस्पॉट फैलाव विश्लेषण",
+    "droneTargets": "लक्षित ड्रोन उड़ानें",
+    "trends": "स्वास्थ्य एवं जोखिम रुझान",
+    "timeline": "फसल जीवनचक्र समय-रेखा",
+    "today": "आज",
+    "tomorrow": "कल",
+    "in3Days": "3 दिनों में",
+    "later": "बाद में",
+    "improving": "सुधार हो रहा है (IMPROVING)",
+    "stable": "स्थिर है (STABLE)",
+    "worsening": "स्थिति बिगड़ रही है (WORSENING)",
+    "spreading": "रोग फैल रहा है (SPREADING)",
+    "hotspotExpanding": "संक्रमण क्षेत्र बढ़ रहा है",
+    "hotspotContracting": "संक्रमण क्षेत्र घट रहा है",
+    "hotspotResolved": "संक्रमण समाप्त",
+    "escalationRequired": "विशेषज्ञ हस्तक्षेप आवश्यक",
+    "fieldInspection": "प्रत्यक्ष खेत जाँच",
+    "farmerImage": "किसान फोटो जाँच",
+    "droneScan": "मल्टीस्पेक्ट्रल ड्रोन",
+    "submitObservation": "जाँच परिणाम दर्ज करें",
+    "coverage": "निगरानी कवरेज %"
   }
 }

@@ -33,9 +33,10 @@ import { MissionsListPage } from '@/features/drones/MissionsListPage';
 import { CreateMissionPage } from '@/features/drones/CreateMissionPage';
 import { MissionDetailsPage } from '@/features/drones/MissionDetailsPage';
 
-// Multilingual Advisories & Expert Validation Modules
+// Multilingual Advisories & Expert Validation & Follow-up Monitoring Modules
 import { AdvisoriesPage } from '@/features/advisories/AdvisoriesPage';
 import { ExpertValidationPage } from '@/features/validation/ExpertValidationPage';
+import { MonitoringWorkspacePage } from '@/features/monitoring/MonitoringWorkspacePage';
 
 /**
  * Root Index Dispatcher: Automatically routes authenticated user to their role's dashboard.
@@ -130,6 +131,30 @@ export const AppRoutes: React.FC = () => {
           element={
             <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
               <ExpertValidationPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="monitoring"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <MonitoringWorkspacePage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farmer/monitoring"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <MonitoringWorkspacePage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/monitoring"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <MonitoringWorkspacePage />
             </RoleProtectedRoute>
           }
         />

@@ -16,6 +16,7 @@ from app.api.v1.endpoints import (
     government,
     health,
     images,
+    monitoring,
     officer,
     risk,
     spread,
@@ -52,4 +53,5 @@ api_router.include_router(water_stress.router)
 api_router.include_router(weather_forecast.router)
 api_router.include_router(validation.router)
 api_router.include_router(advisories.router)
+api_router.include_router(monitoring.router)
 

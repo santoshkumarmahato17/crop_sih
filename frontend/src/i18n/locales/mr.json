@@ -49,5 +49,33 @@
     "stopAudio": "थांबवा",
     "farmerView": "शेतकरी दृश्य",
     "technicalView": "तांत्रिक दृश्य"
+  },
+  "monitoring": {
+    "title": "सतत पाठपुरावा व पीक आरोग्य निरीक्षण",
+    "subtitle": "पूर्वीची व सद्य स्थितीची तुलना, आरोग्य कल आणि हॉटस्पॉट बदल तपासणी",
+    "schedule": "निरीक्षण वेळापत्रक",
+    "activeTasks": "सक्रिय कार्ये",
+    "beforeAfter": "पूर्वी विरूद्ध आता (तुलना)",
+    "hotspots": "रोग प्रादुर्भाव क्षेत्र बदल",
+    "droneTargets": "लक्षित ड्रोन मोहिमा",
+    "trends": "आरोग्य व जोखीम कल",
+    "timeline": "पीक आरोग्य कालक्रम",
+    "today": "आज",
+    "tomorrow": "उद्या",
+    "in3Days": "३ दिवसांत",
+    "later": "नंतर",
+    "improving": "सुधारणा होत आहे (IMPROVING)",
+    "stable": "स्थिर आहे (STABLE)",
+    "worsening": "बिघाड होत आहे (WORSENING)",
+    "spreading": "रोग पसरत आहे (SPREADING)",
+    "hotspotExpanding": "प्रादुर्भाव क्षेत्र वाढत आहे",
+    "hotspotContracting": "प्रादुर्भाव क्षेत्र कमी होत आहे",
+    "hotspotResolved": "रोग पूर्ण बरा झाला",
+    "escalationRequired": "तज्ञांचा तातडीने सल्ला आवश्यक",
+    "fieldInspection": "प्रत्यक्ष शेत पाहणी",
+    "farmerImage": "शेतकरी फोटो तपासणी",
+    "droneScan": "मल्टीस्पेक्ट्रल ड्रोन",
+    "submitObservation": "निरीक्षण नोंदवा",
+    "coverage": "निरीक्षण व्याप्ती %"
   }
 }

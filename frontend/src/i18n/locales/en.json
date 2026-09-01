@@ -49,5 +49,33 @@
     "stopAudio": "Stop Audio",
     "farmerView": "Farmer View",
     "technicalView": "Technical View"
+  },
+  "monitoring": {
+    "title": "Follow-Up Monitoring & Crop Health Tracking",
+    "subtitle": "Closed-loop observation feedback, before-vs-after delta comparison, and spatial change detection",
+    "schedule": "Monitoring Schedule",
+    "activeTasks": "Active Tasks",
+    "beforeAfter": "Before vs After",
+    "hotspots": "Spatial Hotspot Evolution",
+    "droneTargets": "Targeted Drone Missions",
+    "trends": "Health & Risk Trends",
+    "timeline": "Farm Health Timeline",
+    "today": "TODAY",
+    "tomorrow": "TOMORROW",
+    "in3Days": "IN 3 DAYS",
+    "later": "LATER",
+    "improving": "IMPROVING",
+    "stable": "STABLE",
+    "worsening": "WORSENING",
+    "spreading": "SPREADING",
+    "hotspotExpanding": "Hotspot Expanding",
+    "hotspotContracting": "Hotspot Contracting",
+    "hotspotResolved": "Hotspot Resolved",
+    "escalationRequired": "Escalation Required",
+    "fieldInspection": "Field Inspection",
+    "farmerImage": "Farmer Photo Scan",
+    "droneScan": "Multispectral Drone",
+    "submitObservation": "Submit Observation",
+    "coverage": "Monitoring Coverage"
   }
 }
