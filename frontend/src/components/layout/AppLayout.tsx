@@ -17,7 +17,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   version = '0.1.0',
 }) => {
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const location = useLocation();
 
   const isAuthPage =
@@ -25,11 +25,30 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
     location.pathname === '/register' ||
     location.pathname === '/onboarding';
 
+  const rawRole = user?.role;
+  const role = typeof rawRole === 'string' ? rawRole : ((rawRole as any)?.name) || 'FARMER';
+  const isAdmin = role === 'ADMIN' || location.pathname.startsWith('/admin');
+
   // Hide authenticated navigation, sidebar, and assistant on login/register pages
   const shouldShowAuthenticatedChrome = !isAuthPage && isAuthenticated;
 
   return (
-    <div className="h-screen max-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-hidden">
+    <div className={`h-screen max-h-screen ${isAdmin ? 'bg-slate-950' : 'bg-slate-50 dark:bg-slate-950'} text-slate-900 dark:text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-hidden relative`}>
+      {/* ── Admin Mode Full Application Background (Sunlit Seedling & Atmospheric Aura) ── */}
+      {isAdmin && (
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700"
+            style={{
+              backgroundImage: `url('/admin-bg.jpg')`,
+              backgroundPosition: 'center 40%',
+            }}
+          />
+          {/* Subtle dark gradient scrim for contrast, sharpness, and clean readability */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/85 via-slate-950/70 to-slate-950/50 backdrop-blur-[1px]" />
+        </div>
+      )}
+
       {/* 1. Fixed Stationary Header Bar */}
       <div className="relative z-40 shrink-0 w-full">
         <Header
