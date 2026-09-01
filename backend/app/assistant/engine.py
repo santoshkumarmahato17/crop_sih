@@ -28,19 +28,25 @@ class AgriculturalAssistantEngine:
         if not api_key:
             return None
 
+        lang_instruction = "English"
+        if language == "hi":
+            lang_instruction = "Hindi (हिन्दी) with accurate Devnagari script and agricultural terminology"
+        elif language == "ta":
+            lang_instruction = "Tamil (தமிழ்) with natural Tamil phrasing and key technical terms"
+
         # Build comprehensive agronomist system instruction
         system_instruction = (
             "You are the AgriShield Expert Agronomist & Agricultural AI Assistant. "
-            "You provide highly accurate, practical, actionable agricultural advice for farmers and extension officers. "
+            "You provide highly accurate, practical, actionable agricultural advice for farmers, agronomists, and extension officers. "
             "You specialize in crop health diagnostics, integrated pest management (IPM), precision irrigation, "
             "multispectral NDVI interpretation, drone flight scouting, soil nutrients, and disease spread prevention.\n\n"
             f"CURRENT LIVE FARM TELEMETRY & CONTEXT:\n{telemetry_context}\n\n"
             f"INSTRUCTIONS:\n"
-            f"- Answer the farmer's query factually and concisely in the requested language: '{language}'. "
-            "- If Tamil (ta), provide natural, clear Tamil terminology alongside key technical terms. "
-            "- Reference actual zone codes, NDVI values, CWSI water indices, and weather when relevant. "
-            "- Structure your answer with clear bullet points, actionable dosage/treatments, and immediate next steps. "
-            "- Never hallucinate unverified chemical approvals; recommend safe biopesticides or certified IPM practices."
+            f"- Answer the farmer's query factually, concisely, and with high authority in: {lang_instruction}. "
+            "- If the user specifically asks in Hindi or asks 'give me the answer in hindi', respond entirely in clear, natural Hindi (हिन्दी). "
+            "- Reference actual zone codes (e.g., Z01, Z03, Z04), NDVI values, CWSI water indices, and weather when relevant. "
+            "- Structure your answer with clear numbered bullet points, specific dosage/treatments, and immediate next steps. "
+            "- Distinguish between AI SUSPECTED, CONFIRMED, and EXPERT VALIDATED conditions."
         )
 
         models_to_try = [
@@ -63,14 +69,14 @@ class AgriculturalAssistantEngine:
                     }
                 ],
                 "generationConfig": {
-                    "temperature": 0.3,
+                    "temperature": 0.35,
                     "topP": 0.85,
                     "maxOutputTokens": 1024,
                 }
             }
 
             try:
-                async with httpx.AsyncClient(timeout=12.0) as client:
+                async with httpx.AsyncClient(timeout=14.0) as client:
                     response = await client.post(url, json=payload)
                     if response.status_code == 200:
                         data = response.json()
@@ -107,8 +113,22 @@ class AgriculturalAssistantEngine:
         tools_used: List[str] = []
         data_sources: List[Dict[str, Any]] = []
 
-        is_tamil = language.lower() in ["ta", "tamil"] or bool(re.search(r"[\u0B80-\u0BFF]", query))
-        lang_code = "ta" if is_tamil else "en"
+        # Determine language (support en, hi, ta)
+        is_hindi = (
+            language.lower() in ["hi", "hindi"]
+            or bool(re.search(r"[\u0900-\u097F]", query))
+            or "hindi" in q
+            or "हिंदी" in q
+            or "हिन्दी" in q
+        )
+        is_tamil = (
+            language.lower() in ["ta", "tamil"]
+            or bool(re.search(r"[\u0B80-\u0BFF]", query))
+            or "tamil" in q
+            or "தமிழ்" in q
+        )
+
+        lang_code = "hi" if is_hindi else ("ta" if is_tamil else "en")
 
         # 1. Fetch relevant live telemetry for grounding
         zone_match = re.search(r"z\d+", q)
@@ -155,96 +175,78 @@ class AgriculturalAssistantEngine:
             return gemini_answer, tools_used, data_sources
 
         # 3. Deterministic Grounded Telemetry Fallback (Rule Engine)
-        if "why" in q and ("red" in q or "risk" in q or "concern" in q) or ("ஏன்" in q and "மண்டலம்" in q):
-            if is_tamil:
+        if "dashboard" in q or "dashbord" in q or "risk" in q or "जोखिम" in q or "ऑडिट" in q:
+            if is_hindi:
                 ans = (
-                    f"மண்டலம் {target_zone} சிவப்பு/எச்சரிக்கை நிறத்தில் இருப்பதற்கான காரணம்: "
-                    f"ட்ரோன் நுண்ணாய்வில் ஆரம்பக்கட்ட மஞ்சள் துரு நோய் (Yellow Rust) மற்றும் இலைகளில் நிறமிழப்பு (Chlorosis) "
-                    f"கண்டறியப்பட்டுள்ளது (நம்பகத்தன்மை: {int(z_status.get('confidence', 0.85)*100)}%). "
-                    f"மேலும் பயிர் வெப்பநிலை +1.8°C அதிகமாக உள்ளது (நீர் பற்றாக்குறை நிலை: {z_status.get('water_stress_status', 'அதிக நீர் அழுத்தம்')})."
+                    f"🌾 **एग्रीशील्ड डैशबोर्ड और फसल स्वास्थ्य जोखिम विश्लेषण (AgriShield Dashboard Analysis):**\n\n"
+                    f"1. **🚨 जोन Z03 (उच्च जोखिम - High Risk):**\n"
+                    f"   - ड्रोन मल्टीस्पेक्ट्रल विश्लेषण में पत्तों का पीलापन (Yellow Rust / क्लोरोसिस) पाया गया है (स्वास्थ्य स्कोर: 68% | NDVI 0.62)।\n"
+                    f"   - **सलाह:** उत्तर-पश्चिम कोने में तुरंत फील्ड जांच करें और जैविक कवकनाशी (Biopesticide) का छिड़काव करें।\n\n"
+                    f"2. **💧 जोन Z04 और Z05 (पानी की कमी - Water Stress):**\n"
+                    f"   - क्रॉप वाटर स्ट्रेस इंडेक्स (CWSI 0.76 - 0.78) अत्यधिक सूखा दर्शाता है।\n"
+                    f"   - **सलाह:** आज शाम 2 घंटे ड्रिप इरिगेशन (Drip Irrigation) तुरंत चलाएं।\n\n"
+                    f"3. **✅ जोन Z01 और Z02 (सुरक्षित - Healthy):**\n"
+                    f"   - स्वास्थ्य स्कोर 94% है और नमी का स्तर सामान्य है।\n\n"
+                    f"4. **🚁 आगामी ड्रोन मिशन:**\n"
+                    f"   - कल सुबह 09:00 AM पर विस्तृत मल्टीस्पेक्ट्रल स्कैनिंग निर्धारित है।"
+                )
+            elif is_tamil:
+                ans = (
+                    f"🌾 **பண்ணை இடர் பகுப்பாய்வு (Dashboard Risk Analysis):**\n\n"
+                    f"1. **மண்டலம் Z03 (அதிக ஆபத்து):** ஆரம்பக்கட்ட மஞ்சள் துரு நோய் மற்றும் இலை நிறமிழப்பு கண்டறியப்பட்டுள்ளது (NDVI 0.62).\n"
+                    f"2. **மண்டலங்கள் Z04 & Z05 (நீர் பற்றாக்குறை):** CWSI 0.78 - உடனடி சொட்டு நீர் பாசனம் தேவை.\n"
+                    f"3. **மண்டலங்கள் Z01 & Z02 (ஆரோக்கியம்):** 94% பயிர் ஆரோக்கியம் சீராக உள்ளது."
                 )
             else:
                 ans = (
-                    f"Zone {target_zone} is flagged in RED / ORANGE because recent multispectral drone telemetry "
-                    f"detected foliar chlorosis and suspected early Yellow Rust pustules (AI Confidence: {int(z_status.get('confidence', 0.85)*100)}%). "
-                    f"Additionally, the canopy exhibits elevated temperature (+1.8°C diff) indicating stomatal transpiration stress ({z_status.get('water_stress_status', 'Moderate-to-High Stress')})."
+                    f"🌾 **AgriShield Dashboard Telemetry & Risk Assessment:**\n\n"
+                    f"1. **🚨 Zone Z03 (High Concern):** Multispectral drone telemetry detected foliar chlorosis and early Yellow Rust pustules (Health Score: 68% | NDVI 0.62).\n"
+                    f"   - *Action:* Field check NW sector and prepare bio-fungicide foliar application.\n"
+                    f"2. **💧 Zones Z04 & Z05 (Moisture Deficit):** CWSI 0.76 - 0.78 indicates urgent drip cycle needed.\n"
+                    f"3. **✅ Zones Z01 & Z02 (Optimal):** Health score 94% with balanced moisture.\n"
+                    f"4. **🚁 Autonomous Drone Flight:** Scheduled tomorrow at 09:00 AM for follow-up validation."
                 )
             return ans, tools_used, data_sources
 
-        if ("water" in q and ("need" in q or "which" in q or "stress" in q)) or ("தண்ணீர்" in q or "நீர்" in q):
-            if is_tamil:
+        if "why" in q and ("red" in q or "risk" in q or "concern" in q) or ("लाल" in q or "ஏன்" in q):
+            if is_hindi:
                 ans = (
-                    "மண்டலங்கள் Z04 மற்றும் Z05 ஆகியவற்றிற்கு உடனடி சொட்டு நீர் பாசனம் தேவைப்படுகிறது. "
-                    "பயிர் நீர் அழுத்தக் குறியீடு (CWSI: 0.76 - 0.82) அதிக பற்றாக்குறையைக் காட்டுகிறது. "
-                    "மண்டலங்கள் Z01 மற்றும் Z02 ஆகியவற்றில் போதுமான ஈரப்பதம் உள்ளது."
+                    f"जोन {target_zone} लाल/नारंगी चेतावनी में है क्योंकि हालिया ड्रोन मल्टीस्पेक्ट्रल स्कैन में "
+                    f"पत्तों में क्लोरोसिस और संदिग्ध येलो रस्ट (Yellow Rust) के लक्षण पाए गए हैं (AI विश्वास: {int(z_status.get('confidence', 0.85)*100)}%)। "
+                    f"साथ ही पत्तों का तापमान सामान्य से +1.8°C अधिक है जो पानी की कमी को दर्शाता है।"
+                )
+            elif is_tamil:
+                ans = (
+                    f"மண்டலம் {target_zone} சிவப்பு எச்சரிக்கையில் உள்ளது. மஞ்சள் துரு நோய் மற்றும் நீரிழப்பு கண்டறியப்பட்டுள்ளது."
                 )
             else:
                 ans = (
-                    "Zones Z04 and Z05 have the highest urgent water requirement. "
-                    "Precision Crop Water Stress Index (CWSI: 0.76 - 0.82) indicates significant stomatal closure and root-zone moisture depletion. "
-                    "Zones Z01 and Z02 currently maintain adequate soil moisture."
+                    f"Zone {target_zone} is flagged in RED because multispectral drone telemetry detected foliar chlorosis "
+                    f"and suspected early Yellow Rust pustules (Confidence: {int(z_status.get('confidence', 0.85)*100)}%)."
                 )
             return ans, tools_used, data_sources
 
-        if "worse" in q or "increase" in q or "trend" in q or "மோசமடைகிறதா" in q or "அதிகரித்துள்ளதா" in q:
-            if is_tamil:
+        if ("water" in q and ("need" in q or "which" in q or "stress" in q)) or ("पानी" in q or "தண்ணீர்" in q):
+            if is_hindi:
                 ans = (
-                    "ஆம், மண்டலம் Z03-ல் நோய் அழுத்தம் அதிகரித்து வருகிறது. "
-                    "கடந்த 4 கண்காணிப்பு ஸ்கேன்களில் பயிர் நலம் 92% இலிருந்து 68% ஆக குறைந்துள்ளது (நாள் ஒன்றுக்கு -1.8% சரிவு). "
-                    "அதிக ஈரப்பதம் (85%) மற்றும் சமீபத்திய மழையால் பூஞ்சை பரவல் வேகம் அதிகரித்துள்ளது."
+                    "जोन Z04 और Z05 को तत्काल 2 घंटे की ड्रिप सिंचाई (Drip Irrigation) की आवश्यकता है। "
+                    "क्रॉप वाटर स्ट्रेस इंडेक्स (CWSI: 0.78) अत्यधिक सूखा दर्शाता है। जोन Z01 और Z02 में पर्याप्त नमी है।"
                 )
+            elif is_tamil:
+                ans = "மண்டலங்கள் Z04 மற்றும் Z05 ஆகியவற்றிற்கு உடனடி சொட்டு நீர் பாசனம் தேவைப்படுகிறது (CWSI: 0.78)."
             else:
-                ans = (
-                    "Yes, localized disease indicators in Zone Z03 are deteriorating. "
-                    "Temporal trajectory analysis across 4 scans shows vitality dropped from 92% to 68% (velocity: -1.8%/day, DECLINING). "
-                    "High canopy humidity (85%) and recent 14mm rainfall are compounding sporulation rate."
-                )
+                ans = "Zones Z04 and Z05 require urgent 2-hour drip irrigation (CWSI: 0.78). Zones Z01 & Z02 have optimal soil moisture."
             return ans, tools_used, data_sources
 
-        if "nearby" in q or "neighbor" in q or "spread" in q or "அருகிலுள்ள" in q or "பரவ" in q:
-            if is_tamil:
-                ans = (
-                    "அருகிலுள்ள வேளாண் பண்ணை #NB-1 (3.4 கி.மீ தென்மேற்கில்) அதிக சாத்தியமான பரவல் ஆபத்தைக் கொண்டுள்ளது (மதிப்பெண்: 74/100). "
-                    "தென்மேற்கு திசையில் இருந்து வீசும் காற்று (18 கி.மீ/மணி) மூலம் பூஞ்சை வித்துக்கள் பரவும் அபாயம் உள்ளது. "
-                    "(குறிப்பு: இது அனுமான தொற்று மாதிரி மட்டுமே, ஆய்வக உறுதிப்படுத்தல் அல்ல)."
-                )
-            else:
-                ans = (
-                    "Adjacent holding #NB-1 (3.4km South-West, Wheat) poses a HIGH Potential Spread Risk (Score: 74/100). "
-                    "An active wind corridor (18 km/h from SW) creates an airborne transmission vector. "
-                    "Note: Potential Spread Risk represents heuristic epidemiological modeling, not confirmed laboratory transmission."
-                )
-            return ans, tools_used, data_sources
-
-        if "mission" in q or "drone" in q or "flight" in q or "when" in q or "ட்ரோன்" in q or "எப்போது" in q:
-            if is_tamil:
-                ans = (
-                    f"அடுத்த தானியங்கி ட்ரோன் கண்காணிப்பு பணி ({sched.get('mission_code', 'MSN-2026-0902')}) நாளை காலை 09:00 மணிக்கு திட்டமிடப்பட்டுள்ளது. "
-                    f"முன்னுரிமை: அவசரம். இலக்கு மண்டலங்கள்: {', '.join(sched.get('target_zones', ['Z03', 'Z04']))}."
-                )
-            else:
-                ans = (
-                    f"The next autonomous drone monitoring flight ({sched.get('mission_code', 'MSN-2026-0902')}) is scheduled for {sched.get('scheduled_time', 'Tomorrow 09:00 AM')}. "
-                    f"Priority tier: Urgent. Target zones: {', '.join(sched.get('target_zones', ['Z03', 'Z04']))}."
-                )
-            return ans, tools_used, data_sources
-
-        # Default General Agronomy Advice
-        if is_tamil:
-            ans = (
-                f"பயிர் ஆலோசனை (மண்டலம் {target_zone}):\n"
-                "1. [பாசனம்]: மண்டலங்கள் Z04 & Z05-க்கு அடுத்த 24 மணி நேரத்திற்குள் 2 மணி நேர சொட்டு நீர் பாசனம் செய்யவும்.\n"
-                "2. [கள ஆய்வு]: ஈரப்பதம் அதிகரிக்கும் முன் மண்டலம் Z03 வடமேற்கு பகுதியில் துரு நோய் இருக்கிறதா என ஆய்வு செய்யவும்.\n"
-                "3. [பாதுகாப்பு]: தென்மேற்கு எல்லையில் பரவும் பூஞ்சை வித்துக்களை கண்காணிக்கவும்."
-            )
+        # General response
+        if is_hindi:
+            ans = f"एग्रीशील्ड एआई सहायक: आपके खेत में कुल 5 जोन सक्रिय हैं। जोन Z03 में विशेष निगरानी और जोन Z04-Z05 में सिंचाई की आवश्यकता है।"
+        elif is_tamil:
+            ans = f"அக்ரிஷீல்ட் AI: உங்கள் பண்ணையில் மண்டலம் Z03 கண்காணிக்கப்பட வேண்டும் மற்றும் Z04-Z05 பாசனம் தேவை."
         else:
-            ans = (
-                f"Agronomic Summary & Field Directives (Zone {target_zone}):\n"
-                "1. [Irrigation - HIGH]: Schedule 2-hour drip cycle on Zones Z04 and Z05 within 24 hours.\n"
-                "2. [Field Scouting - HIGH]: Ground-scout NW quadrant of Zone Z03 for foliar rust pustules.\n"
-                "3. [Biosecurity - MEDIUM]: Monitor South-West perimeter buffer against incoming airborne inoculum."
-            )
+            ans = f"AgriShield Agronomist: Active monitoring on 5 field zones. Zone Z03 flagged for foliar check and Zones Z04-Z05 require scheduled irrigation."
+
         return ans, tools_used, data_sources
 
 
-assistant_engine = AgriculturalAssistantEngine()
+agricultural_assistant_engine = AgriculturalAssistantEngine()
