@@ -20,6 +20,50 @@ export interface OnboardingData {
   };
 }
 
+export const normalizeRole = (role: any): RoleType => {
+  if (!role) return 'FARMER';
+  if (typeof role === 'string') {
+    const upper = role.toUpperCase().trim();
+    if (upper === 'ADMIN' || upper === 'SYSTEM_ADMIN') return 'ADMIN';
+    if (upper === 'GOVERNMENT' || upper === 'EXTENSION_OFFICER' || upper === 'AGRICULTURE_ADMIN') return 'GOVERNMENT';
+    return 'FARMER';
+  }
+  if (typeof role === 'object' && role.name) {
+    return normalizeRole(role.name);
+  }
+  return 'FARMER';
+};
+
+export const normalizeUser = (user: any): UserProfile | null => {
+  if (!user) return null;
+  const role = normalizeRole(user.role);
+  return {
+    ...user,
+    id: user.id || 'usr-default',
+    email: user.email || 'farmer@agrishield.farm',
+    full_name: user.full_name || 'Agricultural Operator',
+    role,
+    permissions: Array.isArray(user.permissions)
+      ? user.permissions
+      : [
+          'FARM_VIEW',
+          'FARM_CREATE',
+          'FARM_EDIT',
+          'CROP_VIEW',
+          'CROP_MANAGE',
+          'DRONE_VIEW',
+          'DISEASE_VIEW',
+          'DISEASE_ANALYZE',
+          'ALERT_VIEW',
+          'REPORT_VIEW',
+          'AI_ASSISTANT_USE',
+        ],
+    is_active: user.is_active !== undefined ? user.is_active : true,
+    is_verified: user.is_verified !== undefined ? user.is_verified : true,
+    created_at: user.created_at || new Date().toISOString(),
+  };
+};
+
 interface AuthContextType {
   user: UserProfile | null;
   token: string | null;
@@ -37,7 +81,7 @@ interface AuthContextType {
   logout: () => void;
   hasRole: (roles: RoleType | RoleType[]) => boolean;
   hasPermission: (permission: string) => boolean;
-  getRoleDashboardPath: (role?: RoleType) => string;
+  getRoleDashboardPath: (role?: any) => string;
 }
 
 const defaultFarmerUser: UserProfile = {
@@ -65,8 +109,9 @@ const defaultFarmerUser: UserProfile = {
   created_at: '2026-01-15T09:00:00Z',
 };
 
-export const getRoleDashboardPath = (role?: RoleType): string => {
-  switch (role) {
+export const getRoleDashboardPath = (role?: any): string => {
+  const normalized = normalizeRole(role);
+  switch (normalized) {
     case 'ADMIN':
       return '/admin/dashboard';
     case 'GOVERNMENT':
@@ -84,7 +129,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const saved = localStorage.getItem('agrishield_user');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        return normalizeUser(parsed) || defaultFarmerUser;
       } catch {
         return defaultFarmerUser;
       }
@@ -134,9 +180,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const authData = await authService.login(email, password);
-      setUser(authData.user);
+      const cleanUser = normalizeUser(authData.user) || defaultFarmerUser;
+      setUser(cleanUser);
       setToken(authData.access_token);
-      return authData.user.role;
+      return cleanUser.role;
     } catch (err) {
       // Fallback demo logins for evaluation testing
       let simulatedRole: RoleType = 'FARMER';
@@ -164,7 +211,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           'AUDIT_LOGS_VIEW',
           'SYSTEM_CONFIG_MANAGE',
         ];
-      } else if (em.includes('gov') || em.includes('officer') || em === 'officer@gov.agrishield.in') {
+      } else if (em.includes('gov') || em.includes('officer') || em === 'officer@gov.agrishield.in' || em === 'sundaram@gov.agrishield.in') {
         simulatedRole = 'GOVERNMENT';
         simulatedName = 'Dr. Sundaram (Regional Agriculture Officer)';
         permissions = [
@@ -193,9 +240,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         created_at: new Date().toISOString(),
       };
 
-      setUser(mockUser);
+      const cleanMock = normalizeUser(mockUser) || defaultFarmerUser;
+      setUser(cleanMock);
       setToken(`demo-token-${simulatedRole.toLowerCase()}`);
-      return simulatedRole;
+      return cleanMock.role;
     } finally {
       setIsLoading(false);
     }
@@ -205,17 +253,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const newUser = await authService.register(payload);
-      // After registration, log the user in
-      setUser(newUser);
-      setToken(`token-${newUser.id}`);
-      return newUser.role;
+      const cleanUser = normalizeUser(newUser) || defaultFarmerUser;
+      setUser(cleanUser);
+      setToken(`token-${cleanUser.id}`);
+      return cleanUser.role;
     } catch (err) {
       const mockUser: UserProfile = {
         id: `usr-${Date.now()}`,
         email: payload.email,
         full_name: payload.full_name,
         phone_number: payload.phone_number,
-        role: payload.role as RoleType,
+        role: normalizeRole(payload.role),
         permissions:
           payload.role === 'GOVERNMENT'
             ? ['REGIONAL_DASHBOARD_VIEW', 'DISEASE_HOTSPOTS_VIEW', 'REGIONAL_ANALYTICS_VIEW']
@@ -227,9 +275,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         is_verified: false,
         created_at: new Date().toISOString(),
       };
-      setUser(mockUser);
-      setToken(`token-${mockUser.id}`);
-      return mockUser.role;
+      const cleanMock = normalizeUser(mockUser) || defaultFarmerUser;
+      setUser(cleanMock);
+      setToken(`token-${cleanMock.id}`);
+      return cleanMock.role;
     } finally {
       setIsLoading(false);
     }
@@ -239,16 +288,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const updated = await authService.updateProfile(payload);
-      setUser(updated);
-      return updated;
+      const cleanUser = normalizeUser(updated) || defaultFarmerUser;
+      setUser(cleanUser);
+      return cleanUser;
     } catch {
       if (user) {
         const localUpdated: UserProfile = {
           ...user,
           ...payload,
         };
-        setUser(localUpdated);
-        return localUpdated;
+        const cleanUser = normalizeUser(localUpdated) || defaultFarmerUser;
+        setUser(cleanUser);
+        return cleanUser;
       }
       throw new Error('User not found');
     } finally {
@@ -277,13 +328,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const hasRole = (roles: RoleType | RoleType[]): boolean => {
     if (!user) return false;
-    const allowed = Array.isArray(roles) ? roles : [roles];
-    return allowed.includes(user.role);
+    const allowed = Array.isArray(roles) ? roles.map(normalizeRole) : [normalizeRole(roles)];
+    return allowed.includes(normalizeRole(user.role));
   };
 
   const hasPermission = (permission: string): boolean => {
     if (!user) return false;
-    if (user.role === 'ADMIN') return true;
+    if (normalizeRole(user.role) === 'ADMIN') return true;
     return user.permissions?.includes(permission) || false;
   };
 
@@ -292,7 +343,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       value={{
         user,
         token,
-        role: user?.role || null,
+        role: user ? normalizeRole(user.role) : null,
         permissions: user?.permissions || [],
         isAuthenticated: !!user && !!token,
         isLoading,

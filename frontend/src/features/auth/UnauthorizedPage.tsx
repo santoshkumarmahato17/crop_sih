@@ -42,7 +42,7 @@ export const UnauthorizedPage: React.FC<UnauthorizedPageProps> = ({
               <div className="inline-block px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
                 <span className="text-slate-500 dark:text-slate-400 font-semibold">Your current role: </span>
                 <span className="font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">
-                  {user.role}
+                  {typeof user.role === 'string' ? user.role : (user.role as any)?.name || 'FARMER'}
                 </span>
                 {requiredRole && (
                   <span className="text-slate-500 dark:text-slate-400 block text-[11px] mt-0.5">

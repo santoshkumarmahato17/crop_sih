@@ -29,7 +29,11 @@ interface NavItem {
 
 export const Sidebar: React.FC = () => {
   const { user } = useAuth();
-  const role: RoleType = user?.role || 'FARMER';
+  const rawRole = user?.role;
+  const role: RoleType =
+    typeof rawRole === 'string'
+      ? (rawRole as RoleType)
+      : ((rawRole as any)?.name as RoleType) || 'FARMER';
 
   // 1. Farmer Specific Navigation
   const farmerNavItems: NavItem[] = [

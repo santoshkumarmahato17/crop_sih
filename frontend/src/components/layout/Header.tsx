@@ -136,17 +136,17 @@ export const Header: React.FC<HeaderProps> = ({
                   </p>
                   <span
                     className={`inline-block px-1.5 py-0.2 rounded border text-[9px] font-extrabold font-mono uppercase ${roleColorBadge(
-                      user.role
+                      typeof user.role === 'string' ? user.role : (user.role as any)?.name || 'FARMER'
                     )}`}
                   >
-                    {user.role}
+                    {typeof user.role === 'string' ? user.role : (user.role as any)?.name || 'FARMER'}
                   </span>
                 </div>
                 <div
                   className={`w-8 h-8 rounded-lg text-white font-bold text-xs flex items-center justify-center shadow-sm ${
-                    user.role === 'ADMIN'
+                    (typeof user.role === 'string' ? user.role : (user.role as any)?.name) === 'ADMIN'
                       ? 'bg-purple-600'
-                      : user.role === 'GOVERNMENT'
+                      : (typeof user.role === 'string' ? user.role : (user.role as any)?.name) === 'GOVERNMENT'
                       ? 'bg-sky-600'
                       : 'bg-emerald-600'
                   }`}
