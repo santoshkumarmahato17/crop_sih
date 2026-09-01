@@ -47,6 +47,7 @@ export interface CropMonitoringCardData {
   description: string;
   bg_badge: string;
   border_color: string;
+  image_url?: string;
 }
 
 export const FarmerDashboardPage: React.FC = () => {
@@ -58,7 +59,7 @@ export const FarmerDashboardPage: React.FC = () => {
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
-  // Multi-Crop Monitoring State (Box-wise display)
+  // Multi-Crop Monitoring State (Box-wise display with real crop background visuals)
   const [crops, setCrops] = useState<CropMonitoringCardData[]>([
     {
       id: 'crop-1',
@@ -76,6 +77,7 @@ export const FarmerDashboardPage: React.FC = () => {
       description: 'Nominal vegetative index (NDVI: 0.84). Zero pathogen pustules detected.',
       bg_badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
       border_color: 'border-emerald-200 dark:border-emerald-800/80',
+      image_url: '/wheat-bg.jpg',
     },
     {
       id: 'crop-2',
@@ -93,6 +95,7 @@ export const FarmerDashboardPage: React.FC = () => {
       description: 'CWSI 0.72 root-zone deficit. Requires 2-hour drip flush within 18 hours.',
       bg_badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
       border_color: 'border-amber-200 dark:border-amber-800/80',
+      image_url: '/rice-bg.jpg',
     },
     {
       id: 'crop-3',
@@ -110,6 +113,7 @@ export const FarmerDashboardPage: React.FC = () => {
       description: 'Late Blight foliar chlorosis detected in 3 plant clusters. Bio-fungicide alert.',
       bg_badge: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
       border_color: 'border-rose-200 dark:border-rose-800/80',
+      image_url: '/tomato-bg.jpg',
     },
     {
       id: 'crop-4',
@@ -127,6 +131,7 @@ export const FarmerDashboardPage: React.FC = () => {
       description: 'Foliar feeding damage spotted by drone AI scan. Pheromone trap deployment advised.',
       bg_badge: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30',
       border_color: 'border-orange-200 dark:border-orange-800/80',
+      image_url: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
     },
     {
       id: 'crop-5',
@@ -144,6 +149,7 @@ export const FarmerDashboardPage: React.FC = () => {
       description: 'Optimal canopy density & leaf transpiration. Zero Sigatoka leaf spot observed.',
       bg_badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
       border_color: 'border-emerald-200 dark:border-emerald-800/80',
+      image_url: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=800&q=80',
     },
   ]);
 
@@ -196,6 +202,17 @@ export const FarmerDashboardPage: React.FC = () => {
     e.preventDefault();
     if (!addCropName.trim() || !addFieldName.trim()) return;
 
+    const bgMap: Record<string, string> = {
+      Wheat: '/wheat-bg.jpg',
+      Rice: '/rice-bg.jpg',
+      Tomato: '/tomato-bg.jpg',
+      Corn: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
+      Banana: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=800&q=80',
+      Cotton: 'https://images.unsplash.com/photo-1606041008023-472dfb5e530f?auto=format&fit=crop&w=800&q=80',
+      Potato: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80',
+      Sugarcane: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=800&q=80',
+    };
+
     const newCropCard: CropMonitoringCardData = {
       id: `crop-${Date.now()}`,
       crop_name: addCropName.trim(),
@@ -212,6 +229,7 @@ export const FarmerDashboardPage: React.FC = () => {
       description: `Newly registered crop holding in ${addFieldName.trim()}. Monitoring active.`,
       bg_badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
       border_color: 'border-emerald-200 dark:border-emerald-800/80',
+      image_url: bgMap[addCropName] || '/wheat-bg.jpg',
     };
 
     setCrops((prev) => [newCropCard, ...prev]);
@@ -657,103 +675,117 @@ export const FarmerDashboardPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Box-Wise Multi-Crop Cards Grid */}
+        {/* Box-Wise Multi-Crop Cards Grid with Real Crop Visuals */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {crops.map((crop) => (
             <div
               key={crop.id}
-              className={`p-5 rounded-3xl bg-slate-50/90 dark:bg-slate-950/80 border ${crop.border_color} shadow-sm hover:shadow-xl transition-all duration-200 space-y-4 relative group flex flex-col justify-between`}
+              className={`relative rounded-3xl overflow-hidden border ${crop.border_color} shadow-sm hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between min-h-[310px]`}
             >
-              {/* Box Top Header: Icon + Crop Name (Left) & Crop Alertness Badge (Top Right) */}
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-10 h-10 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl shadow-sm">
-                    {crop.icon}
+              {/* ── Real Crop Background Visual ── */}
+              {crop.image_url && (
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
+                  style={{ backgroundImage: `url('${crop.image_url}')` }}
+                />
+              )}
+
+              {/* ── Frosted Glass Scrim Overlay (Light/Dark Mode Adaptive) ── */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/92 via-white/86 to-white/95 dark:from-slate-950/90 dark:via-slate-950/82 dark:to-slate-950/92 backdrop-blur-[5px] transition-colors duration-200" />
+
+              {/* ── Card Content ── */}
+              <div className="relative z-10 p-5 space-y-3.5 flex flex-col justify-between h-full">
+                {/* Box Top Header: Icon + Crop Name (Left) & Crop Alertness Badge (Top Right) */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-10 h-10 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center text-xl shadow-md backdrop-blur-md group-hover:scale-105 transition-transform">
+                      {crop.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-extrabold text-slate-900 dark:text-slate-100 text-sm tracking-tight drop-shadow-sm">
+                        {crop.crop_name}
+                      </h3>
+                      <p className="text-[11px] text-slate-600 dark:text-slate-300 font-semibold flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-slate-500 dark:text-slate-400" />
+                        {crop.field_name} ({crop.area_acres} Acres)
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-extrabold text-slate-900 dark:text-slate-100 text-sm tracking-tight">
-                      {crop.crop_name}
-                    </h3>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-slate-400" />
-                      {crop.field_name} ({crop.area_acres} Acres)
-                    </p>
+
+                  {/* TOP RIGHT: Crop Alertness Status Badge */}
+                  <div className={`px-2.5 py-1 rounded-xl font-mono font-extrabold text-[11px] border backdrop-blur-md shadow-sm ${crop.bg_badge}`}>
+                    {crop.alertness_label}
                   </div>
                 </div>
 
-                {/* TOP RIGHT: Crop Alertness Status Badge */}
-                <div className={`px-2.5 py-1 rounded-xl font-mono font-extrabold text-[11px] border backdrop-blur-md ${crop.bg_badge}`}>
-                  {crop.alertness_label}
-                </div>
-              </div>
+                {/* Crop Health & Stage Metrics */}
+                <div className="space-y-2 pt-1 border-t border-slate-300/40 dark:border-slate-800/60">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-600 dark:text-slate-400 font-semibold">Health Score (NDVI):</span>
+                    <span className="font-black text-slate-900 dark:text-white">
+                      {crop.health_score}% <span className="text-[10px] text-slate-500 dark:text-slate-400 font-normal">({crop.ndvi} NDVI)</span>
+                    </span>
+                  </div>
 
-              {/* Crop Health & Stage Metrics */}
-              <div className="space-y-2 pt-1 border-t border-slate-200/60 dark:border-slate-800/60">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500 dark:text-slate-400 font-semibold">Health Score (NDVI):</span>
-                  <span className="font-black text-slate-900 dark:text-white">
-                    {crop.health_score}% <span className="text-[10px] text-slate-400 font-normal">({crop.ndvi} NDVI)</span>
+                  {/* Progress Health Bar */}
+                  <div className="w-full h-2 rounded-full bg-slate-200/90 dark:bg-slate-800/90 overflow-hidden shadow-inner backdrop-blur-sm">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        crop.alertness_level === 'HEALTHY'
+                          ? 'bg-emerald-500'
+                          : crop.alertness_level === 'MODERATE_STRESS'
+                          ? 'bg-amber-500'
+                          : 'bg-rose-500'
+                      }`}
+                      style={{ width: `${crop.health_score}%` }}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
+                    <div className="p-2 rounded-xl bg-white/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-sm shadow-sm">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Growth Stage</span>
+                      <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">
+                        {crop.stage}
+                      </span>
+                    </div>
+                    <div className="p-2 rounded-xl bg-white/80 dark:bg-slate-900/70 border border-slate-200/80 dark:border-slate-800/80 backdrop-blur-sm shadow-sm">
+                      <span className="text-slate-500 dark:text-slate-400 block text-[10px]">Days to Harvest</span>
+                      <span className="font-bold text-emerald-600 dark:text-emerald-400 block">
+                        {crop.days_to_harvest} Days Left
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="text-[11px] text-slate-700 dark:text-slate-300 leading-snug pt-1">
+                    {crop.description}
+                  </p>
+                </div>
+
+                {/* Box Footer Actions */}
+                <div className="flex items-center justify-between pt-2.5 border-t border-slate-300/40 dark:border-slate-800/60">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-medium">
+                    Scan: {crop.last_scanned}
                   </span>
-                </div>
 
-                {/* Progress Health Bar */}
-                <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-                  <div
-                    className={`h-full rounded-full transition-all duration-500 ${
-                      crop.alertness_level === 'HEALTHY'
-                        ? 'bg-emerald-500'
-                        : crop.alertness_level === 'MODERATE_STRESS'
-                        ? 'bg-amber-500'
-                        : 'bg-rose-500'
-                    }`}
-                    style={{ width: `${crop.health_score}%` }}
-                  />
-                </div>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => navigate('/upload')}
+                      className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-emerald-500/20 dark:hover:bg-emerald-500/30 dark:text-emerald-300 text-[11px] font-bold transition border border-emerald-600 dark:border-emerald-500/30 flex items-center gap-1 shadow-sm"
+                    >
+                      <span>Scan</span>
+                      <ArrowUpRight className="w-3 h-3" />
+                    </button>
 
-                <div className="grid grid-cols-2 gap-2 text-[11px] pt-1">
-                  <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
-                    <span className="text-slate-400 block text-[10px]">Growth Stage</span>
-                    <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">
-                      {crop.stage}
-                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCrop(crop.id, crop.crop_name)}
+                      className="p-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-500/20 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition"
+                      title="Remove Crop Card"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                  <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800/60">
-                    <span className="text-slate-400 block text-[10px]">Days to Harvest</span>
-                    <span className="font-bold text-emerald-600 dark:text-emerald-400 block">
-                      {crop.days_to_harvest} Days Left
-                    </span>
-                  </div>
-                </div>
-
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-snug pt-1">
-                  {crop.description}
-                </p>
-              </div>
-
-              {/* Box Footer Actions */}
-              <div className="flex items-center justify-between pt-3 border-t border-slate-200/60 dark:border-slate-800/60">
-                <span className="text-[10px] text-slate-400 font-mono">
-                  Scan: {crop.last_scanned}
-                </span>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => navigate('/upload')}
-                    className="px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 text-[11px] font-bold transition border border-emerald-200 dark:border-emerald-500/30 flex items-center gap-1"
-                  >
-                    <span>Scan</span>
-                    <ArrowUpRight className="w-3 h-3" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveCrop(crop.id, crop.crop_name)}
-                    className="p-1 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-500/20 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 transition"
-                    title="Remove Crop Card"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
                 </div>
               </div>
             </div>
