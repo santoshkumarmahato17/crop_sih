@@ -17,6 +17,7 @@ import {
   Plus,
   PlusCircle,
   Sprout,
+  Stethoscope,
   ArrowUpRight,
   X,
   Trash2,
@@ -338,6 +339,16 @@ export const FarmerDashboardPage: React.FC = () => {
               >
                 <UploadCloud className="w-4 h-4" />
                 Get Started
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/diagnosis')}
+                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-sm transition-all duration-200 shadow-xl shadow-emerald-500/25"
+              >
+                <Stethoscope className="w-4 h-4 text-slate-950" />
+                Identify Disease
                 <ArrowRight className="w-4 h-4" />
               </button>
 

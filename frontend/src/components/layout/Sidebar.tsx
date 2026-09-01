@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   UploadCloud,
   BrainCircuit,
+  Stethoscope,
   MessageSquare,
   Map,
   Shield,
@@ -21,6 +22,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { to: '/', label: 'Farmer Dashboard', icon: LayoutDashboard },
+  { to: '/diagnosis', label: 'Symptom Disease ID', icon: Stethoscope },
   { to: '/upload', label: 'Upload Studio', icon: UploadCloud },
   { to: '/analysis', label: 'AI Disease Analysis', icon: BrainCircuit },
   { to: '/community', label: 'Community Hub', icon: MessageSquare },

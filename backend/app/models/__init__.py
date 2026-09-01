@@ -59,18 +59,30 @@ from app.models.alert import Alert, AlertSeverity, AlertType, Notification, Noti
 # Audit Trail Models
 from app.models.audit import AuditLog
 
+# Symptom-Based Diagnosis Models
+from app.models.diagnosis import (
+    DiagnosisAnalysis,
+    DiagnosisSymptom,
+    DiagnosisImage,
+    DiagnosisStatus,
+    SymptomSeverity,
+    SymptomDistribution,
+    ValidationRequestStatus,
+)
+
 __all__ = [
+    # Base
     "Base",
     "TimestampMixin",
     # Auth
-    "Role",
     "User",
+    "Role",
     # Farm
     "Farm",
     "FarmMember",
+    "FarmZone",
     "Crop",
     "CropCycle",
-    "FarmZone",
     "MemberRole",
     "CropCycleStatus",
     # Drone
@@ -106,6 +118,14 @@ __all__ = [
     "RecommendationPriority",
     "RecommendationStatus",
     "ValidationStatus",
+    # Diagnosis
+    "DiagnosisAnalysis",
+    "DiagnosisSymptom",
+    "DiagnosisImage",
+    "DiagnosisStatus",
+    "SymptomSeverity",
+    "SymptomDistribution",
+    "ValidationRequestStatus",
     # Alert
     "Alert",
     "Notification",

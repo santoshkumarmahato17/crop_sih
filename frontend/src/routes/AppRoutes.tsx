@@ -5,6 +5,7 @@ import { FarmerDashboardPage } from '@/features/dashboard/FarmerDashboardPage';
 import { ExtensionOfficerDashboardPage } from '@/features/officer/ExtensionOfficerDashboardPage';
 import { PhotoVideoUploadPage } from '@/features/imagery/PhotoVideoUploadPage';
 import { AIDiseaseAnalysisPage } from '@/features/detection/AIDiseaseAnalysisPage';
+import { SymptomDiseaseIdentificationPage } from '@/features/diagnosis/SymptomDiseaseIdentificationPage';
 import { FarmerCommunityPage } from '@/features/community/FarmerCommunityPage';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { RegisterPage } from '@/features/auth/RegisterPage';
@@ -35,6 +36,8 @@ export const AppRoutes: React.FC = () => {
         <Route path="settings" element={<SettingsPage />} />
         <Route path="upload" element={<PhotoVideoUploadPage />} />
         <Route path="analysis" element={<AIDiseaseAnalysisPage />} />
+        <Route path="diagnosis" element={<SymptomDiseaseIdentificationPage />} />
+        <Route path="disease-identification" element={<SymptomDiseaseIdentificationPage />} />
         <Route path="community" element={<FarmerCommunityPage />} />
         <Route path="officer" element={<ExtensionOfficerDashboardPage />} />
 

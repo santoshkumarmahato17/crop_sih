@@ -8,6 +8,7 @@ from app.api.v1.endpoints import (
     auth,
     community,
     dashboard,
+    diagnosis,
     drones,
     farms,
     health,
@@ -28,6 +29,7 @@ api_router.include_router(auth.router)
 api_router.include_router(community.router)
 api_router.include_router(assistant.router)
 api_router.include_router(dashboard.router)
+api_router.include_router(diagnosis.router)
 api_router.include_router(officer.router)
 api_router.include_router(adaptive.router)
 api_router.include_router(alerts.router)
@@ -40,3 +42,4 @@ api_router.include_router(temporal.router)
 api_router.include_router(risk.router)
 api_router.include_router(spread.router)
 api_router.include_router(water_stress.router)
+
