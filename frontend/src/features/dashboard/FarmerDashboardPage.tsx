@@ -338,44 +338,44 @@ export const FarmerDashboardPage: React.FC = () => {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 py-14 flex flex-col lg:flex-row lg:items-center justify-between gap-10">
+        <div className="relative z-10 w-full px-5 sm:px-10 lg:px-14 py-7 sm:py-12 flex flex-col lg:flex-row lg:items-center justify-between gap-6 sm:gap-10">
 
           {/* ── Left: Text + CTAs ── */}
-          <div className="max-w-2xl space-y-6">
+          <div className="max-w-2xl space-y-4 sm:space-y-6">
 
             {/* Pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-lime-400/20 border border-lime-400/40 text-lime-300 text-xs font-mono font-bold tracking-wider backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-lime-400/20 border border-lime-400/40 text-lime-300 text-[11px] sm:text-xs font-mono font-bold tracking-wider backdrop-blur-sm">
               <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
               Smart Drone Telemetry · Live Agriculture AI
             </div>
 
             {/* Main heading */}
-            <div className="space-y-1">
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold text-white leading-[1.08] tracking-tight drop-shadow-lg">
+            <div className="space-y-0.5 sm:space-y-1">
+              <h1 className="text-2xl sm:text-4xl lg:text-[3.2rem] font-black text-white leading-[1.12] tracking-tight drop-shadow-lg">
                 Smart Technology
               </h1>
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold text-white leading-[1.08] tracking-tight drop-shadow-lg">
+              <h1 className="text-2xl sm:text-4xl lg:text-[3.2rem] font-black text-white leading-[1.12] tracking-tight drop-shadow-lg">
                 Driving the <span className="text-lime-400">Agriculture</span>
               </h1>
-              <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold text-white leading-[1.08] tracking-tight drop-shadow-lg">
+              <h1 className="text-2xl sm:text-4xl lg:text-[3.2rem] font-black text-white leading-[1.12] tracking-tight drop-shadow-lg">
                 Revolution
               </h1>
             </div>
 
             {/* Sub-text */}
-            <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-lg">
+            <p className="text-xs sm:text-base text-slate-300 leading-relaxed max-w-lg">
               Use AI-powered drones, sensors, and automation to increase yields
               and reduce environmental impact across your field holdings.
             </p>
 
             {/* Live stat pills */}
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               {[
                 { icon: Wind, label: '18 km/h Wind', color: 'text-sky-300' },
                 { icon: Sparkles, label: 'AI Active', color: 'text-lime-300' },
                 { icon: Plane, label: 'Drone on Mission', color: 'text-violet-300' },
               ].map(({ icon: Icon, label, color }) => (
-                <div key={label} className={`flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-xs font-semibold ${color}`}>
+                <div key={label} className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-[11px] sm:text-xs font-semibold ${color}`}>
                   <Icon className="w-3.5 h-3.5" />
                   {label}
                 </div>
@@ -383,11 +383,11 @@ export const FarmerDashboardPage: React.FC = () => {
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1">
               <button
                 type="button"
                 onClick={() => navigate('/upload')}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 active:scale-95 text-slate-950 font-black text-sm transition-all duration-200 shadow-xl shadow-lime-500/30"
+                className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 active:scale-95 text-slate-950 font-black text-xs sm:text-sm transition-all duration-200 shadow-xl shadow-lime-500/30"
               >
                 <UploadCloud className="w-4 h-4" />
                 Get Started
@@ -397,7 +397,7 @@ export const FarmerDashboardPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate('/diagnosis')}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-sm transition-all duration-200 shadow-xl shadow-emerald-500/25"
+                className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-xs sm:text-sm transition-all duration-200 shadow-xl shadow-emerald-500/25"
               >
                 <Stethoscope className="w-4 h-4 text-slate-950" />
                 Identify Disease
@@ -407,7 +407,7 @@ export const FarmerDashboardPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate('/analysis')}
-                className="flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold text-sm transition-all duration-200 backdrop-blur-md"
+                className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/25 text-white font-bold text-xs sm:text-sm transition-all duration-200 backdrop-blur-md"
               >
                 <BrainCircuit className="w-4 h-4 text-lime-400" />
                 AI Diagnosis Studio

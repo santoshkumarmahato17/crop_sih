@@ -93,10 +93,10 @@ export const AdminDashboardShell: React.FC = () => {
 
       {/* Admin System Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-xl space-y-2">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
+        <div className="p-5 rounded-3xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Total System Users</span>
-            <Users className="w-4 h-4 text-purple-400" />
+            <Users className="w-4 h-4 text-purple-500" />
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white">{stats.total_users}</p>
           <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -104,10 +104,10 @@ export const AdminDashboardShell: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-xl space-y-2">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
+        <div className="p-5 rounded-3xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Farmer Accounts</span>
-            <UserCheck className="w-4 h-4 text-emerald-400" />
+            <UserCheck className="w-4 h-4 text-emerald-500" />
           </div>
           <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
             {stats.farmer_accounts}
@@ -117,10 +117,10 @@ export const AdminDashboardShell: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-xl space-y-2">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
+        <div className="p-5 rounded-3xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>Government Officers</span>
-            <ShieldAlert className="w-4 h-4 text-sky-400" />
+            <ShieldAlert className="w-4 h-4 text-sky-500" />
           </div>
           <p className="text-2xl font-black text-sky-600 dark:text-sky-400">
             {stats.government_accounts}
@@ -130,10 +130,10 @@ export const AdminDashboardShell: React.FC = () => {
           </p>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-xl space-y-2">
-          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs font-semibold">
+        <div className="p-5 rounded-3xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm space-y-2">
+          <div className="flex items-center justify-between text-slate-500 text-xs font-semibold">
             <span>System RBAC State</span>
-            <Lock className="w-4 h-4 text-purple-400" />
+            <Lock className="w-4 h-4 text-purple-500" />
           </div>
           <p className="text-2xl font-black text-purple-600 dark:text-purple-400">ENFORCED</p>
           <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -144,10 +144,10 @@ export const AdminDashboardShell: React.FC = () => {
 
       {/* Security Audit Log Stream & Configuration */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div className="p-6 rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/80 dark:border-white/10 shadow-xl space-y-4">
+        <div className="p-6 rounded-3xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-purple-400" />
+              <FileText className="w-4 h-4 text-purple-500" />
               <span>Real-Time Security & Audit Logs</span>
             </h2>
             <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">
@@ -159,7 +159,7 @@ export const AdminDashboardShell: React.FC = () => {
             {auditLogs.map((log, idx) => (
               <div
                 key={idx}
-                className="p-3 rounded-2xl bg-white/60 dark:bg-slate-950/70 border border-slate-200/70 dark:border-white/5 flex items-center justify-between text-xs backdrop-blur-sm"
+                className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs"
               >
                 <div className="space-y-0.5">
                   <div className="flex items-center gap-2">
