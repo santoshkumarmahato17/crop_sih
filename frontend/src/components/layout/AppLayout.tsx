@@ -29,9 +29,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const shouldShowAuthenticatedChrome = !isAuthPage && isAuthenticated;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-x-hidden">
-      {/* 1. Header Bar (Clean Minimal Mode during Login/Register) */}
-      <div className="relative z-40">
+    <div className="h-screen max-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-hidden">
+      {/* 1. Fixed Stationary Header Bar */}
+      <div className="relative z-40 shrink-0 w-full">
         <Header
           systemStatus={systemStatus}
           version={version}
@@ -40,9 +40,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         />
       </div>
 
-      {/* 2. Main Body Container with Desktop Sidebar & Mobile Drawer */}
-      <div className="flex flex-1 relative z-10 min-w-0">
-        {/* Desktop Sidebar (Only visible on lg+ screens) */}
+      {/* 2. Main Body Container with Stationary Sidebar & Independently Scrolling Main Area */}
+      <div className="flex flex-1 min-h-0 relative z-10 min-w-0 overflow-hidden">
+        {/* Desktop Fixed Sidebar (Stationary barrier on the left) */}
         {shouldShowAuthenticatedChrome && <Sidebar />}
 
         {/* Mobile Slide-Over Drawer with Backdrop (On screens < lg) */}
@@ -60,12 +60,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           </div>
         )}
 
-        {/* Main Content Area (With bottom padding for mobile navigation bar) */}
+        {/* 3. Main Content Area (Only this square area scrolls upward/downward) */}
         <main
-          className={`flex-1 max-w-full min-w-0 ${
+          className={`flex-1 max-w-full min-w-0 h-full overflow-y-auto ${
             isAuthPage
               ? 'p-0 flex items-center justify-center'
-              : 'p-3 sm:p-6 md:p-8 pb-28 lg:pb-8 overflow-y-auto'
+              : 'p-3 sm:p-6 md:p-8 pb-28 lg:pb-8'
           }`}
         >
           {isAuthPage ? (
@@ -78,14 +78,14 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         </main>
       </div>
 
-      {/* 3. Floating AI Agricultural Assistant */}
+      {/* 4. Floating AI Agricultural Assistant */}
       {shouldShowAuthenticatedChrome && (
         <div className="relative z-50">
           <AgriculturalAssistantWidget />
         </div>
       )}
 
-      {/* 4. Mobile Bottom Navigation Bar (High-Speed Thumb Access) */}
+      {/* 5. Mobile Bottom Navigation Bar */}
       {shouldShowAuthenticatedChrome && (
         <MobileBottomNav
           onToggleMenu={() => setIsMobileDrawerOpen((prev) => !prev)}

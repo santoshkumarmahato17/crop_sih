@@ -106,8 +106,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
 
   return (
     <aside
-      className={`w-64 border-r border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl transition-colors duration-200 flex flex-col justify-between p-4 overflow-y-auto ${
-        isMobileDrawer ? 'h-full' : 'min-h-[calc(100vh-4rem)] hidden lg:flex'
+      className={`w-64 border-r border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl transition-colors duration-200 flex flex-col justify-between p-4 overflow-y-auto shrink-0 ${
+        isMobileDrawer ? 'h-full' : 'h-full hidden lg:flex'
       }`}
     >
       <div className="space-y-4">
