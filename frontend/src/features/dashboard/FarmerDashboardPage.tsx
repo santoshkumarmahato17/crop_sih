@@ -33,7 +33,6 @@ import { LanguageSwitcher } from '@/features/advisories/LanguageSwitcher';
 import { AdvisoryCard } from '@/features/advisories/AdvisoryCard';
 import { advisoryService } from '@/services/advisoryService';
 import { Advisory } from '@/types/advisory';
-import { LiveSatelliteGISMap } from '@/features/farms/LiveSatelliteGISMap';
 import {
   FarmerDashboardSummary,
   Farm,
@@ -909,37 +908,6 @@ export const FarmerDashboardPage: React.FC = () => {
             </div>
           </button>
         </div>
-      </div>
-
-      {/* ═══ SATELLITE FIELD IMAGERY & MULTISPECTRAL NDVI GIS ═══ */}
-      <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-mono text-[10px] font-extrabold uppercase border border-emerald-500/30">
-                Sentinel-2 & Drone Telemetry
-              </span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <Sparkles className="w-6 h-6 text-emerald-500" />
-              <span>Live Satellite GIS & Multispectral NDVI Map</span>
-            </h2>
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              Interactive high-resolution satellite imagery, live NDVI crop vigor index, CWSI water stress, and UAV drone flight telemetry.
-            </p>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => navigate('/field-map')}
-            className="px-4 py-2 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-emerald-900/20 active:scale-95 whitespace-nowrap self-start sm:self-auto"
-          >
-            <span>Full GIS Engine</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-
-        <LiveSatelliteGISMap heightClass="h-[480px] sm:h-[540px]" />
       </div>
 
       {/* ═══ MULTILINGUAL AGRICULTURAL ADVISORIES (IPM Precision Pipeline) ═══ */}
