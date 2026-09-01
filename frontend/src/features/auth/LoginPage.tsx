@@ -134,51 +134,75 @@ export const LoginPage: React.FC = () => {
         </button>
       </form>
 
-      {/* Quick Role-Switcher Cards */}
-      <div className="space-y-2 pt-2 border-t border-slate-200 dark:border-slate-800">
-        <span className="text-[10px] uppercase font-extrabold text-slate-400 dark:text-slate-400 tracking-wider block text-center">
-          Quick Demo Role Switcher
-        </span>
-        <div className="grid grid-cols-3 gap-2">
+      {/* Quick Role-Switcher Cards — 1-Tap Universal Multi-Role Login */}
+      <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] uppercase font-black text-slate-500 dark:text-slate-400 tracking-wider">
+            1-Tap Demo Access (Select Role)
+          </span>
+          <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+            All Roles Ready
+          </span>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2.5">
+          {/* FARMER Role */}
           <button
             type="button"
             onClick={() => handleQuickDemo('ramanathan@agrishield.farm', 'FarmerSecure2026!')}
-            className="p-2.5 rounded-2xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-left transition group active:scale-95"
+            className="p-3 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-left transition group active:scale-95 shadow-sm hover:shadow"
           >
-            <span className="flex items-center gap-1 text-[11px] font-black text-emerald-700 dark:text-emerald-400">
-              <User className="w-3.5 h-3.5" />
-              <span>FARMER</span>
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1 text-xs font-black text-emerald-700 dark:text-emerald-400">
+                <User className="w-3.5 h-3.5" />
+                <span>FARMER</span>
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-700 dark:text-slate-300 block truncate mt-1 font-semibold">
+              Dashboard & GIS
             </span>
-            <span className="text-[9px] text-slate-600 dark:text-slate-400 block truncate mt-0.5 font-medium">
-              My Holdings
+            <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-mono block truncate mt-0.5">
+              ramanathan@...
             </span>
           </button>
 
+          {/* GOVERNMENT Role */}
           <button
             type="button"
             onClick={() => handleQuickDemo('sundaram@gov.agrishield.in', 'GovSecure2026!')}
-            className="p-2.5 rounded-2xl bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 text-left transition group active:scale-95"
+            className="p-3 rounded-2xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 text-left transition group active:scale-95 shadow-sm hover:shadow"
           >
-            <span className="flex items-center gap-1 text-[11px] font-black text-sky-700 dark:text-sky-400">
-              <Briefcase className="w-3.5 h-3.5" />
-              <span>GOVT</span>
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1 text-xs font-black text-sky-700 dark:text-sky-400">
+                <Briefcase className="w-3.5 h-3.5" />
+                <span>GOVT</span>
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-700 dark:text-slate-300 block truncate mt-1 font-semibold">
+              Regional Radar
             </span>
-            <span className="text-[9px] text-slate-600 dark:text-slate-400 block truncate mt-0.5 font-medium">
-              Regional Data
+            <span className="text-[9px] text-sky-600 dark:text-sky-400 font-mono block truncate mt-0.5">
+              sundaram@...
             </span>
           </button>
 
+          {/* ADMIN Role */}
           <button
             type="button"
             onClick={() => handleQuickDemo('admin@agrishield.com', 'AdminRoot2026!')}
-            className="p-2.5 rounded-2xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-left transition group active:scale-95"
+            className="p-3 rounded-2xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/40 text-left transition group active:scale-95 shadow-sm hover:shadow"
           >
-            <span className="flex items-center gap-1 text-[11px] font-black text-purple-700 dark:text-purple-400">
-              <KeyRound className="w-3.5 h-3.5" />
-              <span>ADMIN</span>
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1 text-xs font-black text-purple-700 dark:text-purple-400">
+                <KeyRound className="w-3.5 h-3.5" />
+                <span>ADMIN</span>
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-700 dark:text-slate-300 block truncate mt-1 font-semibold">
+              Master Console
             </span>
-            <span className="text-[9px] text-slate-600 dark:text-slate-400 block truncate mt-0.5 font-medium">
-              Full Control
+            <span className="text-[9px] text-purple-600 dark:text-purple-400 font-mono block truncate mt-0.5">
+              admin@...
             </span>
           </button>
         </div>
