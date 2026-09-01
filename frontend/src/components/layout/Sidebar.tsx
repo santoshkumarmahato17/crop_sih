@@ -29,7 +29,12 @@ interface NavItem {
   badge?: string;
 }
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  onClose?: () => void;
+  isMobileDrawer?: boolean;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = false }) => {
   const { user } = useAuth();
   const rawRole = user?.role;
   const role: RoleType =
@@ -98,9 +103,35 @@ export const Sidebar: React.FC = () => {
       : 'Farmer Operations';
 
   return (
-    <aside className="w-60 border-r border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl transition-colors duration-200 flex flex-col justify-between p-3.5 min-h-[calc(100vh-4rem)]">
+    <aside
+      className={`w-64 border-r border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-2xl transition-colors duration-200 flex flex-col justify-between p-4 overflow-y-auto ${
+        isMobileDrawer ? 'h-full' : 'min-h-[calc(100vh-4rem)] hidden lg:flex'
+      }`}
+    >
       <div className="space-y-4">
         <div>
+          {/* Mobile Drawer Top Header with close button */}
+          {isMobileDrawer && (
+            <div className="flex items-center justify-between pb-3 mb-2 border-b border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-emerald-600/10 p-0.5 border border-emerald-500/20">
+                  <img src="/agri-logo.png" alt="AgriShield" className="w-full h-full object-contain" />
+                </div>
+                <span className="text-sm font-extrabold text-slate-900 dark:text-white">AGRI SHIELD</span>
+              </div>
+              {onClose && (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition"
+                  aria-label="Close menu"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center justify-between px-3 py-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
               {roleLabel}
@@ -125,8 +156,11 @@ export const Sidebar: React.FC = () => {
                 <NavLink
                   key={item.to}
                   to={item.to}
+                  onClick={() => {
+                    if (onClose) onClose();
+                  }}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-150 ${
+                    `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
                       isActive
                         ? role === 'ADMIN'
                           ? 'bg-purple-600 text-white shadow-sm shadow-purple-600/30'
@@ -138,7 +172,7 @@ export const Sidebar: React.FC = () => {
                   }
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-4 h-4 flex-shrink-0" />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
@@ -154,7 +188,7 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Role Footer Card */}
-      <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 text-[11px] space-y-1">
+      <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/80 dark:border-slate-800/80 text-[11px] space-y-1 mt-4">
         <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
           <ShieldAlert className="w-3.5 h-3.5 text-emerald-500" />
           <span>RBAC Protected</span>

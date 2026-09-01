@@ -108,17 +108,17 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           )}
 
-          {/* Maharashtra Agro Setup & Language Quick Selector */}
+          {/* Agro Setup & Language Quick Selector */}
           {!isAuthRoute && (
             <button
               type="button"
               onClick={() => setIsOnboardingModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition shadow-xs"
-              title="महाराष्ट्र कृषी सेटअप: भाषा, पिके व माती निवडा (Configure Maharashtra Agro Setup)"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition shadow-xs"
+              title="Configure Agro Farm Setup & Language"
             >
-              <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span className="hidden sm:inline">मराठी • महाराष्ट्र</span>
-              <span className="sm:hidden">मराठी</span>
+              <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+              <span className="hidden sm:inline">Agro Setup</span>
+              <span className="sm:hidden">Setup</span>
             </button>
           )}
 

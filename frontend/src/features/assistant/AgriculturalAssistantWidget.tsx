@@ -29,17 +29,21 @@ export const AgriculturalAssistantWidget: React.FC = () => {
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Position state (Draggable Coordinates)
+  // Movable trigger button position (default bottom-right, respecting mobile nav bar)
   const [position, setPosition] = useState<{ x: number; y: number }>(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
     const saved = localStorage.getItem('agrishield_assistant_pos');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (typeof parsed.x === 'number' && typeof parsed.y === 'number') {
+          return parsed;
+        }
       } catch {}
     }
     return {
-      x: typeof window !== 'undefined' ? window.innerWidth - 80 : 800,
-      y: typeof window !== 'undefined' ? window.innerHeight - 80 : 600,
+      x: typeof window !== 'undefined' ? window.innerWidth - 72 : 800,
+      y: typeof window !== 'undefined' ? window.innerHeight - (isMobile ? 140 : 80) : 600,
     };
   });
 
@@ -437,7 +441,18 @@ export const AgriculturalAssistantWidget: React.FC = () => {
       {isOpen && (
         <div
           style={
-            isMaximized
+            typeof window !== 'undefined' && window.innerWidth < 640
+              ? {
+                  position: 'fixed',
+                  bottom: '76px',
+                  left: '8px',
+                  right: '8px',
+                  width: 'calc(100vw - 16px)',
+                  maxHeight: 'calc(100vh - 90px)',
+                  height: '540px',
+                  zIndex: 9999,
+                }
+              : isMaximized
               ? {
                   position: 'fixed',
                   top: '12px',

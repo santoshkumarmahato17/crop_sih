@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
+import { MobileBottomNav } from './MobileBottomNav';
 import { AuthBackground } from './AuthBackground';
 import { AgriculturalAssistantWidget } from '@/features/assistant/AgriculturalAssistantWidget';
 import { useAuth } from '@/context/AuthContext';
@@ -15,7 +16,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   systemStatus = 'healthy',
   version = '0.1.0',
 }) => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
@@ -35,15 +36,38 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           systemStatus={systemStatus}
           version={version}
           isMinimal={!shouldShowAuthenticatedChrome}
-          onToggleSidebar={() => setIsSidebarVisible((prev) => !prev)}
+          onToggleSidebar={() => setIsMobileDrawerOpen((prev) => !prev)}
         />
       </div>
 
-      {/* 2. Main Body Container with Conditional Sidebar & Background */}
-      <div className="flex flex-1 relative z-10">
-        {shouldShowAuthenticatedChrome && isSidebarVisible && <Sidebar />}
+      {/* 2. Main Body Container with Desktop Sidebar & Mobile Drawer */}
+      <div className="flex flex-1 relative z-10 min-w-0">
+        {/* Desktop Sidebar (Only visible on lg+ screens) */}
+        {shouldShowAuthenticatedChrome && <Sidebar />}
 
-        <main className={`flex-1 max-w-full ${isAuthPage ? 'p-0 flex items-center justify-center' : 'p-4 sm:p-6 md:p-8 overflow-y-auto'}`}>
+        {/* Mobile Slide-Over Drawer with Backdrop (On screens < lg) */}
+        {shouldShowAuthenticatedChrome && isMobileDrawerOpen && (
+          <div className="lg:hidden fixed inset-0 z-50 flex">
+            {/* Backdrop Blur Overlay */}
+            <div
+              className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-in fade-in transition-opacity"
+              onClick={() => setIsMobileDrawerOpen(false)}
+            />
+            {/* Drawer */}
+            <div className="relative z-10 w-72 max-w-[85vw] h-full shadow-2xl animate-in slide-in-from-left duration-200">
+              <Sidebar isMobileDrawer onClose={() => setIsMobileDrawerOpen(false)} />
+            </div>
+          </div>
+        )}
+
+        {/* Main Content Area (With bottom padding for mobile navigation bar) */}
+        <main
+          className={`flex-1 max-w-full min-w-0 ${
+            isAuthPage
+              ? 'p-0 flex items-center justify-center'
+              : 'p-3 sm:p-6 md:p-8 pb-28 lg:pb-8 overflow-y-auto'
+          }`}
+        >
           {isAuthPage ? (
             <AuthBackground>
               <Outlet />
@@ -54,11 +78,19 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         </main>
       </div>
 
-      {/* 3. Floating AI Agricultural Assistant (Only after logging in) */}
+      {/* 3. Floating AI Agricultural Assistant */}
       {shouldShowAuthenticatedChrome && (
         <div className="relative z-50">
           <AgriculturalAssistantWidget />
         </div>
+      )}
+
+      {/* 4. Mobile Bottom Navigation Bar (High-Speed Thumb Access) */}
+      {shouldShowAuthenticatedChrome && (
+        <MobileBottomNav
+          onToggleMenu={() => setIsMobileDrawerOpen((prev) => !prev)}
+          isMenuOpen={isMobileDrawerOpen}
+        />
       )}
     </div>
   );
