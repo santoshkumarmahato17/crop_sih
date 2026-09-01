@@ -252,13 +252,57 @@ class WeatherObservation(Base, TimestampMixin):
     observation_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
 
     temperature_c: Mapped[float] = mapped_column(Float, nullable=False)
+    min_temperature_c: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    max_temperature_c: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     relative_humidity_percent: Mapped[float] = mapped_column(Float, nullable=False)
     wind_speed_mps: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     wind_direction_deg: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
     rainfall_mm: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    rainfall_duration_hours: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     solar_radiation_w_m2: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    cloud_cover_percent: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    soil_moisture_percent: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     leaf_wetness_hours: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     source: Mapped[str] = mapped_column(String(50), default="on_farm_station", nullable=False)
 
     # Relationships
     farm: Mapped["Farm"] = relationship("Farm", back_populates="weather_observations")
+
+
+class WeatherForecast(Base, TimestampMixin):
+    """Predictive agro-meteorological forecast model across multi-day horizons."""
+
+    __tablename__ = "weather_forecasts"
+    __table_args__ = (
+        Index("ix_weather_forecast_farm_time", "farm_id", "forecast_time"),
+    )
+
+    id: Mapped[str] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
+    )
+    farm_id: Mapped[str] = mapped_column(
+        String(36), ForeignKey("farms.id", ondelete="CASCADE"), nullable=False, index=True
+    )
+
+    # PostGIS Location (SRID 4326)
+    location: Mapped[Geometry] = mapped_column(
+        Geometry(geometry_type="POINT", srid=4326, spatial_index=True),
+        nullable=False,
+    )
+    forecast_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+
+    temperature_c: Mapped[float] = mapped_column(Float, nullable=False)
+    min_temperature_c: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    max_temperature_c: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    relative_humidity_percent: Mapped[float] = mapped_column(Float, nullable=False)
+    rainfall_probability_percent: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    expected_rainfall_mm: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    wind_speed_mps: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    wind_direction_deg: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
+    solar_radiation_w_m2: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    cloud_cover_percent: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    source: Mapped[str] = mapped_column(String(50), default="agro_weather_ensemble", nullable=False)
+
+    # Relationships
+    farm: Mapped["Farm"] = relationship("Farm")
+

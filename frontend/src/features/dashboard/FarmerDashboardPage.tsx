@@ -25,6 +25,9 @@ import {
 import { dashboardService } from '@/services/dashboardService';
 import { farmService } from '@/services/farmService';
 import { zoneService } from '@/services/zoneService';
+import { weatherService, mockFarmWeatherRiskData } from '@/services/weatherService';
+import { WeatherRiskForecastCard } from '@/features/weather/WeatherRiskForecastCard';
+import { FarmWeatherRiskResponse } from '@/types/weatherRisk';
 import { ZoneTemporalAnalyticsModal } from '@/features/temporal/ZoneTemporalAnalyticsModal';
 import {
   FarmerDashboardSummary,
@@ -60,97 +63,115 @@ export const FarmerDashboardPage: React.FC = () => {
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
-  // Multi-Crop Monitoring State (Box-wise display with real crop background visuals)
+  // Multi-Crop Monitoring State (Maharashtra Focus with real crop background visuals)
   const [crops, setCrops] = useState<CropMonitoringCardData[]>([
     {
       id: 'crop-1',
-      crop_name: 'Wheat (PBW-550)',
-      icon: '🌾',
-      field_name: 'West Parcel A',
-      area_acres: 12.5,
-      health_score: 94,
-      ndvi: 0.84,
+      crop_name: 'कापूस / Bt Cotton (Bollgard II)',
+      icon: '🌿',
+      field_name: 'विदर्भ ब्लॉक A1 (Yavatmal Sector)',
+      area_acres: 14.5,
+      health_score: 92,
+      ndvi: 0.85,
       alertness_level: 'HEALTHY',
-      alertness_label: '● Healthy (94%)',
-      stage: 'Grain Filling Stage',
-      days_to_harvest: 22,
+      alertness_label: '● उत्तम आरोग्य (92%)',
+      stage: 'Boll Formation Stage (बोंड विकास)',
+      days_to_harvest: 35,
       last_scanned: 'Today, 08:30 AM',
-      description: 'Nominal vegetative index (NDVI: 0.84). Zero pathogen pustules detected.',
+      description: 'काळया कसदार जमिनीत उत्तम पोषण. गुलाबी बोंडअळीचा (Pink Bollworm) प्रादुर्भाव शून्य.',
       bg_badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
       border_color: 'border-emerald-200 dark:border-emerald-800/80',
-      image_url: '/wheat-bg.jpg',
+      image_url: 'https://images.unsplash.com/photo-1594904351111-a072f80b1a71?auto=format&fit=crop&w=800&q=80',
     },
     {
       id: 'crop-2',
-      crop_name: 'Rice / Paddy (IR-64)',
-      icon: '🍚',
-      field_name: 'South River Bed',
-      area_acres: 18.0,
-      health_score: 74,
-      ndvi: 0.68,
-      alertness_level: 'MODERATE_STRESS',
-      alertness_label: '⚠️ Water Stress',
-      stage: 'Tillering Stage',
-      days_to_harvest: 45,
-      last_scanned: 'Yesterday, 04:15 PM',
-      description: 'CWSI 0.72 root-zone deficit. Requires 2-hour drip flush within 18 hours.',
-      bg_badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
-      border_color: 'border-amber-200 dark:border-amber-800/80',
-      image_url: '/rice-bg.jpg',
+      crop_name: 'ऊस / Sugarcane (Co-86032)',
+      icon: '🎋',
+      field_name: 'कोल्हापूर बागायत प्लॉट #4',
+      area_acres: 22.0,
+      health_score: 95,
+      ndvi: 0.88,
+      alertness_level: 'HEALTHY',
+      alertness_label: '● निरोगी वाढ (95%)',
+      stage: 'Grand Growth Stage (जोमदार वाढ)',
+      days_to_harvest: 120,
+      last_scanned: 'Today, 09:15 AM',
+      description: 'पंचगंगा नदी खोऱ्यातील गाळाच्या जमिनीत उत्तम सूक्ष्म-सिंचन. कांड्यांची लांबी व गोडी समाधानकारक.',
+      bg_badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+      border_color: 'border-emerald-200 dark:border-emerald-800/80',
+      image_url: 'https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=800&q=80',
     },
     {
       id: 'crop-3',
-      crop_name: 'Tomato (Hybrid Cherry)',
-      icon: '🍅',
-      field_name: 'Greenhouse Plot B',
-      area_acres: 4.2,
-      health_score: 62,
-      ndvi: 0.58,
-      alertness_level: 'HIGH_RISK',
-      alertness_label: '🔴 High Blight Risk',
-      stage: 'Flowering & Fruiting',
-      days_to_harvest: 14,
-      last_scanned: 'Today, 07:10 AM',
-      description: 'Late Blight foliar chlorosis detected in 3 plant clusters. Bio-fungicide alert.',
-      bg_badge: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
-      border_color: 'border-rose-200 dark:border-rose-800/80',
-      image_url: '/tomato-bg.jpg',
+      crop_name: 'सोयाबीन / Soybean (JS-335)',
+      icon: '🌱',
+      field_name: 'लातूर-मराठवाडा खरीप पट्टा',
+      area_acres: 16.0,
+      health_score: 78,
+      ndvi: 0.72,
+      alertness_level: 'MODERATE_STRESS',
+      alertness_label: '⚠️ कीड दक्षता (Pest Alert)',
+      stage: 'Pod Development Stage (शेंगा भरणे)',
+      days_to_harvest: 28,
+      last_scanned: 'Yesterday, 04:30 PM',
+      description: 'पानांवरील स्पोडोप्टेरा अळीच्या किरकोळ खुणा. निंबोळी अर्क ५% फवारणीची शिफारस.',
+      bg_badge: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
+      border_color: 'border-amber-200 dark:border-amber-800/80',
+      image_url: 'https://images.unsplash.com/photo-1599588675200-a664654e0c3f?auto=format&fit=crop&w=800&q=80',
     },
     {
       id: 'crop-4',
-      crop_name: 'Corn / Maize (Sweet Corn)',
-      icon: '🌽',
-      field_name: 'East Terraces',
-      area_acres: 8.5,
-      health_score: 79,
-      ndvi: 0.73,
-      alertness_level: 'PEST_ALERT',
-      alertness_label: '🔥 Armyworm Alert',
-      stage: 'Vegetative V6 Stage',
-      days_to_harvest: 38,
-      last_scanned: '2 days ago',
-      description: 'Foliar feeding damage spotted by drone AI scan. Pheromone trap deployment advised.',
-      bg_badge: 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30',
-      border_color: 'border-orange-200 dark:border-orange-800/80',
-      image_url: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=800&q=80',
+      crop_name: 'कांदा / Red Onion (Fursungi)',
+      icon: '🧅',
+      field_name: 'नाशिक (लासलगाव कृषी पट्टा)',
+      area_acres: 9.5,
+      health_score: 84,
+      ndvi: 0.76,
+      alertness_level: 'HEALTHY',
+      alertness_label: '● समाधानकारक (84%)',
+      stage: 'Bulb Development (कांदा पोसणे)',
+      days_to_harvest: 40,
+      last_scanned: 'Today, 07:00 AM',
+      description: 'जांभळा करपा (Purple Blotch) नियंत्रणात. ड्रीपद्वारे 0:52:34 खत मात्रा सुरू आहे.',
+      bg_badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+      border_color: 'border-emerald-200 dark:border-emerald-800/80',
+      image_url: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=80',
     },
     {
       id: 'crop-5',
-      crop_name: 'Banana (Grand Naine)',
-      icon: '🍌',
-      field_name: 'Valley Grove #1',
+      crop_name: 'द्राक्षे / Grapes (Thompson Seedless)',
+      icon: '🍇',
+      field_name: 'सांगली-तासगाव निर्यात प्लॉट',
       area_acres: 6.0,
       health_score: 91,
-      ndvi: 0.81,
+      ndvi: 0.82,
       alertness_level: 'HEALTHY',
-      alertness_label: '● Healthy (91%)',
-      stage: 'Shooting Stage',
-      days_to_harvest: 60,
-      last_scanned: 'Today, 09:00 AM',
-      description: 'Optimal canopy density & leaf transpiration. Zero Sigatoka leaf spot observed.',
+      alertness_label: '● निर्यात दर्जा (91%)',
+      stage: 'Berry Softening / Veraison',
+      days_to_harvest: 45,
+      last_scanned: 'Today, 06:45 AM',
+      description: 'भुरी व डाऊनी मिल्ड्यू (Downy Mildew) प्रतिबंधात्मक बोर्डो मिश्रण फवारणी पूर्ण.',
       bg_badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
       border_color: 'border-emerald-200 dark:border-emerald-800/80',
-      image_url: 'https://images.unsplash.com/photo-1528825871115-3581a5387919?auto=format&fit=crop&w=800&q=80',
+      image_url: 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=800&q=80',
+    },
+    {
+      id: 'crop-6',
+      crop_name: 'डाळिंब / Pomegranate (Bhagwa)',
+      icon: '🍎',
+      field_name: 'सोलापूर (सांगोला ऑर्चर्ड #2)',
+      area_acres: 5.5,
+      health_score: 88,
+      ndvi: 0.79,
+      alertness_level: 'HEALTHY',
+      alertness_label: '● भगवा फळ विकास (88%)',
+      stage: 'Mrig Bahar Fruit Sizing',
+      days_to_harvest: 55,
+      last_scanned: 'Yesterday, 05:00 PM',
+      description: 'तेलकट डाग (Bacterial Blight / Telya) शून्य. पाण्याचा ताण योग्य नियोजनात.',
+      bg_badge: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+      border_color: 'border-emerald-200 dark:border-emerald-800/80',
+      image_url: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=800&q=80',
     },
   ]);
 
@@ -163,12 +184,31 @@ export const FarmerDashboardPage: React.FC = () => {
   const [addStage, setAddStage] = useState<string>('Sowing & Emergence');
   const [addDaysToHarvest, setAddDaysToHarvest] = useState<string>('90');
 
-  // Modals
+  // Modals & Weather Forecasting State
   const [isTemporalModalOpen, setIsTemporalModalOpen] = useState<boolean>(false);
+  const [weatherRiskData, setWeatherRiskData] = useState<FarmWeatherRiskResponse>(mockFarmWeatherRiskData);
+  const [weatherHorizon, setWeatherHorizon] = useState<number>(7);
+  const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
 
   useEffect(() => {
     loadInitialData();
   }, []);
+
+  const loadWeatherRisk = async (farmId?: string, horizon: number = 7) => {
+    try {
+      setIsWeatherLoading(true);
+      const res = await weatherService.getFarmRiskDossier(farmId || selectedFarmId || 'farm-cbe-01', horizon);
+      if (res && res.forecast_timeline && res.forecast_timeline.length > 0) {
+        setWeatherRiskData(res);
+      } else {
+        setWeatherRiskData(mockFarmWeatherRiskData);
+      }
+    } catch {
+      setWeatherRiskData(mockFarmWeatherRiskData);
+    } finally {
+      setIsWeatherLoading(false);
+    }
+  };
 
   const loadInitialData = async () => {
     try {
@@ -179,11 +219,16 @@ export const FarmerDashboardPage: React.FC = () => {
       setSummary(sumRes);
       setFarms(farmsRes.farms);
       if (farmsRes.farms.length > 0) {
-        setSelectedFarmId(farmsRes.farms[0].id);
-        loadFarmZones(farmsRes.farms[0].id);
+        const firstFarmId = farmsRes.farms[0].id;
+        setSelectedFarmId(firstFarmId);
+        loadFarmZones(firstFarmId);
+        loadWeatherRisk(firstFarmId, weatherHorizon);
+      } else {
+        loadWeatherRisk('farm-cbe-01', weatherHorizon);
       }
     } catch (err: any) {
       console.error('Failed to load farmer dashboard summary', err);
+      loadWeatherRisk('farm-cbe-01', weatherHorizon);
     }
   };
 
@@ -652,6 +697,18 @@ export const FarmerDashboardPage: React.FC = () => {
           <p className="text-[11px] text-slate-500 dark:text-slate-400">Targeting Zones Z03, Z04, Z05 (45m Alt)</p>
         </div>
       </div>
+
+      {/* ═══ Weather & Multi-Vector Predictive Risk Forecasting ═══ */}
+      <WeatherRiskForecastCard
+        riskData={weatherRiskData}
+        selectedHorizon={weatherHorizon}
+        isLoading={isWeatherLoading}
+        onHorizonChange={(days) => {
+          setWeatherHorizon(days);
+          loadWeatherRisk(selectedFarmId, days);
+        }}
+        onRefresh={() => loadWeatherRisk(selectedFarmId, weatherHorizon)}
+      />
 
       {/* 3. Multi-Crop Precision Monitoring Grid (Box-wise view & Add Crop) */}
       <div className="p-6 rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-sm dark:shadow-2xl space-y-6 backdrop-blur-xl transition-colors duration-200">

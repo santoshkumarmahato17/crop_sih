@@ -64,11 +64,12 @@ class ValidationStatus(str, enum.Enum):
 
 
 class RiskAssessment(Base, TimestampMixin):
-    """Predictive pest and disease outbreak risk forecasts."""
+    """Predictive pest, disease, and environmental water-stress outbreak risk forecasts."""
 
     __tablename__ = "risk_assessments"
     __table_args__ = (
         Index("ix_risk_assessments_farm_date", "farm_id", "assessment_date"),
+        Index("ix_risk_assessments_zone_type", "zone_id", "risk_type"),
     )
 
     id: Mapped[str] = mapped_column(
@@ -82,11 +83,24 @@ class RiskAssessment(Base, TimestampMixin):
     )
 
     assessment_date: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
-    target_pathogen_or_pest: Mapped[str] = mapped_column(String(150), nullable=False, index=True)
-    risk_score: Mapped[float] = mapped_column(Float, nullable=False) # 0.0 to 1.0
-    risk_level: Mapped[RiskLevel] = mapped_column(Enum(RiskLevel), nullable=False, index=True)
+    forecast_time: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True, index=True)
+    risk_type: Mapped[str] = mapped_column(String(50), default="DISEASE", nullable=False, index=True) # DISEASE, PEST, WATER_STRESS, OVERALL
+    target_pathogen_or_pest: Mapped[str] = mapped_column(String(150), default="General Agronomic Risk", nullable=False, index=True)
+    
+    risk_score: Mapped[float] = mapped_column(Float, nullable=False) # 0.0 to 1.0 (or 0-100)
+    score: Mapped[Optional[int]] = mapped_column(Integer, default=50, nullable=True) # 0 to 100 integer
+    risk_level: Mapped[RiskLevel] = mapped_column(Enum(RiskLevel), default=RiskLevel.MEDIUM, nullable=False, index=True)
+    
+    confidence: Mapped[float] = mapped_column(Float, default=0.85, nullable=False) # 0.0 to 1.0
+    risk_factors: Mapped[Optional[list]] = mapped_column(JSON, default=list, nullable=True)
     driving_factors: Mapped[Optional[dict]] = mapped_column(JSON, default=dict, nullable=True)
+    explanation: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    technical_explanation: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    
+    engine_version: Mapped[str] = mapped_column(String(50), default="weather-risk-v1", nullable=False)
+    weather_data_timestamp: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
     forecast_window_days: Mapped[int] = mapped_column(Integer, default=7, nullable=False)
+
 
 
 class DiseaseEvent(Base, TimestampMixin):

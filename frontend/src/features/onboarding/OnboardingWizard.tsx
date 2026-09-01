@@ -10,212 +10,362 @@ import {
   ArrowRight,
   ArrowLeft,
   Search,
-  Plus,
   MapPin,
-  Bell,
   Camera,
-  Video,
+  FolderOpen,
   Sparkles,
   Check,
+  Navigation,
+  X,
+  RefreshCw,
 } from 'lucide-react';
 import { useAuth, OnboardingData } from '@/context/AuthContext';
 
-interface LanguageOption {
+export interface LanguageOption {
   id: string;
   name: string;
   nativeName: string;
   code: string;
   samplePhrase: string;
   region: string;
+  isPriority?: boolean;
 }
 
-const INDIAN_LANGUAGES: LanguageOption[] = [
-  { id: 'en', name: 'English', nativeName: 'English (Global)', code: 'en-US', samplePhrase: 'Welcome to AGRI SHIELD crop health monitoring.', region: 'International / India' },
-  { id: 'ta', name: 'Tamil', nativeName: 'தமிழ்', code: 'ta-IN', samplePhrase: 'வணக்கம்! அக்ரி ஷீல்ட் பயிர் பாதுகாப்பு அமைப்புக்கு உங்களை வரவேற்கிறோம்.', region: 'Tamil Nadu & Puducherry' },
-  { id: 'hi', name: 'Hindi', nativeName: 'हिन्दी', code: 'hi-IN', samplePhrase: 'नमस्ते! एग्री शील्ड फसल स्वास्थ्य और कीट निगरानी में आपका स्वागत है।', region: 'North & Central India' },
-  { id: 'te', name: 'Telugu', nativeName: 'తెలుగు', code: 'te-IN', samplePhrase: 'నమస్కారం! అగ్రి షీల్డ్ పంట ఆరోగ్య వ్యవస్థకు మీకు స్వాగతం.', region: 'Andhra Pradesh & Telangana' },
-  { id: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ', code: 'kn-IN', samplePhrase: 'ನಮಸ್ಕಾರ! ಅಗ್ರಿ ಶೀಲ್ಡ್ ಬೆಳೆ ಸಂರಕ್ಷಣಾ ವ್ಯವಸ್ಥೆಗೆ ಸ್ವಾಗತ.', region: 'Karnataka' },
-  { id: 'ml', name: 'Malayalam', nativeName: 'മലയാളം', code: 'ml-IN', samplePhrase: 'നമസ്കാരം! അഗ്രി ഷീൽഡ് വിള സംരക്ഷണ സിസ്റ്റത്തിലേക്ക് സ്വാഗതം.', region: 'Kerala' },
-  { id: 'mr', name: 'Marathi', nativeName: 'मराठी', code: 'mr-IN', samplePhrase: 'नमस्कार! एग्री शील्ड पीक आरोग्य प्रणालीमध्ये आपले स्वागत आहे.', region: 'Maharashtra' },
-  { id: 'bn', name: 'Bengali', nativeName: 'বাংলা', code: 'bn-IN', samplePhrase: 'নমস্কার! এগ্রি শিল্ড শস্য সুরক্ষা ব্যবস্থায় আপনাকে স্বাগতম।', region: 'West Bengal & Tripura' },
-  { id: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી', code: 'gu-IN', samplePhrase: 'નમસ્તે! એગ્રી શીલ્ડ પાક સંરક્ષણ સિસ્ટમમાં આપનું સ્વાગત છે.', region: 'Gujarat' },
-  { id: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ', code: 'pa-IN', samplePhrase: 'ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਐਗਰੀ ਸ਼ੀਲਡ ਫ਼ਸਲ ਸੰਭਾਲ ਪ੍ਰਣਾਲੀ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ।', region: 'Punjab' },
+export const INDIAN_LANGUAGES: LanguageOption[] = [
+  {
+    id: 'mr',
+    name: 'Marathi',
+    nativeName: 'मराठी (महाराष्ट्र)',
+    code: 'mr-IN',
+    samplePhrase: 'नमस्कार! एग्री शील्ड महाराष्ट्र पीक संरक्षण आणि हवामान अंदाज प्रणालीमध्ये आपले स्वागत आहे.',
+    region: 'Maharashtra (State Priority)',
+    isPriority: true,
+  },
+  {
+    id: 'hi',
+    name: 'Hindi',
+    nativeName: 'हिन्दी (भारत)',
+    code: 'hi-IN',
+    samplePhrase: 'नमस्ते! एग्री शील्ड फसल स्वास्थ्य, कीट निगरानी और मौसम पूर्वानुमान में आपका स्वागत है।',
+    region: 'North & Central India',
+  },
+  {
+    id: 'en',
+    name: 'English',
+    nativeName: 'English (Global / India)',
+    code: 'en-US',
+    samplePhrase: 'Welcome to AGRI SHIELD precision crop health, weather risk, and pest forecasting platform.',
+    region: 'All-India / Technical',
+  },
+  {
+    id: 'gu',
+    name: 'Gujarati',
+    nativeName: 'ગુજરાતી (ગુજરાત)',
+    code: 'gu-IN',
+    samplePhrase: 'નમસ્તે! એગ્રી શીલ્ડ પાક સંરક્ષણ અને હવામાન આગાહી સિસ્ટમમાં આપનું સ્વાગત છે.',
+    region: 'Gujarat & Western India',
+  },
+  {
+    id: 'kn',
+    name: 'Kannada',
+    nativeName: 'ಕನ್ನಡ (ಕರ್ನಾಟಕ)',
+    code: 'kn-IN',
+    samplePhrase: 'ನಮಸ್ಕಾರ! ಅಗ್ರಿ ಶೀಲ್ಡ್ ಬೆಳೆ ಸಂರಕ್ಷಣೆ ಮತ್ತು ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ ವ್ಯವಸ್ಥೆಗೆ ಸ್ವಾಗತ.',
+    region: 'Karnataka & Deccan Border',
+  },
+  {
+    id: 'te',
+    name: 'Telugu',
+    nativeName: 'తెలుగు (ఆంధ్ర / తెలంగాణ)',
+    code: 'te-IN',
+    samplePhrase: 'నమస్కారం! అగ్రి షీల్డ్ పంట ఆరోగ్య మరియు వాతావరణ అంచనా వ్యవస్థకు స్వాగతం.',
+    region: 'Telangana & Andhra Pradesh',
+  },
+  {
+    id: 'ta',
+    name: 'Tamil',
+    nativeName: 'தமிழ் (தமிழ்நாடு)',
+    code: 'ta-IN',
+    samplePhrase: 'வணக்கம்! அக்ரி ஷீல்ட் பயிர் பாதுகாப்பு மற்றும் வானிலை முன்னறிவிப்புக்கு வரவேற்கிறோம்.',
+    region: 'Tamil Nadu',
+  },
+  {
+    id: 'pa',
+    name: 'Punjabi',
+    nativeName: 'ਪੰਜਾਬੀ (ਪੰਜਾਬ)',
+    code: 'pa-IN',
+    samplePhrase: 'ਸਤਿ ਸ਼੍ਰੀ ਅਕਾਲ! ਐਗਰੀ ਸ਼ੀਲਡ ਫਸਲ ਸੁਰੱਖਿਆ ਅਤੇ ਮੌਸਮ ਪ੍ਰਣਾਲੀ ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ।',
+    region: 'Punjab & Haryana',
+  },
+  {
+    id: 'bn',
+    name: 'Bengali',
+    nativeName: 'বাংলা (পশ্চিমবঙ্গ)',
+    code: 'bn-IN',
+    samplePhrase: 'নমস্কার! এগ্রি শিল্ড শস্য সুরক্ষা ও আবহাওয়া পূর্বাভাস ব্যবস্থায় আপনাকে স্বাগতম।',
+    region: 'West Bengal & Eastern India',
+  },
+  {
+    id: 'ml',
+    name: 'Malayalam',
+    nativeName: 'മലയാളം (കേരളം)',
+    code: 'ml-IN',
+    samplePhrase: 'നമസ്കാരം! അഗ്രി ഷീൽഡ് വിള സംരക്ഷണ സംവിധാനത്തിലേക്ക് സ്വാഗതം.',
+    region: 'Kerala & Western Coast',
+  },
 ];
 
-interface CropOption {
+export interface CropOption {
   id: string;
   name: string;
   vernacular: string;
+  marathiName: string;
   category: string;
   imageUrl: string;
   duration: string;
+  maharashtraRegion: string;
 }
 
-const RECOMMENDED_CROPS: CropOption[] = [
+export const MAHARASHTRA_CROPS: CropOption[] = [
   {
-    id: 'paddy',
-    name: 'Paddy / Rice',
-    vernacular: 'நெல் • धान',
-    category: 'Cereal / Food Grain',
-    imageUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=400&q=80',
-    duration: '110 - 140 Days',
-  },
-  {
-    id: 'wheat',
-    name: 'Wheat',
-    vernacular: 'கோதுமை • गेहूं',
-    category: 'Cereal / Grain',
-    imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=400&q=80',
-    duration: '120 - 150 Days',
+    id: 'cotton',
+    name: 'Bt Cotton',
+    vernacular: 'कपास • Cotton',
+    marathiName: 'कापूस (सफेद सोने)',
+    category: 'Cash & Fiber Crop',
+    imageUrl: 'https://images.unsplash.com/photo-1594904351111-a072f80b1a71?auto=format&fit=crop&w=600&q=80',
+    duration: '160 - 180 Days',
+    maharashtraRegion: 'विदर्भ व मराठवाडा (यवतमाळ, अकोला, अमरावती, जळगाव)',
   },
   {
     id: 'sugarcane',
-    name: 'Sugarcane',
-    vernacular: 'கரும்பு • गन्ना',
-    category: 'Cash Crop',
-    imageUrl: 'https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=400&q=80',
-    duration: '300 - 365 Days',
+    name: 'Sugarcane (Co-86032)',
+    vernacular: 'गन्ना • Sugarcane',
+    marathiName: 'ऊस (बागायती पीक)',
+    category: 'Commercial Cash Crop',
+    imageUrl: 'https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=600&q=80',
+    duration: '330 - 365 Days',
+    maharashtraRegion: 'पश्चिम महाराष्ट्र (कोल्हापूर, पुणे, सांगली, सातारा, अहमदनगर)',
   },
   {
-    id: 'cotton',
-    name: 'Cotton',
-    vernacular: 'பருத்தி • कपास',
-    category: 'Fiber Crop',
-    imageUrl: 'https://images.unsplash.com/photo-1594904351111-a072f80b1a71?auto=format&fit=crop&w=400&q=80',
-    duration: '160 - 180 Days',
+    id: 'soybean',
+    name: 'Soybean (JS-335 / JS-9305)',
+    vernacular: 'सोयाबीन • Soybean',
+    marathiName: 'सोयाबीन (खरीप पीक)',
+    category: 'Oilseed & Protein Crop',
+    imageUrl: 'https://images.unsplash.com/photo-1599588675200-a664654e0c3f?auto=format&fit=crop&w=600&q=80',
+    duration: '90 - 105 Days',
+    maharashtraRegion: 'मराठवाडा व विदर्भ (लातूर, उस्मानाबाद, नांदेड, बुलढाणा)',
   },
   {
-    id: 'maize',
-    name: 'Maize / Corn',
-    vernacular: 'மக்காச்சோளம் • मक्का',
-    category: 'Coarse Grain',
-    imageUrl: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=400&q=80',
-    duration: '90 - 110 Days',
+    id: 'onion',
+    name: 'Onion (Gavran / Fursungi)',
+    vernacular: 'प्याज • Red Onion',
+    marathiName: 'कांदा (लाल/रांगडा कांदा)',
+    category: 'Horticulture / Bulb Crop',
+    imageUrl: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=600&q=80',
+    duration: '110 - 130 Days',
+    maharashtraRegion: 'नाशिक, अहमदनगर, पुणे (लासलगाव कृषी बाजार पट्टा)',
+  },
+  {
+    id: 'grapes',
+    name: 'Grapes (Thompson Seedless / Sonaka)',
+    vernacular: 'अंगूर • Export Grapes',
+    marathiName: 'द्राक्षे (निर्यातक्षम फळपीक)',
+    category: 'High-Value Horticulture',
+    imageUrl: 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=600&q=80',
+    duration: 'Perennial (120-140 Days/Pruning)',
+    maharashtraRegion: 'नाशिक, सांगली, सोलापूर (द्राक्ष राजधानी पट्टा)',
+  },
+  {
+    id: 'pomegranate',
+    name: 'Pomegranate (Bhagwa / Arakta)',
+    vernacular: 'अनार • Pomegranate',
+    marathiName: 'डाळिंब (भगवा जात)',
+    category: 'Arid Horticulture',
+    imageUrl: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80',
+    duration: 'Perennial (Bahar Management)',
+    maharashtraRegion: 'सोलापूर (सांगोला), सांगली, अहिल्यानगर दुष्काळी पट्टा',
+  },
+  {
+    id: 'paddy',
+    name: 'Paddy Rice (Indrayani / Wada Kolam)',
+    vernacular: 'धान / चावल • Paddy',
+    marathiName: 'भात / धान (इंद्रायणी व वाडा कोलम)',
+    category: 'Cereal / Staple Grain',
+    imageUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80',
+    duration: '115 - 135 Days',
+    maharashtraRegion: 'कोकण किनारपट्टी (रत्नागिरी, सिंधुदुर्ग, रायगड, ठाणे/पालघर)',
+  },
+  {
+    id: 'wheat',
+    name: 'Wheat (Lokwan / Sharbati)',
+    vernacular: 'गेहूं • Golden Wheat',
+    marathiName: 'गहू (लोकवन व सिहोर)',
+    category: 'Rabi Cereal Grain',
+    imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80',
+    duration: '110 - 125 Days',
+    maharashtraRegion: 'खानदेश, मध्य महाराष्ट्र व मराठवाडा बागायती भाग',
   },
   {
     id: 'tomato',
-    name: 'Tomato',
-    vernacular: 'தக்காளி • टमाटर',
-    category: 'Horticulture / Vegetable',
-    imageUrl: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=400&q=80',
+    name: 'Tomato (Abhinav / Hyb-3)',
+    vernacular: 'टमाटर • Fresh Tomato',
+    marathiName: 'टोमॅटो (संकरित जात)',
+    category: 'Vegetable Crop',
+    imageUrl: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80',
     duration: '90 - 120 Days',
+    maharashtraRegion: 'जुन्नर (पुणे), नाशिक (दिंडोरी), सातारा पट्टा',
   },
   {
-    id: 'chili',
-    name: 'Chili / Pepper',
-    vernacular: 'மிளகாய் • मिर्च',
-    category: 'Spice Crop',
-    imageUrl: 'https://images.unsplash.com/photo-1588252303782-cb80119abd6d?auto=format&fit=crop&w=400&q=80',
-    duration: '120 - 150 Days',
-  },
-  {
-    id: 'banana',
-    name: 'Banana',
-    vernacular: 'வாழை • केला',
-    category: 'Fruit Plantation',
-    imageUrl: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=400&q=80',
-    duration: '330 - 360 Days',
+    id: 'turmeric',
+    name: 'Turmeric (Salem / Rajapuri)',
+    vernacular: 'हल्दी • Golden Turmeric',
+    marathiName: 'हळद (राजापुरी व सेलम)',
+    category: 'Commercial Spice Crop',
+    imageUrl: 'https://images.unsplash.com/photo-1615485290176-791b7d5a5700?auto=format&fit=crop&w=600&q=80',
+    duration: '240 - 270 Days',
+    maharashtraRegion: 'सांगली, सातारा व नांदेड (हळदीची बाजारपेठ)',
   },
 ];
 
-interface SoilOption {
+export interface SoilOption {
   id: string;
   name: string;
+  marathiName: string;
   vernacular: string;
   colorClass: string;
   borderClass: string;
   description: string;
   bestFor: string;
+  maharashtraGeology: string;
+  soilTextureUrl: string;
 }
 
-const RECOMMENDED_SOILS: SoilOption[] = [
+export const MAHARASHTRA_SOILS: SoilOption[] = [
   {
-    id: 'alluvial',
-    name: 'Alluvial Silt Soil',
-    vernacular: 'வண்டல் மண் • जलोढ़ मिट्टी',
-    colorClass: 'bg-amber-900/30 text-amber-300',
-    borderClass: 'border-amber-700/50',
-    description: 'High fertility silt deposited by river deltas. Rich in potash & humus.',
-    bestFor: 'Paddy, Wheat, Sugarcane & Jute',
+    id: 'black_cotton_regur',
+    name: 'Black Cotton Soil (Regur)',
+    marathiName: 'काळी कापसाची माती (रेगूर माती)',
+    vernacular: 'डेक्कन ट्रॅप बेसाल्ट • Deep Black Clay',
+    colorClass: 'bg-slate-950 text-slate-100',
+    borderClass: 'border-slate-700',
+    description: 'High montmorillonite clay content with deep self-ploughing cracks and extraordinary moisture retention.',
+    bestFor: 'कापूस (Cotton), सोयाबीन (Soybean), ऊस (Sugarcane), ज्वारी व सूर्यफूल',
+    maharashtraGeology: 'Deccan Trap Basalt Lava (विदर्भ, मराठवाडा, खानदेश व पश्चिम महाराष्ट्र खोरे)',
+    soilTextureUrl: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=400&q=80',
   },
   {
-    id: 'red_loam',
-    name: 'Red Loamy Soil',
-    vernacular: 'செம்மண் • लाल मिट्टी',
-    colorClass: 'bg-rose-900/30 text-rose-300',
-    borderClass: 'border-rose-700/50',
-    description: 'Iron oxide rich, highly porous with good aeration and quick drainage.',
-    bestFor: 'Groundnut, Cotton, Millets & Pulses',
+    id: 'laterite_soil',
+    name: 'Laterite Soil (Jambha)',
+    marathiName: 'जांभी माती (कोकण व घाटमाथा)',
+    vernacular: 'जांभा खडक • Iron & Aluminium Rich',
+    colorClass: 'bg-orange-950/70 text-orange-200',
+    borderClass: 'border-orange-700/60',
+    description: 'Heavily leached tropical reddish-brown soil rich in iron and bauxite oxides, highly porous with rapid percolation.',
+    bestFor: 'हापूस आंबा (Alphonso Mango), काजू (Cashew), सुपारी, नारळ व भात',
+    maharashtraGeology: 'High Rainfall Western Ghats (रत्नागिरी, सिंधुदुर्ग, कोल्हापूर पश्चिम घाट)',
+    soilTextureUrl: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=400&q=80',
   },
   {
-    id: 'black_regur',
-    name: 'Black Regur Soil',
-    vernacular: 'கரிசல் மண் • काली मिट्टी',
-    colorClass: 'bg-slate-950 text-slate-200',
-    borderClass: 'border-slate-700/60',
-    description: 'High clay content with self-ploughing moisture retention properties.',
-    bestFor: 'Cotton, Citrus, Sugarcane & Tobacco',
+    id: 'alluvial_loam',
+    name: 'River Basin Alluvial Loam',
+    marathiName: 'गाळाची सुपीक माती (नदी खोरे)',
+    vernacular: 'गोदावरी, भीमा, कृष्णा खोरे • Silt Loam',
+    colorClass: 'bg-amber-950/60 text-amber-200',
+    borderClass: 'border-amber-700/60',
+    description: 'Finely textured river delta silt loam with neutral pH (7.2), rich in available potassium, organic humus and micronutrients.',
+    bestFor: 'ऊस (Sugarcane), गहू (Wheat), द्राक्षे (Grapes), कांदा व केळी',
+    maharashtraGeology: 'River Basins (गोदावरी, कृष्णा, तापी व भीमा नदी काठ)',
+    soilTextureUrl: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=400&q=80',
   },
   {
-    id: 'laterite',
-    name: 'Laterite Soil',
-    vernacular: 'லேட்டரைட் • लेटराइट',
-    colorClass: 'bg-orange-950/40 text-orange-300',
-    borderClass: 'border-orange-700/50',
-    description: 'Leached tropical soil with high iron and aluminum hydroxide deposits.',
-    bestFor: 'Tea, Coffee, Cashew & Rubber',
+    id: 'red_yellow_soil',
+    name: 'Red & Yellow Sandy Clay',
+    marathiName: 'तांबडी व पिवळसर माती (पूर्व विदर्भ)',
+    vernacular: 'लोहयुक्त माती • Ferruginous Sandy Clay',
+    colorClass: 'bg-rose-950/60 text-rose-200',
+    borderClass: 'border-rose-700/60',
+    description: 'Derived from ancient crystalline granite-gneiss rock formations. Moderate fertility, well-aerated with good drainage.',
+    bestFor: 'भात (Paddy), भुईमूग (Groundnut), तूर (Tur Dal) व भाजीपाला',
+    maharashtraGeology: 'Archaean Granite Gneiss (चंद्रपूर, गडचिरोली, भंडारा व गोंदिया)',
+    soilTextureUrl: 'https://images.unsplash.com/photo-1606041008023-472dfb5e530f?auto=format&fit=crop&w=400&q=80',
   },
   {
-    id: 'desert_sandy',
-    name: 'Desert Sandy Soil',
-    vernacular: 'மணல் மண் • बलुई मिट्टी',
-    colorClass: 'bg-yellow-900/20 text-yellow-300',
-    borderClass: 'border-yellow-600/40',
-    description: 'Coarse sand particles with high drainage and low moisture capacity.',
-    bestFor: 'Bajra, Barley, Dates & Pulses',
-  },
-  {
-    id: 'peaty_clay',
-    name: 'Peaty Clay Soil',
-    vernacular: 'களிமண் • चिकनी मिट्टी',
-    colorClass: 'bg-emerald-950/40 text-emerald-300',
-    borderClass: 'border-emerald-700/50',
-    description: 'Organic matter rich marshy soil with dark shade and high acidity.',
-    bestFor: 'Paddy, Spices & Coastal Vegetables',
+    id: 'shallow_loam',
+    name: 'Medium Shallow Loam',
+    marathiName: 'हलकी ते मध्यम मुरमाड माती',
+    vernacular: 'माळरान व मुरमाड • Well Drained Shallow Loam',
+    colorClass: 'bg-yellow-950/50 text-yellow-200',
+    borderClass: 'border-yellow-700/50',
+    description: 'Coarse to medium textured soil over murrum substrate, excellent aeration, preventing water-logging root rot in orchards.',
+    bestFor: 'डाळिंब (Pomegranate), पेरू (Guava), सीताफळ, बाजरी व हरभरा',
+    maharashtraGeology: 'Semi-Arid Rainshadow Tracts (सोलापूर, सांगोला, सातारा व अहिल्यानगर पठार)',
+    soilTextureUrl: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=400&q=80',
   },
 ];
 
-export const OnboardingWizard: React.FC = () => {
+export interface MaharashtraDistrict {
+  id: string;
+  name: string;
+  marathiName: string;
+  region: string;
+  agroZone: string;
+  coordinates: string;
+}
+
+export const MAHARASHTRA_DISTRICTS: MaharashtraDistrict[] = [
+  { id: 'nashik', name: 'Nashik', marathiName: 'नाशिक', region: 'North Maharashtra (Khandesh)', agroZone: 'Western Ghats & Transition Zone', coordinates: '19.9975° N, 73.7898° E' },
+  { id: 'pune', name: 'Pune', marathiName: 'पुणे', region: 'Western Maharashtra', agroZone: 'Scarcity & Plain Zone', coordinates: '18.5204° N, 73.8567° E' },
+  { id: 'solapur', name: 'Solapur', marathiName: 'सोलापूर', region: 'Western Maharashtra', agroZone: 'Scarcity Drought-Prone Zone', coordinates: '17.6599° N, 75.9064° E' },
+  { id: 'ahmednagar', name: 'Ahilyanagar (Ahmednagar)', marathiName: 'अहिल्यानगर (अहमदनगर)', region: 'Central Maharashtra', agroZone: 'Scarcity Rainshadow Zone', coordinates: '19.0952° N, 74.7496° E' },
+  { id: 'aurangabad', name: 'Chhatrapati Sambhaji Nagar', marathiName: 'छत्रपती संभाजीनगर (औरंगाबाद)', region: 'Marathwada', agroZone: 'Central Maharashtra Plateau', coordinates: '19.8762° N, 75.3433° E' },
+  { id: 'kolhapur', name: 'Kolhapur', marathiName: 'कोल्हापूर', region: 'Western Maharashtra (South)', agroZone: 'Sub-Montane High Rainfall Zone', coordinates: '16.7050° N, 74.2433° E' },
+  { id: 'sangli', name: 'Sangli', marathiName: 'सांगली', region: 'Western Maharashtra', agroZone: 'Krishna Basin Agro-Zone', coordinates: '16.8524° N, 74.5815° E' },
+  { id: 'satara', name: 'Satara', marathiName: 'सातारा', region: 'Western Maharashtra', agroZone: 'Sub-Montane Transition Zone', coordinates: '17.6805° N, 74.0183° E' },
+  { id: 'nagpur', name: 'Nagpur', marathiName: 'नागपूर', region: 'Vidarbha (Orange Belt)', agroZone: 'Eastern Vidarbha Assured Rainfall', coordinates: '21.1458° N, 79.0882° E' },
+  { id: 'amravati', name: 'Amravati', marathiName: 'अमरावती', region: 'Western Vidarbha', agroZone: 'Cotton & Soybean Agro-Zone', coordinates: '20.9320° N, 77.7523° E' },
+  { id: 'yavatmal', name: 'Yavatmal', marathiName: 'यवतमाळ', region: 'Vidarbha', agroZone: 'Black Cotton Agro-Climatic Belt', coordinates: '20.3888° N, 78.1204° E' },
+  { id: 'latur', name: 'Latur', marathiName: 'लातूर', region: 'Marathwada', agroZone: 'Soybean & Pulses Agro-Zone', coordinates: '18.4088° N, 76.5604° E' },
+  { id: 'jalgaon', name: 'Jalgaon', marathiName: 'जळगाव', region: 'Khandesh (Banana & Cotton)', agroZone: 'Tapi Basin Alluvial Zone', coordinates: '21.0077° N, 75.5626° E' },
+  { id: 'ratnagiri', name: 'Ratnagiri', marathiName: 'रत्नागिरी', region: 'Konkan Coast', agroZone: 'Very High Rainfall Coastal Laterite Zone', coordinates: '16.9902° N, 73.3120° E' },
+  { id: 'nanded', name: 'Nanded', marathiName: 'नांदेड', region: 'Marathwada', agroZone: 'Godavari Basin Turmeric & Cotton Zone', coordinates: '19.1383° N, 77.3210° E' },
+];
+
+export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
   const navigate = useNavigate();
   const { completeOnboarding } = useAuth();
 
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Step 1: Language
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('ta');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('mr'); // Default to Marathi for Maharashtra
   const [langSearch, setLangSearch] = useState<string>('');
   const [isPlayingAudio, setIsPlayingAudio] = useState<boolean>(false);
 
   // Step 2: Crops
-  const [selectedCrops, setSelectedCrops] = useState<string[]>(['paddy', 'tomato']);
+  const [selectedCrops, setSelectedCrops] = useState<string[]>(['cotton', 'soybean', 'sugarcane']);
   const [cropSearch, setCropSearch] = useState<string>('');
-  const [customCropInput, setCustomCropInput] = useState<string>('');
 
   // Step 3: Soil
-  const [selectedSoil, setSelectedSoil] = useState<string>('red_loam');
+  const [selectedSoil, setSelectedSoil] = useState<string>('black_cotton_regur');
   const [soilSearch, setSoilSearch] = useState<string>('');
-  const [customSoilInput, setCustomSoilInput] = useState<string>('');
 
-  // Step 4: Permissions
+  // Step 4: Location / Maharashtra District
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('nashik');
+  const [isLocating, setIsLocating] = useState<boolean>(false);
+  const [detectedCoords, setDetectedCoords] = useState<string>('19.9975° N, 73.7898° E (Nashik, Maharashtra)');
+
+  // Step 5: Hardware & Media Permissions
   const [permissions, setPermissions] = useState({
-    location: false,
-    notifications: false,
-    camera: true,
-    video: true,
+    location: true,
+    camera: false,
+    gallery: false,
+    notifications: true,
   });
   const [permFeedback, setPermFeedback] = useState<string | null>(null);
 
-  // Play audio sample using HTML5 SpeechSynthesis
+  // Audio Speech Preview
   const handlePlayAudioSample = (lang: LanguageOption) => {
     if (!('speechSynthesis' in window)) {
       alert('Speech synthesis is not supported in this browser.');
@@ -225,62 +375,69 @@ export const OnboardingWizard: React.FC = () => {
     const utterance = new SpeechSynthesisUtterance(lang.samplePhrase);
     utterance.lang = lang.code;
     utterance.rate = 0.95;
-    
+
     setIsPlayingAudio(true);
     utterance.onend = () => setIsPlayingAudio(false);
     utterance.onerror = () => setIsPlayingAudio(false);
-    
+
     window.speechSynthesis.speak(utterance);
   };
 
-  // Permission Request Triggers
+  // Location Geolocation Request
   const handleRequestLocation = () => {
+    setIsLocating(true);
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
-        () => {
+        (pos) => {
+          setIsLocating(false);
+          const coords = `${pos.coords.latitude.toFixed(4)}° N, ${pos.coords.longitude.toFixed(4)}° E (GPS Live Detected)`;
+          setDetectedCoords(coords);
           setPermissions((prev) => ({ ...prev, location: true }));
-          setPermFeedback('📍 Geolocation permission granted!');
-          setTimeout(() => setPermFeedback(null), 3000);
+          setPermFeedback('📍 थेट GPS स्थान यशस्वीरित्या प्राप्त झाले (Live GPS Location Detected)!');
+          setTimeout(() => setPermFeedback(null), 3500);
         },
         () => {
+          setIsLocating(false);
           setPermissions((prev) => ({ ...prev, location: true }));
-          setPermFeedback('📍 Location enabled for precision field map telemetry.');
-          setTimeout(() => setPermFeedback(null), 3000);
+          setPermFeedback('📍 महाराष्ट्र कृषी पट्टा स्थान सक्रिय केले (Maharashtra Agro-Climatic Zone Active)!');
+          setTimeout(() => setPermFeedback(null), 3500);
         }
       );
     } else {
+      setIsLocating(false);
       setPermissions((prev) => ({ ...prev, location: true }));
     }
   };
 
-  const handleRequestNotifications = async () => {
-    if ('Notification' in window) {
-      const res = await Notification.requestPermission();
-      if (res === 'granted') {
-        setPermissions((prev) => ({ ...prev, notifications: true }));
-        setPermFeedback('🔔 Notification permission granted!');
+  // Camera Permission Trigger & Test
+  const handleRequestCamera = async () => {
+    try {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        setPermissions((prev) => ({ ...prev, camera: true }));
+        setPermFeedback('📸 कॅमेरा प्रवेश मंजूर झाला (Camera Access Granted)!');
+        // Stop stream after 4 seconds to conserve resources
+        setTimeout(() => {
+          stream.getTracks().forEach((track) => track.stop());
+          setPermFeedback(null);
+        }, 4000);
       } else {
-        setPermissions((prev) => ({ ...prev, notifications: true }));
-        setPermFeedback('🔔 Push notification channel enabled.');
+        setPermissions((prev) => ({ ...prev, camera: true }));
+        setPermFeedback('📸 कॅमेरा स्कॅनिंग सक्रिय केले (Camera Leaf Scanner Active)!');
+        setTimeout(() => setPermFeedback(null), 3000);
       }
-    } else {
-      setPermissions((prev) => ({ ...prev, notifications: true }));
+    } catch {
+      setPermissions((prev) => ({ ...prev, camera: true }));
+      setPermFeedback('📸 कॅमेरा स्कॅनर सिम्युलेशन मोड सक्रिय (Camera Leaf Scanner Ready)!');
+      setTimeout(() => setPermFeedback(null), 3000);
     }
+  };
+
+  // Gallery Permission Trigger
+  const handleRequestGallery = () => {
+    setPermissions((prev) => ({ ...prev, gallery: true }));
+    setPermFeedback('📁 गॅलरी व ड्रोन इमेज स्टोरेज प्रवेश मंजूर (Gallery & Storage Access Active)!');
     setTimeout(() => setPermFeedback(null), 3000);
-  };
-
-  const handleAddCustomCrop = () => {
-    if (customCropInput.trim() && !selectedCrops.includes(customCropInput.trim())) {
-      setSelectedCrops((prev) => [...prev, customCropInput.trim()]);
-      setCustomCropInput('');
-    }
-  };
-
-  const handleAddCustomSoil = () => {
-    if (customSoilInput.trim()) {
-      setSelectedSoil(customSoilInput.trim());
-      setCustomSoilInput('');
-    }
   };
 
   const toggleCrop = (cropId: string) => {
@@ -298,11 +455,36 @@ export const OnboardingWizard: React.FC = () => {
       language: selectedLanguage,
       crops: selectedCrops,
       soilType: selectedSoil,
-      permissions,
+      permissions: {
+        location: permissions.location,
+        notifications: permissions.notifications,
+        camera: permissions.camera,
+        video: true,
+      },
     };
+
     completeOnboarding(finalData);
-    navigate('/');
+
+    // Broadcast update across active tabs and components
+    window.dispatchEvent(
+      new CustomEvent('agrishield:settings_updated', {
+        detail: {
+          ...finalData,
+          district: selectedDistrict,
+          detectedCoords,
+        },
+      })
+    );
+
+    if (onClose) {
+      onClose();
+    } else {
+      navigate('/');
+    }
   };
+
+  const currentDistrictObj =
+    MAHARASHTRA_DISTRICTS.find((d) => d.id === selectedDistrict) || MAHARASHTRA_DISTRICTS[0];
 
   const filteredLanguages = INDIAN_LANGUAGES.filter(
     (l) =>
@@ -311,141 +493,189 @@ export const OnboardingWizard: React.FC = () => {
       l.region.toLowerCase().includes(langSearch.toLowerCase())
   );
 
-  const filteredCrops = RECOMMENDED_CROPS.filter(
+  const filteredCrops = MAHARASHTRA_CROPS.filter(
     (c) =>
       c.name.toLowerCase().includes(cropSearch.toLowerCase()) ||
-      c.vernacular.toLowerCase().includes(cropSearch.toLowerCase()) ||
-      c.category.toLowerCase().includes(cropSearch.toLowerCase())
+      c.marathiName.toLowerCase().includes(cropSearch.toLowerCase()) ||
+      c.maharashtraRegion.toLowerCase().includes(cropSearch.toLowerCase())
   );
 
-  const filteredSoils = RECOMMENDED_SOILS.filter(
+  const filteredSoils = MAHARASHTRA_SOILS.filter(
     (s) =>
       s.name.toLowerCase().includes(soilSearch.toLowerCase()) ||
-      s.vernacular.toLowerCase().includes(soilSearch.toLowerCase()) ||
-      s.description.toLowerCase().includes(soilSearch.toLowerCase())
+      s.marathiName.toLowerCase().includes(soilSearch.toLowerCase()) ||
+      s.maharashtraGeology.toLowerCase().includes(soilSearch.toLowerCase())
   );
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-2xl flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
-        {/* Top Header & Wizard Stepper */}
-        <div className="p-6 border-b border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
-              <Sparkles className="w-6 h-6 animate-pulse" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-in fade-in">
+      <div className="relative w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden my-8 flex flex-col max-h-[90vh]">
+        {/* ── Top Header Banner with Maharashtra Logo & Stepper ── */}
+        <div className="p-6 bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-950 text-white flex-shrink-0">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 p-1 flex items-center justify-center shadow-lg">
+                <img src="/agri-logo.png" alt="AgriShield" className="w-full h-full object-contain" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 font-mono text-[10px] font-extrabold uppercase tracking-wider">
+                    महाराष्ट्र कृषी सेटअप (Maharashtra Agro Setup)
+                  </span>
+                  <span className="text-xs text-emerald-200 font-mono font-bold">
+                    पायरी {currentStep} / 5
+                  </span>
+                </div>
+                <h1 className="text-xl sm:text-2xl font-black tracking-tight">
+                  AgriShield Smart Farm Onboarding
+                </h1>
+                <p className="text-xs text-emerald-200/80">
+                  Customizing crops, soil profiles, location telemetry, and hardware access for Maharashtra.
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                <span>AGRI SHIELD Initial Onboarding Setup</span>
-                <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">
-                  Step {currentStep} of 5
-                </span>
-              </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Customize your localized agronomic engine before accessing full features.
-              </p>
-            </div>
+
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="p-2 rounded-2xl bg-white/10 hover:bg-white/20 text-white transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
 
-          {/* Progress Bar & Pills */}
-          <div className="flex items-center gap-1.5">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div
-                key={step}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  step === currentStep
-                    ? 'w-8 bg-emerald-500'
-                    : step < currentStep
-                    ? 'w-4 bg-emerald-700/60'
-                    : 'w-4 bg-slate-300 dark:bg-slate-800'
-                }`}
-              />
-            ))}
+          {/* Stepper Progress Bar */}
+          <div className="grid grid-cols-5 gap-2 mt-5">
+            {[
+              { num: 1, label: 'भाषा (Language)' },
+              { num: 2, label: 'पीक (Crops)' },
+              { num: 3, label: 'माती (Soil)' },
+              { num: 4, label: 'स्थान (Location)' },
+              { num: 5, label: 'परवानगी (Access)' },
+            ].map((step) => {
+              const isDone = currentStep > step.num;
+              const isCurrent = currentStep === step.num;
+              return (
+                <div key={step.num} className="space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-bold">
+                    <span className={isCurrent ? 'text-amber-300 font-black' : isDone ? 'text-emerald-300' : 'text-slate-400'}>
+                      {step.num}. {step.label}
+                    </span>
+                  </div>
+                  <div className="h-1.5 rounded-full bg-white/15 overflow-hidden">
+                    <div
+                      className={`h-full transition-all duration-300 ${
+                        isDone ? 'bg-emerald-400 w-full' : isCurrent ? 'bg-amber-400 w-full animate-pulse' : 'w-0'
+                      }`}
+                    />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Step Content Viewport */}
-        <div className="p-6 sm:p-8 overflow-y-auto flex-1 space-y-6">
-          {/* STEP 1: LANGUAGE & AUDIO PREVIEW */}
+        {/* Feedback Alert Toast */}
+        {permFeedback && (
+          <div className="p-3 bg-emerald-600 text-white text-xs font-bold text-center flex items-center justify-center gap-2 animate-in fade-in flex-shrink-0">
+            <Sparkles className="w-4 h-4" />
+            <span>{permFeedback}</span>
+          </div>
+        )}
+
+        {/* ── Main Step Content Area (Scrollable) ── */}
+        <div className="p-6 overflow-y-auto flex-1 space-y-6">
+          {/* ══════════════════════════════════════════════════════════ */}
+          {/* STEP 1: LANGUAGE SELECTION (MARATHI & ALL INDIA)          */}
+          {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 1 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
-                <div className="space-y-1">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div>
+                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                     <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Select Preferred Language & Audio Prompt</span>
+                    <span>Select Language / भाषा निवडा (मराठी व इतर भाषा)</span>
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Choose your native language. All UI descriptions, text, and AI voice guidance will adjust automatically.
+                    Choose your regional language. System diagnostics, advisory voice alerts, and UI adapt automatically.
                   </p>
                 </div>
 
-                {/* Search Bar */}
                 <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                   <input
                     type="text"
+                    placeholder="Search language / भाषा शोधा..."
                     value={langSearch}
                     onChange={(e) => setLangSearch(e.target.value)}
-                    placeholder="Search language..."
-                    className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
               </div>
 
               {/* Language Cards Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-h-[50vh] overflow-y-auto pr-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {filteredLanguages.map((lang) => {
                   const isSelected = selectedLanguage === lang.id;
                   return (
                     <div
                       key={lang.id}
                       onClick={() => setSelectedLanguage(lang.id)}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                      className={`p-4 rounded-2xl border transition cursor-pointer flex flex-col justify-between gap-3 ${
                         isSelected
-                          ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 shadow-md shadow-emerald-500/10'
-                          : 'bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700'
+                          ? 'bg-emerald-500/10 border-emerald-500 dark:border-emerald-500 shadow-md ring-2 ring-emerald-500/30'
+                          : 'bg-white dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                            isSelected
-                              ? 'border-emerald-500 bg-emerald-500 text-white'
-                              : 'border-slate-400 dark:border-slate-600'
-                          }`}
-                        >
-                          {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                        </div>
+                      <div className="flex items-start justify-between gap-2">
                         <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-bold text-slate-900 dark:text-white">
-                              {lang.name}
-                            </span>
-                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 font-mono bg-emerald-100 dark:bg-emerald-950 px-2 py-0.5 rounded-md">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-base font-black text-slate-900 dark:text-white">
                               {lang.nativeName}
                             </span>
+                            {lang.isPriority && (
+                              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-black border border-amber-500/30">
+                                ⭐ Maharashtra Priority
+                              </span>
+                            )}
                           </div>
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                            {lang.region}
-                          </p>
+                          <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">
+                            {lang.name} • {lang.region}
+                          </span>
+                        </div>
+
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center border transition flex-shrink-0 ${
+                            isSelected
+                              ? 'bg-emerald-600 text-white border-emerald-600'
+                              : 'border-slate-300 dark:border-slate-700'
+                          }`}
+                        >
+                          {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                         </div>
                       </div>
 
-                      {/* Speech Audio Test Button */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedLanguage(lang.id);
-                          handlePlayAudioSample(lang);
-                        }}
-                        title="Listen to sample audio prompt"
-                        className="p-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400 hover:scale-105 active:scale-95 transition flex items-center gap-1.5 text-xs font-bold shadow-sm"
-                      >
-                        <Volume2 className={`w-4 h-4 ${isPlayingAudio && isSelected ? 'animate-bounce text-emerald-500' : ''}`} />
-                        <span className="hidden sm:inline">Audio</span>
-                      </button>
+                      {/* Sample phrase & Audio speaker button */}
+                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
+                        <p className="text-[11px] text-slate-600 dark:text-slate-300 italic line-clamp-1">
+                          "{lang.samplePhrase}"
+                        </p>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedLanguage(lang.id);
+                            handlePlayAudioSample(lang);
+                          }}
+                          className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition flex items-center gap-1 text-[10px] font-bold flex-shrink-0"
+                          title="Play native audio preview"
+                        >
+                          <Volume2 className={`w-3.5 h-3.5 ${isPlayingAudio && isSelected ? 'text-emerald-500 animate-bounce' : ''}`} />
+                          <span>ऐका (Listen)</span>
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -453,446 +683,459 @@ export const OnboardingWizard: React.FC = () => {
             </div>
           )}
 
-          {/* STEP 2: CROPS SELECTION */}
+          {/* ══════════════════════════════════════════════════════════ */}
+          {/* STEP 2: MAHARASHTRA CROPS SELECTION                       */}
+          {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 2 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
-                <div className="space-y-1">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div>
+                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                     <Sprout className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Choose Primary Crops Under Cultivation</span>
+                    <span>Choose Maharashtra Crops / पिके निवडा (कापूस, ऊस, सोयाबीन, इ.)</span>
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Select recommended crops or add custom crop varieties for tailored disease diagnostic scans.
+                    Select your active crops. Pathogen models and disease thresholds will be calibrated specifically.
                   </p>
                 </div>
 
                 <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                   <input
                     type="text"
+                    placeholder="Search crop / पीक शोधा..."
                     value={cropSearch}
                     onChange={(e) => setCropSearch(e.target.value)}
-                    placeholder="Search crops..."
-                    className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
                   />
                 </div>
               </div>
 
-              {/* Crop Cards Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 max-h-[45vh] overflow-y-auto pr-1">
+              {/* Crop Cards Grid with Maharashtra Region Tags */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {filteredCrops.map((crop) => {
                   const isSelected = selectedCrops.includes(crop.id);
                   return (
                     <div
                       key={crop.id}
                       onClick={() => toggleCrop(crop.id)}
-                      className={`relative rounded-2xl border overflow-hidden cursor-pointer transition-all duration-200 group flex flex-col justify-between ${
+                      className={`relative rounded-2xl border overflow-hidden transition cursor-pointer flex flex-col justify-between group ${
                         isSelected
-                          ? 'border-emerald-500 ring-2 ring-emerald-500/30 bg-emerald-50/30 dark:bg-emerald-950/20'
-                          : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-slate-400 dark:hover:border-slate-700'
+                          ? 'bg-emerald-500/10 border-emerald-500 shadow-md ring-2 ring-emerald-500/30'
+                          : 'bg-white dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
-                      <div className="h-24 w-full relative overflow-hidden bg-slate-800">
+                      {/* Crop Image Header */}
+                      <div className="relative h-32 w-full overflow-hidden">
                         <img
                           src={crop.imageUrl}
                           alt={crop.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                        <div
-                          className={`absolute top-2 right-2 p-1 rounded-full ${
-                            isSelected
-                              ? 'bg-emerald-500 text-white'
-                              : 'bg-slate-900/60 text-slate-300 backdrop-blur-sm'
-                          }`}
-                        >
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent" />
+
+                        <div className="absolute top-2 right-2">
+                          <div
+                            className={`w-6 h-6 rounded-full flex items-center justify-center border shadow-md transition ${
+                              isSelected
+                                ? 'bg-emerald-600 text-white border-emerald-600'
+                                : 'bg-slate-900/60 text-transparent border-white/50'
+                            }`}
+                          >
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                          </div>
+                        </div>
+
+                        <div className="absolute bottom-2 left-2 right-2">
+                          <h3 className="text-sm font-black text-white drop-shadow">
+                            {crop.marathiName}
+                          </h3>
+                          <span className="text-[11px] text-emerald-300 font-semibold block drop-shadow-sm">
+                            {crop.name}
+                          </span>
                         </div>
                       </div>
 
-                      <div className="p-3 space-y-1">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                          {crop.category}
-                        </span>
-                        <h3 className="text-xs font-bold text-slate-900 dark:text-white line-clamp-1">
-                          {crop.name}
-                        </h3>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                          {crop.vernacular}
+                      {/* Details Strip */}
+                      <div className="p-3 space-y-1.5 text-xs">
+                        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                          <span>{crop.category}</span>
+                          <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{crop.duration}</span>
+                        </div>
+
+                        <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-[10px] text-slate-600 dark:text-slate-300 font-medium">
+                          📍 <strong className="text-slate-800 dark:text-slate-200">पट्टा:</strong> {crop.maharashtraRegion}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ══════════════════════════════════════════════════════════ */}
+          {/* STEP 3: MAHARASHTRA SOIL PROFILES                         */}
+          {/* ══════════════════════════════════════════════════════════ */}
+          {currentStep === 3 && (
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+                <div>
+                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Layers className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                    <span>Choose Maharashtra Soil Profile / मातीचा प्रकार निवडा (काळी कापसाची, जांभी, इ.)</span>
+                  </h2>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                    Select soil texture for accurate irrigation scheduling, root water-stress index, and fertilization tuning.
+                  </p>
+                </div>
+
+                <div className="relative w-full sm:w-64">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <input
+                    type="text"
+                    placeholder="Search soil / माती शोधा..."
+                    value={soilSearch}
+                    onChange={(e) => setSoilSearch(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+
+              {/* Soil Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {filteredSoils.map((soil) => {
+                  const isSelected = selectedSoil === soil.id;
+                  return (
+                    <div
+                      key={soil.id}
+                      onClick={() => setSelectedSoil(soil.id)}
+                      className={`p-4 rounded-2xl border transition cursor-pointer flex flex-col justify-between gap-3 ${
+                        isSelected
+                          ? 'bg-amber-500/10 border-amber-500 shadow-md ring-2 ring-amber-500/30'
+                          : 'bg-white dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-700 flex-shrink-0 shadow-sm">
+                            <img src={soil.soilTextureUrl} alt={soil.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-black text-slate-900 dark:text-white">
+                              {soil.marathiName}
+                            </h3>
+                            <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block">
+                              {soil.name}
+                            </span>
+                            <span className="text-[10px] text-amber-600 dark:text-amber-400 font-mono font-bold block mt-0.5">
+                              {soil.vernacular}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center border transition flex-shrink-0 ${
+                            isSelected
+                              ? 'bg-amber-600 text-white border-amber-600'
+                              : 'border-slate-300 dark:border-slate-700'
+                          }`}
+                        >
+                          {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        {soil.description}
+                      </p>
+
+                      <div className="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
+                        <p className="text-slate-700 dark:text-slate-200">
+                          <strong className="text-slate-900 dark:text-white">उत्कृष्ट पिके (Best For):</strong> {soil.bestFor}
+                        </p>
+                        <p className="text-slate-500 dark:text-slate-400 font-mono text-[10px]">
+                          भूशास्त्रीय पट्टा: {soil.maharashtraGeology}
                         </p>
                       </div>
                     </div>
                   );
                 })}
               </div>
-
-              {/* Custom Crop Add Option */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-3">
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <Plus className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span>Other Crop Variety?</span>
-                </span>
-                <div className="flex items-center gap-2 flex-1 w-full">
-                  <input
-                    type="text"
-                    value={customCropInput}
-                    onChange={(e) => setCustomCropInput(e.target.value)}
-                    placeholder="Type custom crop (e.g. Cardamom, Arecanut, Turmeric)..."
-                    className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddCustomCrop}
-                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-sm"
-                  >
-                    Add Crop
-                  </button>
-                </div>
-              </div>
             </div>
           )}
 
-          {/* STEP 3: SOIL TYPE SELECTION */}
-          {currentStep === 3 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
-                <div className="space-y-1">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <Layers className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Select Holding Soil Type</span>
-                  </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Soil classification tunes irrigation models and water requirement intelligence.
-                  </p>
-                </div>
-
-                <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
-                  <input
-                    type="text"
-                    value={soilSearch}
-                    onChange={(e) => setSoilSearch(e.target.value)}
-                    placeholder="Search soil types..."
-                    className="w-full bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500"
-                  />
-                </div>
-              </div>
-
-              {/* Soil Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-h-[45vh] overflow-y-auto pr-1">
-                {filteredSoils.map((soil) => {
-                  const isSelected = selectedSoil === soil.id || selectedSoil === soil.name;
-                  return (
-                    <div
-                      key={soil.id}
-                      onClick={() => setSelectedSoil(soil.id)}
-                      className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between gap-3 ${
-                        isSelected
-                          ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-500 ring-2 ring-emerald-500/30'
-                          : 'bg-slate-50 dark:bg-slate-950/50 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span
-                              className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${soil.colorClass} ${soil.borderClass}`}
-                            >
-                              {soil.vernacular}
-                            </span>
-                          </div>
-                          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                            {soil.name}
-                          </h3>
-                        </div>
-                        <div
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center flex-shrink-0 ${
-                            isSelected
-                              ? 'border-emerald-500 bg-emerald-500 text-white'
-                              : 'border-slate-400 dark:border-slate-600'
-                          }`}
-                        >
-                          {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                        </div>
-                      </div>
-
-                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                        {soil.description}
-                      </p>
-
-                      <div className="pt-2 border-t border-slate-200/60 dark:border-slate-800/60 text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">
-                        Best for: {soil.bestFor}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Custom Soil Input */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center gap-3">
-                <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                  <Plus className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span>Custom Soil Profile?</span>
-                </span>
-                <div className="flex items-center gap-2 flex-1 w-full">
-                  <input
-                    type="text"
-                    value={customSoilInput}
-                    onChange={(e) => setCustomSoilInput(e.target.value)}
-                    placeholder="Type soil composition (e.g. Silt Clay Loam, Saline Coastal)..."
-                    className="flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddCustomSoil}
-                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-sm"
-                  >
-                    Select Soil
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* STEP 4: PERMISSIONS SETUP */}
+          {/* ══════════════════════════════════════════════════════════ */}
+          {/* STEP 4: LOCATION & MAHARASHTRA DISTRICT TARGETING         */}
+          {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 4 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="space-y-1 border-b border-slate-200 dark:border-slate-800 pb-4">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                  <span>Authorize Essential Application Permissions</span>
+            <div className="space-y-5">
+              <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                  <span>Exact Location & Maharashtra District / स्थान व जिल्हा निवड</span>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Allow camera, video, location, and notification access for real-time disease early detection.
+                  Allow live GPS or select your Maharashtra district for localized microclimate and disease contagion telemetry.
                 </p>
               </div>
 
-              {permFeedback && (
-                <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-2 animate-in fade-in">
-                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-                  <span>{permFeedback}</span>
+              {/* Live Geolocation Button */}
+              <div className="p-4 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <span className="text-xs font-black text-sky-700 dark:text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Navigation className="w-4 h-4" />
+                    <span>स्वयंचलित GPS स्थान ओळख (Live GPS Geolocation)</span>
+                  </span>
+                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
+                    वर्तमान निर्देशांक: <strong className="font-mono text-slate-900 dark:text-white">{detectedCoords}</strong>
+                  </p>
                 </div>
-              )}
 
-              <div className="space-y-3.5">
-                {/* Location Access */}
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                      <MapPin className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-xs font-bold text-slate-900 dark:text-white">
-                          GPS & Location Access
-                        </h3>
-                        <span className="text-[10px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-md font-mono font-bold">
-                          {permissions.location ? 'Granted' : 'Recommended'}
+                <button
+                  type="button"
+                  onClick={handleRequestLocation}
+                  disabled={isLocating}
+                  className="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-md shadow-sky-600/20 active:scale-95 disabled:opacity-50 flex-shrink-0"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
+                  <span>{isLocating ? 'शोधत आहे...' : 'Detect My Live Farm GPS'}</span>
+                </button>
+              </div>
+
+              {/* Maharashtra Districts Grid Selector */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                  Select Maharashtra District / महाराष्ट्र जिल्हा निवडा:
+                </label>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                  {MAHARASHTRA_DISTRICTS.map((dist) => {
+                    const isSelected = selectedDistrict === dist.id;
+                    return (
+                      <button
+                        key={dist.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedDistrict(dist.id);
+                          setDetectedCoords(`${dist.coordinates} (${dist.name}, Maharashtra)`);
+                        }}
+                        className={`p-3 rounded-2xl border text-left transition flex flex-col justify-between gap-1 ${
+                          isSelected
+                            ? 'bg-sky-500/15 border-sky-500 shadow-md ring-2 ring-sky-500/30'
+                            : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                        }`}
+                      >
+                        <span className="text-xs font-black text-slate-900 dark:text-white">
+                          {dist.marathiName}
                         </span>
-                      </div>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                        Required for precision GIS field mapping, weather advisories & regional outbreak alerts.
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleRequestLocation}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-                      permissions.location
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-300'
-                    }`}
-                  >
-                    {permissions.location ? <Check className="w-4 h-4" /> : null}
-                    <span>{permissions.location ? 'Location Active' : 'Grant Location'}</span>
-                  </button>
-                </div>
-
-                {/* Notification Access */}
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                      <Bell className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-xs font-bold text-slate-900 dark:text-white">
-                          Outbreak & Diagnostics Push Notifications
-                        </h3>
-                        <span className="text-[10px] bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 px-2 py-0.5 rounded-md font-mono font-bold">
-                          {permissions.notifications ? 'Granted' : 'Recommended'}
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                          {dist.name}
                         </span>
-                      </div>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                        Receive instant alert banners when neighbor farms report contagious crop blights.
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleRequestNotifications}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
-                      permissions.notifications
-                        ? 'bg-emerald-600 text-white'
-                        : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-300'
-                    }`}
-                  >
-                    {permissions.notifications ? <Check className="w-4 h-4" /> : null}
-                    <span>{permissions.notifications ? 'Notifications Active' : 'Enable Notifications'}</span>
-                  </button>
+                        <span className="text-[9px] text-sky-600 dark:text-sky-400 font-mono truncate">
+                          {dist.region.split(' ')[0]}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
+              </div>
 
-                {/* Camera Access */}
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                      <Camera className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-slate-900 dark:text-white">
-                        Camera & Leaf Scan Access
-                      </h3>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                        Capture diseased leaf photos directly for instant AI vision neural net diagnosis.
-                      </p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={permissions.camera}
-                    onChange={(e) => setPermissions({ ...permissions, camera: e.target.checked })}
-                    className="w-5 h-5 accent-emerald-600 cursor-pointer rounded"
-                  />
-                </div>
-
-                {/* Video Upload Access */}
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="p-2.5 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400">
-                      <Video className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-bold text-slate-900 dark:text-white">
-                        Video Upload & Drone Telemetry Access
-                      </h3>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                        Upload MP4 aerial video clips from smartphones or drones for field analysis.
-                      </p>
-                    </div>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={permissions.video}
-                    onChange={(e) => setPermissions({ ...permissions, video: e.target.checked })}
-                    className="w-5 h-5 accent-emerald-600 cursor-pointer rounded"
-                  />
-                </div>
+              {/* Selected District Agro-Climatic Intelligence Box */}
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5 text-xs">
+                <span className="font-bold text-slate-900 dark:text-white">
+                  📍 निवडलेला कृषी-हवामान पट्टा ({currentDistrictObj.marathiName} / {currentDistrictObj.name}):
+                </span>
+                <p className="text-slate-600 dark:text-slate-300">
+                  हवामान क्षेत्र: <strong>{currentDistrictObj.agroZone}</strong> • भौगोलिक विभाग: <strong>{currentDistrictObj.region}</strong>
+                </p>
+                <p className="text-[11px] text-slate-400 font-mono">
+                  GPS निर्देशांक: {currentDistrictObj.coordinates}
+                </p>
               </div>
             </div>
           )}
 
-          {/* STEP 5: REVIEW & SUMMARY */}
+          {/* ══════════════════════════════════════════════════════════ */}
+          {/* STEP 5: CAMERA & GALLERY HARDWARE PERMISSIONS             */}
+          {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 5 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300 text-center sm:text-left">
-              <div className="space-y-1 border-b border-slate-200 dark:border-slate-800 pb-4">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center justify-center sm:justify-start gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                  <span>Onboarding Profile Ready</span>
+            <div className="space-y-5">
+              <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
+                <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  <span>Hardware & Media Permissions / कॅमेरा व गॅलरी प्रवेश परवानग्या</span>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Review your configured preferences before launching the complete AGRI SHIELD workspace.
+                  Enable device permissions for AI leaf disease detection and multispectral drone scan uploads.
                 </p>
               </div>
 
-              {/* Summary Card */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                    <Globe className="w-3.5 h-3.5 text-emerald-500" /> Language & Audio
-                  </span>
-                  <div className="text-sm font-extrabold text-slate-900 dark:text-white">
-                    {INDIAN_LANGUAGES.find((l) => l.id === selectedLanguage)?.name} (
-                    {INDIAN_LANGUAGES.find((l) => l.id === selectedLanguage)?.nativeName})
-                  </div>
-                  <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-                    Audio prompts enabled
-                  </p>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* 1. Camera Permission Card */}
+                <div className="p-5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                          <Camera className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                            कॅमेरा प्रवेश (Camera Access)
+                          </h3>
+                          <span className="text-[11px] text-slate-400">Crop Leaf Pathology Scanner</span>
+                        </div>
+                      </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                    <Sprout className="w-3.5 h-3.5 text-emerald-500" /> Selected Crops ({selectedCrops.length})
-                  </span>
-                  <div className="flex flex-wrap gap-1">
-                    {selectedCrops.map((c) => (
                       <span
-                        key={c}
-                        className="text-[11px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-md"
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border ${
+                          permissions.camera
+                            ? 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30'
+                            : 'bg-amber-500/15 text-amber-600 border-amber-500/30'
+                        }`}
                       >
-                        {RECOMMENDED_CROPS.find((item) => item.id === c)?.name || c}
+                        {permissions.camera ? 'मंजूर (GRANTED)' : 'प्रलंबित (REQUIRED)'}
                       </span>
-                    ))}
+                    </div>
+
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      Instant leaf disease identification, pest egg cluster detection, and yellow rust spot optical analysis.
+                    </p>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={handleRequestCamera}
+                    className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm ${
+                      permissions.camera
+                        ? 'bg-emerald-600 text-white shadow-emerald-600/20'
+                        : 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    <Camera className="w-4 h-4" />
+                    <span>{permissions.camera ? '✓ Camera Access Granted (Test OK)' : 'Grant Camera Access'}</span>
+                  </button>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-2">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-                    <Layers className="w-3.5 h-3.5 text-emerald-500" /> Holding Soil Profile
-                  </span>
-                  <div className="text-sm font-extrabold text-slate-900 dark:text-white">
-                    {RECOMMENDED_SOILS.find((s) => s.id === selectedSoil)?.name || selectedSoil}
+                {/* 2. Gallery & Storage Permission Card */}
+                <div className="p-5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm flex flex-col justify-between">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400">
+                          <FolderOpen className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                            गॅलरी व स्टोरेज प्रवेश (Gallery & Files)
+                          </h3>
+                          <span className="text-[11px] text-slate-400">Drone GeoTIFF & Soil Reports</span>
+                        </div>
+                      </div>
+
+                      <span
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border ${
+                          permissions.gallery
+                            ? 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30'
+                            : 'bg-amber-500/15 text-amber-600 border-amber-500/30'
+                        }`}
+                      >
+                        {permissions.gallery ? 'मंजूर (GRANTED)' : 'प्रलंबित (REQUIRED)'}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      Upload high-resolution drone multispectral imagery, soil lab PDF cards, and field boundary GeoJSON maps.
+                    </p>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                    Hydrological model calibrated
-                  </p>
+
+                  <button
+                    type="button"
+                    onClick={handleRequestGallery}
+                    className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm ${
+                      permissions.gallery
+                        ? 'bg-emerald-600 text-white shadow-emerald-600/20'
+                        : 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    <FolderOpen className="w-4 h-4" />
+                    <span>{permissions.gallery ? '✓ Gallery Access Active' : 'Grant Gallery Access'}</span>
+                  </button>
                 </div>
               </div>
 
-              {/* Ready Banner */}
-              <div className="p-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-700 text-white space-y-2 shadow-lg shadow-emerald-600/20">
-                <h3 className="text-sm font-bold flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  <span>Full Application User Interface Unlocked!</span>
-                </h3>
-                <p className="text-xs text-emerald-100 leading-relaxed">
-                  Your customized holding profile, disease diagnostic neural net, and precision spatial map are ready.
-                </p>
+              {/* Summary of Maharashtra Configuration */}
+              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
+                    तयार आहे (Setup Summary For Maharashtra)
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-medium">
+                  <div>
+                    <span className="text-[10px] text-slate-400 block">भाषा (Language)</span>
+                    <strong className="text-slate-800 dark:text-slate-200">
+                      {INDIAN_LANGUAGES.find((l) => l.id === selectedLanguage)?.nativeName}
+                    </strong>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block">पिके (Active Crops)</span>
+                    <strong className="text-slate-800 dark:text-slate-200">
+                      {selectedCrops.length} Crops Selected
+                    </strong>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block">माती (Soil Profile)</span>
+                    <strong className="text-slate-800 dark:text-slate-200">
+                      {MAHARASHTRA_SOILS.find((s) => s.id === selectedSoil)?.marathiName.split(' ')[0]}
+                    </strong>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block">जिल्हा (District)</span>
+                    <strong className="text-slate-800 dark:text-slate-200">
+                      {currentDistrictObj.marathiName} ({currentDistrictObj.name})
+                    </strong>
+                  </div>
+                </div>
               </div>
             </div>
           )}
         </div>
 
-        {/* Wizard Footer Controls */}
-        <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/90 flex items-center justify-between gap-4">
-          <button
-            type="button"
-            disabled={currentStep === 1}
-            onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
-            className="px-5 py-2.5 rounded-2xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition flex items-center gap-2 disabled:opacity-40"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Previous</span>
-          </button>
+        {/* ── Bottom Action Navigation Bar ── */}
+        <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between flex-shrink-0">
+          {currentStep > 1 ? (
+            <button
+              type="button"
+              onClick={() => setCurrentStep((prev) => prev - 1)}
+              className="px-5 py-2.5 rounded-2xl bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>मागे (Back)</span>
+            </button>
+          ) : (
+            <div />
+          )}
 
           {currentStep < 5 ? (
             <button
               type="button"
-              onClick={() => setCurrentStep((prev) => Math.min(5, prev + 1))}
-              className="px-6 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-2 shadow-md shadow-emerald-600/20 active:scale-95"
+              onClick={() => setCurrentStep((prev) => prev + 1)}
+              className="px-6 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-95"
             >
-              <span>Continue Step {currentStep + 1}</span>
+              <span>पुढील पायरी (Next Step)</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
             <button
               type="button"
               onClick={handleFinishOnboarding}
-              className="px-8 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition flex items-center gap-2 shadow-xl shadow-emerald-600/30 active:scale-95"
+              className="px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black transition flex items-center gap-2 shadow-xl shadow-emerald-600/30 active:scale-95 animate-pulse"
             >
-              <span>Launch AGRI SHIELD Workspace</span>
-              <ArrowRight className="w-4 h-4" />
+              <Sparkles className="w-4 h-4" />
+              <span>सेटअप पूर्ण करा व डॅशबोर्ड सुरू करा (Launch Maharashtra Dashboard)</span>
+              <CheckCircle2 className="w-4 h-4" />
             </button>
           )}
         </div>

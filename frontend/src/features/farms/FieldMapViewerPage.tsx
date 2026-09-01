@@ -42,6 +42,11 @@ interface FieldZoneRecord {
   fertilizerEfficiency: string;
   equipmentStatus: string;
   centerCoord: string;
+  currentRiskTier?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  currentRiskScore?: number;
+  forecastRiskTier?: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  forecastRiskScore?: number;
+  riskExplanation?: string;
 }
 
 export const FieldMapViewerPage: React.FC = () => {
@@ -49,6 +54,7 @@ export const FieldMapViewerPage: React.FC = () => {
 
   // Mode: 'india_heatmap' | 'local_gis'
   const [viewMode, setViewMode] = useState<'india_heatmap' | 'local_gis'>('india_heatmap');
+  const [riskLayerMode, setRiskLayerMode] = useState<'none' | 'current_risk' | 'forecast_risk'>('current_risk');
 
   // Search & Resource Tab state
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -63,7 +69,7 @@ export const FieldMapViewerPage: React.FC = () => {
   const fieldZones: FieldZoneRecord[] = [
     {
       id: 'zone-a1',
-      name: 'North Field A1',
+      name: 'North Field A1 (Z01)',
       crop: 'Corn',
       status: 'Healthy',
       soilMoisture: '68%',
@@ -77,31 +83,41 @@ export const FieldMapViewerPage: React.FC = () => {
       fertilizerEfficiency: '87%',
       equipmentStatus: 'Active',
       centerCoord: '11.0168° N, 76.9558° E',
+      currentRiskTier: 'LOW',
+      currentRiskScore: 24,
+      forecastRiskTier: 'LOW',
+      forecastRiskScore: 32,
+      riskExplanation: 'Optimal microclimate balance. Zero pathogen pressure.',
     },
     {
       id: 'zone-b2',
-      name: 'East Field B2',
-      crop: 'Wheat',
-      status: 'Stable',
+      name: 'East Field B2 (Z03)',
+      crop: 'Wheat (PBW-550)',
+      status: 'Warning',
       soilMoisture: '72%',
       temperature: '24°C',
-      growthStage: 'Flowering',
+      growthStage: 'Flowering & Heading',
       healthScore: 84,
-      humidity: '41%',
+      humidity: '84%',
       phLevel: '6.4',
       areaHectares: '4.1',
       waterConsumption: '2,100L',
       fertilizerEfficiency: '92%',
       equipmentStatus: 'Active',
       centerCoord: '11.0182° N, 76.9620° E',
+      currentRiskTier: 'HIGH',
+      currentRiskScore: 78,
+      forecastRiskTier: 'CRITICAL',
+      forecastRiskScore: 89,
+      riskExplanation: 'High humidity & persistent rain escalate Yellow Rust fungal risk.',
     },
     {
       id: 'zone-c3',
-      name: 'South Field C3',
+      name: 'South Field C3 (Z04)',
       crop: 'Soybean',
       status: 'Warning',
-      soilMoisture: '59%',
-      temperature: '29°C',
+      soilMoisture: '34%',
+      temperature: '34°C',
       growthStage: 'Germination',
       healthScore: 54,
       humidity: '28%',
@@ -111,6 +127,11 @@ export const FieldMapViewerPage: React.FC = () => {
       fertilizerEfficiency: '71%',
       equipmentStatus: 'Maintenance',
       centerCoord: '11.0140° N, 76.9510° E',
+      currentRiskTier: 'HIGH',
+      currentRiskScore: 74,
+      forecastRiskTier: 'CRITICAL',
+      forecastRiskScore: 86,
+      riskExplanation: 'CWSI deficit (0.78) and thermal stress indicate high water depletion.',
     },
   ];
 
@@ -592,8 +613,34 @@ export const FieldMapViewerPage: React.FC = () => {
               </defs>
             </svg>
 
-            {/* Field Center Label Pin */}
-            <div className="absolute top-[52%] left-[48%] -translate-x-1/2 -translate-y-1/2 text-center text-white pointer-events-none drop-shadow-md">
+            {/* Top Left Risk Forecast Layer Switcher */}
+            <div className="absolute top-4 left-4 flex items-center gap-1.5 p-1 bg-slate-900/90 border border-slate-800 backdrop-blur-md rounded-2xl shadow-2xl z-20">
+              <button
+                type="button"
+                onClick={() => setRiskLayerMode('current_risk')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
+                  riskLayerMode === 'current_risk'
+                    ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                Current Risk
+              </button>
+              <button
+                type="button"
+                onClick={() => setRiskLayerMode('forecast_risk')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
+                  riskLayerMode === 'forecast_risk'
+                    ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 animate-pulse'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                7-Day Forecast Risk
+              </button>
+            </div>
+
+            {/* Field Center Label Pin with Dynamic Risk Assessment */}
+            <div className="absolute top-[52%] left-[48%] -translate-x-1/2 -translate-y-1/2 text-center text-white pointer-events-none drop-shadow-md space-y-1">
               <div className="flex items-center justify-center gap-1 text-xs font-bold text-lime-300">
                 <Leaf className="w-4 h-4 fill-current" />
               </div>
@@ -601,6 +648,30 @@ export const FieldMapViewerPage: React.FC = () => {
                 {currentField.name}
               </h4>
               <p className="text-xs text-emerald-200 font-medium drop-shadow-md">{currentField.crop}</p>
+              
+              {/* Dynamic Risk Tag */}
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-950/80 border border-white/20 text-xs font-black font-mono shadow-lg backdrop-blur-md">
+                <span className={`w-2 h-2 rounded-full ${
+                  (riskLayerMode === 'current_risk' ? currentField.currentRiskTier : currentField.forecastRiskTier) === 'CRITICAL'
+                    ? 'bg-rose-500 animate-ping'
+                    : (riskLayerMode === 'current_risk' ? currentField.currentRiskTier : currentField.forecastRiskTier) === 'HIGH'
+                    ? 'bg-orange-500'
+                    : 'bg-emerald-400'
+                }`} />
+                <span>
+                  {riskLayerMode === 'current_risk' ? 'Current' : '7D Forecast'}:{' '}
+                  <strong className={
+                    (riskLayerMode === 'current_risk' ? currentField.currentRiskTier : currentField.forecastRiskTier) === 'CRITICAL'
+                      ? 'text-rose-400'
+                      : (riskLayerMode === 'current_risk' ? currentField.currentRiskTier : currentField.forecastRiskTier) === 'HIGH'
+                      ? 'text-orange-400'
+                      : 'text-emerald-400'
+                  }>
+                    {riskLayerMode === 'current_risk' ? currentField.currentRiskTier : currentField.forecastRiskTier} (
+                    {riskLayerMode === 'current_risk' ? currentField.currentRiskScore : currentField.forecastRiskScore}/100)
+                  </strong>
+                </span>
+              </div>
             </div>
 
             {/* Top Right Actions Bar: [ Export ] + [ ⋮ ] */}

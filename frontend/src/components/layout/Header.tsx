@@ -8,9 +8,11 @@ import {
   Menu,
   User,
   LogOut,
+  Globe,
 } from 'lucide-react';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import { NotificationCenterModal } from '@/components/notifications/NotificationCenterModal';
+import { OnboardingWizard } from '@/features/onboarding/OnboardingWizard';
 import { useTheme } from '@/context/ThemeContext';
 import { useAuth, getRoleDashboardPath } from '@/context/AuthContext';
 
@@ -32,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const [isNotifOpen, setIsNotifOpen] = useState<boolean>(false);
+  const [isOnboardingModalOpen, setIsOnboardingModalOpen] = useState<boolean>(false);
   const [unreadCount, setUnreadCount] = useState<number>(3);
 
   const isAuthRoute = isMinimal || location.pathname === '/login' || location.pathname === '/register';
@@ -103,6 +106,20 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">State:</span>
               <StatusBadge status={systemStatus} size="sm" />
             </div>
+          )}
+
+          {/* Maharashtra Agro Setup & Language Quick Selector */}
+          {!isAuthRoute && (
+            <button
+              type="button"
+              onClick={() => setIsOnboardingModalOpen(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-xs font-bold transition shadow-xs"
+              title="महाराष्ट्र कृषी सेटअप: भाषा, पिके व माती निवडा (Configure Maharashtra Agro Setup)"
+            >
+              <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+              <span className="hidden sm:inline">मराठी • महाराष्ट्र</span>
+              <span className="sm:hidden">मराठी</span>
+            </button>
           )}
 
           {/* Theme Switcher Toggle */}
@@ -220,6 +237,10 @@ export const Header: React.FC<HeaderProps> = ({
           onClose={() => setIsNotifOpen(false)}
           onUpdateCount={(c) => setUnreadCount(c)}
         />
+      )}
+
+      {isOnboardingModalOpen && (
+        <OnboardingWizard onClose={() => setIsOnboardingModalOpen(false)} />
       )}
     </>
   );

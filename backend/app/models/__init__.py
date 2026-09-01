@@ -38,6 +38,7 @@ from app.models.observation import (
     WaterStressCategory,
     WaterStressObservation,
     WeatherObservation,
+    WeatherForecast,
 )
 
 # Spread Intelligence & Advisory Models
