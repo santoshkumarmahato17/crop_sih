@@ -575,41 +575,43 @@ export const FarmerDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 2. Soil Moisture & Water Stress Level — soil cross-section background */}
-        <div className="relative rounded-3xl overflow-hidden shadow-lg" style={{ minHeight: '170px' }}>
+        {/* 2. Soil Moisture & Water Stress Level — High-res Seedling Irrigation Background */}
+        <div className="relative rounded-3xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300" style={{ minHeight: '170px' }}>
 
-          {/* ── Soil cross-section background ── */}
+          {/* ── High-res Seedling Irrigation photo background ── */}
           <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url('/soil-bg.jpg')`, backgroundPosition: 'center 60%' }}
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+            style={{ backgroundImage: `url('/water-stress-bg.jpg')`, backgroundPosition: 'center 45%' }}
           />
 
-          {/* Dark scrim so text is readable */}
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/55 to-slate-950/80" />
+          {/* Dark gradient scrim so text is ultra-readable and vibrant */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/75 via-slate-950/60 to-slate-950/85" />
 
           {/* Card content */}
-          <div className="relative z-10 p-5 space-y-2.5 h-full">
+          <div className="relative z-10 p-5 space-y-2.5 h-full flex flex-col justify-between">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] text-slate-200 font-bold uppercase tracking-wider drop-shadow">
+              <span className="text-[11px] text-emerald-300 font-bold uppercase tracking-wider drop-shadow">
                 Water Stress / CWSI
               </span>
-              <div className="p-1.5 rounded-xl bg-blue-500/20 border border-blue-400/30 text-blue-300 backdrop-blur-sm">
-                <Droplets className="w-4 h-4" />
+              <div className="p-1.5 rounded-xl bg-blue-500/25 border border-blue-400/40 text-blue-200 backdrop-blur-md shadow-sm">
+                <Droplets className="w-4 h-4 text-blue-300 animate-pulse" />
               </div>
             </div>
 
             <div>
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-white drop-shadow-lg">0.76</span>
-                <span className="text-xs text-orange-300 font-bold drop-shadow">Moderate Stress</span>
+                <span className="text-2xl font-black text-white drop-shadow-lg font-mono">0.76</span>
+                <span className="text-xs text-amber-300 font-bold drop-shadow px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/30">
+                  Moderate Stress
+                </span>
               </div>
               {/* Stress progress bar */}
-              <div className="w-full h-2 rounded-full bg-white/15 overflow-hidden mt-2 backdrop-blur-sm">
+              <div className="w-full h-2 rounded-full bg-white/20 overflow-hidden mt-2 backdrop-blur-sm">
                 <div className="h-full rounded-full bg-gradient-to-r from-blue-500 via-amber-400 to-rose-500 w-[65%]" />
               </div>
             </div>
 
-            <p className="text-[11px] text-slate-300 leading-snug drop-shadow">
+            <p className="text-[11px] text-slate-200 leading-snug drop-shadow font-medium">
               Zones Z04 &amp; Z05 need irrigation within 24h
             </p>
           </div>
