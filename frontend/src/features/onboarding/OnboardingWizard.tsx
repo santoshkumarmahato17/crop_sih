@@ -130,102 +130,102 @@ export const MAHARASHTRA_CROPS: CropOption[] = [
   {
     id: 'cotton',
     name: 'Bt Cotton',
-    vernacular: 'कपास • Cotton',
-    marathiName: 'कापूस (सफेद सोने)',
+    vernacular: 'Cotton (White Gold)',
+    marathiName: 'Bt Cotton',
     category: 'Cash & Fiber Crop',
     imageUrl: 'https://images.unsplash.com/photo-1594904351111-a072f80b1a71?auto=format&fit=crop&w=600&q=80',
     duration: '160 - 180 Days',
-    maharashtraRegion: 'विदर्भ व मराठवाडा (यवतमाळ, अकोला, अमरावती, जळगाव)',
+    maharashtraRegion: 'Vidarbha & Marathwada (Yavatmal, Akola, Amravati, Jalgaon)',
   },
   {
     id: 'sugarcane',
     name: 'Sugarcane (Co-86032)',
-    vernacular: 'गन्ना • Sugarcane',
-    marathiName: 'ऊस (बागायती पीक)',
+    vernacular: 'Sugarcane (Irrigated)',
+    marathiName: 'Sugarcane',
     category: 'Commercial Cash Crop',
     imageUrl: 'https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=600&q=80',
     duration: '330 - 365 Days',
-    maharashtraRegion: 'पश्चिम महाराष्ट्र (कोल्हापूर, पुणे, सांगली, सातारा, अहमदनगर)',
+    maharashtraRegion: 'Western Maharashtra (Kolhapur, Pune, Sangli, Satara, Ahmednagar)',
   },
   {
     id: 'soybean',
     name: 'Soybean (JS-335 / JS-9305)',
-    vernacular: 'सोयाबीन • Soybean',
-    marathiName: 'सोयाबीन (खरीप पीक)',
+    vernacular: 'Soybean (Kharif)',
+    marathiName: 'Soybean',
     category: 'Oilseed & Protein Crop',
     imageUrl: 'https://images.unsplash.com/photo-1599588675200-a664654e0c3f?auto=format&fit=crop&w=600&q=80',
     duration: '90 - 105 Days',
-    maharashtraRegion: 'मराठवाडा व विदर्भ (लातूर, उस्मानाबाद, नांदेड, बुलढाणा)',
+    maharashtraRegion: 'Marathwada & Vidarbha (Latur, Osmanabad, Nanded, Buldhana)',
   },
   {
     id: 'onion',
     name: 'Onion (Gavran / Fursungi)',
-    vernacular: 'प्याज • Red Onion',
-    marathiName: 'कांदा (लाल/रांगडा कांदा)',
+    vernacular: 'Red Onion (Rabi & Kharif)',
+    marathiName: 'Red Onion',
     category: 'Horticulture / Bulb Crop',
     imageUrl: 'https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=600&q=80',
     duration: '110 - 130 Days',
-    maharashtraRegion: 'नाशिक, अहमदनगर, पुणे (लासलगाव कृषी बाजार पट्टा)',
+    maharashtraRegion: 'Nashik, Ahmednagar, Pune (Lasalgaon Market Belt)',
   },
   {
     id: 'grapes',
     name: 'Grapes (Thompson Seedless / Sonaka)',
-    vernacular: 'अंगूर • Export Grapes',
-    marathiName: 'द्राक्षे (निर्यातक्षम फळपीक)',
+    vernacular: 'Export Grapes',
+    marathiName: 'Table & Export Grapes',
     category: 'High-Value Horticulture',
     imageUrl: 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?auto=format&fit=crop&w=600&q=80',
     duration: 'Perennial (120-140 Days/Pruning)',
-    maharashtraRegion: 'नाशिक, सांगली, सोलापूर (द्राक्ष राजधानी पट्टा)',
+    maharashtraRegion: 'Nashik, Sangli, Solapur (Grape Capital Belt)',
   },
   {
     id: 'pomegranate',
     name: 'Pomegranate (Bhagwa / Arakta)',
-    vernacular: 'अनार • Pomegranate',
-    marathiName: 'डाळिंब (भगवा जात)',
+    vernacular: 'Pomegranate (Bhagwa)',
+    marathiName: 'Pomegranate',
     category: 'Arid Horticulture',
     imageUrl: 'https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=600&q=80',
     duration: 'Perennial (Bahar Management)',
-    maharashtraRegion: 'सोलापूर (सांगोला), सांगली, अहिल्यानगर दुष्काळी पट्टा',
+    maharashtraRegion: 'Solapur (Sangola), Sangli, Ahilyanagar Arid Belt',
   },
   {
     id: 'paddy',
     name: 'Paddy Rice (Indrayani / Wada Kolam)',
-    vernacular: 'धान / चावल • Paddy',
-    marathiName: 'भात / धान (इंद्रायणी व वाडा कोलम)',
+    vernacular: 'Paddy / Rice',
+    marathiName: 'Paddy Rice',
     category: 'Cereal / Staple Grain',
     imageUrl: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80',
     duration: '115 - 135 Days',
-    maharashtraRegion: 'कोकण किनारपट्टी (रत्नागिरी, सिंधुदुर्ग, रायगड, ठाणे/पालघर)',
+    maharashtraRegion: 'Konkan Coast (Ratnagiri, Sindhudurg, Raigad, Thane/Palghar)',
   },
   {
     id: 'wheat',
     name: 'Wheat (Lokwan / Sharbati)',
-    vernacular: 'गेहूं • Golden Wheat',
-    marathiName: 'गहू (लोकवन व सिहोर)',
+    vernacular: 'Golden Wheat',
+    marathiName: 'Golden Wheat',
     category: 'Rabi Cereal Grain',
     imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=600&q=80',
     duration: '110 - 125 Days',
-    maharashtraRegion: 'खानदेश, मध्य महाराष्ट्र व मराठवाडा बागायती भाग',
+    maharashtraRegion: 'Khandesh, Central Maharashtra & Marathwada Irrigated Tracts',
   },
   {
     id: 'tomato',
     name: 'Tomato (Abhinav / Hyb-3)',
-    vernacular: 'टमाटर • Fresh Tomato',
-    marathiName: 'टोमॅटो (संकरित जात)',
+    vernacular: 'Fresh Hybrid Tomato',
+    marathiName: 'Hybrid Tomato',
     category: 'Vegetable Crop',
     imageUrl: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80',
     duration: '90 - 120 Days',
-    maharashtraRegion: 'जुन्नर (पुणे), नाशिक (दिंडोरी), सातारा पट्टा',
+    maharashtraRegion: 'Junnar (Pune), Nashik (Dindori), Satara Belt',
   },
   {
     id: 'turmeric',
     name: 'Turmeric (Salem / Rajapuri)',
-    vernacular: 'हल्दी • Golden Turmeric',
-    marathiName: 'हळद (राजापुरी व सेलम)',
+    vernacular: 'Golden Spice Turmeric',
+    marathiName: 'Turmeric',
     category: 'Commercial Spice Crop',
     imageUrl: 'https://images.unsplash.com/photo-1615485290176-791b7d5a5700?auto=format&fit=crop&w=600&q=80',
     duration: '240 - 270 Days',
-    maharashtraRegion: 'सांगली, सातारा व नांदेड (हळदीची बाजारपेठ)',
+    maharashtraRegion: 'Sangli, Satara & Nanded (Turmeric Trading Hub)',
   },
 ];
 
@@ -245,62 +245,62 @@ export interface SoilOption {
 export const MAHARASHTRA_SOILS: SoilOption[] = [
   {
     id: 'black_cotton_regur',
-    name: 'Black Cotton Soil (Regur)',
-    marathiName: 'काळी कापसाची माती (रेगूर माती)',
-    vernacular: 'डेक्कन ट्रॅप बेसाल्ट • Deep Black Clay',
+    name: 'Black Cotton Soil (Regur Clay)',
+    marathiName: 'Black Cotton Soil',
+    vernacular: 'Deccan Trap Basalt • Deep Black Clay',
     colorClass: 'bg-slate-950 text-slate-100',
     borderClass: 'border-slate-700',
     description: 'High montmorillonite clay content with deep self-ploughing cracks and extraordinary moisture retention.',
-    bestFor: 'कापूस (Cotton), सोयाबीन (Soybean), ऊस (Sugarcane), ज्वारी व सूर्यफूल',
-    maharashtraGeology: 'Deccan Trap Basalt Lava (विदर्भ, मराठवाडा, खानदेश व पश्चिम महाराष्ट्र खोरे)',
+    bestFor: 'Cotton, Soybean, Sugarcane, Sorghum & Sunflower',
+    maharashtraGeology: 'Deccan Trap Basalt Lava (Vidarbha, Marathwada, Khandesh & Western Maharashtra)',
     soilTextureUrl: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&w=400&q=80',
   },
   {
     id: 'laterite_soil',
     name: 'Laterite Soil (Jambha)',
-    marathiName: 'जांभी माती (कोकण व घाटमाथा)',
-    vernacular: 'जांभा खडक • Iron & Aluminium Rich',
+    marathiName: 'Laterite Soil (Coastal & Ghats)',
+    vernacular: 'Iron & Aluminium Rich Tropical Clay',
     colorClass: 'bg-orange-950/70 text-orange-200',
     borderClass: 'border-orange-700/60',
     description: 'Heavily leached tropical reddish-brown soil rich in iron and bauxite oxides, highly porous with rapid percolation.',
-    bestFor: 'हापूस आंबा (Alphonso Mango), काजू (Cashew), सुपारी, नारळ व भात',
-    maharashtraGeology: 'High Rainfall Western Ghats (रत्नागिरी, सिंधुदुर्ग, कोल्हापूर पश्चिम घाट)',
+    bestFor: 'Alphonso Mango, Cashew, Betelnut, Coconut & Paddy',
+    maharashtraGeology: 'High Rainfall Western Ghats (Ratnagiri, Sindhudurg, Kolhapur Western Ghats)',
     soilTextureUrl: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=400&q=80',
   },
   {
     id: 'alluvial_loam',
     name: 'River Basin Alluvial Loam',
-    marathiName: 'गाळाची सुपीक माती (नदी खोरे)',
-    vernacular: 'गोदावरी, भीमा, कृष्णा खोरे • Silt Loam',
+    marathiName: 'River Delta Silt Loam',
+    vernacular: 'Godavari, Bhima, Krishna Basins • Silt Loam',
     colorClass: 'bg-amber-950/60 text-amber-200',
     borderClass: 'border-amber-700/60',
     description: 'Finely textured river delta silt loam with neutral pH (7.2), rich in available potassium, organic humus and micronutrients.',
-    bestFor: 'ऊस (Sugarcane), गहू (Wheat), द्राक्षे (Grapes), कांदा व केळी',
-    maharashtraGeology: 'River Basins (गोदावरी, कृष्णा, तापी व भीमा नदी काठ)',
+    bestFor: 'Sugarcane, Wheat, Grapes, Onion & Banana',
+    maharashtraGeology: 'River Basins (Godavari, Krishna, Tapi & Bhima River Banks)',
     soilTextureUrl: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?auto=format&fit=crop&w=400&q=80',
   },
   {
     id: 'red_yellow_soil',
     name: 'Red & Yellow Sandy Clay',
-    marathiName: 'तांबडी व पिवळसर माती (पूर्व विदर्भ)',
-    vernacular: 'लोहयुक्त माती • Ferruginous Sandy Clay',
+    marathiName: 'Red Sandy Loam Soil',
+    vernacular: 'Ferruginous Sandy Clay',
     colorClass: 'bg-rose-950/60 text-rose-200',
     borderClass: 'border-rose-700/60',
     description: 'Derived from ancient crystalline granite-gneiss rock formations. Moderate fertility, well-aerated with good drainage.',
-    bestFor: 'भात (Paddy), भुईमूग (Groundnut), तूर (Tur Dal) व भाजीपाला',
-    maharashtraGeology: 'Archaean Granite Gneiss (चंद्रपूर, गडचिरोली, भंडारा व गोंदिया)',
+    bestFor: 'Paddy, Groundnut, Pigeon Pea (Tur) & Vegetables',
+    maharashtraGeology: 'Wainganga & Pranhita Basins (Bhandara, Gondia, Gadchiroli, Chandrapur)',
     soilTextureUrl: 'https://images.unsplash.com/photo-1606041008023-472dfb5e530f?auto=format&fit=crop&w=400&q=80',
   },
   {
     id: 'shallow_loam',
     name: 'Medium Shallow Loam',
-    marathiName: 'हलकी ते मध्यम मुरमाड माती',
-    vernacular: 'माळरान व मुरमाड • Well Drained Shallow Loam',
+    marathiName: 'Light Gravelly Murrum Soil',
+    vernacular: 'Plateau Murrum • High Drainage',
     colorClass: 'bg-yellow-950/50 text-yellow-200',
     borderClass: 'border-yellow-700/50',
     description: 'Coarse to medium textured soil over murrum substrate, excellent aeration, preventing water-logging root rot in orchards.',
-    bestFor: 'डाळिंब (Pomegranate), पेरू (Guava), सीताफळ, बाजरी व हरभरा',
-    maharashtraGeology: 'Semi-Arid Rainshadow Tracts (सोलापूर, सांगोला, सातारा व अहिल्यानगर पठार)',
+    bestFor: 'Pomegranate, Guava, Custard Apple, Pearl Millet (Bajra) & Gram',
+    maharashtraGeology: 'Semi-Arid Rainshadow Tracts (Solapur, Sangola, Satara & Ahilyanagar Plateaus)',
     soilTextureUrl: 'https://images.unsplash.com/photo-1551754655-cd27e38d2076?auto=format&fit=crop&w=400&q=80',
   },
 ];
@@ -315,21 +315,21 @@ export interface MaharashtraDistrict {
 }
 
 export const MAHARASHTRA_DISTRICTS: MaharashtraDistrict[] = [
-  { id: 'nashik', name: 'Nashik', marathiName: 'नाशिक', region: 'North Maharashtra (Khandesh)', agroZone: 'Western Ghats & Transition Zone', coordinates: '19.9975° N, 73.7898° E' },
-  { id: 'pune', name: 'Pune', marathiName: 'पुणे', region: 'Western Maharashtra', agroZone: 'Scarcity & Plain Zone', coordinates: '18.5204° N, 73.8567° E' },
-  { id: 'solapur', name: 'Solapur', marathiName: 'सोलापूर', region: 'Western Maharashtra', agroZone: 'Scarcity Drought-Prone Zone', coordinates: '17.6599° N, 75.9064° E' },
-  { id: 'ahmednagar', name: 'Ahilyanagar (Ahmednagar)', marathiName: 'अहिल्यानगर (अहमदनगर)', region: 'Central Maharashtra', agroZone: 'Scarcity Rainshadow Zone', coordinates: '19.0952° N, 74.7496° E' },
-  { id: 'aurangabad', name: 'Chhatrapati Sambhaji Nagar', marathiName: 'छत्रपती संभाजीनगर (औरंगाबाद)', region: 'Marathwada', agroZone: 'Central Maharashtra Plateau', coordinates: '19.8762° N, 75.3433° E' },
-  { id: 'kolhapur', name: 'Kolhapur', marathiName: 'कोल्हापूर', region: 'Western Maharashtra (South)', agroZone: 'Sub-Montane High Rainfall Zone', coordinates: '16.7050° N, 74.2433° E' },
-  { id: 'sangli', name: 'Sangli', marathiName: 'सांगली', region: 'Western Maharashtra', agroZone: 'Krishna Basin Agro-Zone', coordinates: '16.8524° N, 74.5815° E' },
-  { id: 'satara', name: 'Satara', marathiName: 'सातारा', region: 'Western Maharashtra', agroZone: 'Sub-Montane Transition Zone', coordinates: '17.6805° N, 74.0183° E' },
-  { id: 'nagpur', name: 'Nagpur', marathiName: 'नागपूर', region: 'Vidarbha (Orange Belt)', agroZone: 'Eastern Vidarbha Assured Rainfall', coordinates: '21.1458° N, 79.0882° E' },
-  { id: 'amravati', name: 'Amravati', marathiName: 'अमरावती', region: 'Western Vidarbha', agroZone: 'Cotton & Soybean Agro-Zone', coordinates: '20.9320° N, 77.7523° E' },
-  { id: 'yavatmal', name: 'Yavatmal', marathiName: 'यवतमाळ', region: 'Vidarbha', agroZone: 'Black Cotton Agro-Climatic Belt', coordinates: '20.3888° N, 78.1204° E' },
-  { id: 'latur', name: 'Latur', marathiName: 'लातूर', region: 'Marathwada', agroZone: 'Soybean & Pulses Agro-Zone', coordinates: '18.4088° N, 76.5604° E' },
-  { id: 'jalgaon', name: 'Jalgaon', marathiName: 'जळगाव', region: 'Khandesh (Banana & Cotton)', agroZone: 'Tapi Basin Alluvial Zone', coordinates: '21.0077° N, 75.5626° E' },
-  { id: 'ratnagiri', name: 'Ratnagiri', marathiName: 'रत्नागिरी', region: 'Konkan Coast', agroZone: 'Very High Rainfall Coastal Laterite Zone', coordinates: '16.9902° N, 73.3120° E' },
-  { id: 'nanded', name: 'Nanded', marathiName: 'नांदेड', region: 'Marathwada', agroZone: 'Godavari Basin Turmeric & Cotton Zone', coordinates: '19.1383° N, 77.3210° E' },
+  { id: 'nashik', name: 'Nashik', marathiName: 'Nashik District', region: 'North Maharashtra (Khandesh)', agroZone: 'Western Ghats & Transition Zone', coordinates: '19.9975° N, 73.7898° E' },
+  { id: 'pune', name: 'Pune', marathiName: 'Pune District', region: 'Western Maharashtra', agroZone: 'Scarcity & Plain Zone', coordinates: '18.5204° N, 73.8567° E' },
+  { id: 'solapur', name: 'Solapur', marathiName: 'Solapur District', region: 'Western Maharashtra', agroZone: 'Scarcity Drought-Prone Zone', coordinates: '17.6599° N, 75.9064° E' },
+  { id: 'ahmednagar', name: 'Ahilyanagar (Ahmednagar)', marathiName: 'Ahilyanagar District', region: 'Central Maharashtra', agroZone: 'Scarcity Rainshadow Zone', coordinates: '19.0952° N, 74.7496° E' },
+  { id: 'aurangabad', name: 'Chhatrapati Sambhaji Nagar', marathiName: 'Chhatrapati Sambhaji Nagar', region: 'Marathwada', agroZone: 'Central Maharashtra Plateau', coordinates: '19.8762° N, 75.3433° E' },
+  { id: 'kolhapur', name: 'Kolhapur', marathiName: 'Kolhapur District', region: 'Western Maharashtra (South)', agroZone: 'Sub-Montane High Rainfall Zone', coordinates: '16.7050° N, 74.2433° E' },
+  { id: 'sangli', name: 'Sangli', marathiName: 'Sangli District', region: 'Western Maharashtra', agroZone: 'Krishna Basin Agro-Zone', coordinates: '16.8524° N, 74.5815° E' },
+  { id: 'satara', name: 'Satara', marathiName: 'Satara District', region: 'Western Maharashtra', agroZone: 'Sub-Montane Transition Zone', coordinates: '17.6805° N, 74.0183° E' },
+  { id: 'nagpur', name: 'Nagpur', marathiName: 'Nagpur District', region: 'Vidarbha (Orange Belt)', agroZone: 'Eastern Vidarbha Assured Rainfall', coordinates: '21.1458° N, 79.0882° E' },
+  { id: 'amravati', name: 'Amravati', marathiName: 'Amravati District', region: 'Western Vidarbha', agroZone: 'Cotton & Soybean Agro-Zone', coordinates: '20.9320° N, 77.7523° E' },
+  { id: 'yavatmal', name: 'Yavatmal', marathiName: 'Yavatmal District', region: 'Vidarbha', agroZone: 'Black Cotton Agro-Climatic Belt', coordinates: '20.3888° N, 78.1204° E' },
+  { id: 'latur', name: 'Latur', marathiName: 'Latur District', region: 'Marathwada', agroZone: 'Soybean & Pulses Agro-Zone', coordinates: '18.4088° N, 76.5604° E' },
+  { id: 'jalgaon', name: 'Jalgaon', marathiName: 'Jalgaon District', region: 'Khandesh (Banana & Cotton)', agroZone: 'Tapi Basin Alluvial Zone', coordinates: '21.0077° N, 75.5626° E' },
+  { id: 'ratnagiri', name: 'Ratnagiri', marathiName: 'Ratnagiri District', region: 'Konkan Coast', agroZone: 'Very High Rainfall Coastal Laterite Zone', coordinates: '16.9902° N, 73.3120° E' },
+  { id: 'nanded', name: 'Nanded', marathiName: 'Nanded District', region: 'Marathwada', agroZone: 'Godavari Basin Turmeric & Cotton Zone', coordinates: '19.1383° N, 77.3210° E' },
 ];
 
 export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
@@ -399,7 +399,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
         () => {
           setIsLocating(false);
           setPermissions((prev) => ({ ...prev, location: true }));
-          setPermFeedback('📍 महाराष्ट्र कृषी पट्टा स्थान सक्रिय केले (Maharashtra Agro-Climatic Zone Active)!');
+          setPermFeedback('📍 Agro-Climatic Zone Location Activated!');
           setTimeout(() => setPermFeedback(null), 3500);
         }
       );
@@ -415,7 +415,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         setPermissions((prev) => ({ ...prev, camera: true }));
-        setPermFeedback('📸 कॅमेरा प्रवेश मंजूर झाला (Camera Access Granted)!');
+        setPermFeedback('📸 Camera Access Granted Successfully!');
         // Stop stream after 4 seconds to conserve resources
         setTimeout(() => {
           stream.getTracks().forEach((track) => track.stop());
@@ -423,12 +423,12 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
         }, 4000);
       } else {
         setPermissions((prev) => ({ ...prev, camera: true }));
-        setPermFeedback('📸 कॅमेरा स्कॅनिंग सक्रिय केले (Camera Leaf Scanner Active)!');
+        setPermFeedback('📸 Camera Leaf Scanner Active!');
         setTimeout(() => setPermFeedback(null), 3000);
       }
     } catch {
       setPermissions((prev) => ({ ...prev, camera: true }));
-      setPermFeedback('📸 कॅमेरा स्कॅनर सिम्युलेशन मोड सक्रिय (Camera Leaf Scanner Ready)!');
+      setPermFeedback('📸 Camera Leaf Scanner Simulation Active!');
       setTimeout(() => setPermFeedback(null), 3000);
     }
   };
@@ -436,7 +436,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
   // Gallery Permission Trigger
   const handleRequestGallery = () => {
     setPermissions((prev) => ({ ...prev, gallery: true }));
-    setPermFeedback('📁 गॅलरी व ड्रोन इमेज स्टोरेज प्रवेश मंजूर (Gallery & Storage Access Active)!');
+    setPermFeedback('📁 Gallery & Storage Access Granted!');
     setTimeout(() => setPermFeedback(null), 3000);
   };
 
@@ -520,17 +520,17 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               <div>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 font-mono text-[10px] font-extrabold uppercase tracking-wider">
-                    महाराष्ट्र कृषी सेटअप (Maharashtra Agro Setup)
+                    Agro Farm Setup
                   </span>
                   <span className="text-xs text-emerald-200 font-mono font-bold">
-                    पायरी {currentStep} / 5
+                    Step {currentStep} of 5
                   </span>
                 </div>
                 <h1 className="text-xl sm:text-2xl font-black tracking-tight">
                   AgriShield Smart Farm Onboarding
                 </h1>
                 <p className="text-xs text-emerald-200/80">
-                  Customizing crops, soil profiles, location telemetry, and hardware access for Maharashtra.
+                  Customizing crops, soil profiles, location telemetry, and hardware access.
                 </p>
               </div>
             </div>
@@ -549,11 +549,11 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           {/* Stepper Progress Bar */}
           <div className="grid grid-cols-5 gap-2 mt-5">
             {[
-              { num: 1, label: 'भाषा (Language)' },
-              { num: 2, label: 'पीक (Crops)' },
-              { num: 3, label: 'माती (Soil)' },
-              { num: 4, label: 'स्थान (Location)' },
-              { num: 5, label: 'परवानगी (Access)' },
+              { num: 1, label: 'Language' },
+              { num: 2, label: 'Crops' },
+              { num: 3, label: 'Soil' },
+              { num: 4, label: 'Location' },
+              { num: 5, label: 'Access' },
             ].map((step) => {
               const isDone = currentStep > step.num;
               const isCurrent = currentStep === step.num;
@@ -588,7 +588,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
         {/* ── Main Step Content Area (Scrollable) ── */}
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
           {/* ══════════════════════════════════════════════════════════ */}
-          {/* STEP 1: LANGUAGE SELECTION (MARATHI & ALL INDIA)          */}
+          {/* STEP 1: LANGUAGE SELECTION                                 */}
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 1 && (
             <div className="space-y-4">
@@ -596,10 +596,10 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                 <div>
                   <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                     <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Select Language / भाषा निवडा (मराठी व इतर भाषा)</span>
+                    <span>Select Preferred Language</span>
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Choose your regional language. System diagnostics, advisory voice alerts, and UI adapt automatically.
+                    Choose your language. System diagnostics, advisory voice alerts, and UI adapt automatically.
                   </p>
                 </div>
 
@@ -607,7 +607,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                   <input
                     type="text"
-                    placeholder="Search language / भाषा शोधा..."
+                    placeholder="Search language..."
                     value={langSearch}
                     onChange={(e) => setLangSearch(e.target.value)}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
@@ -633,16 +633,20 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-base font-black text-slate-900 dark:text-white">
-                              {lang.nativeName}
+                              {lang.name}
                             </span>
-                            {lang.isPriority && (
-                              <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-black border border-amber-500/30">
-                                ⭐ Maharashtra Priority
+                            {lang.id === 'en' ? (
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black border border-emerald-500/30">
+                                Default
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-bold border border-slate-200 dark:border-slate-700">
+                                {lang.nativeName}
                               </span>
                             )}
                           </div>
                           <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">
-                            {lang.name} • {lang.region}
+                            {lang.region}
                           </span>
                         </div>
 
@@ -673,7 +677,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                           title="Play native audio preview"
                         >
                           <Volume2 className={`w-3.5 h-3.5 ${isPlayingAudio && isSelected ? 'text-emerald-500 animate-bounce' : ''}`} />
-                          <span>ऐका (Listen)</span>
+                          <span>Listen</span>
                         </button>
                       </div>
                     </div>
@@ -684,7 +688,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           )}
 
           {/* ══════════════════════════════════════════════════════════ */}
-          {/* STEP 2: MAHARASHTRA CROPS SELECTION                       */}
+          {/* STEP 2: CROPS SELECTION                                   */}
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 2 && (
             <div className="space-y-4">
@@ -692,7 +696,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                 <div>
                   <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                     <Sprout className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                    <span>Choose Maharashtra Crops / पिके निवडा (कापूस, ऊस, सोयाबीन, इ.)</span>
+                    <span>Choose Active Farm Crops</span>
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
                     Select your active crops. Pathogen models and disease thresholds will be calibrated specifically.
@@ -703,7 +707,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                   <input
                     type="text"
-                    placeholder="Search crop / पीक शोधा..."
+                    placeholder="Search crop..."
                     value={cropSearch}
                     onChange={(e) => setCropSearch(e.target.value)}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
@@ -711,7 +715,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                 </div>
               </div>
 
-              {/* Crop Cards Grid with Maharashtra Region Tags */}
+              {/* Crop Cards Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                 {filteredCrops.map((crop) => {
                   const isSelected = selectedCrops.includes(crop.id);
@@ -748,10 +752,10 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
 
                         <div className="absolute bottom-2 left-2 right-2">
                           <h3 className="text-sm font-black text-white drop-shadow">
-                            {crop.marathiName}
+                            {crop.name}
                           </h3>
                           <span className="text-[11px] text-emerald-300 font-semibold block drop-shadow-sm">
-                            {crop.name}
+                            {crop.vernacular}
                           </span>
                         </div>
                       </div>
@@ -764,7 +768,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                         </div>
 
                         <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-[10px] text-slate-600 dark:text-slate-300 font-medium">
-                          📍 <strong className="text-slate-800 dark:text-slate-200">पट्टा:</strong> {crop.maharashtraRegion}
+                          📍 <strong className="text-slate-800 dark:text-slate-200">Region:</strong> {crop.maharashtraRegion}
                         </div>
                       </div>
                     </div>
@@ -775,7 +779,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           )}
 
           {/* ══════════════════════════════════════════════════════════ */}
-          {/* STEP 3: MAHARASHTRA SOIL PROFILES                         */}
+          {/* STEP 3: SOIL PROFILES                                     */}
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 3 && (
             <div className="space-y-4">
@@ -783,7 +787,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                 <div>
                   <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                     <Layers className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-                    <span>Choose Maharashtra Soil Profile / मातीचा प्रकार निवडा (काळी कापसाची, जांभी, इ.)</span>
+                    <span>Choose Soil Profile (Black Cotton, Laterite, Alluvial, etc.)</span>
                   </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
                     Select soil texture for accurate irrigation scheduling, root water-stress index, and fertilization tuning.
@@ -794,7 +798,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
                   <input
                     type="text"
-                    placeholder="Search soil / माती शोधा..."
+                    placeholder="Search soil profile..."
                     value={soilSearch}
                     onChange={(e) => setSoilSearch(e.target.value)}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
@@ -823,11 +827,8 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                           </div>
                           <div>
                             <h3 className="text-sm font-black text-slate-900 dark:text-white">
-                              {soil.marathiName}
-                            </h3>
-                            <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold block">
                               {soil.name}
-                            </span>
+                            </h3>
                             <span className="text-[10px] text-amber-600 dark:text-amber-400 font-mono font-bold block mt-0.5">
                               {soil.vernacular}
                             </span>
@@ -851,10 +852,10 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
 
                       <div className="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
                         <p className="text-slate-700 dark:text-slate-200">
-                          <strong className="text-slate-900 dark:text-white">उत्कृष्ट पिके (Best For):</strong> {soil.bestFor}
+                          <strong className="text-slate-900 dark:text-white">Best Crops:</strong> {soil.bestFor}
                         </p>
                         <p className="text-slate-500 dark:text-slate-400 font-mono text-[10px]">
-                          भूशास्त्रीय पट्टा: {soil.maharashtraGeology}
+                          Geological Belt: {soil.maharashtraGeology}
                         </p>
                       </div>
                     </div>
@@ -865,17 +866,17 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           )}
 
           {/* ══════════════════════════════════════════════════════════ */}
-          {/* STEP 4: LOCATION & MAHARASHTRA DISTRICT TARGETING         */}
+          {/* STEP 4: LOCATION & DISTRICT TARGETING                     */}
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 4 && (
             <div className="space-y-5">
               <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
                 <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <span>Exact Location & Maharashtra District / स्थान व जिल्हा निवड</span>
+                  <span>Exact Location & District Selection</span>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Allow live GPS or select your Maharashtra district for localized microclimate and disease contagion telemetry.
+                  Allow live GPS or select your district for localized microclimate and disease contagion telemetry.
                 </p>
               </div>
 
@@ -884,10 +885,10 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                 <div className="space-y-1">
                   <span className="text-xs font-black text-sky-700 dark:text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
                     <Navigation className="w-4 h-4" />
-                    <span>स्वयंचलित GPS स्थान ओळख (Live GPS Geolocation)</span>
+                    <span>Automatic Live GPS Geolocation</span>
                   </span>
                   <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
-                    वर्तमान निर्देशांक: <strong className="font-mono text-slate-900 dark:text-white">{detectedCoords}</strong>
+                    Current Coordinates: <strong className="font-mono text-slate-900 dark:text-white">{detectedCoords}</strong>
                   </p>
                 </div>
 
@@ -898,14 +899,14 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                   className="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-md shadow-sky-600/20 active:scale-95 disabled:opacity-50 flex-shrink-0"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isLocating ? 'animate-spin' : ''}`} />
-                  <span>{isLocating ? 'शोधत आहे...' : 'Detect My Live Farm GPS'}</span>
+                  <span>{isLocating ? 'Detecting...' : 'Detect My Live Farm GPS'}</span>
                 </button>
               </div>
 
-              {/* Maharashtra Districts Grid Selector */}
+              {/* Districts Grid Selector */}
               <div className="space-y-2">
                 <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
-                  Select Maharashtra District / महाराष्ट्र जिल्हा निवडा:
+                  Select Region / District:
                 </label>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
@@ -917,7 +918,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                         type="button"
                         onClick={() => {
                           setSelectedDistrict(dist.id);
-                          setDetectedCoords(`${dist.coordinates} (${dist.name}, Maharashtra)`);
+                          setDetectedCoords(`${dist.coordinates} (${dist.name})`);
                         }}
                         className={`p-3 rounded-2xl border text-left transition flex flex-col justify-between gap-1 ${
                           isSelected
@@ -926,13 +927,13 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                         }`}
                       >
                         <span className="text-xs font-black text-slate-900 dark:text-white">
-                          {dist.marathiName}
-                        </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                           {dist.name}
                         </span>
-                        <span className="text-[9px] text-sky-600 dark:text-sky-400 font-mono truncate">
+                        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
                           {dist.region.split(' ')[0]}
+                        </span>
+                        <span className="text-[9px] text-sky-600 dark:text-sky-400 font-mono truncate">
+                          {dist.agroZone.split(' ')[0]}
                         </span>
                       </button>
                     );
@@ -943,13 +944,13 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               {/* Selected District Agro-Climatic Intelligence Box */}
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5 text-xs">
                 <span className="font-bold text-slate-900 dark:text-white">
-                  📍 निवडलेला कृषी-हवामान पट्टा ({currentDistrictObj.marathiName} / {currentDistrictObj.name}):
+                  📍 Selected Agro-Climatic Zone ({currentDistrictObj.name}):
                 </span>
                 <p className="text-slate-600 dark:text-slate-300">
-                  हवामान क्षेत्र: <strong>{currentDistrictObj.agroZone}</strong> • भौगोलिक विभाग: <strong>{currentDistrictObj.region}</strong>
+                  Climate Zone: <strong>{currentDistrictObj.agroZone}</strong> • Region: <strong>{currentDistrictObj.region}</strong>
                 </p>
                 <p className="text-[11px] text-slate-400 font-mono">
-                  GPS निर्देशांक: {currentDistrictObj.coordinates}
+                  GPS Coordinates: {currentDistrictObj.coordinates}
                 </p>
               </div>
             </div>
@@ -963,7 +964,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
                 <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                  <span>Hardware & Media Permissions / कॅमेरा व गॅलरी प्रवेश परवानग्या</span>
+                  <span>Hardware & Media Permissions</span>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Enable device permissions for AI leaf disease detection and multispectral drone scan uploads.
@@ -981,7 +982,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                         </div>
                         <div>
                           <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                            कॅमेरा प्रवेश (Camera Access)
+                            Camera Access
                           </h3>
                           <span className="text-[11px] text-slate-400">Crop Leaf Pathology Scanner</span>
                         </div>
@@ -994,7 +995,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                             : 'bg-amber-500/15 text-amber-600 border-amber-500/30'
                         }`}
                       >
-                        {permissions.camera ? 'मंजूर (GRANTED)' : 'प्रलंबित (REQUIRED)'}
+                        {permissions.camera ? 'GRANTED' : 'REQUIRED'}
                       </span>
                     </div>
 
@@ -1027,7 +1028,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                         </div>
                         <div>
                           <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                            गॅलरी व स्टोरेज प्रवेश (Gallery & Files)
+                            Gallery & Files Access
                           </h3>
                           <span className="text-[11px] text-slate-400">Drone GeoTIFF & Soil Reports</span>
                         </div>
@@ -1040,7 +1041,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                             : 'bg-amber-500/15 text-amber-600 border-amber-500/30'
                         }`}
                       >
-                        {permissions.gallery ? 'मंजूर (GRANTED)' : 'प्रलंबित (REQUIRED)'}
+                        {permissions.gallery ? 'GRANTED' : 'REQUIRED'}
                       </span>
                     </div>
 
@@ -1064,37 +1065,37 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                 </div>
               </div>
 
-              {/* Summary of Maharashtra Configuration */}
+              {/* Summary of Configuration */}
               <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                   <span className="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
-                    तयार आहे (Setup Summary For Maharashtra)
+                    Setup Summary
                   </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-medium">
                   <div>
-                    <span className="text-[10px] text-slate-400 block">भाषा (Language)</span>
+                    <span className="text-[10px] text-slate-400 block">Language</span>
                     <strong className="text-slate-800 dark:text-slate-200">
-                      {INDIAN_LANGUAGES.find((l) => l.id === selectedLanguage)?.nativeName}
+                      {INDIAN_LANGUAGES.find((l) => l.id === selectedLanguage)?.name || 'English'}
                     </strong>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block">पिके (Active Crops)</span>
+                    <span className="text-[10px] text-slate-400 block">Active Crops</span>
                     <strong className="text-slate-800 dark:text-slate-200">
                       {selectedCrops.length} Crops Selected
                     </strong>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block">माती (Soil Profile)</span>
+                    <span className="text-[10px] text-slate-400 block">Soil Profile</span>
                     <strong className="text-slate-800 dark:text-slate-200">
-                      {MAHARASHTRA_SOILS.find((s) => s.id === selectedSoil)?.marathiName.split(' ')[0]}
+                      {MAHARASHTRA_SOILS.find((s) => s.id === selectedSoil)?.name.split(' ')[0]}
                     </strong>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block">जिल्हा (District)</span>
+                    <span className="text-[10px] text-slate-400 block">District</span>
                     <strong className="text-slate-800 dark:text-slate-200">
-                      {currentDistrictObj.marathiName} ({currentDistrictObj.name})
+                      {currentDistrictObj.name}
                     </strong>
                   </div>
                 </div>
@@ -1112,7 +1113,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               className="px-5 py-2.5 rounded-2xl bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5"
             >
               <ArrowLeft className="w-4 h-4" />
-              <span>मागे (Back)</span>
+              <span>Back</span>
             </button>
           ) : (
             <div />
@@ -1124,7 +1125,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               onClick={() => setCurrentStep((prev) => prev + 1)}
               className="px-6 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-95"
             >
-              <span>पुढील पायरी (Next Step)</span>
+              <span>Next Step</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           ) : (
@@ -1134,7 +1135,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               className="px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black transition flex items-center gap-2 shadow-xl shadow-emerald-600/30 active:scale-95 animate-pulse"
             >
               <Sparkles className="w-4 h-4" />
-              <span>सेटअप पूर्ण करा व डॅशबोर्ड सुरू करा (Launch Maharashtra Dashboard)</span>
+              <span>Complete Setup & Launch Dashboard</span>
               <CheckCircle2 className="w-4 h-4" />
             </button>
           )}

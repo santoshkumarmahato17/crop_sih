@@ -13,26 +13,20 @@ async function callDirectGeminiAPI(
 ): Promise<string | null> {
   const isMarathi =
     language === 'mr' ||
-    prompt.toLowerCase().includes('marathi') ||
-    prompt.toLowerCase().includes('मराठी') ||
-    prompt.toLowerCase().includes('महाराष्ट्र') ||
-    prompt.toLowerCase().includes('कापूस') ||
-    prompt.toLowerCase().includes('सोयाबीन') ||
-    prompt.toLowerCase().includes('ऊस');
+    prompt.toLowerCase().includes('in marathi') ||
+    prompt.toLowerCase().includes('मराठी');
 
   const isHindi =
     !isMarathi &&
     (language === 'hi' ||
-      prompt.toLowerCase().includes('hindi') ||
+      prompt.toLowerCase().includes('in hindi') ||
       prompt.toLowerCase().includes('हिंदी') ||
-      prompt.toLowerCase().includes('हिन्दी') ||
-      /[\u0900-\u097F]/.test(prompt));
+      prompt.toLowerCase().includes('हिन्दी'));
 
   const isTamil =
     language === 'ta' ||
-    prompt.toLowerCase().includes('tamil') ||
-    prompt.toLowerCase().includes('தமிழ்') ||
-    /[\u0B80-\u0BFF]/.test(prompt);
+    prompt.toLowerCase().includes('in tamil') ||
+    prompt.toLowerCase().includes('தமிழ்');
 
   let langInstruction = 'English';
   if (isMarathi) {
@@ -92,19 +86,24 @@ Structure your advice with concise bullet points, specific dosage/preventative b
 export const assistantService = {
   chat: async (request: AssistantChatRequest): Promise<AssistantChatResponse> => {
     const q = request.message.toLowerCase();
+    const isMarathi =
+      request.language === 'mr' ||
+      q.includes('in marathi') ||
+      q.includes('मराठी');
+
     const isHindi =
-      request.language === 'hi' ||
-      q.includes('hindi') ||
-      q.includes('हिंदी') ||
-      q.includes('हिन्दी') ||
-      /[\u0900-\u097F]/.test(request.message);
+      !isMarathi &&
+      (request.language === 'hi' ||
+        q.includes('in hindi') ||
+        q.includes('हिंदी') ||
+        q.includes('हिन्दी'));
+
     const isTamil =
       request.language === 'ta' ||
-      q.includes('tamil') ||
-      q.includes('தமிழ்') ||
-      /[\u0B80-\u0BFF]/.test(request.message);
+      q.includes('in tamil') ||
+      q.includes('தமிழ்');
 
-    const effectiveLang: 'en' | 'hi' | 'ta' = isHindi ? 'hi' : isTamil ? 'ta' : 'en';
+    const effectiveLang: 'en' | 'hi' | 'mr' | 'ta' = isMarathi ? 'mr' : isHindi ? 'hi' : isTamil ? 'ta' : 'en';
 
     // 1. Try backend assistant endpoint
     try {

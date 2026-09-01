@@ -22,7 +22,7 @@ import { ChatMessage } from '@/types';
 export const AgriculturalAssistantWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isMaximized, setIsMaximized] = useState<boolean>(false);
-  const [language, setLanguage] = useState<'en' | 'hi' | 'mr' | 'ta'>('mr');
+  const [language, setLanguage] = useState<'en' | 'hi' | 'mr' | 'ta'>('en');
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
@@ -399,7 +399,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
       : [
           '🌾 Why is Zone Z03 red?',
           '💧 Which zone needs water?',
-          '📊 Analyze dashboard risk in Hindi',
+          '📊 Analyze dashboard risk',
           '🧪 Organic recipe for Early Blight',
           '🚁 When is the next drone flight?',
         ];
