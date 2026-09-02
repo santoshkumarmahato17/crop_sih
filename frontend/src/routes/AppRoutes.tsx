@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { RoleProtectedRoute } from '@/components/auth/RoleProtectedRoute';
 import { useAuth } from '@/context/AuthContext';
@@ -39,12 +39,16 @@ import { MonitoringWorkspacePage } from '@/features/monitoring/MonitoringWorkspa
 import { EOSCreateFieldOnboarding } from '@/features/farms/EOSCreateFieldOnboarding';
 
 /**
- * Root Index Dispatcher: Automatically routes authenticated user to their role's dashboard.
+ * Root Index Dispatcher: Automatically routes authenticated user to their role's dashboard,
+ * or guides new / unauthenticated users to the Login / Register procedure.
  */
 const RootRoleRedirect: React.FC = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isOnboarded } = useAuth();
   if (!isAuthenticated || !user) {
-    return <FarmerDashboardPage />;
+    return <Navigate to="/login" replace />;
+  }
+  if (user.role === 'FARMER' && !isOnboarded) {
+    return <Navigate to="/onboarding" replace />;
   }
   if (user.role === 'ADMIN') {
     return <AdminDashboardShell />;
@@ -300,36 +304,204 @@ export const AppRoutes: React.FC = () => {
         />
 
         {/* ── Shared Operations & Diagnostics ── */}
-        <Route path="profile" element={<UserProfilePage />} />
-        <Route path="settings" element={<SettingsPage />} />
-        <Route path="upload" element={<PhotoVideoUploadPage />} />
-        <Route path="analysis" element={<AIDiseaseAnalysisPage />} />
-        <Route path="diagnosis" element={<SymptomDiseaseIdentificationPage />} />
-        <Route path="disease-identification" element={<SymptomDiseaseIdentificationPage />} />
-        <Route path="community" element={<FarmerCommunityPage />} />
-        <Route path="officer" element={<ExtensionOfficerDashboardPage />} />
+        <Route
+          path="profile"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <UserProfilePage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="settings"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <SettingsPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="upload"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <PhotoVideoUploadPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="analysis"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <AIDiseaseAnalysisPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="diagnosis"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <SymptomDiseaseIdentificationPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="disease-identification"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <SymptomDiseaseIdentificationPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="community"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <FarmerCommunityPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="officer"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <ExtensionOfficerDashboardPage />
+            </RoleProtectedRoute>
+          }
+        />
 
         {/* Spatial Field Map & Precision Monitoring */}
-        <Route path="field-map" element={<FieldMapViewerPage />} />
-        <Route path="create-field" element={<EOSCreateFieldOnboarding />} />
-        <Route path="onboarding/create-field" element={<EOSCreateFieldOnboarding />} />
-        <Route path="farmer/create-field" element={<EOSCreateFieldOnboarding />} />
-        <Route path="farms" element={<FieldMapViewerPage />} />
-        <Route path="farms/list" element={<FarmsListPage />} />
-        <Route path="farms/new" element={<EOSCreateFieldOnboarding />} />
-        <Route path="farms/:id" element={<FarmDetailsPage />} />
-        <Route path="farms/:id/edit" element={<EditFarmPage />} />
+        <Route
+          path="field-map"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <FieldMapViewerPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="create-field"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <EOSCreateFieldOnboarding />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="onboarding/create-field"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <EOSCreateFieldOnboarding />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farmer/create-field"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <EOSCreateFieldOnboarding />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farms"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <FieldMapViewerPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farms/list"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <FarmsListPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farms/new"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <EOSCreateFieldOnboarding />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farms/:id"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <FarmDetailsPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farms/:id/edit"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <EditFarmPage />
+            </RoleProtectedRoute>
+          }
+        />
 
         {/* Drone Fleet & Missions */}
-        <Route path="drones" element={<DronesListPage />} />
-        <Route path="missions" element={<MissionsListPage />} />
-        <Route path="missions/new" element={<CreateMissionPage />} />
-        <Route path="missions/:id" element={<MissionDetailsPage />} />
+        <Route
+          path="drones"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <DronesListPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="missions"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <MissionsListPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="missions/new"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <CreateMissionPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="missions/:id"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <MissionDetailsPage />
+            </RoleProtectedRoute>
+          }
+        />
 
         {/* Sub-module Aliases */}
-        <Route path="zones" element={<FieldMapViewerPage />} />
-        <Route path="observations" element={<AIDiseaseAnalysisPage />} />
-        <Route path="spread" element={<ExtensionOfficerDashboardPage />} />
+        <Route
+          path="zones"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <FieldMapViewerPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="observations"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <AIDiseaseAnalysisPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="spread"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <ExtensionOfficerDashboardPage />
+            </RoleProtectedRoute>
+          }
+        />
 
         {/* 404 Catch-all */}
         <Route

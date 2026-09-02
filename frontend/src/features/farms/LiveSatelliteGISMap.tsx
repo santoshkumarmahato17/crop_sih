@@ -128,7 +128,6 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
   const [selectedZone, setSelectedZone] = useState<FarmPolygonZone>(MOCK_ZONES[2]); // High risk default
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
   const [showDrone, setShowDrone] = useState<boolean>(showDroneTracker);
-  const [ndviOpacity] = useState<number>(75);
   const [dronePos, setDronePos] = useState<{ x: number; y: number; alt: number; heading: number }>({
     x: 35,
     y: 30,
@@ -199,34 +198,23 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
       ref={containerRef}
       className={`relative w-full ${heightClass} rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl transition-all duration-300 select-none`}
     >
-      {/* ── Layer 1: High-Res Satellite Aerial Base Imagery ── */}
+      {/* ── Layer 1: High-Res Real Top-Down Satellite Base Imagery ── */}
       <div
-        className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out"
+        className="absolute inset-0 bg-cover bg-center transition-all duration-500 ease-out"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=2000&q=90')`,
+          backgroundImage: `url('${mapLayer === 'ndvi' ? '/satellite/satellite_crop_ndvi.jpg' : '/satellite/satellite_crop_truecolor.jpg'}')`,
           transform: `scale(${zoomLevel / 100})`,
         }}
       />
 
-      {/* ── Layer 2: Multispectral NDVI / Thermal Shader Overlays ── */}
-      {mapLayer === 'ndvi' && (
-        <div
-          className="absolute inset-0 mix-blend-color-dodge transition-opacity duration-300 pointer-events-none"
-          style={{
-            opacity: ndviOpacity / 100,
-            background:
-              'radial-gradient(ellipse at 30% 30%, rgba(16, 185, 129, 0.85), transparent 45%), radial-gradient(ellipse at 70% 30%, rgba(52, 211, 153, 0.8), transparent 40%), radial-gradient(ellipse at 70% 70%, rgba(244, 63, 94, 0.85), transparent 45%), radial-gradient(ellipse at 30% 70%, rgba(5, 150, 105, 0.9), transparent 50%)',
-          }}
-        />
-      )}
-
+      {/* ── Layer 2: Multispectral Thermal & Topo Overlays ── */}
       {mapLayer === 'thermal' && (
         <div
           className="absolute inset-0 mix-blend-screen transition-opacity duration-300 pointer-events-none"
           style={{
-            opacity: 0.7,
+            opacity: 0.8,
             background:
-              'radial-gradient(circle at 70% 65%, rgba(239, 68, 68, 0.75), transparent 35%), radial-gradient(circle at 35% 30%, rgba(59, 130, 246, 0.6), transparent 40%), radial-gradient(circle at 30% 70%, rgba(16, 185, 129, 0.5), transparent 40%)',
+              'radial-gradient(circle at 70% 65%, rgba(239, 68, 68, 0.85), transparent 35%), radial-gradient(circle at 35% 30%, rgba(59, 130, 246, 0.7), transparent 40%), radial-gradient(circle at 30% 70%, rgba(16, 185, 129, 0.6), transparent 40%)',
           }}
         />
       )}

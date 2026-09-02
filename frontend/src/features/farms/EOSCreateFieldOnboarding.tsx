@@ -20,6 +20,11 @@ import {
   Square,
   Pentagon,
   Globe,
+  Radio,
+  Crosshair,
+  MapPin,
+  Check,
+  Move,
 } from 'lucide-react';
 
 export interface DrawnVertex {
@@ -27,8 +32,105 @@ export interface DrawnVertex {
   y: number; // percentage (0-100)
 }
 
+interface RegionPreset {
+  id: string;
+  name: string;
+  state: string;
+  country: string;
+  lat: number;
+  lng: number;
+  cropDefault: string;
+  varietyDefault: string;
+  soilDefault: string;
+  irrigationDefault: string;
+  initialVertices: DrawnVertex[];
+  bgImage: string;
+}
+
+const REGION_PRESETS: RegionPreset[] = [
+  {
+    id: 'nashik',
+    name: 'Nashik BioFarm Cluster',
+    state: 'Maharashtra',
+    country: 'India',
+    lat: 19.9975,
+    lng: 73.7898,
+    cropDefault: 'Bt Cotton (Bollgard II)',
+    varietyDefault: 'RCH-659 BG II',
+    soilDefault: 'Black Cotton Regur Clay',
+    irrigationDefault: 'Drip Irrigation with Fertigation',
+    initialVertices: [
+      { x: 34.2, y: 18.5 },
+      { x: 65.8, y: 17.2 },
+      { x: 66.4, y: 64.6 },
+      { x: 33.8, y: 65.2 },
+    ],
+    bgImage: '/satellite/satellite_crop_truecolor.jpg',
+  },
+  {
+    id: 'punjab',
+    name: 'Punjab Green Revolution Basin',
+    state: 'Punjab',
+    country: 'India',
+    lat: 30.901,
+    lng: 75.8573,
+    cropDefault: 'Wheat (PBW-550)',
+    varietyDefault: 'PBW-550 Certified',
+    soilDefault: 'River Basin Alluvial Loam',
+    irrigationDefault: 'Furrow Flood Irrigation',
+    initialVertices: [
+      { x: 16.5, y: 18.2 },
+      { x: 32.5, y: 18.2 },
+      { x: 32.5, y: 49.5 },
+      { x: 16.5, y: 49.5 },
+    ],
+    bgImage: '/satellite/satellite_crop_truecolor.jpg',
+  },
+  {
+    id: 'california',
+    name: 'California Central Valley Agro-Grid',
+    state: 'California',
+    country: 'USA',
+    lat: 36.7783,
+    lng: -119.4179,
+    cropDefault: 'Tomato (Abhinav)',
+    varietyDefault: 'Heinz Hybrid 1197',
+    soilDefault: 'Laterite Soil',
+    irrigationDefault: 'Drip Irrigation with Fertigation',
+    initialVertices: [
+      { x: 67.5, y: 17.5 },
+      { x: 83.2, y: 17.5 },
+      { x: 83.2, y: 49.8 },
+      { x: 67.5, y: 49.8 },
+    ],
+    bgImage: '/satellite/satellite_crop_truecolor.jpg',
+  },
+  {
+    id: 'karnataka',
+    name: 'Karnataka Sugarcane & Maize Belt',
+    state: 'Karnataka',
+    country: 'India',
+    lat: 12.5218,
+    lng: 76.8951,
+    cropDefault: 'Sugarcane (Co-86032)',
+    varietyDefault: 'Co-86032 Nira',
+    soilDefault: 'Red Sandy Loam Soil',
+    irrigationDefault: 'Micro-Sprinkler Overhead',
+    initialVertices: [
+      { x: 50.4, y: 50.8 },
+      { x: 82.8, y: 50.8 },
+      { x: 82.8, y: 82.4 },
+      { x: 50.4, y: 82.4 },
+    ],
+    bgImage: '/satellite/satellite_crop_truecolor.jpg',
+  },
+];
+
 export const EOSCreateFieldOnboarding: React.FC = () => {
   const navigate = useNavigate();
+
+  // Active Region Preset
+  const [activeRegion, setActiveRegion] = useState<RegionPreset>(REGION_PRESETS[0]);
 
   // Field Drawing Mode: 'polygon' | 'rectangle' | 'upload'
   const [drawingTool, setDrawingTool] = useState<'polygon' | 'rectangle' | 'upload'>('polygon');
@@ -36,13 +138,9 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
   const [zoomLevel, setZoomLevel] = useState<number>(100);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
-  // Drawn Boundary Vertices
-  const [vertices, setVertices] = useState<DrawnVertex[]>([
-    { x: 32, y: 28 },
-    { x: 64, y: 24 },
-    { x: 70, y: 68 },
-    { x: 38, y: 72 },
-  ]);
+  // Boundary Vertices
+  const [vertices, setVertices] = useState<DrawnVertex[]>(REGION_PRESETS[0].initialVertices);
+  const [draggedVertexIndex, setDraggedVertexIndex] = useState<number | null>(null);
 
   // Search location
   const [searchQuery, setSearchQuery] = useState<string>('Nashik, Maharashtra, India');
@@ -60,40 +158,62 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [successToast, setSuccessToast] = useState<string | null>(null);
+  const [showImportModal, setShowImportModal] = useState<boolean>(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const canvasSvgRef = useRef<SVGSVGElement>(null);
 
-  // Compute field area (Hectares and Acres) & perimeter from vertices
-  const { areaHa, areaAcres, perimeterMeters } = useMemo(() => {
+  // Select region preset
+  const handleSelectRegion = (preset: RegionPreset) => {
+    setActiveRegion(preset);
+    setSearchQuery(`${preset.name}, ${preset.state}, ${preset.country}`);
+    setCropType(preset.cropDefault);
+    setCropVariety(preset.varietyDefault);
+    setSoilType(preset.soilDefault);
+    setIrrigationType(preset.irrigationDefault);
+    setFarmGroup(preset.name);
+    setVertices(preset.initialVertices);
+  };
+
+  // Compute field area (Hectares, Acres, Gunthas) & perimeter from vertices
+  const { areaHa, areaAcres, areaGunthas, perimeterMeters } = useMemo(() => {
     if (vertices.length < 3) {
-      return { areaHa: 0, areaAcres: 0, perimeterMeters: 0 };
+      return { areaHa: 0, areaAcres: 0, areaGunthas: 0, perimeterMeters: 0 };
     }
 
-    // Shoelace formula on normalized coordinates scaled to representative ~1km field box
+    // High precision shoelace polygon formula mapped to 1km top-down satellite bounding scene
     let shoelace = 0;
     let perimeter = 0;
     for (let i = 0; i < vertices.length; i++) {
       const next = (i + 1) % vertices.length;
       shoelace += vertices[i].x * vertices[next].y - vertices[next].x * vertices[i].y;
 
-      const dx = (vertices[next].x - vertices[i].x) * 12.5; // ~12.5m per percentage
-      const dy = (vertices[next].y - vertices[i].y) * 12.5;
+      const dx = (vertices[next].x - vertices[i].x) * 10; // 10m per percentage on 1000m orthophoto
+      const dy = (vertices[next].y - vertices[i].y) * 10;
       perimeter += Math.sqrt(dx * dx + dy * dy);
     }
 
-    const rawAreaSqMeters = Math.abs(shoelace / 2) * 12.5 * 12.5;
+    const rawAreaSqMeters = Math.abs(shoelace / 2) * 10 * 10;
     const ha = +(rawAreaSqMeters / 10000).toFixed(2);
     const acres = +(ha * 2.47105).toFixed(2);
+    const gunthas = +(ha * 100).toFixed(1);
     const periM = Math.round(perimeter);
 
-    return { areaHa: Math.max(ha, 1.2), areaAcres: Math.max(acres, 2.96), perimeterMeters: Math.max(periM, 420) };
+    return {
+      areaHa: Math.max(ha, 0.4),
+      areaAcres: Math.max(acres, 0.99),
+      areaGunthas: Math.max(gunthas, 40),
+      perimeterMeters: Math.max(periM, 260),
+    };
   }, [vertices]);
 
   // Click on satellite canvas to add vertices
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (draggedVertexIndex !== null) return;
     if (drawingTool === 'upload') return;
 
-    const rect = e.currentTarget.getBoundingClientRect();
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
     const clickX = ((e.clientX - rect.left) / rect.width) * 100;
     const clickY = ((e.clientY - rect.top) / rect.height) * 100;
 
@@ -101,14 +221,35 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
       const w = 24;
       const h = 20;
       setVertices([
-        { x: clickX - w / 2, y: clickY - h / 2 },
-        { x: clickX + w / 2, y: clickY - h / 2 },
-        { x: clickX + w / 2, y: clickY + h / 2 },
-        { x: clickX - w / 2, y: clickY + h / 2 },
+        { x: +Math.max(2, Math.min(98, clickX - w / 2)).toFixed(1), y: +Math.max(2, Math.min(98, clickY - h / 2)).toFixed(1) },
+        { x: +Math.max(2, Math.min(98, clickX + w / 2)).toFixed(1), y: +Math.max(2, Math.min(98, clickY - h / 2)).toFixed(1) },
+        { x: +Math.max(2, Math.min(98, clickX + w / 2)).toFixed(1), y: +Math.max(2, Math.min(98, clickY + h / 2)).toFixed(1) },
+        { x: +Math.max(2, Math.min(98, clickX - w / 2)).toFixed(1), y: +Math.max(2, Math.min(98, clickY + h / 2)).toFixed(1) },
       ]);
     } else {
       setVertices((prev) => [...prev, { x: +clickX.toFixed(1), y: +clickY.toFixed(1) }]);
     }
+  };
+
+  // Vertex Dragging handlers
+  const handleVertexMouseDown = (e: React.MouseEvent, index: number) => {
+    e.stopPropagation();
+    setDraggedVertexIndex(index);
+  };
+
+  const handleContainerMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (draggedVertexIndex === null || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const moveX = Math.max(2, Math.min(98, ((e.clientX - rect.left) / rect.width) * 100));
+    const moveY = Math.max(2, Math.min(98, ((e.clientY - rect.top) / rect.height) * 100));
+
+    setVertices((prev) =>
+      prev.map((v, idx) => (idx === draggedVertexIndex ? { x: +moveX.toFixed(1), y: +moveY.toFixed(1) } : v))
+    );
+  };
+
+  const handleContainerMouseUp = () => {
+    setDraggedVertexIndex(null);
   };
 
   const handleUndoVertex = (e: React.MouseEvent) => {
@@ -121,18 +262,28 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
     setVertices([]);
   };
 
+  const handleSnapToCentralParcel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setVertices([
+      { x: 34.2, y: 18.5 },
+      { x: 65.8, y: 17.2 },
+      { x: 66.4, y: 64.6 },
+      { x: 33.8, y: 65.2 },
+    ]);
+  };
+
   const handleSaveField = () => {
     if (vertices.length < 3) {
-      alert('Please place at least 3 corner points on the satellite map to define your field boundary.');
+      alert('Please place at least 3 corner points on the top-down satellite map to define your field boundary.');
       return;
     }
 
     setIsSaving(true);
     setTimeout(() => {
       setIsSaving(false);
-      setSuccessToast(`Field "${fieldName}" successfully created and linked to Sentinel-2 satellite pipeline!`);
+      setSuccessToast(`Field "${fieldName}" (${areaHa} ha) successfully linked to Sentinel-2 satellite pipeline!`);
       setTimeout(() => {
-        navigate('/field-map');
+        navigate('/farms');
       }, 1500);
     }, 1200);
   };
@@ -148,20 +299,34 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
     }
   };
 
-  // Convert vertices to SVG polygon points string
+  // Convert vertices to SVG polygon points string (scaled to 1000x600 viewBox)
   const svgPoints = vertices.map((v) => `${v.x * 10},${v.y * 6}`).join(' ');
+
+  // Determine active satellite imagery layer background
+  const getSatelliteBackground = () => {
+    switch (satelliteLayer) {
+      case 'ndvi':
+        return '/satellite/satellite_crop_ndvi.jpg';
+      case 'ndre':
+        return '/satellite/satellite_crop_ndre.jpg';
+      case 'true_color':
+      default:
+        return activeRegion.bgImage;
+    }
+  };
 
   return (
     <div className="max-w-[1500px] mx-auto space-y-6 pb-20 animate-in fade-in duration-200">
       {/* ── Top EOS Header Ribbon ── */}
       <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-950 via-emerald-950 to-teal-950 text-white shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-emerald-500/20">
         <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-extrabold uppercase tracking-wider">
-              🛰️ EOSDA Sentinel-2 Satellite Engine
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
+              <Radio className="w-3 h-3 text-emerald-400 animate-pulse" />
+              <span>Sentinel-2 & Landsat-9 Satellite Pipeline</span>
             </span>
             <span className="px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-mono text-[10px] font-bold">
-              Sub-Meter GIS Drawing
+              90° Nadir Orthomosaic (0.5m GSD)
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2.5">
@@ -169,17 +334,17 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             <span>Create & Draw Field Boundary (शेताची सीमा आखा)</span>
           </h1>
           <p className="text-xs sm:text-sm text-emerald-200/80 max-w-3xl">
-            Pinpoint and draw your agricultural field boundaries directly onto Sentinel-2 satellite imagery to unlock continuous NDVI vegetation index monitoring, soil moisture tracking, and AI disease early warnings.
+            Pinpoint and draw high-precision agricultural field boundaries directly onto real 90° top-down satellite imagery to unlock continuous NDVI vegetation index monitoring, soil moisture tracking, and AI disease early warnings.
           </p>
         </div>
 
         <button
           type="button"
-          onClick={() => navigate('/field-map')}
+          onClick={() => navigate('/farms')}
           className="px-4 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 transition flex items-center gap-2 text-xs font-bold active:scale-95 whitespace-nowrap self-start md:self-auto"
         >
           <Navigation className="w-4 h-4" />
-          <span>Exit to Map View</span>
+          <span>Exit to Farm View</span>
         </button>
       </div>
 
@@ -243,7 +408,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setDrawingTool('upload')}
+                onClick={() => setShowImportModal(true)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
                   drawingTool === 'upload'
                     ? 'bg-emerald-600 text-white shadow-sm'
@@ -257,92 +422,118 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             </div>
           </div>
 
+          {/* Agricultural Region Quick Selector Bar */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+            <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1 shrink-0">
+              <MapPin className="w-3.5 h-3.5 text-emerald-500" />
+              <span>Satellite Scene:</span>
+            </span>
+            {REGION_PRESETS.map((preset) => (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => handleSelectRegion(preset)}
+                className={`px-3 py-1.5 rounded-xl border text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${
+                  activeRegion.id === preset.id
+                    ? 'bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-bold'
+                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-emerald-500/50'
+                }`}
+              >
+                {activeRegion.id === preset.id && <Check className="w-3 h-3 text-emerald-500" />}
+                <span>{preset.name}</span>
+                <span className="text-[10px] text-slate-400 font-mono">({preset.state})</span>
+              </button>
+            ))}
+          </div>
+
           {/* ── Interactive Satellite GIS Canvas Box ── */}
           <div
             ref={containerRef}
             onClick={handleMapClick}
+            onMouseMove={handleContainerMouseMove}
+            onMouseUp={handleContainerMouseUp}
             className="relative w-full h-[580px] sm:h-[660px] rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl group cursor-crosshair select-none"
           >
-            {/* Satellite Background Texture */}
+            {/* Real Top-Down Satellite Crop Imagery Base */}
             <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-300"
+              className="absolute inset-0 bg-cover bg-center transition-all duration-500 ease-out"
               style={{
-                backgroundImage: `url('https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=2000&q=90')`,
+                backgroundImage: `url('${getSatelliteBackground()}')`,
                 transform: `scale(${zoomLevel / 100})`,
               }}
             />
 
-            {/* Multispectral False-Color Overlays */}
-            {satelliteLayer === 'ndvi' && (
-              <div
-                className="absolute inset-0 mix-blend-color-dodge transition-opacity duration-300 pointer-events-none opacity-80"
-                style={{
-                  background:
-                    'radial-gradient(ellipse at 45% 45%, rgba(16, 185, 129, 0.9), transparent 50%), radial-gradient(ellipse at 75% 30%, rgba(52, 211, 153, 0.8), transparent 45%)',
-                }}
-              />
-            )}
-
-            {satelliteLayer === 'ndre' && (
-              <div
-                className="absolute inset-0 mix-blend-screen transition-opacity duration-300 pointer-events-none opacity-75"
-                style={{
-                  background:
-                    'radial-gradient(circle at 50% 50%, rgba(234, 179, 8, 0.8), transparent 45%), radial-gradient(circle at 30% 70%, rgba(16, 185, 129, 0.7), transparent 40%)',
-                }}
-              />
-            )}
-
+            {/* Multispectral Dynamic Overlays for NDWI and Thermal */}
             {satelliteLayer === 'ndwi' && (
               <div
-                className="absolute inset-0 mix-blend-overlay transition-opacity duration-300 pointer-events-none opacity-85"
+                className="absolute inset-0 mix-blend-color-dodge transition-opacity duration-300 pointer-events-none opacity-85"
                 style={{
                   background:
-                    'radial-gradient(circle at 60% 40%, rgba(56, 189, 248, 0.9), transparent 50%), radial-gradient(circle at 40% 70%, rgba(2, 132, 199, 0.8), transparent 45%)',
+                    'radial-gradient(ellipse at 50% 50%, rgba(2, 132, 199, 0.85), transparent 60%), radial-gradient(circle at 25% 25%, rgba(56, 189, 248, 0.9), transparent 45%), radial-gradient(circle at 75% 75%, rgba(14, 165, 233, 0.8), transparent 50%)',
                 }}
               />
             )}
 
             {satelliteLayer === 'thermal' && (
               <div
-                className="absolute inset-0 mix-blend-screen transition-opacity duration-300 pointer-events-none opacity-75"
+                className="absolute inset-0 mix-blend-screen transition-opacity duration-300 pointer-events-none opacity-85"
                 style={{
                   background:
-                    'radial-gradient(circle at 65% 55%, rgba(244, 63, 94, 0.85), transparent 40%), radial-gradient(circle at 35% 35%, rgba(59, 130, 246, 0.7), transparent 45%)',
+                    'radial-gradient(circle at 65% 55%, rgba(239, 68, 68, 0.85), transparent 45%), radial-gradient(circle at 35% 35%, rgba(59, 130, 246, 0.75), transparent 45%), radial-gradient(circle at 50% 80%, rgba(245, 158, 11, 0.8), transparent 40%)',
                 }}
               />
             )}
 
-            {/* High-Precision Orthophoto Coordinate Grid Overlay */}
+            {/* Sub-Meter Orthophoto Coordinate Grid Overlay */}
             <div
-              className="absolute inset-0 pointer-events-none opacity-15"
+              className="absolute inset-0 pointer-events-none opacity-20"
               style={{
-                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.2) 1px, transparent 1px)`,
-                backgroundSize: '36px 36px',
+                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.25) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.25) 1px, transparent 1px)`,
+                backgroundSize: '40px 40px',
               }}
             />
 
+            {/* Satellite Metadata HUD Strip at Top */}
+            <div className="absolute top-16 left-4 z-10 hidden sm:flex items-center gap-3 px-3 py-1 rounded-xl bg-slate-950/80 backdrop-blur border border-emerald-500/20 text-[10px] font-mono text-emerald-300 pointer-events-none">
+              <span className="flex items-center gap-1">
+                <Crosshair className="w-3 h-3 text-emerald-400" />
+                <span>GPS: {activeRegion.lat.toFixed(4)}°N, {activeRegion.lng.toFixed(4)}°E</span>
+              </span>
+              <span className="text-slate-600">|</span>
+              <span>GSD: 0.5m/px</span>
+              <span className="text-slate-600">|</span>
+              <span>Cloud: 0.0%</span>
+              <span className="text-slate-600">|</span>
+              <span className="text-sky-300">Constellation: Sentinel-2 MSI</span>
+            </div>
+
             {/* SVG Polygon Canvas for Drawn Field Vertices */}
             <svg
+              ref={canvasSvgRef}
               className="absolute inset-0 w-full h-full pointer-events-none"
               viewBox="0 0 1000 600"
               preserveAspectRatio="none"
             >
               <defs>
                 <filter id="eos-glow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="5" result="blur" />
+                  <feGaussianBlur stdDeviation="6" result="blur" />
                   <feComposite in="SourceGraphic" in2="blur" operator="over" />
                 </filter>
+                <radialGradient id="polygonFillGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="#059669" stopOpacity="0.22" />
+                </radialGradient>
               </defs>
 
               {/* Polygon Perimeter Filled Area */}
               {vertices.length >= 3 && (
                 <polygon
                   points={svgPoints}
-                  fill="rgba(16, 185, 129, 0.28)"
+                  fill="url(#polygonFillGrad)"
                   stroke="#10b981"
-                  strokeWidth="3"
+                  strokeWidth="3.5"
                   filter="url(#eos-glow)"
+                  className="transition-all duration-100"
                 />
               )}
 
@@ -358,25 +549,61 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
               )}
 
               {/* Individual Corner Vertex Pins */}
-              {vertices.map((v, idx) => (
-                <g key={idx} transform={`translate(${v.x * 10}, ${v.y * 6})`}>
-                  <circle r="9" fill="#10b981" stroke="#ffffff" strokeWidth="2.5" />
-                  <circle r="16" fill="rgba(16, 185, 129, 0.3)" className="animate-ping" />
-                  <text
-                    y="-12"
-                    textAnchor="middle"
-                    fill="#ffffff"
-                    fontSize="10"
-                    fontWeight="bold"
-                    className="font-mono drop-shadow"
+              {vertices.map((v, idx) => {
+                const isDragging = draggedVertexIndex === idx;
+                return (
+                  <g
+                    key={idx}
+                    transform={`translate(${v.x * 10}, ${v.y * 6})`}
+                    className="cursor-move pointer-events-auto"
+                    onMouseDown={(e) => handleVertexMouseDown(e, idx)}
                   >
-                    P{idx + 1}
-                  </text>
-                </g>
-              ))}
+                    {/* Pulsing Radar Ring */}
+                    <circle
+                      r={isDragging ? 22 : 14}
+                      fill="rgba(16, 185, 129, 0.35)"
+                      className={isDragging ? 'animate-none' : 'animate-ping'}
+                    />
+
+                    {/* Outer Glow Pin */}
+                    <circle
+                      r="10"
+                      fill={isDragging ? '#34d399' : '#10b981'}
+                      stroke="#ffffff"
+                      strokeWidth="2.5"
+                      className="shadow-lg hover:scale-125 transition-transform"
+                    />
+
+                    {/* Center Core Dot */}
+                    <circle r="3.5" fill="#ffffff" />
+
+                    {/* Point Label Badge */}
+                    <rect
+                      x="-14"
+                      y="-26"
+                      width="28"
+                      height="15"
+                      rx="4"
+                      fill="#022c22"
+                      stroke="#10b981"
+                      strokeWidth="1.2"
+                    />
+                    <text
+                      y="-15"
+                      textAnchor="middle"
+                      fill="#34d399"
+                      fontSize="9"
+                      fontWeight="bold"
+                      className="font-mono select-none"
+                    >
+                      P{idx + 1}
+                    </text>
+                  </g>
+                );
+              })}
             </svg>
 
-            {/* Top Left Layer Switcher Pill */}
+            {/* Top Left Layer Switcher Pill matching screenshot */}
             <div
               className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-1 p-1 bg-slate-950/90 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl"
               onClick={(e) => e.stopPropagation()}
@@ -392,25 +619,25 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   key={id}
                   type="button"
                   onClick={() => setSatelliteLayer(id as any)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                     satelliteLayer === id
                       ? 'bg-emerald-600 text-white shadow-md'
                       : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  {label}
+                  <span>{label}</span>
                 </button>
               ))}
             </div>
 
-            {/* Top Right Zoom & Fullscreen Controls */}
+            {/* Top Right Zoom & Fullscreen Controls matching screenshot */}
             <div
               className="absolute top-4 right-4 z-20 flex items-center gap-1.5 p-1 bg-slate-950/90 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 type="button"
-                onClick={() => setZoomLevel((z) => Math.min(z + 15, 200))}
+                onClick={() => setZoomLevel((z) => Math.min(z + 15, 220))}
                 className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
                 title="Zoom In"
               >
@@ -418,7 +645,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
               </button>
               <button
                 type="button"
-                onClick={() => setZoomLevel((z) => Math.max(z - 15, 80))}
+                onClick={() => setZoomLevel((z) => Math.max(z - 15, 75))}
                 className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
                 title="Zoom Out"
               >
@@ -434,7 +661,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
               </button>
             </div>
 
-            {/* Drawing Help Overlay / Vertex Controls at Bottom Left */}
+            {/* Drawing Help Overlay / Vertex Controls at Bottom Left matching screenshot */}
             <div
               className="absolute bottom-4 left-4 z-20 p-3 rounded-2xl bg-slate-950/90 backdrop-blur-2xl border border-emerald-500/30 text-white shadow-2xl space-y-2 max-w-sm"
               onClick={(e) => e.stopPropagation()}
@@ -448,6 +675,11 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   {vertices.length} Points
                 </span>
               </div>
+
+              <p className="text-[10px] text-slate-400 flex items-center gap-1">
+                <Move className="w-3 h-3 text-emerald-400" />
+                <span>Drag any P pin to fine-tune parcel boundary coordinates</span>
+              </p>
 
               <div className="flex items-center gap-2 pt-1 border-t border-slate-800">
                 <button
@@ -469,21 +701,37 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Clear</span>
                 </button>
+
+                <button
+                  type="button"
+                  onClick={handleSnapToCentralParcel}
+                  className="px-2.5 py-1 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-xs font-bold transition flex items-center gap-1 ml-auto"
+                  title="Snap boundary to central high-yield crop parcel"
+                >
+                  <Crosshair className="w-3.5 h-3.5" />
+                  <span>Snap Parcel</span>
+                </button>
               </div>
             </div>
 
-            {/* Live Area Calculation Floating Pill at Bottom Right */}
+            {/* Live Area Calculation Floating Pill at Bottom Right matching screenshot */}
             <div className="absolute bottom-4 right-4 z-20 flex items-center gap-3 p-3 rounded-2xl bg-slate-950/90 backdrop-blur-2xl border border-emerald-500/30 text-white shadow-2xl font-mono text-xs">
               <div className="text-right">
                 <span className="text-[9px] text-slate-400 block uppercase">Calculated Area</span>
                 <strong className="text-emerald-400 text-sm font-black">
                   {areaHa} ha <span className="text-slate-400 text-xs font-normal">({areaAcres} ac)</span>
                 </strong>
+                <span className="text-[9px] text-emerald-300/80 block font-sans">
+                  ~{areaGunthas} Gunthas / Bigha
+                </span>
               </div>
-              <div className="w-px h-7 bg-slate-800" />
+              <div className="w-px h-8 bg-slate-800" />
               <div>
                 <span className="text-[9px] text-slate-400 block uppercase">Perimeter</span>
                 <strong className="text-sky-300 font-bold">{perimeterMeters} m</strong>
+                <span className="text-[9px] text-slate-500 block font-sans">
+                  ~{(perimeterMeters * 3.28084).toFixed(0)} ft
+                </span>
               </div>
             </div>
           </div>
@@ -652,6 +900,57 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl text-white animate-in zoom-in-95">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="font-extrabold text-sm flex items-center gap-2">
+                <UploadCloud className="w-4 h-4 text-emerald-400" />
+                <span>Import Boundary File</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setShowImportModal(false)}
+                className="text-slate-400 hover:text-white text-xs font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-300">
+              Upload existing GIS vector files (.GeoJSON, .KML, or Shapefile zip) to automatically map field boundaries.
+            </p>
+
+            <div className="border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-2xl p-6 text-center space-y-2 cursor-pointer transition">
+              <UploadCloud className="w-8 h-8 text-emerald-400 mx-auto" />
+              <p className="text-xs font-bold text-slate-200">Drag & drop your GIS boundary file here</p>
+              <p className="text-[10px] text-slate-400">Supports GeoJSON, KML, SHP (Max 10MB)</p>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowImportModal(false)}
+                className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300 hover:bg-slate-700"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  handleSnapToCentralParcel({ stopPropagation: () => {} } as any);
+                  setShowImportModal(false);
+                }}
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold"
+              >
+                Load Sample GeoJSON
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

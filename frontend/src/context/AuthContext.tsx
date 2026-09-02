@@ -130,16 +130,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        return normalizeUser(parsed) || defaultFarmerUser;
+        return normalizeUser(parsed);
       } catch {
-        return defaultFarmerUser;
+        return null;
       }
     }
-    return defaultFarmerUser;
+    return null;
   });
 
   const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem('agrishield_token') || 'demo-jwt-token';
+    return localStorage.getItem('agrishield_token') || null;
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);

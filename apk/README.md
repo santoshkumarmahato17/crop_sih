@@ -1,6 +1,6 @@
 # 🌾 AgriShield — Universal Multi-Role Android APK
 
-This APK provides access to all three platform roles (**Farmer**, **Government Official**, and **Administrator**) in a single unified application.
+This APK provides access to all three platform roles (**Farmer**, **Government Official**, and **Administrator**) with a complete step-by-step onboarding, registration, and login flow.
 
 ---
 
@@ -13,52 +13,43 @@ This APK provides access to all three platform roles (**Farmer**, **Government O
 
 ---
 
-## 🔑 1-Tap Quick Demo & Manual Login Credentials
+## 🧭 Step-by-Step User Flow & Procedures
 
-The application sign-in screen features **1-Tap Quick Demo Role Switcher buttons** at the bottom of the login card, or you can enter the credentials manually:
+When you launch the APK on your mobile device, the app guides you through the proper step-by-step authentication and farm setup procedures:
 
-### 1. 👨‍🌾 FARMER ROLE
-* **Email:** `ramanathan@agrishield.farm`
-* **Password:** `FarmerSecure2026!`
-* **Accessible Features:**
-  - Dynamic Farmer Dashboard with Real-Time Micro-Metrics & Weather
-  - Seedling Irrigation & Water Stress Analysis (CWSI)
-  - Precision Multi-Crop Holding Trackers (Wheat, Rice, Cotton, Tomato)
-  - Interactive Sentinel-2 Satellite GIS Map & Multispectral NDVI Engine
-  - EOSDA-Style Satellite Field Drawing Canvas (`/onboarding/create-field`)
-  - AI Disease Analysis, Upload Studio & Symptom Identification
-  - Multilingual Agricultural Advisories (English, Hindi, Marathi, Tamil)
-  - Drone Mission Fleet Viewer
+### Step 1: Authentication / Sign In / Register
+1. **New User Registration:**
+   - Tap **"Register here"** at the bottom of the sign-in screen.
+   - Choose your account type: **Farmer Account** or **Government Official**.
+   - Enter your Full Name, Email, Phone, District / Location, and Password.
+   - Tap **"Create Account"**.
 
----
+2. **Smart 5-Step Farm Onboarding Procedure (For Farmers):**
+   - **Step 1 (Language):** Select your preferred language (English, Hindi, Marathi, Gujarati, Kannada, Telugu, Tamil, Punjabi, Bengali, Malayalam) with native voice speech preview.
+   - **Step 2 (Crops):** Select your active farm crops (Bt Cotton, Sugarcane, Soybean, Onion, Grapes, Pomegranate, Paddy Rice, Wheat, Tomato, Turmeric).
+   - **Step 3 (Soil Profile):** Select your soil profile (Black Cotton Regur Clay, Laterite Soil, River Basin Alluvial Loam, Red & Yellow Sandy Clay, Medium Shallow Loam).
+   - **Step 4 (Location & District):** Use 1-tap Live GPS geolocation or select your district to load local microclimate and pest contagion telemetry.
+   - **Step 5 (Media & Hardware Access):** Grant Camera access (for leaf disease optical diagnostics) and Gallery storage access (for drone GeoTIFF and soil test uploads).
+   - Tap **"Complete Setup & Launch Dashboard"** to enter your personalized dashboard!
 
-### 2. 🏛️ GOVERNMENT / EXTENSION OFFICER ROLE
-* **Email:** `sundaram@gov.agrishield.in`
-* **Password:** `GovSecure2026!`
-* **Accessible Features:**
-  - Regional Agriculture Command Center & Nationwide Outbreak Radar
-  - Contagion Heatmaps & Real-Time Epidemic Spread Risk Index
-  - Expert Disease Diagnosis Validation Pipeline
-  - District Agricultural Advisory Dispatch System
-  - Cross-District Crop Holding Spatial Telemetry
+3. **1-Tap Quick Demo Role Access (For Instant Testing):**
+   - Direct 1-tap buttons on the Sign In screen allow instant evaluation as **FARMER**, **GOVT**, or **ADMIN**.
 
 ---
 
-### 3. 🛡️ ADMINISTRATOR ROLE
-* **Email:** `admin@agrishield.com`
-* **Password:** `AdminRoot2026!`
-* **Accessible Features:**
-  - Master Administrative Console
-  - User & Role Authorization Management
-  - AI Model Registry, Versioning & Deployment Controls
-  - Automated Drone Fleet Allocation & Hardware Management
-  - Comprehensive Audit Logs & System Health Diagnostics
+## 🔑 Demo & Manual Login Credentials
+
+| Role | Email | Password | Primary Landing Experience |
+|---|---|---|---|
+| 👨‍🌾 **FARMER** | `ramanathan@agrishield.farm` | `FarmerSecure2026!` | Dynamic Farm Health Dashboard, CWSI Water Stress, Satellite Maps |
+| 🏛️ **GOVERNMENT** | `sundaram@gov.agrishield.in` | `GovSecure2026!` | Regional Command Center, Epidemic Heatmaps, Advisory Dispatch |
+| 🛡️ **ADMIN** | `admin@agrishield.com` | `AdminRoot2026!` | Master System Console, AI Model Registry, Drone Fleet Controls |
 
 ---
 
-## 🚀 How to Install on Android
+## 🚀 How to Install & Test on Android
 
-1. Transfer the `.apk` file (`apk/agrishield-universal-access.apk`) to your Android device via USB, WhatsApp, Google Drive, or local download.
+1. Transfer the `.apk` file ([`apk/agrishield-universal-access.apk`](file:///c:/Users/krsan/Desktop/crop/apk/agrishield-universal-access.apk)) to your Android phone via USB, WhatsApp, or Google Drive.
 2. Tap on the file in your device file manager.
 3. Allow **"Install from unknown sources"** if prompted.
-4. Open **AGRI SHIELD** and tap any of the 3 role buttons (**FARMER**, **GOVT**, or **ADMIN**) on the login screen for instant access!
+4. Launch **AGRI SHIELD** to experience the step-by-step registration, onboarding wizard, or 1-tap role access!
