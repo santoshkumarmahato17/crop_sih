@@ -40,12 +40,14 @@ router = APIRouter(tags=["Weather-Based Crop Disease & Pest Risk Forecasting"])
 )
 async def get_current_weather(
     farm_id: str,
+    lat: Optional[float] = Query(None, description="User or farm latitude"),
+    lon: Optional[float] = Query(None, description="User or farm longitude"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> WeatherObservationSchema:
     provider = get_weather_provider()
     # Default coordinates (e.g. Western Ghats Agro Basin)
-    lat, lon = 11.0168, 76.9558
+    farm_lat, farm_lon = 11.0168, 76.9558
 
     try:
         result = await db.execute(select(Farm).where(Farm.id == farm_id))
@@ -53,7 +55,11 @@ async def get_current_weather(
     except Exception:
         farm = None
 
-    data_pt = await provider.get_current_weather(latitude=lat, longitude=lon)
+    target_lat = lat if lat is not None else farm_lat
+    target_lon = lon if lon is not None else farm_lon
+
+    data_pt = await provider.get_current_weather(latitude=target_lat, longitude=target_lon)
+
     return WeatherObservationSchema(
         timestamp=data_pt.timestamp,
         temperature_c=data_pt.temperature_c,
@@ -173,14 +179,19 @@ def _build_crop_context(farm_or_zone_name: str = "Wheat") -> CropAgronomicContex
 async def get_farm_risk(
     farm_id: str,
     days: int = Query(7, ge=1, le=14),
+    lat: Optional[float] = Query(None, description="User or farm latitude"),
+    lon: Optional[float] = Query(None, description="User or farm longitude"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> FarmWeatherRiskResponse:
     provider = get_weather_provider()
-    lat, lon = 11.0168, 76.9558
+    farm_lat, farm_lon = 11.0168, 76.9558
 
-    current_w = await provider.get_current_weather(lat, lon)
-    forecast_w = await provider.get_forecast(lat, lon, days=days)
+    target_lat = lat if lat is not None else farm_lat
+    target_lon = lon if lon is not None else farm_lon
+
+    current_w = await provider.get_current_weather(target_lat, target_lon)
+    forecast_w = await provider.get_forecast(target_lat, target_lon, days=days)
 
     crop_ctx = _build_crop_context()
     assessment = WeatherRiskForecastEngine.evaluate_farm_or_zone(

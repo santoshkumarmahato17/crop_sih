@@ -291,11 +291,18 @@ export const weatherService = {
 
   async getFarmRiskDossier(
     farmId: string = 'farm-cbe-01',
-    days: number = 7
+    days: number = 7,
+    lat?: number,
+    lon?: number
   ): Promise<FarmWeatherRiskResponse> {
     try {
+      const params: any = { days };
+      if (lat !== undefined && lon !== undefined) {
+        params.lat = lat;
+        params.lon = lon;
+      }
       const res = await apiClient.get<FarmWeatherRiskResponse>(`/risk/farm/${farmId}`, {
-        params: { days },
+        params,
       });
       if (res.data && res.data.forecast_timeline && res.data.forecast_timeline.length > 0) {
         return res.data;

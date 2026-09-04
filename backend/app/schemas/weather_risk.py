@@ -21,6 +21,9 @@ class WeatherObservationSchema(BaseModel):
     condition_text: str = "Clear"
     source: str = "agro_telemetry"
     is_forecast: bool = False
+    location_name: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
     model_config = ConfigDict(from_attributes=True)
 

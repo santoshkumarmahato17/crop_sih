@@ -112,7 +112,7 @@ class Advisory(Base, TimestampMixin):
         Enum(AdvisoryType), default=AdvisoryType.DISEASE_ADVISORY, nullable=False, index=True
     )
     priority: Mapped[AdvisoryPriority] = mapped_column(
-        Enum(AdvisoryPriority), default=AdvisoryPriority.MEDIUM, nullable=False, index=True
+        Enum(AdvisoryPriority), default=AdvisoryPriority.MEDIUM, nullable=False
     )
     source: Mapped[AdvisorySource] = mapped_column(
         Enum(AdvisorySource), default=AdvisorySource.AI, nullable=False, index=True

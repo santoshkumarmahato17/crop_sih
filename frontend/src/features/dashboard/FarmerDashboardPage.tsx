@@ -66,6 +66,9 @@ export const FarmerDashboardPage: React.FC = () => {
   const [, setZones] = useState<Zone[]>([]);
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
+  
+  // Real-Time Location State
+  const [userLocationName, setUserLocationName] = useState<string>('Detecting location...');
 
   // Multi-Crop Monitoring State (Clean English)
   const [crops, setCrops] = useState<CropMonitoringCardData[]>([
@@ -197,12 +200,48 @@ export const FarmerDashboardPage: React.FC = () => {
 
   useEffect(() => {
     loadInitialData();
-  }, []);
+    
+    // Auto-refresh weather every 15 minutes (900000 ms)
+    const intervalId = setInterval(() => {
+      loadWeatherRisk(selectedFarmId, weatherHorizon);
+    }, 900000);
+    
+    return () => clearInterval(intervalId);
+  }, [selectedFarmId, weatherHorizon]);
 
   const loadWeatherRisk = async (farmId?: string, horizon: number = 7) => {
     try {
       setIsWeatherLoading(true);
-      const res = await weatherService.getFarmRiskDossier(farmId || selectedFarmId || 'farm-cbe-01', horizon);
+      const targetFarm = farmId || selectedFarmId || 'farm-cbe-01';
+      
+      let lat: number | undefined;
+      let lon: number | undefined;
+      
+      // Attempt geolocation if supported
+      if ('geolocation' in navigator) {
+        try {
+          const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, { 
+                timeout: 10000,
+                enableHighAccuracy: true 
+            });
+          });
+          lat = pos.coords.latitude;
+          lon = pos.coords.longitude;
+          setUserLocationName(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+        } catch (e: any) {
+          console.warn("Geolocation error:", e);
+          if (e.code === 1) {
+              setUserLocationName('Location permission denied');
+          } else {
+              setUserLocationName('Location unavailable');
+          }
+        }
+      } else {
+          setUserLocationName('Geolocation not supported');
+      }
+
+      const res = await weatherService.getFarmRiskDossier(targetFarm, horizon, lat, lon);
       if (res && res.forecast_timeline && res.forecast_timeline.length > 0) {
         setWeatherRiskData(res);
       } else {
@@ -629,8 +668,8 @@ export const FarmerDashboardPage: React.FC = () => {
           <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 animate-bounce" style={{ animationDuration: '3s' }} />
-              <span className="text-xs font-semibold text-emerald-200 truncate max-w-[140px]">
-                {selectedFarm?.name || 'West Valley Sector'}
+              <span className="text-xs font-semibold text-emerald-200 truncate max-w-[140px]" title={userLocationName}>
+                {userLocationName}
               </span>
             </div>
 
@@ -653,12 +692,12 @@ export const FarmerDashboardPage: React.FC = () => {
           {/* Row 2: Temperature + Condition & Live Timestamp */}
           <div className="flex items-end justify-between relative z-10">
             <span className="text-4xl font-extrabold text-white tracking-tight leading-none animate-metric-pulse drop-shadow-md">
-              28.4°C
+              {weatherRiskData?.current_weather?.temperature_c?.toFixed(1) || '28.4'}°C
             </span>
             <div className="text-right space-y-0.5">
               <p className="text-xs font-bold text-emerald-300 tracking-wide flex items-center justify-end gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping inline-block" style={{ animationDuration: '2.5s' }} />
-                <span>Clean/Sunny</span>
+                <span>{weatherRiskData?.current_weather?.condition_text || 'Clean/Sunny'}</span>
               </p>
               <p className="text-[10px] text-emerald-400/80 font-mono">
                 {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
@@ -672,16 +711,16 @@ export const FarmerDashboardPage: React.FC = () => {
           <div className="relative z-10 pt-2.5 border-t border-emerald-500/20 grid grid-cols-3 divide-x divide-emerald-500/20 text-center">
             <div className="space-y-0.5 hover:bg-emerald-500/10 rounded-lg py-0.5 transition-colors">
               <span className="text-[10px] text-emerald-400/80 font-semibold block">Humidity</span>
-              <p className="text-xs font-bold text-white">85%</p>
+              <p className="text-xs font-bold text-white">{weatherRiskData?.current_weather?.relative_humidity_percent?.toFixed(0) || '85'}%</p>
             </div>
             <div className="space-y-0.5 px-1 hover:bg-emerald-500/10 rounded-lg py-0.5 transition-colors">
               <span className="text-[10px] text-emerald-400/80 font-semibold block">Precipitation</span>
-              <p className="text-xs font-bold text-white">8 mm</p>
+              <p className="text-xs font-bold text-white">{weatherRiskData?.current_weather?.rainfall_mm?.toFixed(1) || '8'} mm</p>
             </div>
             <div className="space-y-0.5 pl-1 hover:bg-emerald-500/10 rounded-lg py-0.5 transition-colors">
               <span className="text-[10px] text-emerald-400/80 font-semibold block">Wind Speed</span>
               <p className="text-xs font-bold text-white flex items-center justify-center gap-0.5">
-                <span>18 km/h</span>
+                <span>{Math.round((weatherRiskData?.current_weather?.wind_speed_mps || 5) * 3.6)} km/h</span>
               </p>
             </div>
           </div>

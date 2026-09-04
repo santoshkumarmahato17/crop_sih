@@ -12,6 +12,18 @@ export const apiClient: AxiosInstance = axios.create({
   },
 });
 
+// Request interceptor to attach auth token
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('agrishield_token');
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 // Response interceptor for unified error formatting
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response,
