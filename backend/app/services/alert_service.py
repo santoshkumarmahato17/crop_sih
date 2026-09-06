@@ -117,9 +117,8 @@ class AlertService:
                 severity=data.severity,
                 channel_keys=["in_app", "email", "sms", "push"],
             )
-        except Exception:
-            # Safe in mock/offline mode
-            pass
+        except Exception as err:
+            logger.warning(f"[AlertService] create_alert db error: {err}")
 
         return AlertResponse(
             id=a_id,
@@ -167,9 +166,6 @@ class AlertService:
                 owned_farm_ids = [f.id for f in owned_farms]
                 if owned_farm_ids:
                     query = query.where(Alert.farm_id.in_(owned_farm_ids))
-                else:
-                    # User has no farms yet
-                    query = query.where(Alert.farm_id == "user-no-farms")
 
             result = await db.execute(query.limit(50))
             db_alerts = result.scalars().all()

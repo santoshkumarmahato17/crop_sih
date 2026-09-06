@@ -18,6 +18,7 @@ export * from './adaptive';
 export * from './alert';
 export * from './assistant';
 export * from './community';
+export * from './cropPrediction';
 
 export type SeverityLevel = 'low' | 'moderate' | 'high' | 'critical';
 

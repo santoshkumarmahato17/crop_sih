@@ -1,3 +1,4 @@
+import uuid
 import pytest
 from httpx import AsyncClient
 
@@ -8,8 +9,9 @@ async def test_auth_profile_flow(async_client: AsyncClient):
     Test user registration with farm address, login, getting profile,
     updating address/name, and changing password.
     """
+    unique_email = f"saravanan.farmer_{uuid.uuid4().hex[:8]}@agrishield.farm"
     register_payload = {
-        "email": "saravanan.farmer@agrishield.farm",
+        "email": unique_email,
         "password": "StrongPassword2026!",
         "full_name": "Farmer Saravanan",
         "phone_number": "+91 99441 23456",
@@ -25,7 +27,7 @@ async def test_auth_profile_flow(async_client: AsyncClient):
 
     # 2. Login
     login_payload = {
-        "email": "saravanan.farmer@agrishield.farm",
+        "email": unique_email,
         "password": "StrongPassword2026!",
     }
     login_res = await async_client.post("/api/v1/auth/login", json=login_payload)
@@ -40,7 +42,7 @@ async def test_auth_profile_flow(async_client: AsyncClient):
     me_res = await async_client.get("/api/v1/auth/me", headers=headers)
     assert me_res.status_code == 200
     profile = me_res.json()
-    assert profile["email"] == "saravanan.farmer@agrishield.farm"
+    assert profile["email"] == unique_email
 
     # 4. Update profile address and name
     update_payload = {

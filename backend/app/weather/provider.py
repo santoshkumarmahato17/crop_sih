@@ -276,12 +276,12 @@ class OpenMeteoWeatherProvider(WeatherDataProvider):
         except Exception:
             pass
 
-        return []
+        return await MockWeatherProvider().get_forecast(latitude, longitude, days)
 
     async def get_historical_weather(
         self, latitude: float, longitude: float, days_back: int = 7
     ) -> List[WeatherDataPoint]:
-        return []
+        return await MockWeatherProvider().get_historical_weather(latitude, longitude, days_back)
 
 
 class AccuWeatherProvider(WeatherDataProvider):

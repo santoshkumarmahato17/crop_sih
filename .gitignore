@@ -93,6 +93,10 @@ frontend/dist-ssr/
 minio-data/
 postgres-data/
 redis-data/
+*.db
+*.sqlite*
+agrishield.db
+Dataset for Crop Pest and Disease Detection/
 
 # IDE & OS
 .idea/
@@ -102,3 +106,8 @@ redis-data/
 *~
 .DS_Store
 Thumbs.db
+
+# Temporary test images and external datasets
+sample_leaf.jpg
+test_chewed_leaf.jpg
+data/california_housing.csv

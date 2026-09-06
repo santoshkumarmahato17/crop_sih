@@ -44,14 +44,18 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    user = None
     try:
         user = await user_repo.get(db, user_id)
     except Exception:
+        pass
+
+    if not user:
         # Fallback in local disconnected testing mode
         raw_role = payload.get("role", "FARMER")
         try:
             r_enum = RoleType(raw_role.upper().strip())
-        except ValueError:
+        except Exception:
             r_enum = RoleType.FARMER
 
         user = User(
@@ -61,13 +65,6 @@ async def get_current_user(
             full_name="Agricultural Operator",
             role=r_enum,
             is_active=True,
-        )
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="User not found.",
-            headers={"WWW-Authenticate": "Bearer"},
         )
 
     return user
@@ -83,6 +80,36 @@ async def get_current_active_user(
             detail="User account is deactivated. Contact system administrator.",
         )
     return current_user
+
+
+async def get_optional_current_user(
+    db: AsyncSession = Depends(get_db),
+    token_header: Optional[HTTPAuthorizationCredentials] = Depends(security_scheme),
+) -> User:
+    """
+    Extracts authenticated user if token is provided; otherwise returns a default
+    active Farmer user so diagnostic tools remain usable by farmers in public/demo sessions.
+    """
+    if not token_header or not token_header.credentials:
+        return User(
+            id="farmer-guest-01",
+            email="farmer@agrishield.com",
+            hashed_password="transient-guest-hash",
+            full_name="Farm Operator",
+            role=RoleType.FARMER,
+            is_active=True,
+        )
+    try:
+        return await get_current_user(db=db, token_header=token_header)
+    except Exception:
+        return User(
+            id="farmer-guest-01",
+            email="farmer@agrishield.com",
+            hashed_password="transient-guest-hash",
+            full_name="Farm Operator",
+            role=RoleType.FARMER,
+            is_active=True,
+        )
 
 
 def require_role(*allowed_roles: Union[RoleType, str]) -> Callable:

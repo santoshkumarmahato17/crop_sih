@@ -1,3 +1,11 @@
+import os
+import sys
+
+# Ensure repository root is in sys.path
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+if REPO_ROOT not in sys.path:
+    sys.path.insert(0, REPO_ROOT)
+
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
@@ -13,6 +21,8 @@ from app.core.logging import logger, setup_logging
 
 settings = get_settings()
 
+from app.db.session import init_db
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
@@ -21,6 +31,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info(
         f"Starting {settings.PROJECT_NAME} v{__version__} [Env: {settings.ENVIRONMENT}]"
     )
+    # Initialize database tables and initial dataset
+    await init_db()
     yield
     logger.info(f"Shutting down {settings.PROJECT_NAME} gracefully.")
 
@@ -88,6 +100,11 @@ def create_application() -> FastAPI:
 
     # Mount API v1 Router
     app.include_router(api_router, prefix=settings.API_V1_STR)
+
+    # Mount Predict and AI Endpoints directly at root for easy access (/predict, /ai/...)
+    from app.api.v1.endpoints import predict, ai
+    app.include_router(predict.router)
+    app.include_router(ai.router)
 
     return app
 

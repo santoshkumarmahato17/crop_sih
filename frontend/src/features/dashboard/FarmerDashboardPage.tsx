@@ -341,7 +341,6 @@ export const FarmerDashboardPage: React.FC = () => {
     setTimeout(() => setActionSuccess(null), 4000);
   };
 
-  const selectedFarm = farms.find((f) => f.id === selectedFarmId) || farms[0];
 
   return (
     <div className="space-y-6 pb-12 max-w-7xl mx-auto transition-colors duration-200">

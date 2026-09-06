@@ -10,6 +10,7 @@ from app.api.v1.endpoints import (
     auth,
     community,
     dashboard,
+    dataset,
     diagnosis,
     drones,
     farms,
@@ -18,6 +19,7 @@ from app.api.v1.endpoints import (
     images,
     monitoring,
     officer,
+    predict,
     risk,
     spread,
     temporal,
@@ -37,6 +39,7 @@ api_router.include_router(government.router)
 api_router.include_router(community.router)
 api_router.include_router(assistant.router)
 api_router.include_router(dashboard.router)
+api_router.include_router(dataset.router)
 api_router.include_router(diagnosis.router)
 api_router.include_router(officer.router)
 api_router.include_router(adaptive.router)
@@ -52,6 +55,7 @@ api_router.include_router(spread.router)
 api_router.include_router(water_stress.router)
 api_router.include_router(weather_forecast.router)
 api_router.include_router(validation.router)
+api_router.include_router(predict.router)
 api_router.include_router(advisories.router)
 api_router.include_router(monitoring.router)
 

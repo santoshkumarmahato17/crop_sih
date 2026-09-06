@@ -28,20 +28,31 @@ async def check_health(
     subsystems = {}
     overall_status = "healthy"
 
-    # 1. Check PostgreSQL + PostGIS Connectivity
+    # 1. Check Database Connectivity (PostGIS or SQLite Fallback)
     db_start = time.perf_counter()
     try:
-        result = await db.execute(text("SELECT postgis_version();"))
-        postgis_ver = result.scalar()
-        db_latency = round((time.perf_counter() - db_start) * 1000, 2)
-        subsystems["postgis"] = SubsystemHealth(
-            status="operational",
-            latency_ms=db_latency,
-            details=f"PostGIS Version: {postgis_ver}",
-        )
+        bind_dialect = db.bind.dialect.name if db.bind else ""
+        if bind_dialect == "sqlite":
+            result = await db.execute(text("SELECT sqlite_version();"))
+            sqlite_ver = result.scalar()
+            db_latency = round((time.perf_counter() - db_start) * 1000, 2)
+            subsystems["database"] = SubsystemHealth(
+                status="operational",
+                latency_ms=db_latency,
+                details=f"SQLite Resilient Engine: v{sqlite_ver} (Geometry shims active)",
+            )
+        else:
+            result = await db.execute(text("SELECT postgis_version();"))
+            postgis_ver = result.scalar()
+            db_latency = round((time.perf_counter() - db_start) * 1000, 2)
+            subsystems["postgis"] = SubsystemHealth(
+                status="operational",
+                latency_ms=db_latency,
+                details=f"PostGIS Version: {postgis_ver}",
+            )
     except Exception as e:
         db_latency = round((time.perf_counter() - db_start) * 1000, 2)
-        subsystems["postgis"] = SubsystemHealth(
+        subsystems["database"] = SubsystemHealth(
             status="unavailable",
             latency_ms=db_latency,
             details=f"Database probe failed: {str(e)}",

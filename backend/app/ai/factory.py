@@ -1,13 +1,12 @@
 from app.ai.base import CropHealthModel
-from app.ai.demo import demo_crop_health_model
+from app.ai.ccmt_vision_model import ccmt_crop_health_model
 
 
 def get_crop_health_model() -> CropHealthModel:
     """
     Factory resolving the active CropHealthModel instance.
     
-    Allows replacing the DemoCropHealthModel with a production PyTorch
-    (e.g., Vision Transformer / ResNet / UNet) model without modifying
-    any upstream API routes, database hooks, or service consumers.
+    Returns the production PyTorch vision classifier trained and calibrated
+    on the CCMT (Cashew, Cassava, Maize, Tomato) Crop Pest & Disease Dataset.
     """
-    return demo_crop_health_model
+    return ccmt_crop_health_model

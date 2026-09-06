@@ -57,103 +57,183 @@ class PrototypeDiseaseIdentificationService(DiseaseIdentificationService):
 
     # Agronomic pathology knowledge base mapping
     DISEASE_KNOWLEDGE_BASE = {
-        "Tomato": [
+        "Cashew": [
             {
-                "name": "Possible Early Blight (Alternaria solani)",
-                "triggers": ["Spots", "Browning", "Yellowing", "Necrosis", "Blotches"],
-                "parts": ["Leaf", "Stem"],
-                "stages": ["Flowering", "Fruiting", "Vegetative"],
-                "pathogen": "Fungal",
-                "base_prob": 0.78,
-                "urgency": "High",
-                "desc": "Concentric dark brown rings with chlorotic yellow halo on lower foliar canopy.",
-                "recs": [
-                    {"action_type": "IPM", "title": "Apply Bio-Fungicide (Trichoderma / Copper Hydroxide)", "description": "Spray organic copper-based formulation in early morning to halt spore germination.", "priority": "High"},
-                    {"action_type": "Cultural", "title": "Prune Lower Chlorotic Leaves", "description": "Carefully remove and dispose of infected bottom foliage to prevent soil splash propagation.", "priority": "Medium"},
-                ]
-            },
-            {
-                "name": "Possible Late Blight (Phytophthora infestans)",
-                "triggers": ["Water-soaked lesions", "Wilting", "Blotches", "Rot", "Curling"],
-                "parts": ["Leaf", "Stem", "Fruit"],
-                "stages": ["Flowering", "Fruiting", "Maturity"],
-                "pathogen": "Oomycete",
-                "base_prob": 0.65,
-                "urgency": "Urgent",
-                "desc": "Rapidly expanding dark water-soaked foliar lesions with white sporulation on undersides.",
-                "recs": [
-                    {"action_type": "IPM", "title": "Immediate Preventative Drip / Foliar Barrier", "description": "Ensure canopy aeration and avoid overhead irrigation.", "priority": "Urgent"}
-                ]
-            },
-            {
-                "name": "Possible Tomato Leaf Curl Virus (ToLCV)",
-                "triggers": ["Curling", "Stunted growth", "Yellowing", "Mosaic pattern"],
-                "parts": ["Leaf", "Whole Plant"],
-                "stages": ["Seedling", "Vegetative", "Flowering"],
-                "pathogen": "Viral",
-                "base_prob": 0.60,
-                "urgency": "High",
-                "desc": "Upward foliar curling, vein clearing, stunted internodes transmitted by whiteflies.",
-                "recs": [
-                    {"action_type": "IPM", "title": "Deploy Yellow Sticky Traps for Whitefly Vector Control", "description": "Target adult whiteflies using neem oil emulsion and physical sticky cards.", "priority": "High"}
-                ]
-            },
-        ],
-        "Wheat": [
-            {
-                "name": "Possible Yellow / Stripe Rust (Puccinia striiformis)",
-                "triggers": ["Rust-like appearance", "Yellowing", "Powdery coating", "Spots"],
-                "parts": ["Leaf"],
-                "stages": ["Tillering", "Stem Elongation", "Heading", "Grain Filling"],
+                "name": "Anthracnose Blight (Colletotrichum gloeosporioides)",
+                "triggers": ["Spots", "Browning", "Necrosis", "Blotches", "Lesions"],
+                "parts": ["Leaf", "Stem", "Shoot"],
+                "stages": ["Flushing", "Flowering", "Vegetative", "Fruiting"],
                 "pathogen": "Fungal",
                 "base_prob": 0.82,
-                "urgency": "Urgent",
-                "desc": "Yellow-orange powdery urediniospore pustules arranged in parallel stripes along leaf veins.",
+                "urgency": "High",
+                "desc": "Dark necrotic lesions with chlorotic halos expanding on foliage and young shoots.",
                 "recs": [
-                    {"action_type": "IPM", "title": "Targeted Triazole Foliar Application (Propiconazole / Tebuconazole)", "description": "Deliver calibrated spray to contain vegetative striping before flag leaf emergence.", "priority": "Urgent"},
-                    {"action_type": "Inspection", "title": "Scout Adjacent Wheat Parcels within 48h", "description": "Wind-borne urediniospores travel rapidly across downwind farm plots.", "priority": "High"},
+                    {"action_type": "IPM", "title": "Apply Copper Oxychloride (0.2%)", "description": "Spray during flush and flowering at 2-3 week intervals to halt fungal spread.", "priority": "High"},
+                    {"action_type": "Cultural", "title": "Prune Infected Shoots", "description": "Prune and burn blighted twigs 10cm below lesion margins.", "priority": "Medium"}
                 ]
             },
             {
-                "name": "Possible Powdery Mildew (Blumeria graminis)",
-                "triggers": ["Powdery coating", "Browning", "Necrosis", "Yellowing"],
-                "parts": ["Leaf", "Stem"],
-                "stages": ["Vegetative", "Heading"],
-                "pathogen": "Fungal",
-                "base_prob": 0.68,
-                "urgency": "Medium",
-                "desc": "White-grey talcum-like fungal mats on upper leaf surfaces.",
-                "recs": [
-                    {"action_type": "IPM", "title": "Sulfur / Difenoconazole Spray", "description": "Apply during dry afternoon hours to target superficial mycelial growth.", "priority": "Medium"}
-                ]
-            },
-        ],
-        "Rice": [
-            {
-                "name": "Possible Rice Blast (Magnaporthe oryzae)",
-                "triggers": ["Spots", "Blotches", "Browning", "Necrosis", "Lesions"],
-                "parts": ["Leaf", "Stem", "Whole Plant"],
-                "stages": ["Tillering", "Booting", "Panicle"],
+                "name": "Cashew Gummosis Canker (Lasiodiplodia theobromae)",
+                "triggers": ["Canker", "Gummy exudates", "Bark cracking", "Dieback"],
+                "parts": ["Stem", "Trunk", "Branch"],
+                "stages": ["Vegetative", "Flowering", "Maturity"],
                 "pathogen": "Fungal",
                 "base_prob": 0.76,
                 "urgency": "High",
-                "desc": "Diamond/spindle-shaped lesions with grey centers and dark reddish-brown margins.",
+                "desc": "Amber resinous gum exudates oozing from cracked bark resulting in branch dieback.",
                 "recs": [
-                    {"action_type": "IPM", "title": "Apply Tricyclazole / Isoprothiolane Solution", "description": "Spray at first sign of spindle foliar lesions.", "priority": "High"},
-                    {"action_type": "Irrigation", "title": "Maintain Continuous Shallow Water Layer", "description": "Prevent soil cracking which stresses root systems and accelerates blast severity.", "priority": "Medium"},
+                    {"action_type": "Bark Care", "title": "Scrape and Apply Bordeaux Paste (1%)", "description": "Clean oozing bark wounds and seal with protective paste.", "priority": "High"}
                 ]
             },
             {
-                "name": "Possible Bacterial Leaf Blight (Xanthomonas oryzae)",
-                "triggers": ["Wilting", "Yellowing", "Discoloration", "Browning"],
+                "name": "Cashew Leaf Miner (Acrocercops syngramma)",
+                "triggers": ["Tunnels", "Mines", "Browning", "Lesions", "Curling"],
                 "parts": ["Leaf"],
-                "stages": ["Tillering", "Flowering"],
-                "pathogen": "Bacterial",
-                "base_prob": 0.66,
+                "stages": ["Flushing", "Vegetative"],
+                "pathogen": "Pest / Insect",
+                "base_prob": 0.84,
                 "urgency": "High",
-                "desc": "Water-soaked stripes along leaf margins drying into wavy yellowish-white lesions.",
+                "desc": "Silvery or brown serpentine winding epidermal mines on tender young flush leaves.",
                 "recs": [
-                    {"action_type": "IPM", "title": "Bactericide (Streptomycin sulphate + Tetracycline)", "description": "Spray in early morning; drain field water temporarily if standing water is deep.", "priority": "High"}
+                    {"action_type": "Bio-Pesticide", "title": "Apply Neem Seed Kernel Extract (NSKE 5%)", "detail": "Spray young flush leaves to deter ovipositing adult moths.", "priority": "High"}
+                ]
+            },
+            {
+                "name": "Red Rust Algal Disease (Cephaleuros virescens)",
+                "triggers": ["Rust-like appearance", "Spots", "Discoloration", "Blotches"],
+                "parts": ["Leaf"],
+                "stages": ["Vegetative", "Flowering"],
+                "pathogen": "Algal / Fungal",
+                "base_prob": 0.72,
+                "urgency": "Medium",
+                "desc": "Orange-red circular velvety algal pustules on upper foliar canopy.",
+                "recs": [
+                    {"action_type": "Foliar Spray", "title": "Apply Copper Hydroxide (0.2%)", "description": "Deliver full canopy coverage during humid flush periods.", "priority": "Medium"}
+                ]
+            }
+        ],
+        "Cassava": [
+            {
+                "name": "Cassava Bacterial Blight (Xanthomonas axonopodis)",
+                "triggers": ["Water-soaked lesions", "Wilting", "Spots", "Dieback", "Necrosis"],
+                "parts": ["Leaf", "Stem"],
+                "stages": ["Vegetative", "Tuber Filling", "Maturity"],
+                "pathogen": "Bacterial",
+                "base_prob": 0.86,
+                "urgency": "Urgent",
+                "desc": "Angular water-soaked foliar spots expanding rapidly into leaf blighting, gum exudate on stems, and dieback.",
+                "recs": [
+                    {"action_type": "Sanitation", "title": "Rogue and Burn CBB-Infected Stems", "description": "Uproot infected stems immediately to prevent rain-splash vectoring.", "priority": "Urgent"},
+                    {"action_type": "Clean Seed", "title": "Procure Certified Disease-Free Cuttings", "description": "Use pathogen-tested clean stem planting material.", "priority": "High"}
+                ]
+            },
+            {
+                "name": "Cassava Brown Leaf Spot (Cercospora henningsii)",
+                "triggers": ["Spots", "Browning", "Blotches", "Yellowing"],
+                "parts": ["Leaf"],
+                "stages": ["Vegetative", "Maturity"],
+                "pathogen": "Fungal",
+                "base_prob": 0.74,
+                "urgency": "Medium",
+                "desc": "Circular uniform brown foliar spots with defined dark borders on lower and middle canopy leaves.",
+                "recs": [
+                    {"action_type": "Cultural", "title": "Increase Plant Spacing for Canopy Aeration", "description": "Ensure 1m x 1m planting grid to lower humidity.", "priority": "Medium"}
+                ]
+            },
+            {
+                "name": "Cassava Green Mite Damage (Mononychellus tanajoa)",
+                "triggers": ["Yellowing", "Stippling", "Stunted growth", "Curling"],
+                "parts": ["Leaf", "Shoot"],
+                "stages": ["Vegetative", "Sprouting"],
+                "pathogen": "Pest / Insect",
+                "base_prob": 0.80,
+                "urgency": "High",
+                "desc": "Chlorotic yellow pinprick feeding spots on terminal young leaves causing apical candle-stick deformation.",
+                "recs": [
+                    {"action_type": "Biological", "title": "Release Predatory Mites (Typhlodromalus aripo)", "description": "Introduce predatory mites into shoot tips for sustainable control.", "priority": "High"},
+                    {"action_type": "Organic", "title": "Apply Wettable Sulfur Spray", "description": "Foliar spray during dry spells to suppress mite population explosions.", "priority": "Medium"}
+                ]
+            },
+            {
+                "name": "Cassava Mosaic Disease (CMD / Geminivirus)",
+                "triggers": ["Mosaic pattern", "Yellowing", "Curling", "Stunted growth", "Discoloration"],
+                "parts": ["Leaf", "Whole Plant"],
+                "stages": ["Sprouting", "Vegetative", "Flowering"],
+                "pathogen": "Viral",
+                "base_prob": 0.88,
+                "urgency": "Urgent",
+                "desc": "Severe chlorotic yellow/green mosaic variegation, wrinkled asymmetric leaf blades, and stunted growth.",
+                "recs": [
+                    {"action_type": "Roguing", "title": "Immediately Rogue CMD-Infected Plants", "description": "Remove and burn virus reservoir plants to prevent whitefly spread.", "priority": "Urgent"},
+                    {"action_type": "Vector Control", "title": "Control Whitefly (Bemisia tabaci) Vectors", "description": "Deploy yellow sticky traps and neem oil applications.", "priority": "High"}
+                ]
+            }
+        ],
+        "Maize": [
+            {
+                "name": "Fall Armyworm Damage (Spodoptera frugiperda)",
+                "triggers": ["Holes", "Lesions", "Stunted growth", "Discoloration", "Chewed"],
+                "parts": ["Leaf", "Stem", "Whorl"],
+                "stages": ["Vegetative", "Whorl", "Tasseling"],
+                "pathogen": "Pest / Insect",
+                "base_prob": 0.85,
+                "urgency": "Urgent",
+                "desc": "Ragged windowpane foliar feeding holes with abundant moist sawdust-like frass inside the whorl.",
+                "recs": [
+                    {"action_type": "Bio-Control", "title": "Deploy Bt / Spinosad in Central Whorl", "description": "Spray bio-insecticide directly into the whorl funnel where larvae feed.", "priority": "Urgent"},
+                    {"action_type": "Trapping", "title": "Install Pheromone Monitoring Traps", "description": "Monitor adult moth flights to anticipate larval emergence peaks.", "priority": "High"}
+                ]
+            },
+            {
+                "name": "Northern Corn Leaf Blight (Exserohilum turcicum)",
+                "triggers": ["Spots", "Blotches", "Browning", "Lesions", "Necrosis"],
+                "parts": ["Leaf"],
+                "stages": ["Vegetative", "Tasseling", "Grain Filling"],
+                "pathogen": "Fungal",
+                "base_prob": 0.81,
+                "urgency": "High",
+                "desc": "Large elliptical, cigar-shaped greyish-green to tan lesions parallel to leaf margins.",
+                "recs": [
+                    {"action_type": "Fungicide", "title": "Apply Azoxystrobin + Difenoconazole", "description": "Deliver protective spray if lesions appear on lower canopy before tasseling.", "priority": "High"}
+                ]
+            },
+            {
+                "name": "Gray Leaf Spot (Cercospora zeae-maydis)",
+                "triggers": ["Spots", "Browning", "Necrosis", "Lesions"],
+                "parts": ["Leaf"],
+                "stages": ["Tasseling", "Grain Filling", "Maturity"],
+                "pathogen": "Fungal",
+                "base_prob": 0.77,
+                "urgency": "High",
+                "desc": "Rectangular, narrow necrotic lesions strictly delimited by veins with yellow halos.",
+                "recs": [
+                    {"action_type": "Fungicide", "title": "Apply Pyraclostrobin or Propiconazole", "description": "Spray upper canopy leaves during warm humid weather.", "priority": "High"}
+                ]
+            },
+            {
+                "name": "Maize Streak Virus (MSV)",
+                "triggers": ["Stripes", "Yellowing", "Discoloration", "Stunted growth"],
+                "parts": ["Leaf", "Whole Plant"],
+                "stages": ["Seedling", "Vegetative", "Tasseling"],
+                "pathogen": "Viral",
+                "base_prob": 0.79,
+                "urgency": "High",
+                "desc": "Continuous narrow chlorotic yellow-white stripes aligned uniformly along veins.",
+                "recs": [
+                    {"action_type": "Vector Control", "title": "Control Cicadulina Leafhopper Vectors", "description": "Apply systemic seed treatments or foliar sprays to curb transmission.", "priority": "High"}
+                ]
+            },
+            {
+                "name": "Grasshopper & Leaf Beetle Feeding",
+                "triggers": ["Holes", "Chewed", "Lesions", "Discoloration"],
+                "parts": ["Leaf"],
+                "stages": ["Vegetative", "Whorl"],
+                "pathogen": "Pest / Insect",
+                "base_prob": 0.75,
+                "urgency": "Medium",
+                "desc": "Irregular chewed leaf margins or fine parallel epidermal scraped scratches.",
+                "recs": [
+                    {"action_type": "IPM", "title": "Spray Botanical Neem Extract (3ml/L)", "description": "Deter adult chewing pests during early morning foraging hours.", "priority": "Medium"}
                 ]
             }
         ],
@@ -172,9 +252,108 @@ class PrototypeDiseaseIdentificationService(DiseaseIdentificationService):
                 ]
             }
         ],
+        "Tomato": [
+            {
+                "name": "Early Blight (Alternaria solani)",
+                "triggers": ["Spots", "Browning", "Yellowing", "Necrosis", "Blotches"],
+                "parts": ["Leaf", "Stem"],
+                "stages": ["Flowering", "Fruiting", "Vegetative"],
+                "pathogen": "Fungal",
+                "base_prob": 0.82,
+                "urgency": "High",
+                "desc": "Concentric dark brown rings with chlorotic yellow halo on lower foliar canopy.",
+                "recs": [
+                    {"action_type": "IPM", "title": "Apply Bio-Fungicide (Trichoderma / Copper Hydroxide)", "description": "Spray organic copper-based formulation in early morning to halt spore germination.", "priority": "High"},
+                    {"action_type": "Cultural", "title": "Prune Lower Chlorotic Leaves", "description": "Carefully remove and dispose of infected bottom foliage to prevent soil splash propagation.", "priority": "Medium"}
+                ]
+            },
+            {
+                "name": "Late Blight (Phytophthora infestans)",
+                "triggers": ["Water-soaked lesions", "Wilting", "Blotches", "Rot", "Curling"],
+                "parts": ["Leaf", "Stem", "Fruit"],
+                "stages": ["Flowering", "Fruiting", "Maturity"],
+                "pathogen": "Oomycete",
+                "base_prob": 0.84,
+                "urgency": "Urgent",
+                "desc": "Rapidly expanding dark water-soaked foliar lesions with white sporulation on undersides.",
+                "recs": [
+                    {"action_type": "IPM", "title": "Immediate Preventative Drip / Foliar Barrier", "description": "Ensure canopy aeration and avoid overhead irrigation.", "priority": "Urgent"}
+                ]
+            },
+            {
+                "name": "Tomato Yellow Leaf Curl Virus (TYLCV)",
+                "triggers": ["Curling", "Stunted growth", "Yellowing", "Mosaic pattern"],
+                "parts": ["Leaf", "Whole Plant"],
+                "stages": ["Seedling", "Vegetative", "Flowering"],
+                "pathogen": "Viral",
+                "base_prob": 0.80,
+                "urgency": "Urgent",
+                "desc": "Upward foliar curling, vein clearing, stunted internodes transmitted by whiteflies.",
+                "recs": [
+                    {"action_type": "IPM", "title": "Deploy Yellow Sticky Traps for Whitefly Vector Control", "description": "Target adult whiteflies using neem oil emulsion and physical sticky cards.", "priority": "High"}
+                ]
+            },
+            {
+                "name": "Septoria Leaf Spot (Septoria lycopersici)",
+                "triggers": ["Spots", "Browning", "Necrosis", "Blotches"],
+                "parts": ["Leaf", "Stem"],
+                "stages": ["Vegetative", "Flowering", "Fruiting"],
+                "pathogen": "Fungal",
+                "base_prob": 0.78,
+                "urgency": "High",
+                "desc": "Numerous circular pinpoint spots with grey/white centers and dark brown margins across lower leaves.",
+                "recs": [
+                    {"action_type": "Fungicide", "title": "Apply Chlorothalonil or Copper Hydroxide", "description": "Deliver thorough foliar spray upon initial spot detection.", "priority": "High"}
+                ]
+            },
+            {
+                "name": "Verticillium Vascular Wilt (Verticillium dahliae)",
+                "triggers": ["Wilting", "Yellowing", "Necrosis", "Browning"],
+                "parts": ["Leaf", "Stem", "Whole Plant"],
+                "stages": ["Flowering", "Fruiting", "Maturity"],
+                "pathogen": "Fungal",
+                "base_prob": 0.75,
+                "urgency": "High",
+                "desc": "V-shaped marginal foliar yellowing and necrosis with vascular browning and progressive daytime wilting.",
+                "recs": [
+                    {"action_type": "Cultural", "title": "Soil Solarization & Crop Rotation", "description": "Rotate with non-solanaceous crops and avoid overwatering.", "priority": "High"}
+                ]
+            }
+        ],
+        "Wheat": [
+            {
+                "name": "Yellow / Stripe Rust (Puccinia striiformis)",
+                "triggers": ["Rust-like appearance", "Yellowing", "Powdery coating", "Spots"],
+                "parts": ["Leaf"],
+                "stages": ["Tillering", "Stem Elongation", "Heading", "Grain Filling"],
+                "pathogen": "Fungal",
+                "base_prob": 0.82,
+                "urgency": "Urgent",
+                "desc": "Yellow-orange powdery urediniospore pustules arranged in parallel stripes along leaf veins.",
+                "recs": [
+                    {"action_type": "IPM", "title": "Targeted Triazole Foliar Application (Propiconazole / Tebuconazole)", "description": "Deliver calibrated spray to contain vegetative striping before flag leaf emergence.", "priority": "Urgent"},
+                    {"action_type": "Inspection", "title": "Scout Adjacent Wheat Parcels within 48h", "description": "Wind-borne urediniospores travel rapidly across downwind farm plots.", "priority": "High"}
+                ]
+            }
+        ],
+        "Rice": [
+            {
+                "name": "Rice Blast (Magnaporthe oryzae)",
+                "triggers": ["Spots", "Blotches", "Browning", "Necrosis", "Lesions"],
+                "parts": ["Leaf", "Stem", "Whole Plant"],
+                "stages": ["Tillering", "Booting", "Panicle"],
+                "pathogen": "Fungal",
+                "base_prob": 0.76,
+                "urgency": "High",
+                "desc": "Diamond/spindle-shaped lesions with grey centers and dark reddish-brown margins.",
+                "recs": [
+                    {"action_type": "IPM", "title": "Apply Tricyclazole / Isoprothiolane Solution", "description": "Spray at first sign of spindle foliar lesions.", "priority": "High"}
+                ]
+            }
+        ],
         "Banana": [
             {
-                "name": "Possible Black Sigatoka (Pseudocercospora fijiensis)",
+                "name": "Black Sigatoka (Pseudocercospora fijiensis)",
                 "triggers": ["Spots", "Browning", "Necrosis", "Yellowing"],
                 "parts": ["Leaf"],
                 "stages": ["Shooting", "Fruiting", "Vegetative"],
@@ -188,6 +367,7 @@ class PrototypeDiseaseIdentificationService(DiseaseIdentificationService):
             }
         ]
     }
+
 
     async def analyze_crop_health(
         self,

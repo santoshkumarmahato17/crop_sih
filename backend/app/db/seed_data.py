@@ -31,6 +31,7 @@ from app.models import (
     Alert,
     Notification,
     AuditLog,
+    AuditEventType,
     MemberRole,
     CropCycleStatus,
     DroneStatus,
@@ -535,10 +536,14 @@ async def seed_all_data(db: AsyncSession) -> dict:
     audit = AuditLog(
         id=str(uuid.uuid4()),
         user_id=user_agronomist.id,
-        action="VALIDATE",
-        entity_type="DiseaseObservation",
-        entity_id=disease_obs.id,
-        changes={"status_before": "unverified", "status_after": "confirmed"},
+        user_email=user_agronomist.email,
+        event_type=AuditEventType.VALIDATION_CONFIRMED,
+        details={
+            "action": "VALIDATE",
+            "entity_type": "DiseaseObservation",
+            "entity_id": disease_obs.id,
+            "changes": {"status_before": "unverified", "status_after": "confirmed"},
+        },
         ip_address="192.168.1.50",
     )
     db.add(audit)

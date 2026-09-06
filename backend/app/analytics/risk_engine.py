@@ -26,6 +26,7 @@ class RiskEngineInputs:
     has_pest_history: bool = False
     nearby_disease_activity_km: Optional[float] = 3.5  # Distance in km to nearest outbreak
     cwsi_water_stress: float = 0.45  # 0.0 to 1.0
+    has_contextual_data: bool = True  # Golden Rule 9: Set to False if weather/history/spatial context is absent
 
 
 @dataclass
@@ -35,12 +36,13 @@ class ExplainableRiskResult:
     pest_risk_score: int  # 0 to 100
     water_stress_risk: int  # 0 to 100
     overall_crop_risk: int  # 0 to 100
-    risk_level: str  # "LOW", "MEDIUM", "HIGH", "CRITICAL"
+    risk_level: str  # "LOW", "MEDIUM", "HIGH", "CRITICAL", "LIMITED"
     rule_version: str
     assessment_timestamp: datetime
     explanation_summary: str
     contributing_factors: List[ContributingFactor] = field(default_factory=list)
     raw_inputs: Dict[str, Any] = field(default_factory=dict)
+    risk_confidence: float = 0.85
 
 
 def evaluate_crop_health_risk(
@@ -48,10 +50,23 @@ def evaluate_crop_health_risk(
 ) -> ExplainableRiskResult:
     """
     Executes explainable multi-factor agronomic risk scoring.
-    
-    Generates exact $+/-$ point attribution for disease, pest, and water stress threats,
-    avoiding opaque black-box scoring.
+    Golden Rule 9: If contextual data is missing, returns LIMITED risk without fabricating numbers.
     """
+    if not inputs.has_contextual_data:
+        return ExplainableRiskResult(
+            disease_risk_score=0,
+            pest_risk_score=0,
+            water_stress_risk=0,
+            overall_crop_risk=0,
+            risk_level="LIMITED",
+            risk_confidence=0.35,
+            rule_version=rule_version,
+            assessment_timestamp=datetime.now(timezone.utc),
+            explanation_summary="Risk assessment limited: Insufficient contextual data (weather telemetry, spatial proximity, and observation history are absent).",
+            contributing_factors=[],
+            raw_inputs={"status": "INSUFFICIENT_CONTEXTUAL_DATA"},
+        )
+
     factors: List[ContributingFactor] = []
     base_disease = 10
     base_pest = 10

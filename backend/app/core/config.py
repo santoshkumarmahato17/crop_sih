@@ -135,6 +135,8 @@ class Settings(BaseSettings):
     MAX_UPLOAD_SIZE_MB: int = 2048
     GEMINI_API_KEY: str = "AQ.Ab8RN6JjzG6wKeLfBU2gP1tsLpO5dxowlfSGXKt6J_a-oNYI_A"
     GEMINI_MODEL: str = "gemini-1.5-flash"
+    DATASET_ROOT_DIR: str = r"c:\Users\krsan\Desktop\crop\Dataset for Crop Pest and Disease Detection"
+    USE_SQLITE_FALLBACK: bool = True
 
 
 @lru_cache()

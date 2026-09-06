@@ -17,7 +17,7 @@ class UserRepository(BaseRepository[User]):
         """Fetch user by email with role preloaded."""
         result = await db.execute(
             select(User)
-            .options(selectinload(User.role))
+            .options(selectinload(User.role_rel))
             .where(User.email == email.lower().strip())
         )
         return result.scalars().first()
@@ -26,7 +26,7 @@ class UserRepository(BaseRepository[User]):
         """Fetch user by primary key with role preloaded."""
         result = await db.execute(
             select(User)
-            .options(selectinload(User.role))
+            .options(selectinload(User.role_rel))
             .where(User.id == user_id)
         )
         return result.scalars().first()
