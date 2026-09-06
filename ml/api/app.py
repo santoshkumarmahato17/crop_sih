@@ -20,6 +20,7 @@ if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
 from ml.src.predict import get_tomato_predictor
+from ml.src.predict_maize import get_maize_predictor
 from ml.src.utils import load_config, load_json
 
 app = FastAPI(
@@ -46,6 +47,20 @@ class PredictResponse(BaseModel):
     status: str = Field(description="High Confidence or Uncertain prediction")
     probabilities: Dict[str, float] = Field(description="Class probabilities for all 5 classes")
     explanation: Optional[str] = None
+    quality_assessment: Optional[Dict] = None
+
+
+class MaizePredictResponse(BaseModel):
+    success: bool = True
+    prediction: str = Field(description="Predicted class name or 'Uncertain Prediction'")
+    display_name: str = Field(description="Display name")
+    category: str = Field(description="'pest', 'disease', or 'healthy'")
+    confidence: float = Field(description="Confidence percentage (0-100)")
+    reliable: bool = Field(description="Whether the prediction is considered reliable")
+    status: str = Field(description="High Confidence or Uncertain Prediction")
+    probabilities: Dict[str, float] = Field(description="Class probabilities for all 7 classes")
+    explanation: Optional[str] = None
+    disease_details: Optional[Dict] = None
     quality_assessment: Optional[Dict] = None
 
 
@@ -194,6 +209,108 @@ async def predict_leaf(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"ML Inference failed: {str(e)}",
         )
+
+
+@app.post(
+    "/api/maize/predict",
+    response_model=MaizePredictResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["Maize Inference"],
+    summary="Predict Maize Leaf Pest, Disease, or Healthy Condition (7 Classes)",
+    description="Accepts a photograph of a maize leaf and returns 7-class prediction, category (pest/disease/healthy), confidence, and probabilities.",
+)
+async def predict_maize_leaf(
+    image: UploadFile = File(..., description="Photograph of a maize leaf (JPG/PNG)"),
+    confidence_threshold: Optional[float] = Form(None, description="Custom confidence threshold (0.0 - 1.0)"),
+):
+    """Maize 7-class pest & disease inference endpoint."""
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(image.filename)[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported format '{ext}'. Allowed: {valid_exts}")
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    try:
+        predictor = get_maize_predictor()
+        result = predictor.predict(
+            image_input=contents,
+            confidence_threshold=confidence_threshold,
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Maize ML Inference failed: {str(e)}")
+
+
+@app.get("/api/maize/classes", tags=["Maize Metadata"])
+async def get_maize_classes():
+    """Retrieve supported Maize class taxonomy and categories."""
+    predictor = get_maize_predictor()
+    from ml.src.dataset_maize import CLASS_CATEGORIES
+    return {
+        "classes": predictor.classes,
+        "count": len(predictor.classes),
+        "class_categories": CLASS_CATEGORIES,
+        "confidence_threshold": predictor.confidence_threshold,
+    }
+
+
+@app.get("/api/maize/sample-images", tags=["Maize Metadata"])
+async def get_maize_sample_images():
+    """Retrieve sample images across each of the 7 Maize classes."""
+    predictor = get_maize_predictor()
+    maize_root = os.path.join(REPO_ROOT, "Maize")
+    folder_mapping = {
+        "Fall army worm": "fall armyworm",
+        "Grasshopper": "grasshoper",
+        "Healthy": "healthy",
+        "Leaf Beetle": "leaf beetle",
+        "Leaf Blight": "leaf blight",
+        "Leaf Spot": "leaf spot",
+        "Streak Virus": "streak virus",
+    }
+    samples = []
+    for cls in predictor.classes:
+        fld = folder_mapping.get(cls, cls.lower())
+        cls_dir = os.path.join(maize_root, fld)
+        if os.path.isdir(cls_dir):
+            files = [f for f in os.listdir(cls_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+            for f in files[:4]:
+                samples.append({
+                    "class_name": cls,
+                    "filename": f,
+                    "relative_path": f"{fld}/{f}",
+                })
+    return {"samples": samples}
+
+
+@app.get("/api/maize/sample-image-file", tags=["Maize Metadata"])
+async def get_maize_sample_image_file(rel_path: str):
+    """Stream a Maize sample image file."""
+    safe_rel = os.path.normpath(rel_path).replace("\\", "/")
+    if safe_rel.startswith("..") or "/../" in safe_rel:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    full_path = os.path.join(REPO_ROOT, "Maize", safe_rel)
+    if not os.path.isfile(full_path):
+        raise HTTPException(status_code=404, detail="Sample image not found")
+    return FileResponse(full_path, media_type="image/jpeg")
+
+
+@app.get("/api/maize/model-info", tags=["Maize Metadata"])
+async def get_maize_model_info():
+    """Retrieve Maize training and architecture metadata."""
+    metadata_path = os.path.join(REPO_ROOT, "ml", "models_maize", "model_metadata.json")
+    if os.path.exists(metadata_path):
+        return load_json(metadata_path)
+    return {"status": "metadata not found, model might be training"}
 
 
 if __name__ == "__main__":

@@ -1,0 +1,61 @@
+dataset:
+  name: "Maize Pest and Disease Classification Dataset"
+  default_path: "Maize"
+  classes:
+    - "Fall army worm"
+    - "Grasshopper"
+    - "Healthy"
+    - "Leaf Beetle"
+    - "Leaf Blight"
+    - "Leaf Spot"
+    - "Streak Virus"
+  folder_mapping:
+    "fall armyworm": "Fall army worm"
+    "fall army worm": "Fall army worm"
+    "grasshoper": "Grasshopper"
+    "grasshopper": "Grasshopper"
+    "healthy": "Healthy"
+    "leaf beetle": "Leaf Beetle"
+    "leaf blight": "Leaf Blight"
+    "leaf spot": "Leaf Spot"
+    "streak virus": "Streak Virus"
+  class_categories:
+    "Fall army worm": "pest"
+    "Grasshopper": "pest"
+    "Healthy": "healthy"
+    "Leaf Beetle": "pest"
+    "Leaf Blight": "disease"
+    "Leaf Spot": "disease"
+    "Streak Virus": "disease"
+
+splits:
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  random_seed: 42
+  deduplicate: true
+
+training:
+  backbone: "mobilenet_v3_small"
+  pretrained: true
+  input_size: 224
+  batch_size: 32
+  num_workers: 0
+  warmup_epochs: 2
+  finetune_epochs: 4
+  warmup_lr: 0.001
+  finetune_lr: 0.0003
+  weight_decay: 0.0001
+  use_class_weights: true
+  early_stopping_patience: 3
+
+inference:
+  confidence_threshold: 0.70
+  blur_laplacian_threshold: 60.0
+  min_brightness: 25.0
+  max_brightness: 235.0
+
+paths:
+  splits_dir: "ml/data/splits_maize"
+  models_dir: "ml/models_maize"
+  reports_dir: "ml/reports_maize"

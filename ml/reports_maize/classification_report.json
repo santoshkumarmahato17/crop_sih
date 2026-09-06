@@ -1,0 +1,121 @@
+{
+  "overall": {
+    "accuracy": 0.8294,
+    "macro_precision": 0.8109,
+    "macro_recall": 0.8634,
+    "macro_f1": 0.8293,
+    "weighted_precision": 0.8355,
+    "weighted_recall": 0.8294,
+    "weighted_f1": 0.8287,
+    "total_samples": 762
+  },
+  "per_class": {
+    "Fall army worm": {
+      "precision": 0.7593,
+      "recall": 0.9762,
+      "f1_score": 0.8542,
+      "test_samples": 42
+    },
+    "Grasshopper": {
+      "precision": 0.9691,
+      "recall": 0.9307,
+      "f1_score": 0.9495,
+      "test_samples": 101
+    },
+    "Healthy": {
+      "precision": 0.617,
+      "recall": 0.9355,
+      "f1_score": 0.7436,
+      "test_samples": 31
+    },
+    "Leaf Beetle": {
+      "precision": 0.9371,
+      "recall": 0.9504,
+      "f1_score": 0.9437,
+      "test_samples": 141
+    },
+    "Leaf Blight": {
+      "precision": 0.8361,
+      "recall": 0.68,
+      "f1_score": 0.75,
+      "test_samples": 150
+    },
+    "Leaf Spot": {
+      "precision": 0.7197,
+      "recall": 0.7152,
+      "f1_score": 0.7175,
+      "test_samples": 158
+    },
+    "Streak Virus": {
+      "precision": 0.838,
+      "recall": 0.8561,
+      "f1_score": 0.847,
+      "test_samples": 139
+    }
+  },
+  "confusion_matrix": [
+    [
+      41,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      94,
+      0,
+      7,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      29,
+      0,
+      0,
+      1,
+      1
+    ],
+    [
+      2,
+      2,
+      0,
+      134,
+      0,
+      3,
+      0
+    ],
+    [
+      8,
+      0,
+      0,
+      0,
+      102,
+      29,
+      11
+    ],
+    [
+      0,
+      0,
+      16,
+      1,
+      17,
+      113,
+      11
+    ],
+    [
+      3,
+      0,
+      2,
+      1,
+      3,
+      11,
+      119
+    ]
+  ]
+}

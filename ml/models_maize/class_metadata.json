@@ -1,0 +1,32 @@
+{
+  "classes": [
+    {
+      "name": "Fall army worm",
+      "category": "pest"
+    },
+    {
+      "name": "Grasshopper",
+      "category": "pest"
+    },
+    {
+      "name": "Healthy",
+      "category": "healthy"
+    },
+    {
+      "name": "Leaf Beetle",
+      "category": "pest"
+    },
+    {
+      "name": "Leaf Blight",
+      "category": "disease"
+    },
+    {
+      "name": "Leaf Spot",
+      "category": "disease"
+    },
+    {
+      "name": "Streak Virus",
+      "category": "disease"
+    }
+  ]
+}

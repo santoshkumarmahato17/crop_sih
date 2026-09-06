@@ -68,6 +68,10 @@ data/exports/
 *.bin
 weights/
 checkpoints/
+!ml/models/**/best_model.pth
+!ml/models/**/best_model_mobile.pt
+!ml/models_maize/**/best_model.pth
+!ml/models_maize/**/best_model_mobile.pt
 
 # Node & Frontend
 node_modules/
@@ -98,6 +102,7 @@ redis-data/
 agrishield.db
 Dataset for Crop Pest and Disease Detection/
 Tomato/
+Maize/
 
 # IDE & OS
 .idea/
