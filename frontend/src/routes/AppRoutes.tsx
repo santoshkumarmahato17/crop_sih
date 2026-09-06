@@ -19,7 +19,6 @@ import { AdminDashboardShell } from '@/features/admin/AdminDashboardShell';
 import { ExtensionOfficerDashboardPage } from '@/features/officer/ExtensionOfficerDashboardPage';
 
 // Operational Modules
-import { PhotoVideoUploadPage } from '@/features/imagery/PhotoVideoUploadPage';
 import { TomatoCameraAnalysisPage } from '@/features/detection/TomatoCameraAnalysisPage';
 import { SymptomDiseaseIdentificationPage } from '@/features/diagnosis/SymptomDiseaseIdentificationPage';
 import { FarmerCommunityPage } from '@/features/community/FarmerCommunityPage';
@@ -322,11 +321,7 @@ export const AppRoutes: React.FC = () => {
         />
         <Route
           path="upload"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
-              <PhotoVideoUploadPage />
-            </RoleProtectedRoute>
-          }
+          element={<Navigate to="/analysis" replace />}
         />
         <Route
           path="analysis"

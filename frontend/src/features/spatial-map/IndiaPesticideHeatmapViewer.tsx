@@ -250,7 +250,7 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
         <div className="relative z-10 flex flex-wrap items-center gap-3">
           <button
             type="button"
-            onClick={() => navigate('/upload')}
+            onClick={() => navigate('/analysis')}
             className="px-4 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition shadow-lg shadow-emerald-500/20 flex items-center gap-2"
           >
             <Droplets className="w-4 h-4" />

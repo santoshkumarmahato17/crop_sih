@@ -2,7 +2,6 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
-  UploadCloud,
   BrainCircuit,
   Stethoscope,
   MessageSquare,
@@ -52,7 +51,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
     { to: '/advisories', label: 'Crop Advisories', icon: Sprout, badge: 'IPM' },
     { to: '/validation', label: 'Expert Validation', icon: ShieldCheck },
     { to: '/diagnosis', label: 'Symptom Disease ID', icon: Stethoscope, badge: 'AI' },
-    { to: '/upload', label: 'Upload Studio', icon: UploadCloud },
     { to: '/analysis', label: 'AI Disease Analysis', icon: BrainCircuit },
     { to: '/community', label: 'Community Hub', icon: MessageSquare },
     { to: '/drones', label: 'Drone Fleet & Missions', icon: Plane },

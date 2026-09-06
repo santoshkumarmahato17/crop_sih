@@ -9,7 +9,6 @@ import {
   TrendingUp,
   ArrowRight,
   RefreshCw,
-  UploadCloud,
   BrainCircuit,
   MapPin,
   ChevronRight,
@@ -425,10 +424,10 @@ export const FarmerDashboardPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-1">
               <button
                 type="button"
-                onClick={() => navigate('/upload')}
+                onClick={() => navigate('/analysis')}
                 className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 active:scale-95 text-slate-950 font-black text-xs sm:text-sm transition-all duration-200 shadow-xl shadow-lime-500/30"
               >
-                <UploadCloud className="w-4 h-4" />
+                <BrainCircuit className="w-4 h-4" />
                 Get Started
                 <ArrowRight className="w-4 h-4" />
               </button>
@@ -917,7 +916,7 @@ export const FarmerDashboardPage: React.FC = () => {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => navigate('/upload')}
+                      onClick={() => navigate('/analysis')}
                       className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md shadow-emerald-600/20 flex items-center gap-1.5 active:scale-95"
                     >
                       <span>Scan</span>
