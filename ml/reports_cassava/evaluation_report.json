@@ -1,0 +1,81 @@
+{
+  "overall": {
+    "accuracy": 0.9422,
+    "macro_precision": 0.943,
+    "macro_recall": 0.9466,
+    "macro_f1": 0.9447,
+    "weighted_precision": 0.9425,
+    "weighted_recall": 0.9422,
+    "weighted_f1": 0.9422,
+    "total_samples": 1107
+  },
+  "per_class": {
+    "Bacterial Blight": {
+      "precision": 0.9452,
+      "recall": 0.9306,
+      "f1_score": 0.9378,
+      "test_samples": 389
+    },
+    "Brown Spot": {
+      "precision": 0.9103,
+      "recall": 0.9227,
+      "f1_score": 0.9165,
+      "test_samples": 220
+    },
+    "Green Mite": {
+      "precision": 0.9241,
+      "recall": 0.9605,
+      "f1_score": 0.9419,
+      "test_samples": 152
+    },
+    "Healthy": {
+      "precision": 0.9718,
+      "recall": 0.9609,
+      "f1_score": 0.9663,
+      "test_samples": 179
+    },
+    "Mosaic": {
+      "precision": 0.9639,
+      "recall": 0.9581,
+      "f1_score": 0.961,
+      "test_samples": 167
+    }
+  },
+  "confusion_matrix": [
+    [
+      362,
+      20,
+      3,
+      3,
+      1
+    ],
+    [
+      15,
+      203,
+      0,
+      0,
+      2
+    ],
+    [
+      1,
+      0,
+      146,
+      2,
+      3
+    ],
+    [
+      5,
+      0,
+      2,
+      172,
+      0
+    ],
+    [
+      0,
+      0,
+      7,
+      0,
+      160
+    ]
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "dataset_name": "Cassava Leaf Disease & Pest Dataset",
+  "dataset_location": "C:\\Users\\krsan\\Desktop\\crop\\Cassava",
+  "total_images_scanned": 7508,
+  "corrupted_images_count": 0,
+  "corrupted_files": [],
+  "duplicate_images_count": 129,
+  "clean_unique_images_count": 7379,
+  "classes_detected": [
+    "Bacterial Blight",
+    "Brown Spot",
+    "Green Mite",
+    "Healthy",
+    "Mosaic"
+  ],
+  "class_categories": {
+    "Bacterial Blight": "disease",
+    "Brown Spot": "disease",
+    "Green Mite": "pest",
+    "Healthy": "healthy",
+    "Mosaic": "disease"
+  },
+  "raw_class_distribution": {
+    "Bacterial Blight": 2594,
+    "Brown Spot": 1465,
+    "Green Mite": 1015,
+    "Healthy": 1193,
+    "Mosaic": 1112
+  },
+  "formats_distribution": {
+    ".jpg": 7508
+  },
+  "dimensions": {
+    "min_width": 400,
+    "max_width": 400,
+    "min_height": 400,
+    "max_height": 400,
+    "avg_width": 400.0,
+    "avg_height": 400.0
+  }
+}

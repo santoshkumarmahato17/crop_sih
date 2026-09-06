@@ -314,6 +314,111 @@ async def get_maize_model_info():
 
 
 # ---------------------------------------------------------------------------
+# Cassava 5-Class Pest & Disease Classification Endpoints
+# ---------------------------------------------------------------------------
+
+@app.post(
+    "/api/cassava/predict",
+    tags=["Cassava Inference"],
+    summary="Predict Cassava Leaf Disease, Pest, or Healthy Condition (5 Classes)",
+    description="Accepts a photograph of a cassava leaf and returns 5-class prediction, category (pest/disease/healthy), confidence, and probabilities.",
+)
+async def predict_cassava_leaf(
+    image: UploadFile = File(..., description="Photograph of a cassava leaf (JPG/PNG)"),
+    confidence_threshold: Optional[float] = Form(None, description="Custom confidence threshold (0.0 - 100.0)"),
+):
+    """Cassava 5-class disease & pest inference endpoint."""
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(image.filename)[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported format '{ext}'. Allowed: {valid_exts}")
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    try:
+        from ml.src.predict_cassava import get_cassava_predictor
+        predictor = get_cassava_predictor()
+        result = predictor.predict(
+            image_input=contents,
+            confidence_threshold=confidence_threshold,
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cassava ML Inference failed: {str(e)}")
+
+
+@app.get("/api/cassava/classes", tags=["Cassava Metadata"])
+async def get_cassava_classes():
+    """Retrieve supported Cassava class taxonomy and categories."""
+    from ml.src.predict_cassava import get_cassava_predictor
+    predictor = get_cassava_predictor()
+    from ml.src.dataset_cassava import CLASS_CATEGORIES
+    return {
+        "classes": predictor.classes,
+        "count": len(predictor.classes),
+        "class_categories": CLASS_CATEGORIES,
+        "confidence_threshold": predictor.confidence_threshold,
+    }
+
+
+@app.get("/api/cassava/sample-images", tags=["Cassava Metadata"])
+async def get_cassava_sample_images():
+    """Retrieve sample images across each of the 5 Cassava classes."""
+    from ml.src.predict_cassava import get_cassava_predictor
+    predictor = get_cassava_predictor()
+    cassava_root = os.path.join(REPO_ROOT, "Cassava")
+    folder_mapping = {
+        "Bacterial Blight": "bacterial blight",
+        "Brown Spot": "brown spot",
+        "Green Mite": "green mite",
+        "Healthy": "healthy",
+        "Mosaic": "mosaic",
+    }
+    samples = []
+    for cls in predictor.classes:
+        fld = folder_mapping.get(cls, cls.lower())
+        cls_dir = os.path.join(cassava_root, fld)
+        if os.path.isdir(cls_dir):
+            files = [f for f in os.listdir(cls_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+            for f in files[:4]:
+                samples.append({
+                    "class_name": cls,
+                    "filename": f,
+                    "relative_path": f"{fld}/{f}",
+                })
+    return {"samples": samples}
+
+
+@app.get("/api/cassava/sample-image-file", tags=["Cassava Metadata"])
+async def get_cassava_sample_image_file(rel_path: str):
+    """Stream a Cassava sample image file."""
+    safe_rel = os.path.normpath(rel_path).replace("\\", "/")
+    if safe_rel.startswith("..") or "/../" in safe_rel:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    full_path = os.path.join(REPO_ROOT, "Cassava", safe_rel)
+    if not os.path.isfile(full_path):
+        raise HTTPException(status_code=404, detail="Sample image not found")
+    return FileResponse(full_path, media_type="image/jpeg")
+
+
+@app.get("/api/cassava/model-info", tags=["Cassava Metadata"])
+async def get_cassava_model_info():
+    """Retrieve Cassava training and architecture metadata."""
+    metadata_path = os.path.join(REPO_ROOT, "ml", "models_cassava", "model_metadata.json")
+    if os.path.exists(metadata_path):
+        return load_json(metadata_path)
+    return {"status": "metadata not found, model might be training"}
+
+
+# ---------------------------------------------------------------------------
 # YOLO Plant Disease Lesion Detection & Severity Segmentation Endpoints
 # ---------------------------------------------------------------------------
 

@@ -1,0 +1,65 @@
+# Cassava Leaf Disease & Pest Classification Configuration
+# 5 Classes: Bacterial Blight, Brown Spot, Green Mite, Healthy, Mosaic
+
+dataset:
+  name: "Cassava Leaf Disease & Pest Dataset"
+  raw_dir: "Cassava"
+  splits_dir: "ml/data/splits_cassava"
+  reports_dir: "ml/reports_cassava"
+  train_split: 0.70
+  val_split: 0.15
+  test_split: 0.15
+  random_seed: 42
+  image_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".bmp"
+    - ".webp"
+
+classes:
+  - "Bacterial Blight"
+  - "Brown Spot"
+  - "Green Mite"
+  - "Healthy"
+  - "Mosaic"
+
+class_mapping:
+  "bacterial blight": "Bacterial Blight"
+  "brown spot": "Brown Spot"
+  "green mite": "Green Mite"
+  "healthy": "Healthy"
+  "mosaic": "Mosaic"
+
+class_categories:
+  "Bacterial Blight": "disease"
+  "Brown Spot": "disease"
+  "Green Mite": "pest"
+  "Healthy": "healthy"
+  "Mosaic": "disease"
+
+model:
+  architecture: "mobilenet_v3_small"
+  pretrained: true
+  num_classes: 5
+  input_size: 224
+  dropout: 0.25
+  save_dir: "ml/models_cassava"
+
+training:
+  batch_size: 32
+  num_workers: 0  # Safe for Windows CPU/multiprocessing
+  warmup_epochs: 2
+  fine_tune_epochs: 4
+  warmup_lr: 0.001
+  fine_tune_lr: 0.0003
+  weight_decay: 0.0001
+  min_lr: 0.00001
+  device: "cpu"
+  use_class_weights: true
+
+inference:
+  confidence_threshold: 70.0
+  blur_threshold: 2.0
+  min_brightness: 25.0
+  max_brightness: 235.0

@@ -106,10 +106,12 @@ def build_model(
     num_classes: int = 5,
     backbone_name: str = "mobilenet_v3_large",
     pretrained: bool = True,
+    dropout_rate: float = 0.25,
 ) -> TomatoDiseaseClassifier:
     """Factory helper to build the classifier."""
     return TomatoDiseaseClassifier(
         num_classes=num_classes,
         backbone_name=backbone_name,
         pretrained=pretrained,
+        dropout_rate=dropout_rate,
     )
