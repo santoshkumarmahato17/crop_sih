@@ -106,6 +106,14 @@ def create_application() -> FastAPI:
     app.include_router(predict.router)
     app.include_router(ai.router)
 
+    # Mount Tomato Leaf Disease ML Pipeline API
+    try:
+        from ml.api.app import app as ml_app
+        app.mount("/api", ml_app)
+        logger.info("Successfully mounted Tomato Leaf Disease ML API under /api")
+    except Exception as e:
+        logger.warning(f"Could not mount Tomato Leaf Disease ML API: {e}")
+
     return app
 
 

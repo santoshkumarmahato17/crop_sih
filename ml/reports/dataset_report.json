@@ -1,0 +1,122 @@
+{
+  "dataset_name": "Tomato Leaf Disease Classification Dataset",
+  "dataset_root": "C:\\Users\\krsan\\Desktop\\crop\\Tomato",
+  "total_images_scanned": 5805,
+  "valid_images_count": 5338,
+  "corrupted_images_count": 13,
+  "duplicate_images_count": 454,
+  "classes": [
+    "Healthy",
+    "Leaf Blight",
+    "Leaf Curl",
+    "Septoria Leaf Spot",
+    "Verticillium Wilt"
+  ],
+  "raw_counts_per_class": {
+    "Healthy": 470,
+    "Leaf Blight": 1301,
+    "Leaf Curl": 518,
+    "Septoria Leaf Spot": 2743,
+    "Verticillium Wilt": 773
+  },
+  "format_distribution": {
+    ".jpg": 5805
+  },
+  "dimension_distribution": {
+    "400x400": 5792
+  },
+  "class_imbalance": {
+    "Healthy": 8.1,
+    "Leaf Blight": 22.41,
+    "Leaf Curl": 8.92,
+    "Septoria Leaf Spot": 47.25,
+    "Verticillium Wilt": 13.32
+  },
+  "splits_summary": {
+    "train": {
+      "total": 3736,
+      "per_class": {
+        "Healthy": 325,
+        "Leaf Blight": 904,
+        "Leaf Curl": 360,
+        "Septoria Leaf Spot": 1606,
+        "Verticillium Wilt": 541
+      }
+    },
+    "validation": {
+      "total": 801,
+      "per_class": {
+        "Healthy": 70,
+        "Leaf Blight": 194,
+        "Leaf Curl": 77,
+        "Septoria Leaf Spot": 344,
+        "Verticillium Wilt": 116
+      }
+    },
+    "test": {
+      "total": 801,
+      "per_class": {
+        "Healthy": 70,
+        "Leaf Blight": 194,
+        "Leaf Curl": 77,
+        "Septoria Leaf Spot": 344,
+        "Verticillium Wilt": 116
+      }
+    }
+  },
+  "corrupted_files_sample": [
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\healthy\\healthy443_.jpg",
+      "error": "Truncated File Read"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\healthy\\healthy77_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\healthy\\\\healthy77_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf blight\\leaf blight1232_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf blight\\\\leaf blight1232_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf blight\\leaf blight471_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf blight\\\\leaf blight471_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf blight\\leaf blight558_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf blight\\\\leaf blight558_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf blight\\leaf blight645_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf blight\\\\leaf blight645_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf blight\\leaf blight72_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf blight\\\\leaf blight72_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf blight\\leaf blight814_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf blight\\\\leaf blight814_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf blight\\leaf blight998_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf blight\\\\leaf blight998_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf curl\\leaf curl186_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf curl\\\\leaf curl186_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf curl\\leaf curl271_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf curl\\\\leaf curl271_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf curl\\leaf curl354_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf curl\\\\leaf curl354_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Tomato\\leaf curl\\leaf curl43_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Tomato\\\\leaf curl\\\\leaf curl43_.jpg'"
+    }
+  ],
+  "zero_data_leakage_verified": true
+}

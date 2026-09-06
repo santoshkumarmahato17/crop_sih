@@ -1,0 +1,22 @@
+{
+  "model_name": "TomatoLeafDiseaseClassifier-MobileNetV3",
+  "architecture": "mobilenet_v3_small",
+  "input_size": [
+    3,
+    224,
+    224
+  ],
+  "num_classes": 5,
+  "classes": [
+    "Healthy",
+    "Leaf Blight",
+    "Leaf Curl",
+    "Septoria Leaf Spot",
+    "Verticillium Wilt"
+  ],
+  "confidence_threshold": 0.7,
+  "best_epoch": 3,
+  "best_validation_accuracy": 0.6317,
+  "best_validation_loss": 0.7991,
+  "total_training_time_seconds": 704.9
+}

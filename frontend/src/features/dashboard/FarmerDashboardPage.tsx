@@ -18,6 +18,7 @@ import {
   PlusCircle,
   Sprout,
   Stethoscope,
+  Camera,
   ArrowUpRight,
   X,
   Trash2,
@@ -439,6 +440,16 @@ export const FarmerDashboardPage: React.FC = () => {
               >
                 <Stethoscope className="w-4 h-4 text-slate-950" />
                 Identify Disease
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate('/tomato-camera')}
+                className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black text-xs sm:text-sm transition-all duration-200 shadow-xl shadow-amber-500/25"
+              >
+                <Camera className="w-4 h-4 text-slate-950" />
+                Tomato Leaf AI Camera
                 <ArrowRight className="w-4 h-4" />
               </button>
 

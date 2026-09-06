@@ -1,0 +1,17 @@
+{
+  "backbone": "mobilenet_v3_small",
+  "input_size": 224,
+  "warmup_epochs": 2,
+  "finetune_epochs": 4,
+  "batch_size": 32,
+  "warmup_lr": 0.001,
+  "finetune_lr": 0.0003,
+  "class_weights": [
+    1.631110429763794,
+    0.586405873298645,
+    1.4725302457809448,
+    0.3300814926624298,
+    0.9798722863197327
+  ],
+  "device": "cpu"
+}

@@ -21,6 +21,7 @@ import { ExtensionOfficerDashboardPage } from '@/features/officer/ExtensionOffic
 // Operational Modules
 import { PhotoVideoUploadPage } from '@/features/imagery/PhotoVideoUploadPage';
 import { AIDiseaseAnalysisPage } from '@/features/detection/AIDiseaseAnalysisPage';
+import { TomatoCameraAnalysisPage } from '@/features/detection/TomatoCameraAnalysisPage';
 import { SymptomDiseaseIdentificationPage } from '@/features/diagnosis/SymptomDiseaseIdentificationPage';
 import { FarmerCommunityPage } from '@/features/community/FarmerCommunityPage';
 import { FieldMapViewerPage } from '@/features/farms/FieldMapViewerPage';
@@ -333,6 +334,14 @@ export const AppRoutes: React.FC = () => {
           element={
             <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
               <AIDiseaseAnalysisPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="tomato-camera"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <TomatoCameraAnalysisPage />
             </RoleProtectedRoute>
           }
         />

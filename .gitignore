@@ -97,6 +97,7 @@ redis-data/
 *.sqlite*
 agrishield.db
 Dataset for Crop Pest and Disease Detection/
+Tomato/
 
 # IDE & OS
 .idea/
