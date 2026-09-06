@@ -20,7 +20,6 @@ import { ExtensionOfficerDashboardPage } from '@/features/officer/ExtensionOffic
 
 // Operational Modules
 import { PhotoVideoUploadPage } from '@/features/imagery/PhotoVideoUploadPage';
-import { AIDiseaseAnalysisPage } from '@/features/detection/AIDiseaseAnalysisPage';
 import { TomatoCameraAnalysisPage } from '@/features/detection/TomatoCameraAnalysisPage';
 import { SymptomDiseaseIdentificationPage } from '@/features/diagnosis/SymptomDiseaseIdentificationPage';
 import { FarmerCommunityPage } from '@/features/community/FarmerCommunityPage';
@@ -333,7 +332,7 @@ export const AppRoutes: React.FC = () => {
           path="analysis"
           element={
             <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
-              <AIDiseaseAnalysisPage />
+              <TomatoCameraAnalysisPage />
             </RoleProtectedRoute>
           }
         />
@@ -499,7 +498,7 @@ export const AppRoutes: React.FC = () => {
           path="observations"
           element={
             <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
-              <AIDiseaseAnalysisPage />
+              <TomatoCameraAnalysisPage />
             </RoleProtectedRoute>
           }
         />

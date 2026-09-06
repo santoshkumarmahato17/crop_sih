@@ -12,7 +12,7 @@ import sys
 from typing import Dict, Optional
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from pydantic import BaseModel, Field
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
@@ -89,6 +89,47 @@ async def get_model_info():
     if os.path.exists(metadata_path):
         return load_json(metadata_path)
     return {"status": "metadata not found, model might be training"}
+
+
+@app.get("/api/sample-images", tags=["Metadata"])
+@app.get("/sample-images", tags=["Metadata"])
+async def get_sample_images():
+    """Retrieve sample images from the Tomato dataset across each of the 5 classes."""
+    predictor = get_tomato_predictor()
+    tomato_root = os.path.join(REPO_ROOT, "Tomato")
+    folder_mapping = {
+        "Healthy": "healthy",
+        "Leaf Blight": "leaf blight",
+        "Leaf Curl": "leaf curl",
+        "Septoria Leaf Spot": "septoria leaf spot",
+        "Verticillium Wilt": "verticulium wilt",
+    }
+    samples = []
+    for cls in predictor.classes:
+        fld = folder_mapping.get(cls, cls.lower())
+        cls_dir = os.path.join(tomato_root, fld)
+        if os.path.isdir(cls_dir):
+            files = [f for f in os.listdir(cls_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+            for f in files[:4]:
+                samples.append({
+                    "class_name": cls,
+                    "filename": f,
+                    "relative_path": f"{fld}/{f}",
+                })
+    return {"samples": samples}
+
+
+@app.get("/api/sample-image-file", tags=["Metadata"])
+@app.get("/sample-image-file", tags=["Metadata"])
+async def get_sample_image_file(rel_path: str):
+    """Stream a sample image file."""
+    safe_rel = os.path.normpath(rel_path).replace("\\", "/")
+    if safe_rel.startswith("..") or "/../" in safe_rel:
+        raise HTTPException(status_code=400, detail="Invalid path")
+    full_path = os.path.join(REPO_ROOT, "Tomato", safe_rel)
+    if not os.path.isfile(full_path):
+        raise HTTPException(status_code=404, detail="Sample image not found")
+    return FileResponse(full_path, media_type="image/jpeg")
 
 
 @app.post(
