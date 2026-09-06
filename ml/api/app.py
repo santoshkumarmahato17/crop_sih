@@ -313,6 +313,116 @@ async def get_maize_model_info():
     return {"status": "metadata not found, model might be training"}
 
 
+# ---------------------------------------------------------------------------
+# YOLO Plant Disease Lesion Detection & Severity Segmentation Endpoints
+# ---------------------------------------------------------------------------
+
+_YOLO_DETECTOR = None
+
+
+def get_yolo_detector():
+    """Singleton getter for YOLODiseaseDetector."""
+    global _YOLO_DETECTOR
+    if _YOLO_DETECTOR is None:
+        from ml.src.yolo_disease_detector import YOLODiseaseDetector
+        _YOLO_DETECTOR = YOLODiseaseDetector()
+    return _YOLO_DETECTOR
+
+
+@app.post(
+    "/api/yolo/analyze-disease",
+    tags=["YOLO Lesion Detection"],
+    summary="YOLO Foliar Lesion Detection, Multi-Region Segmentation & Severity",
+    description="Analyzes foliage image, returns bounding boxes, segmentation masks, spectral heatmap, and quantitative severity metrics.",
+)
+async def analyze_yolo_disease(
+    image: UploadFile = File(..., description="Photograph of plant foliage (JPG/PNG)"),
+):
+    """YOLO disease lesion detection and segmentation endpoint."""
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(image.filename)[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported format '{ext}'. Allowed: {valid_exts}")
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    try:
+        detector = get_yolo_detector()
+        result = detector.analyze(contents)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"YOLO Disease Analysis failed: {str(e)}")
+
+
+@app.get("/api/yolo/sample-images", tags=["YOLO Lesion Detection"])
+async def get_yolo_sample_images():
+    """Retrieve sample images for YOLO foliar lesion analysis."""
+    samples_dir = os.path.join(REPO_ROOT, "ml", "data", "yolo_samples")
+    meta = {
+        "pear_foliar_blight_yolo.jpg": {
+            "title": "Field Canopy Blight (Figure 3)",
+            "description": "Pear foliage with multiple necrotic lesion margins",
+            "category": "Blight Bounding Boxes",
+        },
+        "potato_late_blight_spectral.jpg": {
+            "title": "Potato Late Blight (Figure 1)",
+            "description": "Potato leaf with water-soaked late blight patches",
+            "category": "Spectral Heatmap",
+        },
+        "multiclass_foliar_lesions.jpg": {
+            "title": "Multi-Foliar Disease Lesions (Figure 2)",
+            "description": "Multi-crop leaves showing chlorotic halos and necrotic cores",
+            "category": "Multi-Region Segmentation",
+        },
+        "maize_turcicum_blight.jpg": {
+            "title": "Maize Turcicum Blight",
+            "description": "Maize leaf with elongated cigar-shaped blight lesions",
+            "category": "Maize Pathology",
+        },
+        "tomato_foliar_blight.jpg": {
+            "title": "Tomato Foliar Blight",
+            "description": "Tomato leaf affected by severe foliar blight lesions",
+            "category": "Tomato Pathology",
+        },
+    }
+    items = []
+    if os.path.exists(samples_dir):
+        for f in os.listdir(samples_dir):
+            if f.lower().endswith((".jpg", ".jpeg", ".png")):
+                info = meta.get(f, {
+                    "title": f.replace("_", " ").replace(".jpg", "").title(),
+                    "description": "Plant foliage lesion sample",
+                    "category": "Foliar Sample",
+                })
+                items.append({
+                    "filename": f,
+                    "title": info["title"],
+                    "description": info["description"],
+                    "category": info["category"],
+                    "relative_path": f,
+                })
+    return {"samples": items}
+
+
+@app.get("/api/yolo/sample-image-file", tags=["YOLO Lesion Detection"])
+async def get_yolo_sample_image_file(rel_path: str):
+    """Stream a YOLO sample image file."""
+    safe_rel = os.path.basename(rel_path)
+    full_path = os.path.join(REPO_ROOT, "ml", "data", "yolo_samples", safe_rel)
+    if not os.path.isfile(full_path):
+        raise HTTPException(status_code=404, detail="Sample image not found")
+    return FileResponse(full_path, media_type="image/jpeg")
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
+
