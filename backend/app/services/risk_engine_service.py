@@ -94,12 +94,41 @@ class RiskEngineService:
                     trend_str = "DECLINING" if diff <= -5.0 else ("IMPROVING" if diff >= 5.0 else "STABLE")
                 has_disease = any(len(o.disease_observations or []) > 0 for o in observations)
 
+            # Fetch real weather based on fallback coordinates (approx. Maharashtra region)
+            # Ideally extract from zone.farm.center_point when PostGIS is fully populated
+            lat, lon = 20.0, 73.78
+            
+            from app.weather.providers.service import get_current_weather, get_historical_weather
+            from app.weather.providers.base import DataQuality
+            
+            rel_humidity = 82.0
+            temp_c = 27.5
+            recent_rainfall = 18.0
+            
+            try:
+                # Real weather integration as per user request
+                current_weather = await get_current_weather(lat, lon)
+                hist_weather = await get_historical_weather(lat, lon, days_back=7)
+                
+                # Apply weather only if it meets data quality threshold
+                if current_weather.data_quality in (DataQuality.GOOD, DataQuality.STALE):
+                    if current_weather.relative_humidity_percent is not None:
+                        rel_humidity = current_weather.relative_humidity_percent
+                    if current_weather.temperature_c is not None:
+                        temp_c = current_weather.temperature_c
+                
+                # Aggregate historical rainfall
+                if hist_weather:
+                    recent_rainfall = sum(w.rainfall_mm or 0.0 for w in hist_weather)
+            except Exception as e:
+                logger.error(f"Failed to fetch real weather for risk engine: {e}")
+
             inputs = RiskEngineInputs(
                 crop_type="Wheat",
                 growth_stage="Grain Filling",
-                relative_humidity_pct=82.0,
-                recent_rainfall_mm=18.0,
-                temperature_c=27.5,
+                relative_humidity_pct=rel_humidity,
+                recent_rainfall_mm=recent_rainfall,
+                temperature_c=temp_c,
                 current_health_score=latest_health,
                 health_trend=trend_str,
                 has_disease_history=has_disease,

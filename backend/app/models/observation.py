@@ -230,43 +230,39 @@ class WaterStressObservation(Base, TimestampMixin):
 
 
 class WeatherObservation(Base, TimestampMixin):
-    """In-situ weather station or microclimate reanalysis observation."""
+    """Real-time weather observation data."""
 
     __tablename__ = "weather_observations"
     __table_args__ = (
-        Index("ix_weather_obs_farm_time", "farm_id", "observation_time"),
+        Index("ix_weather_obs_farm_time", "farm_id", "observed_at"),
     )
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
-    )
-    farm_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("farms.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-
-    # PostGIS Station Location (SRID 4326)
-    location: Mapped[Geometry] = mapped_column(
-        Geometry(geometry_type="POINT", srid=4326, spatial_index=True),
-        nullable=False,
-    )
-    observation_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
-
-    temperature_c: Mapped[float] = mapped_column(Float, nullable=False)
-    min_temperature_c: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    max_temperature_c: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    relative_humidity_percent: Mapped[float] = mapped_column(Float, nullable=False)
-    wind_speed_mps: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    wind_direction_deg: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    rainfall_mm: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    rainfall_duration_hours: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    solar_radiation_w_m2: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    cloud_cover_percent: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    soil_moisture_percent: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    leaf_wetness_hours: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    source: Mapped[str] = mapped_column(String(50), default="on_farm_station", nullable=False)
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
+    farm_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("farms.id", ondelete="CASCADE"), nullable=True, index=True)
+    zone_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("farm_zones.id", ondelete="CASCADE"), nullable=True, index=True)
+    
+    latitude: Mapped[float] = mapped_column(Float, nullable=False)
+    longitude: Mapped[float] = mapped_column(Float, nullable=False)
+    
+    observed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
+    
+    temperature: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    relative_humidity: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    rainfall: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    precipitation_probability: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    wind_speed: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    wind_direction: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    dew_point: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    soil_moisture: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    et0: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    vpd: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    
+    provider: Mapped[str] = mapped_column(String(50), nullable=False)
+    model: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    source_timestamp: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships
-    farm: Mapped["Farm"] = relationship("Farm", back_populates="weather_observations")
+    farm: Mapped[Optional["Farm"]] = relationship("Farm", back_populates="weather_observations")
 
 
 class WeatherForecast(Base, TimestampMixin):
@@ -277,32 +273,28 @@ class WeatherForecast(Base, TimestampMixin):
         Index("ix_weather_forecast_farm_time", "farm_id", "forecast_time"),
     )
 
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
-    )
-    farm_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("farms.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-
-    # PostGIS Location (SRID 4326)
-    location: Mapped[Geometry] = mapped_column(
-        Geometry(geometry_type="POINT", srid=4326, spatial_index=True),
-        nullable=False,
-    )
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
+    farm_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("farms.id", ondelete="CASCADE"), nullable=True, index=True)
+    zone_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("farm_zones.id", ondelete="CASCADE"), nullable=True, index=True)
+    
     forecast_time: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False, index=True)
-
-    temperature_c: Mapped[float] = mapped_column(Float, nullable=False)
-    min_temperature_c: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    max_temperature_c: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    relative_humidity_percent: Mapped[float] = mapped_column(Float, nullable=False)
-    rainfall_probability_percent: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    expected_rainfall_mm: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    wind_speed_mps: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    wind_direction_deg: Mapped[float] = mapped_column(Float, default=0.0, nullable=False)
-    solar_radiation_w_m2: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    cloud_cover_percent: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
-    source: Mapped[str] = mapped_column(String(50), default="agro_weather_ensemble", nullable=False)
+    
+    temperature: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    relative_humidity: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    precipitation: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    precipitation_probability: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    rainfall: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    wind_speed: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    wind_direction: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    dew_point: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    soil_moisture: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    et0: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    vpd: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    
+    provider: Mapped[str] = mapped_column(String(50), nullable=False)
+    model: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    forecast_generated_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
     # Relationships
-    farm: Mapped["Farm"] = relationship("Farm")
+    farm: Mapped[Optional["Farm"]] = relationship("Farm", back_populates="weather_forecasts")
 

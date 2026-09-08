@@ -26,6 +26,7 @@ from app.api.v1.endpoints import (
     validation,
     water_stress,
     weather_forecast,
+    weather_real,
     zones,
 )
 
@@ -54,6 +55,8 @@ api_router.include_router(risk.router)
 api_router.include_router(spread.router)
 api_router.include_router(water_stress.router)
 api_router.include_router(weather_forecast.router)
+# New normalized real-weather endpoints
+api_router.include_router(weather_real.router)
 api_router.include_router(validation.router)
 api_router.include_router(predict.router)
 api_router.include_router(advisories.router)
