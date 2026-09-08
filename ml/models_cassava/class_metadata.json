@@ -1,0 +1,44 @@
+{
+  "classes": [
+    {
+      "id": 0,
+      "name": "Bacterial Blight",
+      "category": "disease",
+      "scientific_name": "Xanthomonas axonopodis pv. manihotis",
+      "urgency": "High",
+      "recommendation": "Cassava Bacterial Blight (CBB) detected. Prune infected branches, apply copper-based bactericides (e.g. Copper Oxychloride), use certified disease-free stem cuttings, and destroy infected residues."
+    },
+    {
+      "id": 1,
+      "name": "Brown Spot",
+      "category": "disease",
+      "scientific_name": "Passalora henningsii",
+      "urgency": "Low",
+      "recommendation": "Cassava Brown Leaf Spot (Passalora henningsii) detected. Ensure proper plant spacing to facilitate air movement; apply preventative protectant fungicides like Mancozeb or Chlorothalonil if canopy defoliation begins."
+    },
+    {
+      "id": 2,
+      "name": "Green Mite",
+      "category": "pest",
+      "scientific_name": "Mononychellus tanajoa (Bondar)",
+      "urgency": "Medium",
+      "recommendation": "Cassava Green Mite (Mononychellus tanajoa) pest infestation detected. Introduce classical biological control predatory phytoseiid mites (Typhlodromalus aripo); avoid indiscriminate broad-spectrum organophosphate sprays."
+    },
+    {
+      "id": 3,
+      "name": "Healthy",
+      "category": "healthy",
+      "scientific_name": "Manihot esculenta (Healthy Canopy)",
+      "urgency": "None",
+      "recommendation": "Cassava foliage demonstrates vigorous chlorophyll pigmentation, intact leaf lobes, and no signs of bacterial exudates, fungal spotting, chlorotic mosaic mottling, or green mite stippling."
+    },
+    {
+      "id": 4,
+      "name": "Mosaic",
+      "category": "disease",
+      "scientific_name": "Cassava mosaic begomoviruses (ACMV/EACMV)",
+      "urgency": "High",
+      "recommendation": "Cassava Mosaic Disease (CMD) detected, transmitted by whiteflies (Bemisia tabaci). Immediately rogue severely stunted or distorted plants; plant CMD-resistant varieties; manage whitefly vector populations."
+    }
+  ]
+}

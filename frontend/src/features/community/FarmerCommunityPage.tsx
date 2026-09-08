@@ -710,10 +710,10 @@ export const FarmerCommunityPage: React.FC = () => {
             </p>
             <button
               type="button"
-              onClick={() => navigate('/upload')}
+              onClick={() => navigate('/analysis')}
               className="w-full py-2.5 rounded-xl bg-white text-slate-900 hover:bg-blue-50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md"
             >
-              <span>Upload Photo / Video</span>
+              <span>Instant AI Disease Diagnosis</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
