@@ -1,6 +1,6 @@
 import json
 from functools import lru_cache
-from typing import List, Union
+from typing import List, Optional, Union
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -47,7 +47,8 @@ class Settings(BaseSettings):
                 pass
         return v if isinstance(v, list) else []
 
-    # 2. Database Settings (PostgreSQL + PostGIS)
+    # 2. Database Settings (PostgreSQL + PostGIS or Supabase Hosted Database)
+    DATABASE_URL: Optional[str] = None
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str = "agrishield_user"
@@ -56,8 +57,31 @@ class Settings(BaseSettings):
     DATABASE_POOL_SIZE: int = 20
     DATABASE_MAX_OVERFLOW: int = 10
 
+    # Supabase Specific Configuration
+    SUPABASE_URL: Optional[str] = "https://iekecrgipogdkycreqbc.supabase.co"
+    SUPABASE_ANON_KEY: Optional[str] = None
+    SUPABASE_SERVICE_ROLE_KEY: Optional[str] = None
+
     @property
     def async_database_url(self) -> str:
+        if self.DATABASE_URL:
+            url = self.DATABASE_URL.strip()
+            # Normalize scheme to postgresql+asyncpg
+            if url.startswith("postgres://"):
+                url = "postgresql+asyncpg://" + url[len("postgres://"):]
+            elif url.startswith("postgresql://"):
+                url = "postgresql+asyncpg://" + url[len("postgresql://"):]
+            elif not url.startswith("postgresql+asyncpg://"):
+                url = "postgresql+asyncpg://" + url
+
+            # Strip unsupported asyncpg query params (e.g., sslmode=require)
+            if "sslmode=" in url:
+                import re
+                url = re.sub(r'[\?&]sslmode=[^&]+', '', url)
+                if '?' not in url and '&' in url:
+                    url = url.replace('&', '?', 1)
+            return url
+
         return (
             f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
             f"@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
@@ -65,6 +89,14 @@ class Settings(BaseSettings):
 
     @property
     def sync_database_url(self) -> str:
+        if self.DATABASE_URL:
+            url = self.DATABASE_URL.strip()
+            if url.startswith("postgresql+asyncpg://"):
+                url = "postgresql://" + url[len("postgresql+asyncpg://"):]
+            elif url.startswith("postgres://"):
+                url = "postgresql://" + url[len("postgres://"):]
+            return url
+
         return (
             f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
             f"@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"

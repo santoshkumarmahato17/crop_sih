@@ -66,7 +66,7 @@ data/exports/
 *.pkl
 *.joblib
 *.bin
-weights/
+!weights/**
 checkpoints/
 !ml/models/**/best_model.pth
 !ml/models/**/best_model_mobile.pt
@@ -109,12 +109,6 @@ redis-data/
 *.sqlite*
 agrishield.db
 Dataset for Crop Pest and Disease Detection/
-Tomato/
-Maize/
-Cassava/
-Cashew/
-apple dataset/
-"apple dataset"/
 orange d-set/
 soybean d-set/
 

@@ -26,10 +26,12 @@ ga_sqlite.before_create = lambda *args, **kwargs: None
 
 
 # ------------------------------------------------------------------------------
-# 2. Database Engine Discovery (PostgreSQL / SQLite Dual-Mode)
+# 2. Database Engine Discovery (PostgreSQL / SQLite Dual-Mode & Supabase)
 # ------------------------------------------------------------------------------
-def is_postgres_available(host: str, port: int, timeout_seconds: float = 0.6) -> bool:
-    """Performs a non-blocking TCP socket probe to verify PostgreSQL daemon reachability."""
+from urllib.parse import urlparse
+
+def is_postgres_available(host: str, port: int, timeout_seconds: float = 1.0) -> bool:
+    """Performs a TCP socket probe to verify PostgreSQL daemon reachability."""
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(timeout_seconds)
@@ -40,11 +42,32 @@ def is_postgres_available(host: str, port: int, timeout_seconds: float = 0.6) ->
         return False
 
 
-postgres_online = is_postgres_available(settings.POSTGRES_SERVER, settings.POSTGRES_PORT)
+# Determine target host, port, and SSL requirements
+db_host = settings.POSTGRES_SERVER
+db_port = settings.POSTGRES_PORT
+connect_args = {}
+
+if settings.DATABASE_URL:
+    try:
+        parsed_url = urlparse(settings.DATABASE_URL)
+        if parsed_url.hostname:
+            db_host = parsed_url.hostname
+        if parsed_url.port:
+            db_port = parsed_url.port
+    except Exception:
+        pass
+
+is_remote = db_host not in ("localhost", "127.0.0.1", "0.0.0.0")
+timeout = 4.0 if is_remote else 0.8
+
+if is_remote or "supabase" in (db_host or "").lower():
+    connect_args["ssl"] = True
+
+postgres_online = is_postgres_available(db_host, db_port, timeout_seconds=timeout)
 
 if postgres_online:
     logger.info(
-        f"[Database] PostgreSQL + PostGIS active at {settings.POSTGRES_SERVER}:{settings.POSTGRES_PORT}. "
+        f"[Database] PostgreSQL + PostGIS active at {db_host}:{db_port}. "
         f"Binding production async engine."
     )
     database_url = settings.async_database_url
@@ -55,13 +78,14 @@ if postgres_online:
         future=True,
         pool_size=settings.DATABASE_POOL_SIZE,
         max_overflow=settings.DATABASE_MAX_OVERFLOW,
+        connect_args=connect_args,
     )
 else:
     db_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../agrishield.db"))
     database_url = f"sqlite+aiosqlite:///{db_file_path}"
     is_sqlite = True
     logger.warning(
-        f"[Database] PostgreSQL daemon not detected at {settings.POSTGRES_SERVER}:{settings.POSTGRES_PORT}. "
+        f"[Database] PostgreSQL daemon not detected at {db_host}:{db_port}. "
         f"Operating with resilient asynchronous SQLite engine: {db_file_path}"
     )
     engine = create_async_engine(
@@ -157,6 +181,12 @@ async def init_db() -> None:
 
     try:
         async with engine.begin() as conn:
+            if not is_sqlite:
+                try:
+                    from sqlalchemy import text
+                    await conn.execute(text("CREATE EXTENSION IF NOT EXISTS postgis;"))
+                except Exception as ext_err:
+                    logger.warning(f"[Database] Notice creating postgis extension: {ext_err}")
             await conn.run_sync(Base.metadata.create_all)
         logger.info("[Database] Verified all schema tables exist.")
 
