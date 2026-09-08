@@ -110,7 +110,6 @@ redis-data/
 *.sqlite*
 agrishield.db
 Dataset for Crop Pest and Disease Detection/
-orange d-set/
 soybean d-set/
 
 # IDE & OS
