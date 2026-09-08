@@ -53,6 +53,14 @@ class TomatoDiseaseClassifier(nn.Module):
             in_features = self.base_model.classifier[1].in_features
             self.base_model.classifier[0] = nn.Dropout(p=dropout_rate, inplace=True)
             self.base_model.classifier[1] = nn.Linear(in_features, num_classes)
+        elif backbone_name == "resnet18":
+            weights = models.ResNet18_Weights.DEFAULT if pretrained else None
+            self.base_model = models.resnet18(weights=weights)
+            in_features = self.base_model.fc.in_features
+            self.base_model.fc = nn.Sequential(
+                nn.Dropout(p=dropout_rate),
+                nn.Linear(in_features, num_classes),
+            )
         else:
             raise ValueError(f"Unsupported backbone: {backbone_name}")
 
@@ -67,29 +75,38 @@ class TomatoDiseaseClassifier(nn.Module):
 
     def freeze_backbone(self):
         """Freeze all feature extractor layers to train only the classifier head."""
-        for name, param in self.base_model.features.named_parameters():
-            param.requires_grad = False
-        for param in self.base_model.classifier.parameters():
-            param.requires_grad = True
+        if hasattr(self.base_model, "features"):
+            for param in self.base_model.features.parameters():
+                param.requires_grad = False
+            for param in self.base_model.classifier.parameters():
+                param.requires_grad = True
+        elif hasattr(self.base_model, "fc"):
+            for name, param in self.base_model.named_parameters():
+                if "fc" not in name:
+                    param.requires_grad = False
+                else:
+                    param.requires_grad = True
 
     def unfreeze_backbone(self, unfreeze_last_n_blocks: Optional[int] = None):
         """
         Unfreeze backbone layers for fine-tuning.
-        If unfreeze_last_n_blocks is specified, only unfreezes the deepest layers.
         """
         if unfreeze_last_n_blocks is None:
             for param in self.base_model.parameters():
                 param.requires_grad = True
         else:
-            # Unfreeze everything first, then selectively freeze earlier layers
-            num_blocks = len(self.base_model.features)
-            cutoff = max(0, num_blocks - unfreeze_last_n_blocks)
-            for idx, block in enumerate(self.base_model.features):
-                req = idx >= cutoff
-                for param in block.parameters():
-                    param.requires_grad = req
-            for param in self.base_model.classifier.parameters():
-                param.requires_grad = True
+            if hasattr(self.base_model, "features"):
+                num_blocks = len(self.base_model.features)
+                cutoff = max(0, num_blocks - unfreeze_last_n_blocks)
+                for idx, block in enumerate(self.base_model.features):
+                    req = idx >= cutoff
+                    for param in block.parameters():
+                        param.requires_grad = req
+                for param in self.base_model.classifier.parameters():
+                    param.requires_grad = True
+            elif hasattr(self.base_model, "fc"):
+                for param in self.base_model.parameters():
+                    param.requires_grad = True
 
     def export_torchscript(self, save_path: str, input_size: int = 224) -> str:
         """

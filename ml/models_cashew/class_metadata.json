@@ -1,0 +1,44 @@
+{
+  "classes": [
+    {
+      "id": 0,
+      "name": "Anthracnose",
+      "category": "disease",
+      "scientific_name": "Colletotrichum gloeosporioides",
+      "urgency": "High",
+      "recommendation": "Apply Copper Oxychloride (0.2%) or Mancozeb at flushing and flowering; prune and incinerate blighted twigs 10 cm below necrotic margins."
+    },
+    {
+      "id": 1,
+      "name": "Gummosis",
+      "category": "disease",
+      "scientific_name": "Lasiodiplodia theobromae",
+      "urgency": "High",
+      "recommendation": "Scrape oozing cankers carefully; apply Bordeaux paste (1%) or Copper fungicide to infected trunk/branch wounds; improve soil drainage."
+    },
+    {
+      "id": 2,
+      "name": "Healthy",
+      "category": "healthy",
+      "scientific_name": "Anacardium occidentale (Healthy Foliage)",
+      "urgency": "None",
+      "recommendation": "Maintain standard cashew orchard sanitation, balanced N-P-K nutrient application, and routine canopy scouting."
+    },
+    {
+      "id": 3,
+      "name": "Leaf Miner",
+      "category": "pest",
+      "scientific_name": "Acrocercops syngramma",
+      "urgency": "High",
+      "recommendation": "Apply Neem Seed Kernel Extract (NSKE 5%) or Spinosad on tender flush shoots; avoid broad-spectrum pyrethroids to preserve natural eulophid parasitoids."
+    },
+    {
+      "id": 4,
+      "name": "Red Rust",
+      "category": "disease",
+      "scientific_name": "Cephaleuros virescens",
+      "urgency": "Medium",
+      "recommendation": "Spray Copper Hydroxide (0.2%) or Bordeaux mixture (1%) during moist flush periods; prune overly dense inner canopy branches to boost airflow."
+    }
+  ]
+}

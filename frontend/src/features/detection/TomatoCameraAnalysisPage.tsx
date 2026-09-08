@@ -101,8 +101,27 @@ interface YOLOSampleItem {
   relative_path: string;
 }
 
-type DiagnosticMode = 'cassava' | 'maize' | 'tomato' | 'yolo';
+type DiagnosticMode = 'apple' | 'cashew' | 'cassava' | 'maize' | 'tomato' | 'yolo';
 type VisualLayer = 'original' | 'yolo_bbox' | 'segmentation' | 'spectral_heatmap';
+
+const APPLE_CLASSES = [
+  'Apple Scab',
+  'Black Rot',
+  'Cedar Apple Rust',
+  'Healthy',
+];
+export const APPLE_DISEASES = ['Apple Scab', 'Black Rot', 'Cedar Apple Rust'];
+
+const CASHEW_CLASSES = [
+  'Anthracnose',
+  'Gummosis',
+  'Healthy',
+  'Leaf Miner',
+  'Red Rust',
+];
+
+const CASHEW_PESTS = ['Leaf Miner'];
+export const CASHEW_DISEASES = ['Anthracnose', 'Gummosis', 'Red Rust'];
 
 const CASSAVA_CLASSES = [
   'Bacterial Blight',
@@ -113,7 +132,7 @@ const CASSAVA_CLASSES = [
 ];
 
 const CASSAVA_PESTS = ['Green Mite'];
-const CASSAVA_DISEASES = ['Bacterial Blight', 'Brown Spot', 'Mosaic'];
+export const CASSAVA_DISEASES = ['Bacterial Blight', 'Brown Spot', 'Mosaic'];
 
 const MAIZE_CLASSES = [
   'Fall army worm',
@@ -134,7 +153,7 @@ const TOMATO_CLASSES = [
 ];
 
 const MAIZE_PESTS = ['Fall army worm', 'Grasshopper', 'Leaf Beetle'];
-const MAIZE_DISEASES = ['Leaf Blight', 'Leaf Spot', 'Streak Virus'];
+export const MAIZE_DISEASES = ['Leaf Blight', 'Leaf Spot', 'Streak Virus'];
 
 export const TomatoCameraAnalysisPage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -165,7 +184,11 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
   const [selectedYoloSample, setSelectedYoloSample] = useState<YOLOSampleItem | null>(null);
 
   const activeClasses =
-    selectedCrop === 'cassava'
+    selectedCrop === 'apple'
+      ? APPLE_CLASSES
+      : selectedCrop === 'cashew'
+      ? CASHEW_CLASSES
+      : selectedCrop === 'cassava'
       ? CASSAVA_CLASSES
       : selectedCrop === 'maize'
       ? MAIZE_CLASSES
@@ -244,7 +267,19 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         }
       } else {
         const endpoints =
-          selectedCrop === 'cassava'
+          selectedCrop === 'apple'
+            ? [
+                'http://localhost:8001/api/apple/sample-images',
+                '/api/apple/sample-images',
+                'http://localhost:8000/api/apple/sample-images',
+              ]
+            : selectedCrop === 'cashew'
+            ? [
+                'http://localhost:8001/api/cashew/sample-images',
+                '/api/cashew/sample-images',
+                'http://localhost:8000/api/cashew/sample-images',
+              ]
+            : selectedCrop === 'cassava'
             ? [
                 'http://localhost:8001/api/cassava/sample-images',
                 '/api/cassava/sample-images',
@@ -355,7 +390,19 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
     const relParam = encodeURIComponent(sample.relative_path);
     const streamUrls =
-      selectedCrop === 'cassava'
+      selectedCrop === 'apple'
+        ? [
+            `http://localhost:8001/api/apple/sample-image-file?rel_path=${relParam}`,
+            `/api/apple/sample-image-file?rel_path=${relParam}`,
+            `http://localhost:8000/api/apple/sample-image-file?rel_path=${relParam}`,
+          ]
+        : selectedCrop === 'cashew'
+        ? [
+            `http://localhost:8001/api/cashew/sample-image-file?rel_path=${relParam}`,
+            `/api/cashew/sample-image-file?rel_path=${relParam}`,
+            `http://localhost:8000/api/cashew/sample-image-file?rel_path=${relParam}`,
+          ]
+        : selectedCrop === 'cassava'
         ? [
             `http://localhost:8001/api/cassava/sample-image-file?rel_path=${relParam}`,
             `/api/cassava/sample-image-file?rel_path=${relParam}`,
@@ -472,7 +519,21 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       }
     } else {
       const endpoints =
-        selectedCrop === 'cassava'
+        selectedCrop === 'apple'
+          ? [
+              'http://localhost:8001/api/apple/predict',
+              '/api/apple/predict',
+              'http://localhost:8000/api/apple/predict',
+            ]
+          : selectedCrop === 'cashew'
+          ? [
+              'http://localhost:8001/api/cashew/predict',
+              '/api/cashew/predict',
+              'http://localhost:8000/api/cashew/predict',
+              'http://localhost:8001/api/predict',
+              '/api/predict',
+            ]
+          : selectedCrop === 'cassava'
           ? [
               'http://localhost:8001/api/cassava/predict',
               '/api/cassava/predict',
@@ -508,7 +569,15 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       if (!success) {
         setErrorMsg(
           `Could not connect to ${
-            selectedCrop === 'cassava' ? 'Cassava' : selectedCrop === 'maize' ? 'Maize' : 'Tomato'
+            selectedCrop === 'apple'
+              ? 'Apple'
+              : selectedCrop === 'cashew'
+              ? 'Cashew'
+              : selectedCrop === 'cassava'
+              ? 'Cassava'
+              : selectedCrop === 'maize'
+              ? 'Maize'
+              : 'Tomato'
           } ML Inference service.`
         );
       }
@@ -542,7 +611,45 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
   // Category determination helper
   const getCategoryInfo = (predClass: string) => {
-    if (selectedCrop === 'cassava') {
+    if (selectedCrop === 'apple') {
+      if (predClass === 'Healthy') {
+        return {
+          type: 'Healthy',
+          label: 'Optimal Foliage Health',
+          icon: <Leaf className="w-4 h-4 text-emerald-400" />,
+          badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+        };
+      }
+      return {
+        type: 'Disease Detected',
+        label: `Foliar Pathology: ${predClass}`,
+        icon: <Activity className="w-4 h-4 text-rose-400" />,
+        badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
+      };
+    } else if (selectedCrop === 'cashew') {
+      if (predClass === 'Healthy') {
+        return {
+          type: 'Healthy',
+          label: 'Optimal Foliage Health',
+          icon: <Leaf className="w-4 h-4 text-emerald-400" />,
+          badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+        };
+      }
+      if (CASHEW_PESTS.includes(predClass)) {
+        return {
+          type: 'Pest Detected',
+          label: 'Cashew Leaf Miner Infestation Detected',
+          icon: <Bug className="w-4 h-4 text-amber-400" />,
+          badgeClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30',
+        };
+      }
+      return {
+        type: 'Disease Detected',
+        label: 'Pathogenic Disease Detected',
+        icon: <Activity className="w-4 h-4 text-rose-400" />,
+        badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
+      };
+    } else if (selectedCrop === 'cassava') {
       if (predClass === 'Healthy') {
         return {
           type: 'Healthy',
@@ -619,7 +726,17 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             AI Disease Analysis · Edge-Optimized Multi-Crop Diagnostic Suite
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            {selectedCrop === 'cassava' ? (
+            {selectedCrop === 'apple' ? (
+              <>
+                <span className="text-2xl">🍎</span>
+                Apple Leaf Disease & Health Analysis
+              </>
+            ) : selectedCrop === 'cashew' ? (
+              <>
+                <span className="text-amber-500 text-2xl">🌰</span>
+                Cashew Leaf Condition & Pest Analysis
+              </>
+            ) : selectedCrop === 'cassava' ? (
               <>
                 <span className="text-emerald-500 text-2xl">🍃</span>
                 Cassava Leaf Disease & Pest Analysis
@@ -642,7 +759,11 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             )}
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
-            {selectedCrop === 'cassava'
+            {selectedCrop === 'apple'
+              ? 'Real-time diagnostic AI for 4 Apple foliar conditions: Apple Scab, Black Rot, Cedar Apple Rust, and Healthy foliage.'
+              : selectedCrop === 'cashew'
+              ? 'Real-time diagnostic AI for 5 Cashew conditions: Anthracnose, Gummosis, Healthy foliage, Leaf Miner pest, and Red Rust.'
+              : selectedCrop === 'cassava'
               ? 'Real-time diagnostic AI for 5 cassava conditions: Bacterial Blight, Brown Spot, Mosaic, Green Mite pest, and Healthy foliage.'
               : selectedCrop === 'yolo'
               ? 'YOLO deep learning engine localizing disease lesions with bounding boxes, multi-region semantic segmentation, and quantitative canopy severity scoring.'
@@ -656,6 +777,28 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-x-auto">
             <button
+              onClick={() => handleCropChange('apple')}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                selectedCrop === 'apple'
+                  ? 'bg-rose-500 text-white shadow-md'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <span>🍎</span>
+              <span>Apple (4 Classes)</span>
+            </button>
+            <button
+              onClick={() => handleCropChange('cashew')}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                selectedCrop === 'cashew'
+                  ? 'bg-amber-500 text-slate-950 shadow-md'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <span>🌰</span>
+              <span>Cashew (5 Classes)</span>
+            </button>
+            <button
               onClick={() => handleCropChange('cassava')}
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
                 selectedCrop === 'cassava'
@@ -665,17 +808,6 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             >
               <span>🍃</span>
               <span>Cassava (5 Classes)</span>
-            </button>
-            <button
-              onClick={() => handleCropChange('yolo')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                selectedCrop === 'yolo'
-                  ? 'bg-rose-500 text-white shadow-md'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <Crosshair className="w-3.5 h-3.5" />
-              <span>YOLO Lesions</span>
             </button>
             <button
               onClick={() => handleCropChange('maize')}
@@ -718,16 +850,19 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-xl">
                 <button
                   onClick={() => {
+                    if (selectedCrop === 'yolo') {
+                      setSelectedCrop('cassava');
+                    }
                     setActiveTab('camera');
                     setCapturedImage(null);
                     setResult(null);
                     setYoloResult(null);
                   }}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
-                    activeTab === 'camera'
-                      ? selectedCrop === 'yolo'
+                    activeTab === 'camera' && selectedCrop !== 'yolo'
+                      ? selectedCrop === 'apple'
                         ? 'bg-rose-500 text-white shadow-sm'
-                        : selectedCrop === 'maize'
+                        : selectedCrop === 'maize' || selectedCrop === 'cashew'
                         ? 'bg-amber-500 text-slate-950 shadow-sm'
                         : 'bg-emerald-500 text-slate-950 shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -738,14 +873,17 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                 </button>
                 <button
                   onClick={() => {
+                    if (selectedCrop === 'yolo') {
+                      setSelectedCrop('cassava');
+                    }
                     setActiveTab('upload');
                     stopCamera();
                   }}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
-                    activeTab === 'upload'
-                      ? selectedCrop === 'yolo'
+                    activeTab === 'upload' && selectedCrop !== 'yolo'
+                      ? selectedCrop === 'apple'
                         ? 'bg-rose-500 text-white shadow-sm'
-                        : selectedCrop === 'maize'
+                        : selectedCrop === 'maize' || selectedCrop === 'cashew'
                         ? 'bg-amber-500 text-slate-950 shadow-sm'
                         : 'bg-emerald-500 text-slate-950 shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -756,14 +894,17 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                 </button>
                 <button
                   onClick={() => {
+                    if (selectedCrop === 'yolo') {
+                      setSelectedCrop('cassava');
+                    }
                     setActiveTab('samples');
                     stopCamera();
                   }}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
-                    activeTab === 'samples'
-                      ? selectedCrop === 'yolo'
+                    activeTab === 'samples' && selectedCrop !== 'yolo'
+                      ? selectedCrop === 'apple'
                         ? 'bg-rose-500 text-white shadow-sm'
-                        : selectedCrop === 'maize'
+                        : selectedCrop === 'maize' || selectedCrop === 'cashew'
                         ? 'bg-amber-500 text-slate-950 shadow-sm'
                         : 'bg-emerald-500 text-slate-950 shadow-sm'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -771,6 +912,32 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                 >
                   <FlaskConical className="w-3.5 h-3.5" />
                   Dataset Samples ({selectedCrop === 'yolo' ? yoloSamples.length : activeClasses.length})
+                </button>
+                <button
+                  onClick={async () => {
+                    const currentImg = capturedImage;
+                    handleCropChange('yolo');
+                    if (currentImg) {
+                      setCapturedImage(currentImg);
+                      try {
+                        const res = await fetch(currentImg);
+                        const blob = await res.blob();
+                        analyzeImageBlob(blob);
+                      } catch (e) {
+                        setActiveTab('samples');
+                      }
+                    } else {
+                      setActiveTab('samples');
+                    }
+                  }}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+                    selectedCrop === 'yolo'
+                      ? 'bg-rose-500 text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                >
+                  <Crosshair className="w-3.5 h-3.5" />
+                  YOLO Lesions
                 </button>
               </div>
 
@@ -1082,14 +1249,20 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     const isSelected = selectedSample?.class_name === sample.class_name;
                     
                     const isPest =
-                      selectedCrop === 'cassava'
+                      selectedCrop === 'cashew'
+                        ? CASHEW_PESTS.includes(clsName)
+                        : selectedCrop === 'cassava'
                         ? CASSAVA_PESTS.includes(clsName)
                         : selectedCrop === 'maize'
                         ? MAIZE_PESTS.includes(clsName)
                         : false;
                         
                     const isDisease =
-                      selectedCrop === 'cassava'
+                      selectedCrop === 'apple'
+                        ? APPLE_DISEASES.includes(clsName)
+                        : selectedCrop === 'cashew'
+                        ? CASHEW_DISEASES.includes(clsName)
+                        : selectedCrop === 'cassava'
                         ? CASSAVA_DISEASES.includes(clsName)
                         : selectedCrop === 'maize'
                         ? MAIZE_DISEASES.includes(clsName)
@@ -1353,7 +1526,9 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     const isTop = result.prediction.toLowerCase() === cls.toLowerCase();
 
                     const isPest =
-                      selectedCrop === 'cassava'
+                      selectedCrop === 'cashew'
+                        ? CASHEW_PESTS.includes(cls)
+                        : selectedCrop === 'cassava'
                         ? CASSAVA_PESTS.includes(cls)
                         : selectedCrop === 'maize'
                         ? MAIZE_PESTS.includes(cls)

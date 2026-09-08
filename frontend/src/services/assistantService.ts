@@ -5,11 +5,13 @@ import {
   AssistantToolInfo,
 } from '@/types';
 
-const GEMINI_API_KEY = 'AQ.Ab8RN6JjzG6wKeLfBU2gP1tsLpO5dxowlfSGXKt6J_a-oNYI_A';
+const GEMINI_API_KEY = 'AQ.Ab8RN6LOdiNsdPOpR5S0RxEmVwEIOb_uBfz15HprZgP5Vx1sLg';
 
 async function callDirectGeminiAPI(
   prompt: string,
-  language: 'en' | 'hi' | 'mr' | 'ta' = 'en'
+  language: 'en' | 'hi' | 'mr' | 'ta' = 'en',
+  imageBase64?: string,
+  imageMime?: string
 ): Promise<string | null> {
   const isMarathi =
     language === 'mr' ||
@@ -37,13 +39,51 @@ async function callDirectGeminiAPI(
     langInstruction = 'Tamil (தமிழ்) with natural Tamil phrasing and key technical terms';
   }
 
-  const systemInstruction = `You are the AgriShield Expert Agronomist & Agricultural AI Assistant.
-You provide highly accurate, practical, and scientific crop health, disease identification, irrigation, and drone monitoring guidance for farmers across Maharashtra and India.
-Language: Respond fluently and clearly in ${langInstruction}.
-Key focus: Weather-based disease and pest risk forecasting, crop monitoring (Bt Cotton, Sugarcane, Soybean, Onion, Grapes, Pomegranate, Paddy, Wheat), soil health (Black Cotton Regur soil), and microclimate CWSI water stress mitigation.
-Structure your advice with concise bullet points, specific dosage/preventative bio-actions, and clear reasoning.`;
+  const systemInstruction = `You are the AgriShield Senior Expert Agronomist & Agricultural AI Engine.
+You provide highly accurate, practical, and scientific crop health, pest & disease identification, irrigation, and drone monitoring guidance for farmers across India.
+Language: Respond fluently and naturally in ${langInstruction}.
 
-  const models = ['gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-2.0-flash', 'gemini-1.5-pro'];
+Whenever answering any query regarding crop problems, pests, diseases, or plant health, ALWAYS structure your response with these 5 clear headings:
+
+1. 🔬 **ROOT CAUSE & REASON**:
+Explain the underlying pathogen (fungal, bacterial, viral), pest life-cycle, nutrient deficiency, or climatic triggers (high humidity, temperature spikes, water stress).
+
+2. 🔍 **SYMPTOMS & IDENTIFICATION**:
+Detail the specific visual symptoms on leaves, stems, flowers, or fruits (e.g. concentric dark rings, chlorotic yellowing, defoliation, chewed margins, mosaic mottling, wilting).
+
+3. 🛡️ **CROP PREVENTION PROTOCOLS**:
+Provide practical cultural prevention methods (crop rotation, clean certified seeds, field sanitation, proper spacing, soil aeration, drip irrigation management).
+
+4. 💊 **MEDICINE & PESTICIDE / FUNGICIDE SUGGESTIONS**:
+Give exact, practical recommendations:
+- **Chemical Option**: Active ingredient (e.g. Chlorantraniliprole, Imidacloprid, Mancozeb, Azoxystrobin, Copper Oxychloride) with exact dosage (e.g., 2 ml/L or 200 ml/acre).
+- **Biological / Organic Option**: Eco-friendly alternatives (e.g. Neem Oil 1500ppm @ 3-5ml/L, Trichoderma viride @ 5g/L, Beauveria bassiana).
+- **Application Method & Precautions**: Best spray time (early morning/evening) and safety withholding period.
+
+5. 📋 **ACTIONABLE RECOMMENDATIONS**:
+Immediate next steps the grower should take today (quarantine infected plants, adjust irrigation, scout surrounding perimeter).`;
+
+  const models = [
+    'gemini-3.5-flash-lite',
+    'gemini-3.5-flash',
+    'gemini-3.7-flash',
+    'gemini-3.1-flash-lite',
+    'gemini-flash-latest',
+  ];
+
+  const parts: any[] = [
+    { text: prompt.trim() || 'Please examine this crop image and provide disease/pest identification, symptoms, reason, crop prevention, and medicine/pesticide suggestion.' },
+  ];
+
+  if (imageBase64) {
+    const cleanB64 = imageBase64.replace(/^data:image\/[a-zA-Z0-9+]+;base64,/, '');
+    parts.push({
+      inline_data: {
+        mime_type: imageMime || 'image/jpeg',
+        data: cleanB64,
+      },
+    });
+  }
 
   for (const model of models) {
     try {
@@ -59,12 +99,12 @@ Structure your advice with concise bullet points, specific dosage/preventative b
             contents: [
               {
                 role: 'user',
-                parts: [{ text: prompt }],
+                parts,
               },
             ],
             generationConfig: {
-              temperature: 0.35,
-              maxOutputTokens: 1024,
+              temperature: 0.25,
+              maxOutputTokens: 1500,
             },
           }),
         }
@@ -74,6 +114,9 @@ Structure your advice with concise bullet points, specific dosage/preventative b
         const data = await response.json();
         const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
         if (text) return text.trim();
+      } else {
+        const errJson = await response.json().catch(() => null);
+        console.warn(`Gemini API ${model} status ${response.status}:`, errJson);
       }
     } catch (e) {
       console.warn(`Gemini client call failed for ${model}:`, e);
@@ -85,7 +128,7 @@ Structure your advice with concise bullet points, specific dosage/preventative b
 
 export const assistantService = {
   chat: async (request: AssistantChatRequest): Promise<AssistantChatResponse> => {
-    const q = request.message.toLowerCase();
+    const q = (request.message || '').toLowerCase();
     const isMarathi =
       request.language === 'mr' ||
       q.includes('in marathi') ||
@@ -105,7 +148,35 @@ export const assistantService = {
 
     const effectiveLang: 'en' | 'hi' | 'mr' | 'ta' = isMarathi ? 'mr' : isHindi ? 'hi' : isTamil ? 'ta' : 'en';
 
-    // 1. Try backend assistant endpoint
+    // 1. If image is attached, prefer direct multimodal Gemini Vision call
+    if (request.image_base64) {
+      try {
+        const visionText = await callDirectGeminiAPI(
+          request.message,
+          effectiveLang,
+          request.image_base64,
+          request.image_mime
+        );
+        if (visionText) {
+          return {
+            response_text: visionText,
+            tools_used: ['gemini_multimodal_vision', 'crop_diagnostic_rag'],
+            data_sources: [
+              {
+                source: 'Google Gemini Multimodal Vision & Agronomy Engine',
+                status: 'online',
+              },
+            ],
+            disclaimer: 'Multimodal AI-generated crop pathology diagnosis with live Google Gemini AI.',
+            language: effectiveLang,
+          };
+        }
+      } catch (err) {
+        console.warn('Direct Gemini Vision API call error:', err);
+      }
+    }
+
+    // 2. Try backend assistant endpoint
     try {
       const response = await apiClient.post<AssistantChatResponse>('/assistant/chat', {
         ...request,
@@ -116,16 +187,21 @@ export const assistantService = {
       console.warn('Backend assistant API call failed, invoking direct Gemini AI fallback...', err);
     }
 
-    // 2. Direct Gemini API call
+    // 3. Direct Gemini API call fallback
     try {
-      const directText = await callDirectGeminiAPI(request.message, effectiveLang);
+      const directText = await callDirectGeminiAPI(
+        request.message,
+        effectiveLang,
+        request.image_base64,
+        request.image_mime
+      );
       if (directText) {
         return {
           response_text: directText,
           tools_used: ['gemini_direct_rag'],
           data_sources: [
             {
-              source: 'Google Gemini 1.5 Flash Agronomic Engine',
+              source: 'Google Gemini 3.5 Agronomic Engine',
               status: 'online',
             },
           ],

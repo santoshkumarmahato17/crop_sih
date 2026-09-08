@@ -1,0 +1,73 @@
+{
+  "dataset_name": "Apple Leaf Disease Dataset",
+  "dataset_location": "C:\\Users\\krsan\\Desktop\\crop\\apple dataset",
+  "classes": [
+    "Apple Scab",
+    "Black Rot",
+    "Cedar Apple Rust",
+    "Healthy"
+  ],
+  "class_categories": {
+    "Apple Scab": "disease",
+    "Black Rot": "disease",
+    "Cedar Apple Rust": "disease",
+    "Healthy": "healthy"
+  },
+  "train_dataset": {
+    "class_counts": {
+      "Apple Scab": 2016,
+      "Black Rot": 1987,
+      "Cedar Apple Rust": 1760,
+      "Healthy": 2008
+    },
+    "total_images": 7771,
+    "imbalance_ratio": 1.145
+  },
+  "test_dataset": {
+    "class_counts": {
+      "Apple Scab": 504,
+      "Black Rot": 497,
+      "Cedar Apple Rust": 440,
+      "Healthy": 502
+    },
+    "total_images": 1943
+  },
+  "corrupted_images": [],
+  "unreadable_images": [],
+  "duplicate_count": 10,
+  "image_formats": {
+    ".jpg": 9714
+  },
+  "dimensions": {
+    "min_width": 256,
+    "max_width": 256,
+    "min_height": 256,
+    "max_height": 256,
+    "avg_width": 256.0,
+    "avg_height": 256.0
+  },
+  "splits_summary": {
+    "train_count": 6216,
+    "val_count": 1555,
+    "test_count": 1943,
+    "total_images": 9714,
+    "train_per_class": {
+      "Apple Scab": 1613,
+      "Healthy": 1606,
+      "Black Rot": 1589,
+      "Cedar Apple Rust": 1408
+    },
+    "val_per_class": {
+      "Healthy": 402,
+      "Cedar Apple Rust": 352,
+      "Black Rot": 398,
+      "Apple Scab": 403
+    },
+    "test_per_class": {
+      "Apple Scab": 504,
+      "Black Rot": 497,
+      "Cedar Apple Rust": 440,
+      "Healthy": 502
+    }
+  }
+}

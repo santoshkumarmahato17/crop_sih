@@ -1,0 +1,65 @@
+# Apple Leaf Disease Classification Configuration
+# 4 Classes: Apple Scab, Black Rot, Cedar Apple Rust, Healthy
+
+dataset:
+  name: "Apple Leaf Disease Dataset"
+  raw_dir: "apple dataset"
+  splits_dir: "ml/data/splits_apple"
+  reports_dir: "ml/reports_apple"
+  train_split: 0.80  # 80% train, 20% validation from original train/
+  val_split: 0.20
+  random_seed: 42
+  image_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".bmp"
+    - ".webp"
+
+classes:
+  - "Apple Scab"
+  - "Black Rot"
+  - "Cedar Apple Rust"
+  - "Healthy"
+
+class_mapping:
+  "apple_scab": "Apple Scab"
+  "apple scab": "Apple Scab"
+  "black_rot": "Black Rot"
+  "black rot": "Black Rot"
+  "cedar_apple_rust": "Cedar Apple Rust"
+  "cedar apple rust": "Cedar Apple Rust"
+  "healthy": "Healthy"
+
+class_categories:
+  "Apple Scab": "disease"
+  "Black Rot": "disease"
+  "Cedar Apple Rust": "disease"
+  "Healthy": "healthy"
+
+model:
+  architecture: "mobilenet_v3_small"
+  pretrained: true
+  num_classes: 4
+  input_size: 224
+  dropout: 0.25
+  save_dir: "ml/models_apple"
+
+training:
+  batch_size: 32
+  num_workers: 0  # Safe on Windows PyTorch CPU
+  warmup_epochs: 3
+  fine_tune_epochs: 5
+  warmup_lr: 0.001
+  fine_tune_lr: 0.0002
+  weight_decay: 0.0001
+  min_lr: 0.00001
+  device: "cpu"
+  use_class_weights: true
+
+inference:
+  confidence_threshold: 70.0
+  blur_threshold: 40.0
+  min_brightness: 20.0
+  max_brightness: 240.0
+  min_resolution: 64

@@ -33,41 +33,51 @@ class AgriculturalAssistantEngine:
             lang_instruction = "Hindi (हिन्दी) with accurate Devnagari script and agricultural terminology"
         elif language == "ta":
             lang_instruction = "Tamil (தமிழ்) with natural Tamil phrasing and key technical terms"
+        elif language == "mr":
+            lang_instruction = "Marathi (मराठी) with authentic agricultural terms for Maharashtra farmers"
 
         system_instruction = (
-            "You are the AgriShield Expert Agronomist & Agricultural AI Assistant. "
-            "You provide highly accurate, practical, actionable agricultural advice for farmers, agronomists, and extension officers. "
+            "You are the AgriShield Senior Expert Agronomist & Agricultural AI Engine. "
+            "You provide highly accurate, practical, actionable agricultural advice for farmers, growers, and extension officers across India. "
             "You specialize in crop health diagnostics, integrated pest management (IPM), precision irrigation, "
             "multispectral NDVI interpretation, drone flight scouting, soil nutrients, and disease spread prevention.\n\n"
             f"CURRENT LIVE FARM TELEMETRY & CONTEXT:\n{telemetry_context}\n\n"
-            f"INSTRUCTIONS:\n"
-            f"- Answer the farmer's query factually, concisely, and with high authority in: {lang_instruction}. "
-            "- If the user specifically asks in Hindi or asks 'give me the answer in hindi', respond entirely in clear, natural Hindi (हिन्दी). "
-            "- Reference actual zone codes (e.g., Z01, Z03, Z04), NDVI values, CWSI water indices, and weather when relevant. "
-            "- Structure your answer with clear numbered bullet points, specific dosage/treatments, and immediate next steps. "
-            "- Distinguish between AI SUSPECTED, CONFIRMED, and EXPERT VALIDATED conditions."
+            f"REQUIRED RESPONSE FORMAT & STRUCTURE:\n"
+            f"Always respond fluently in: {lang_instruction}.\n"
+            "Whenever diagnosing, recommending, or answering any crop or plant health query, structure your response with these clear sections:\n"
+            "1. 🔬 ROOT CAUSE & REASON: Detail the underlying pathogen (fungal, bacterial, viral), insect pest lifecycle, soil nutrient imbalance, or weather trigger (humidity, temperature, water stress).\n"
+            "2. 🔍 SYMPTOMS & IDENTIFICATION: Specific foliar, stem, fruit, or root signs to look for (e.g. concentric rings, chlorosis, chewed holes, mosaic mottling, wilting).\n"
+            "3. 🛡️ CROP PREVENTION: Long-term cultural practices, crop rotation, resistant varieties, spacing, sanitation, and water management to prevent recurrence.\n"
+            "4. 💊 MEDICINE & PESTICIDE SUGGESTIONS: Specific chemical active ingredients (e.g., Chlorantraniliprole, Imidacloprid, Mancozeb, Hexaconazole) and biological alternatives (e.g., Neem oil 1500ppm, Trichoderma viride, Beauveria bassiana) with exact dosages (e.g. 2ml/L water) and safety precautions.\n"
+            "5. 📋 IMMEDIATE RECOMMENDATIONS: Step-by-step next actions for the grower (quarantine, drone scouting, irrigation adjustment).\n\n"
+            "- Reference actual zone codes (e.g., Z01, Z03, Z04), NDVI values, and weather parameters when relevant to the context."
         )
 
         models_to_try = [
-            "gemini-1.5-flash",
-            "gemini-1.5-flash-latest",
-            "gemini-1.5-pro",
-            "gemini-2.0-flash",
+            getattr(self.settings, "GEMINI_MODEL", "gemini-3.5-flash-lite"),
+            "gemini-3.5-flash-lite",
+            "gemini-3.5-flash",
+            "gemini-3.7-flash",
+            "gemini-3.1-flash-lite",
+            "gemini-flash-latest",
         ]
+        # Remove duplicates while preserving order
+        seen = set()
+        deduped_models = [m for m in models_to_try if not (m in seen or seen.add(m))]
 
-        for model in models_to_try:
+        for model in deduped_models:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
             payload = {
                 "contents": [{"parts": [{"text": f"{system_instruction}\n\nFarmer Query: {query}"}]}],
                 "generationConfig": {
-                    "temperature": 0.2,
+                    "temperature": 0.25,
                     "topP": 0.95,
-                    "maxOutputTokens": 1024,
+                    "maxOutputTokens": 1500,
                 },
             }
 
             try:
-                async with httpx.AsyncClient(timeout=10.0) as client:
+                async with httpx.AsyncClient(timeout=20.0) as client:
                     response = await client.post(url, json=payload)
                     if response.status_code == 200:
                         data = response.json()

@@ -2,7 +2,9 @@ export interface AssistantChatRequest {
   message: string;
   farm_id?: string;
   zone_id?: string;
-  language?: 'en' | 'ta' | string;
+  language?: 'en' | 'ta' | 'hi' | 'mr' | string;
+  image_base64?: string;
+  image_mime?: string;
 }
 
 export interface AssistantChatResponse {
@@ -23,7 +25,9 @@ export interface ChatMessage {
   id: string;
   sender: 'user' | 'assistant';
   text: string;
+  image_url?: string;
   tools_used?: string[];
   timestamp: string;
   language?: string;
 }
+

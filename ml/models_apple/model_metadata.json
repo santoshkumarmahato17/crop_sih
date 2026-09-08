@@ -1,0 +1,28 @@
+{
+  "model_name": "Apple Leaf Condition Classifier",
+  "architecture": "mobilenet_v3_small",
+  "input_size": [
+    3,
+    224,
+    224
+  ],
+  "num_classes": 4,
+  "classes": [
+    "Apple Scab",
+    "Black Rot",
+    "Cedar Apple Rust",
+    "Healthy"
+  ],
+  "class_categories": {
+    "Apple Scab": "disease",
+    "Black Rot": "disease",
+    "Cedar Apple Rust": "disease",
+    "Healthy": "healthy"
+  },
+  "best_epoch": 8,
+  "best_val_accuracy": 99.87,
+  "best_val_macro_f1": 99.87,
+  "mobile_model_size_mb": 6.22,
+  "training_time_seconds": 1441.9,
+  "timestamp": "2026-09-08T17:47:50Z"
+}

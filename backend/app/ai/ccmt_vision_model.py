@@ -175,6 +175,12 @@ class CCMTCropHealthModel(CropHealthModel):
             '  "health_score": 0.38,\n'
             '  "stress_score": 0.62,\n'
             '  "description": "string (concise 1-2 sentence pathology summary)",\n'
+            '  "symptoms": ["string (visible lesion, chlorosis, chew mark details)"],\n'
+            '  "reason": "string (underlying cause, pathogen biology, or environmental weather trigger)",\n'
+            '  "prevention": ["string (crop cultural control, sanitation, soil drainage)"],\n'
+            '  "pesticide_suggestions": [\n'
+            '    {"type": "Chemical / Bio-Pesticide", "name": "string", "dosage": "string (e.g. 2ml/L water)", "safety_period": "string"}\n'
+            "  ],\n"
             '  "detected_patches": [\n'
             '    {"ymin": 20.5, "xmin": 18.2, "ymax": 48.0, "xmax": 52.3, "label": "string", "severity": "High"}\n'
             "  ],\n"
@@ -185,13 +191,19 @@ class CCMTCropHealthModel(CropHealthModel):
         )
 
         models_to_try = [
-            "gemini-2.5-flash",
-            "gemini-2.0-flash",
-            "gemini-1.5-flash",
+            getattr(settings, "GEMINI_MODEL", "gemini-3.5-flash-lite"),
+            "gemini-3.5-flash-lite",
+            "gemini-3.5-flash",
+            "gemini-3.7-flash",
+            "gemini-3.1-flash-lite",
+            "gemini-flash-latest",
         ]
+        # Deduplicate while preserving order
+        seen = set()
+        deduped_models = [m for m in models_to_try if not (m in seen or seen.add(m))]
 
-        async with httpx.AsyncClient(timeout=14.0) as client:
-            for model_name in models_to_try:
+        async with httpx.AsyncClient(timeout=22.0) as client:
+            for model_name in deduped_models:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
                 payload = {
                     "contents": [

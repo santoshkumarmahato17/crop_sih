@@ -14,7 +14,7 @@ from ml.src.augmentation import get_inference_transforms
 
 
 def assess_image_quality(
-    image: Image.Image,
+    image: Union[str, bytes, io.BytesIO, Image.Image],
     blur_threshold: float = 60.0,
     min_brightness: float = 25.0,
     max_brightness: float = 235.0,
@@ -25,6 +25,13 @@ def assess_image_quality(
     - Computes mean brightness and contrast.
     - Flags severe lighting or blur issues before inference.
     """
+    if isinstance(image, str):
+        image = Image.open(image)
+    elif isinstance(image, bytes):
+        image = Image.open(io.BytesIO(image))
+    elif isinstance(image, io.BytesIO):
+        image = Image.open(image)
+
     # 1. Convert to grayscale numpy array
     gray_img = np.array(image.convert("L"))
 
@@ -57,8 +64,10 @@ def assess_image_quality(
     if is_low_contrast:
         advisories.append("Low contrast detected between leaf and background.")
 
+    passed = not (is_blurry or is_too_dark or is_too_bright)
     return {
-        "is_acceptable": not (is_blurry or is_too_dark or is_too_bright),
+        "is_acceptable": passed,
+        "passed": passed,
         "quality_status": quality_status,
         "blur_score": round(variance_of_laplacian, 2),
         "is_blurry": is_blurry,
@@ -67,6 +76,7 @@ def assess_image_quality(
         "is_too_bright": is_too_bright,
         "contrast": round(std_contrast, 2),
         "advisory_notes": advisories,
+        "reasons": advisories,
     }
 
 

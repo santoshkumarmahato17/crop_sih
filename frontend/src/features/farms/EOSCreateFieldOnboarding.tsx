@@ -1,5 +1,6 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loadGoogleMaps } from '@/services/googleMapsLoader';
 import {
   Layers,
   Sparkles,
@@ -25,6 +26,13 @@ import {
   MapPin,
   Check,
   Move,
+  ChevronUp,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  LocateFixed,
+  Hand,
+  Compass,
 } from 'lucide-react';
 
 export interface DrawnVertex {
@@ -49,14 +57,14 @@ interface RegionPreset {
 
 const REGION_PRESETS: RegionPreset[] = [
   {
-    id: 'nashik',
-    name: 'Nashik BioFarm Cluster',
+    id: 'dindori',
+    name: 'Dindori Valley Tomato & Vineyard Fields',
     state: 'Maharashtra',
     country: 'India',
-    lat: 19.9975,
-    lng: 73.7898,
-    cropDefault: 'Bt Cotton (Bollgard II)',
-    varietyDefault: 'RCH-659 BG II',
+    lat: 20.2185,
+    lng: 73.842,
+    cropDefault: 'Tomato (Abhinav)',
+    varietyDefault: 'Syngenta Abhinav F1',
     soilDefault: 'Black Cotton Regur Clay',
     irrigationDefault: 'Drip Irrigation with Fertigation',
     initialVertices: [
@@ -68,12 +76,12 @@ const REGION_PRESETS: RegionPreset[] = [
     bgImage: '/satellite/satellite_crop_truecolor.jpg',
   },
   {
-    id: 'punjab',
-    name: 'Punjab Green Revolution Basin',
+    id: 'punjab_cropland',
+    name: 'Khanna Rural Wheat & Rice Fields',
     state: 'Punjab',
     country: 'India',
-    lat: 30.901,
-    lng: 75.8573,
+    lat: 30.718,
+    lng: 76.192,
     cropDefault: 'Wheat (PBW-550)',
     varietyDefault: 'PBW-550 Certified',
     soilDefault: 'River Basin Alluvial Loam',
@@ -87,33 +95,14 @@ const REGION_PRESETS: RegionPreset[] = [
     bgImage: '/satellite/satellite_crop_truecolor.jpg',
   },
   {
-    id: 'california',
-    name: 'California Central Valley Agro-Grid',
-    state: 'California',
-    country: 'USA',
-    lat: 36.7783,
-    lng: -119.4179,
-    cropDefault: 'Tomato (Abhinav)',
-    varietyDefault: 'Heinz Hybrid 1197',
-    soilDefault: 'Laterite Soil',
-    irrigationDefault: 'Drip Irrigation with Fertigation',
-    initialVertices: [
-      { x: 67.5, y: 17.5 },
-      { x: 83.2, y: 17.5 },
-      { x: 83.2, y: 49.8 },
-      { x: 67.5, y: 49.8 },
-    ],
-    bgImage: '/satellite/satellite_crop_truecolor.jpg',
-  },
-  {
-    id: 'karnataka',
-    name: 'Karnataka Sugarcane & Maize Belt',
-    state: 'Karnataka',
+    id: 'pollachi_farms',
+    name: 'Pollachi Rural Farmland & Crop Canopy',
+    state: 'Tamil Nadu',
     country: 'India',
-    lat: 12.5218,
-    lng: 76.8951,
-    cropDefault: 'Sugarcane (Co-86032)',
-    varietyDefault: 'Co-86032 Nira',
+    lat: 10.742,
+    lng: 77.015,
+    cropDefault: 'Maize (Hybrid DHM-117)',
+    varietyDefault: 'DHM-117 Certified',
     soilDefault: 'Red Sandy Loam Soil',
     irrigationDefault: 'Micro-Sprinkler Overhead',
     initialVertices: [
@@ -121,6 +110,25 @@ const REGION_PRESETS: RegionPreset[] = [
       { x: 82.8, y: 50.8 },
       { x: 82.8, y: 82.4 },
       { x: 50.4, y: 82.4 },
+    ],
+    bgImage: '/satellite/satellite_crop_truecolor.jpg',
+  },
+  {
+    id: 'krishna_delta',
+    name: 'Krishna Delta Rural Paddy & Cashew Basin',
+    state: 'Andhra Pradesh',
+    country: 'India',
+    lat: 16.085,
+    lng: 80.785,
+    cropDefault: 'Rice (Basmati 1121)',
+    varietyDefault: 'Pusa-1121',
+    soilDefault: 'Alluvial Delta Clay',
+    irrigationDefault: 'Canal Flow Irrigation',
+    initialVertices: [
+      { x: 67.5, y: 17.5 },
+      { x: 83.2, y: 17.5 },
+      { x: 83.2, y: 49.8 },
+      { x: 67.5, y: 49.8 },
     ],
     bgImage: '/satellite/satellite_crop_truecolor.jpg',
   },
@@ -132,10 +140,21 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
   // Active Region Preset
   const [activeRegion, setActiveRegion] = useState<RegionPreset>(REGION_PRESETS[0]);
 
-  // Field Drawing Mode: 'polygon' | 'rectangle' | 'upload'
-  const [drawingTool, setDrawingTool] = useState<'polygon' | 'rectangle' | 'upload'>('polygon');
-  const [satelliteLayer, setSatelliteLayer] = useState<'true_color' | 'ndvi' | 'ndre' | 'ndwi' | 'thermal'>('true_color');
+  // Field Interaction & Drawing Mode: 'pan' | 'polygon' | 'rectangle' | 'upload'
+  const [toolMode, setToolMode] = useState<'pan' | 'polygon' | 'rectangle' | 'upload'>('pan');
+  const [satelliteLayer, setSatelliteLayer] = useState<
+    'google_satellite' | 'google_hybrid' | 'true_color' | 'ndvi' | 'ndre' | 'ndwi' | 'thermal'
+  >('google_satellite');
+  const [isGoogleMapsReady, setIsGoogleMapsReady] = useState<boolean>(false);
   const [zoomLevel, setZoomLevel] = useState<number>(100);
+  const [currentMapZoom, setCurrentMapZoom] = useState<number>(17);
+  const [currentCenter, setCurrentCenter] = useState<{ lat: number; lng: number }>({
+    lat: REGION_PRESETS[0].lat,
+    lng: REGION_PRESETS[0].lng,
+  });
+  const [imagePan, setImagePan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isDraggingFallback, setIsDraggingFallback] = useState<boolean>(false);
+  const [fallbackDragStart, setFallbackDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   // Boundary Vertices
@@ -162,6 +181,69 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasSvgRef = useRef<SVGSVGElement>(null);
+  const googleMapDivRef = useRef<HTMLDivElement>(null);
+  const googleMapInstanceRef = useRef<any>(null);
+
+  // Initialize Google Maps for field boundary drawing scene
+  useEffect(() => {
+    let isMounted = true;
+    loadGoogleMaps()
+      .then((googleMaps) => {
+        if (!isMounted || !googleMapDivRef.current) return;
+        try {
+          const map = new googleMaps.Map(googleMapDivRef.current, {
+            center: { lat: activeRegion.lat, lng: activeRegion.lng },
+            zoom: currentMapZoom,
+            mapTypeId:
+              satelliteLayer === 'google_hybrid'
+                ? googleMaps.MapTypeId.HYBRID
+                : googleMaps.MapTypeId.SATELLITE,
+            disableDefaultUI: true,
+            gestureHandling: 'greedy', // Enables 1-finger touch and desktop mouse dragging anywhere
+            draggable: true,
+            scrollwheel: true,
+            disableDoubleClickZoom: false,
+            tilt: 0,
+          });
+          googleMapInstanceRef.current = map;
+          setIsGoogleMapsReady(true);
+
+          map.addListener('center_changed', () => {
+            const c = map.getCenter();
+            if (c) {
+              setCurrentCenter({ lat: c.lat(), lng: c.lng() });
+            }
+          });
+
+          map.addListener('zoom_changed', () => {
+            const z = map.getZoom();
+            if (typeof z === 'number') {
+              setCurrentMapZoom(z);
+            }
+          });
+        } catch (e) {
+          console.warn('[EOSCreateFieldOnboarding] Google Map init error:', e);
+        }
+      })
+      .catch((e) => {
+        console.warn('[EOSCreateFieldOnboarding] Google Maps load failed:', e);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Sync Google Map type when satelliteLayer switches
+  useEffect(() => {
+    if (!googleMapInstanceRef.current || !(window as any).google?.maps) return;
+    const gmaps = (window as any).google.maps;
+    if (satelliteLayer === 'google_hybrid') {
+      googleMapInstanceRef.current.setMapTypeId(gmaps.MapTypeId.HYBRID);
+    } else if (satelliteLayer === 'google_satellite') {
+      googleMapInstanceRef.current.setMapTypeId(gmaps.MapTypeId.SATELLITE);
+    }
+  }, [satelliteLayer]);
 
   // Select region preset
   const handleSelectRegion = (preset: RegionPreset) => {
@@ -173,6 +255,14 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
     setIrrigationType(preset.irrigationDefault);
     setFarmGroup(preset.name);
     setVertices(preset.initialVertices);
+    setCurrentCenter({ lat: preset.lat, lng: preset.lng });
+    setImagePan({ x: 0, y: 0 });
+
+    if (googleMapInstanceRef.current) {
+      googleMapInstanceRef.current.panTo({ lat: preset.lat, lng: preset.lng });
+      googleMapInstanceRef.current.setZoom(17);
+      setCurrentMapZoom(17);
+    }
   };
 
   // Compute field area (Hectares, Acres, Gunthas) & perimeter from vertices
@@ -207,17 +297,160 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
     };
   }, [vertices]);
 
+  // Directional Pan (Swap) Handlers - left, right, up, down, anywhere
+  const handlePanBy = (dx: number, dy: number) => {
+    if (googleMapInstanceRef.current && (satelliteLayer === 'google_satellite' || satelliteLayer === 'google_hybrid')) {
+      googleMapInstanceRef.current.panBy(dx, dy);
+    } else {
+      setImagePan((prev) => ({
+        x: Math.max(-800, Math.min(800, prev.x - dx)),
+        y: Math.max(-800, Math.min(800, prev.y - dy)),
+      }));
+    }
+  };
+
+  const handlePanLeft = () => handlePanBy(-220, 0);
+  const handlePanRight = () => handlePanBy(220, 0);
+  const handlePanUp = () => handlePanBy(0, -220);
+  const handlePanDown = () => handlePanBy(0, 220);
+
+  const handleRecenter = () => {
+    if (googleMapInstanceRef.current) {
+      googleMapInstanceRef.current.panTo({ lat: activeRegion.lat, lng: activeRegion.lng });
+      googleMapInstanceRef.current.setZoom(17);
+      setCurrentMapZoom(17);
+    }
+    setCurrentCenter({ lat: activeRegion.lat, lng: activeRegion.lng });
+    setImagePan({ x: 0, y: 0 });
+    setZoomLevel(100);
+  };
+
+  // Zoom In / Out Handlers (+ and -)
+  const handleZoomIn = () => {
+    if (googleMapInstanceRef.current && (satelliteLayer === 'google_satellite' || satelliteLayer === 'google_hybrid')) {
+      const cur = googleMapInstanceRef.current.getZoom() || 17;
+      const next = Math.min(cur + 1, 21);
+      googleMapInstanceRef.current.setZoom(next);
+      setCurrentMapZoom(next);
+    }
+    setZoomLevel((z) => Math.min(z + 20, 260));
+  };
+
+  const handleZoomOut = () => {
+    if (googleMapInstanceRef.current && (satelliteLayer === 'google_satellite' || satelliteLayer === 'google_hybrid')) {
+      const cur = googleMapInstanceRef.current.getZoom() || 17;
+      const next = Math.max(cur - 1, 10);
+      googleMapInstanceRef.current.setZoom(next);
+      setCurrentMapZoom(next);
+    }
+    setZoomLevel((z) => Math.max(z - 20, 60));
+  };
+
+  const handleSetZoomLevel = (targetZoom: number) => {
+    if (googleMapInstanceRef.current && (satelliteLayer === 'google_satellite' || satelliteLayer === 'google_hybrid')) {
+      googleMapInstanceRef.current.setZoom(targetZoom);
+      setCurrentMapZoom(targetZoom);
+    }
+    setZoomLevel(targetZoom === 15 ? 80 : targetZoom === 17 ? 100 : targetZoom === 19 ? 140 : 180);
+  };
+
+  // Keyboard navigation for Pan & Zoom
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'SELECT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        handlePanLeft();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        handlePanRight();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        handlePanUp();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        handlePanDown();
+      } else if (e.key === '+' || e.key === '=') {
+        e.preventDefault();
+        handleZoomIn();
+      } else if (e.key === '-' || e.key === '_') {
+        e.preventDefault();
+        handleZoomOut();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [satelliteLayer, currentMapZoom]);
+
+  // Search geocoder & preset matcher
+  const handleSearchLocation = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) return;
+
+    // Direct GPS format "20.2185, 73.8420"
+    const coordMatch = query.match(/^(-?\d+(\.\d+)?)\s*,\s*(-?\d+(\.\d+)?)$/);
+    if (coordMatch) {
+      const lat = parseFloat(coordMatch[1]);
+      const lng = parseFloat(coordMatch[3]);
+      if (googleMapInstanceRef.current) {
+        googleMapInstanceRef.current.panTo({ lat, lng });
+        googleMapInstanceRef.current.setZoom(17);
+        setCurrentMapZoom(17);
+      }
+      setCurrentCenter({ lat, lng });
+      return;
+    }
+
+    // Google Maps Geocoder if SDK available
+    if ((window as any).google?.maps?.Geocoder) {
+      const geocoder = new (window as any).google.maps.Geocoder();
+      geocoder.geocode({ address: query }, (results: any, status: any) => {
+        if (status === 'OK' && results?.[0]?.geometry?.location) {
+          const loc = results[0].geometry.location;
+          const lat = loc.lat();
+          const lng = loc.lng();
+          if (googleMapInstanceRef.current) {
+            googleMapInstanceRef.current.panTo({ lat, lng });
+            googleMapInstanceRef.current.setZoom(17);
+            setCurrentMapZoom(17);
+          }
+          setCurrentCenter({ lat, lng });
+        } else {
+          fallbackMatchPreset(query);
+        }
+      });
+    } else {
+      fallbackMatchPreset(query);
+    }
+  };
+
+  const fallbackMatchPreset = (query: string) => {
+    const qLower = query.toLowerCase();
+    const found = REGION_PRESETS.find(
+      (p) =>
+        p.name.toLowerCase().includes(qLower) ||
+        p.state.toLowerCase().includes(qLower) ||
+        p.cropDefault.toLowerCase().includes(qLower)
+    );
+    if (found) {
+      handleSelectRegion(found);
+    }
+  };
+
   // Click on satellite canvas to add vertices
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (toolMode === 'pan' || toolMode === 'upload') return;
     if (draggedVertexIndex !== null) return;
-    if (drawingTool === 'upload') return;
 
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const clickX = ((e.clientX - rect.left) / rect.width) * 100;
     const clickY = ((e.clientY - rect.top) / rect.height) * 100;
 
-    if (drawingTool === 'rectangle') {
+    if (toolMode === 'rectangle') {
       const w = 24;
       const h = 20;
       setVertices([
@@ -226,7 +459,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
         { x: +Math.max(2, Math.min(98, clickX + w / 2)).toFixed(1), y: +Math.max(2, Math.min(98, clickY + h / 2)).toFixed(1) },
         { x: +Math.max(2, Math.min(98, clickX - w / 2)).toFixed(1), y: +Math.max(2, Math.min(98, clickY + h / 2)).toFixed(1) },
       ]);
-    } else {
+    } else if (toolMode === 'polygon') {
       setVertices((prev) => [...prev, { x: +clickX.toFixed(1), y: +clickY.toFixed(1) }]);
     }
   };
@@ -237,19 +470,39 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
     setDraggedVertexIndex(index);
   };
 
-  const handleContainerMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (draggedVertexIndex === null || !containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const moveX = Math.max(2, Math.min(98, ((e.clientX - rect.left) / rect.width) * 100));
-    const moveY = Math.max(2, Math.min(98, ((e.clientY - rect.top) / rect.height) * 100));
+  const handleContainerMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      toolMode === 'pan' &&
+      (!isGoogleMapsReady || (satelliteLayer !== 'google_satellite' && satelliteLayer !== 'google_hybrid'))
+    ) {
+      setIsDraggingFallback(true);
+      setFallbackDragStart({ x: e.clientX, y: e.clientY });
+    }
+  };
 
-    setVertices((prev) =>
-      prev.map((v, idx) => (idx === draggedVertexIndex ? { x: +moveX.toFixed(1), y: +moveY.toFixed(1) } : v))
-    );
+  const handleContainerMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (draggedVertexIndex !== null && containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const moveX = Math.max(2, Math.min(98, ((e.clientX - rect.left) / rect.width) * 100));
+      const moveY = Math.max(2, Math.min(98, ((e.clientY - rect.top) / rect.height) * 100));
+
+      setVertices((prev) =>
+        prev.map((v, idx) => (idx === draggedVertexIndex ? { x: +moveX.toFixed(1), y: +moveY.toFixed(1) } : v))
+      );
+    } else if (isDraggingFallback) {
+      const dx = e.clientX - fallbackDragStart.x;
+      const dy = e.clientY - fallbackDragStart.y;
+      setImagePan((prev) => ({
+        x: Math.max(-800, Math.min(800, prev.x + dx)),
+        y: Math.max(-800, Math.min(800, prev.y + dy)),
+      }));
+      setFallbackDragStart({ x: e.clientX, y: e.clientY });
+    }
   };
 
   const handleContainerMouseUp = () => {
     setDraggedVertexIndex(null);
+    setIsDraggingFallback(false);
   };
 
   const handleUndoVertex = (e: React.MouseEvent) => {
@@ -365,25 +618,45 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
           {/* Top Search & Drawing Tools Toolbar */}
           <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
             {/* Search Location on Satellite */}
-            <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <form onSubmit={handleSearchLocation} className="relative w-full sm:w-80 flex items-center">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search district, village or GPS coordinates..."
-                className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                placeholder="Search district, village or GPS coords..."
+                className="w-full pl-10 pr-16 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
-            </div>
+              <button
+                type="submit"
+                className="absolute right-1.5 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition shadow-sm"
+              >
+                Find
+              </button>
+            </form>
 
-            {/* Geometry Drawing Mode Selector */}
+            {/* Geometry Drawing & Pan Mode Selector */}
             <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold w-full sm:w-auto justify-center">
               <button
                 type="button"
-                onClick={() => setDrawingTool('polygon')}
+                onClick={() => setToolMode('pan')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
-                  drawingTool === 'polygon'
-                    ? 'bg-emerald-600 text-white shadow-sm'
+                  toolMode === 'pan'
+                    ? 'bg-emerald-600 text-white shadow-sm font-bold'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                }`}
+                title="Pan / Move / Swap map in any direction"
+              >
+                <Hand className="w-3.5 h-3.5" />
+                <span>Pan / Move</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setToolMode('polygon')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
+                  toolMode === 'polygon'
+                    ? 'bg-emerald-600 text-white shadow-sm font-bold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
                 title="Click point-by-point to draw custom polygon boundary"
@@ -394,10 +667,10 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => setDrawingTool('rectangle')}
+                onClick={() => setToolMode('rectangle')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
-                  drawingTool === 'rectangle'
-                    ? 'bg-emerald-600 text-white shadow-sm'
+                  toolMode === 'rectangle'
+                    ? 'bg-emerald-600 text-white shadow-sm font-bold'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
                 title="Click to drop rectangular boundary box"
@@ -410,7 +683,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                 type="button"
                 onClick={() => setShowImportModal(true)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
-                  drawingTool === 'upload'
+                  toolMode === 'upload'
                     ? 'bg-emerald-600 text-white shadow-sm'
                     : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                 }`}
@@ -450,18 +723,39 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
           <div
             ref={containerRef}
             onClick={handleMapClick}
+            onMouseDown={handleContainerMouseDown}
             onMouseMove={handleContainerMouseMove}
             onMouseUp={handleContainerMouseUp}
-            className="relative w-full h-[580px] sm:h-[660px] rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl group cursor-crosshair select-none"
+            className={`relative w-full h-[580px] sm:h-[660px] rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl group select-none ${
+              toolMode === 'pan'
+                ? isDraggingFallback
+                  ? 'cursor-grabbing'
+                  : 'cursor-grab'
+                : 'cursor-crosshair'
+            }`}
           >
-            {/* Real Top-Down Satellite Crop Imagery Base */}
+            {/* Live Google Cloud Satellite Base Imagery */}
             <div
-              className="absolute inset-0 bg-cover bg-center transition-all duration-500 ease-out"
-              style={{
-                backgroundImage: `url('${getSatelliteBackground()}')`,
-                transform: `scale(${zoomLevel / 100})`,
-              }}
+              ref={googleMapDivRef}
+              className={`absolute inset-0 w-full h-full transition-opacity duration-500 ${
+                toolMode === 'pan' ? 'pointer-events-auto' : 'pointer-events-none'
+              } ${
+                (satelliteLayer === 'google_satellite' || satelliteLayer === 'google_hybrid') && isGoogleMapsReady
+                  ? 'opacity-100 z-0'
+                  : 'opacity-0'
+              }`}
             />
+
+            {/* Real Top-Down Sentinel-2 Satellite Fallback Base */}
+            {(!(satelliteLayer === 'google_satellite' || satelliteLayer === 'google_hybrid') || !isGoogleMapsReady) && (
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-all duration-300 ease-out z-0"
+                style={{
+                  backgroundImage: `url('${getSatelliteBackground()}')`,
+                  transform: `translate(${imagePan.x}px, ${imagePan.y}px) scale(${zoomLevel / 100})`,
+                }}
+              />
+            )}
 
             {/* Multispectral Dynamic Overlays for NDWI and Thermal */}
             {satelliteLayer === 'ndwi' && (
@@ -494,17 +788,52 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             />
 
             {/* Satellite Metadata HUD Strip at Top */}
-            <div className="absolute top-16 left-4 z-10 hidden sm:flex items-center gap-3 px-3 py-1 rounded-xl bg-slate-950/80 backdrop-blur border border-emerald-500/20 text-[10px] font-mono text-emerald-300 pointer-events-none">
-              <span className="flex items-center gap-1">
-                <Crosshair className="w-3 h-3 text-emerald-400" />
-                <span>GPS: {activeRegion.lat.toFixed(4)}°N, {activeRegion.lng.toFixed(4)}°E</span>
+            <div className="absolute top-16 left-4 z-10 hidden sm:flex items-center gap-3.5 py-1.5 px-3.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-emerald-500/25 text-[10px] font-mono text-emerald-300 pointer-events-none shadow-xl">
+              <span className="flex items-center gap-1.5 font-bold">
+                <Crosshair className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                <span>GPS: {currentCenter.lat.toFixed(4)}°N, {currentCenter.lng.toFixed(4)}°E</span>
               </span>
               <span className="text-slate-600">|</span>
-              <span>GSD: 0.5m/px</span>
+              <span className="text-emerald-400 font-bold">Zoom: {currentMapZoom}x</span>
+              <span className="text-slate-600">|</span>
+              <span>GSD: {(0.5 * Math.pow(2, Math.max(0, 17 - currentMapZoom))).toFixed(2)}m/px</span>
               <span className="text-slate-600">|</span>
               <span>Cloud: 0.0%</span>
               <span className="text-slate-600">|</span>
-              <span className="text-sky-300">Constellation: Sentinel-2 MSI</span>
+              <span className="text-sky-300">Sentinel-2 & Google High-Res</span>
+            </div>
+
+            {/* On-Canvas Mode Quick-Switcher Pill */}
+            <div
+              className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 p-1 bg-slate-950/90 backdrop-blur-xl border border-emerald-500/30 rounded-2xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setToolMode('pan')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                  toolMode === 'pan'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Drag map anywhere to swap left, right, up, down"
+              >
+                <Hand className="w-3.5 h-3.5" />
+                <span>✋ Pan & Move</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setToolMode('polygon')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                  toolMode === 'polygon'
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Click on map to drop boundary points"
+              >
+                <Pentagon className="w-3.5 h-3.5" />
+                <span>✏️ Draw Points</span>
+              </button>
             </div>
 
             {/* SVG Polygon Canvas for Drawn Field Vertices */}
@@ -609,7 +938,9 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
               onClick={(e) => e.stopPropagation()}
             >
               {[
-                { id: 'true_color', label: '🛰️ True Color', icon: Layers },
+                { id: 'google_satellite', label: '🛰️ Google Satellite', icon: Radio },
+                { id: 'google_hybrid', label: '🗺️ Hybrid', icon: Layers },
+                { id: 'true_color', label: '🛰️ Sentinel-2', icon: Layers },
                 { id: 'ndvi', label: '🌿 NDVI', icon: Sparkles },
                 { id: 'ndre', label: '🌾 NDRE', icon: Sprout },
                 { id: 'ndwi', label: '💧 NDWI', icon: Globe },
@@ -637,17 +968,20 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             >
               <button
                 type="button"
-                onClick={() => setZoomLevel((z) => Math.min(z + 15, 220))}
+                onClick={handleZoomIn}
                 className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
-                title="Zoom In"
+                title="Zoom In (+)"
               >
                 <ZoomIn className="w-4 h-4" />
               </button>
+              <span className="text-[10px] font-mono font-bold text-emerald-400 px-1">
+                {currentMapZoom}x
+              </span>
               <button
                 type="button"
-                onClick={() => setZoomLevel((z) => Math.max(z - 15, 75))}
+                onClick={handleZoomOut}
                 className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
-                title="Zoom Out"
+                title="Zoom Out (−)"
               >
                 <ZoomOut className="w-4 h-4" />
               </button>
@@ -661,6 +995,143 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
               </button>
             </div>
 
+            {/* Directional Pan (Swap) D-Pad & Zoom Widget */}
+            <div
+              className="absolute bottom-20 right-4 z-20 flex flex-col items-center gap-2 p-2.5 rounded-2xl bg-slate-950/90 backdrop-blur-xl border border-emerald-500/30 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* D-Pad Header */}
+              <div className="flex items-center justify-between w-full px-1">
+                <span className="text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                  <Compass className="w-3 h-3 text-emerald-400" />
+                  <span>Swap / Pan</span>
+                </span>
+                <span className="text-[9px] font-mono font-bold text-sky-400">
+                  {currentMapZoom}x
+                </span>
+              </div>
+
+              {/* 4-Way Directional D-Pad */}
+              <div className="grid grid-cols-3 gap-1 w-28 h-28 place-items-center">
+                <div />
+                {/* UP */}
+                <button
+                  type="button"
+                  onClick={handlePanUp}
+                  title="Swap Up (वर सरकवा)"
+                  className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
+                >
+                  <ChevronUp className="w-4 h-4" />
+                </button>
+                <div />
+
+                {/* LEFT */}
+                <button
+                  type="button"
+                  onClick={handlePanLeft}
+                  title="Swap Left (डावीकडे सरकवा)"
+                  className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+
+                {/* CENTER RECENTER */}
+                <button
+                  type="button"
+                  onClick={handleRecenter}
+                  title="Recenter to Farm (मध्यभागी आणा)"
+                  className="w-8 h-8 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 flex items-center justify-center transition active:scale-90 border border-emerald-500/40 shadow font-bold"
+                >
+                  <LocateFixed className="w-3.5 h-3.5" />
+                </button>
+
+                {/* RIGHT */}
+                <button
+                  type="button"
+                  onClick={handlePanRight}
+                  title="Swap Right (उजवीकडे सरकवा)"
+                  className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+
+                <div />
+                {/* DOWN */}
+                <button
+                  type="button"
+                  onClick={handlePanDown}
+                  title="Swap Down (खाली सरकवा)"
+                  className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+                <div />
+              </div>
+
+              {/* Divider */}
+              <div className="w-full h-px bg-slate-800 my-0.5" />
+
+              {/* Zoom Controls (+ and -) */}
+              <div className="flex items-center gap-1.5 w-full">
+                <button
+                  type="button"
+                  onClick={handleZoomIn}
+                  title="Zoom In (+) विस्तृत करा"
+                  className="flex-1 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-200 hover:text-white flex items-center justify-center transition font-black text-sm border border-slate-700/60 shadow active:scale-95"
+                >
+                  +
+                </button>
+                <button
+                  type="button"
+                  onClick={handleZoomOut}
+                  title="Zoom Out (−) संक्षिप्त करा"
+                  className="flex-1 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-200 hover:text-white flex items-center justify-center transition font-black text-sm border border-slate-700/60 shadow active:scale-95"
+                >
+                  −
+                </button>
+              </div>
+
+              {/* Quick Zoom Presets */}
+              <div className="grid grid-cols-3 gap-1 w-full text-[9px] font-mono font-bold pt-0.5">
+                <button
+                  type="button"
+                  onClick={() => handleSetZoomLevel(15)}
+                  className={`py-1 rounded-lg border text-center transition ${
+                    currentMapZoom === 15
+                      ? 'bg-emerald-600 text-white border-emerald-500'
+                      : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white'
+                  }`}
+                  title="District view (15x)"
+                >
+                  15x
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSetZoomLevel(17)}
+                  className={`py-1 rounded-lg border text-center transition ${
+                    currentMapZoom === 17
+                      ? 'bg-emerald-600 text-white border-emerald-500'
+                      : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white'
+                  }`}
+                  title="Farm parcel view (17x)"
+                >
+                  17x
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSetZoomLevel(19)}
+                  className={`py-1 rounded-lg border text-center transition ${
+                    currentMapZoom === 19
+                      ? 'bg-emerald-600 text-white border-emerald-500'
+                      : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white'
+                  }`}
+                  title="Crop canopy view (19x)"
+                >
+                  19x
+                </button>
+              </div>
+            </div>
+
             {/* Drawing Help Overlay / Vertex Controls at Bottom Left matching screenshot */}
             <div
               className="absolute bottom-4 left-4 z-20 p-3 rounded-2xl bg-slate-950/90 backdrop-blur-2xl border border-emerald-500/30 text-white shadow-2xl space-y-2 max-w-sm"
@@ -668,8 +1139,17 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             >
               <div className="flex items-center justify-between gap-3">
                 <span className="text-xs font-black text-emerald-400 flex items-center gap-1.5">
-                  <MousePointerClick className="w-4 h-4" />
-                  <span>Click satellite map to add boundary points</span>
+                  {toolMode === 'pan' ? (
+                    <>
+                      <Hand className="w-4 h-4" />
+                      <span>Pan Mode: Drag map anywhere or use swap arrows</span>
+                    </>
+                  ) : (
+                    <>
+                      <MousePointerClick className="w-4 h-4" />
+                      <span>Click satellite map to add boundary points</span>
+                    </>
+                  )}
                 </span>
                 <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   {vertices.length} Points

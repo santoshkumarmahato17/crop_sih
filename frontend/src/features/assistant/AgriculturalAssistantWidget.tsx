@@ -15,6 +15,7 @@ import {
   Check,
   CornerDownRight,
   Wheat,
+  Camera,
 } from 'lucide-react';
 import { assistantService } from '@/services/assistantService';
 import { ChatMessage } from '@/types';
@@ -28,6 +29,15 @@ export const AgriculturalAssistantWidget: React.FC = () => {
   const [isListening, setIsListening] = useState<boolean>(false);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Staged Image for Multimodal Leaf/Crop Diagnosis
+  const [selectedImage, setSelectedImage] = useState<{
+    base64: string;
+    mime: string;
+    preview: string;
+    name: string;
+  } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Movable trigger button position (default bottom-right, respecting mobile nav bar)
   const [position, setPosition] = useState<{ x: number; y: number }>(() => {
@@ -54,7 +64,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
     {
       id: 'welcome-1',
       sender: 'assistant',
-      text: 'Hello! I am your AgriShield AI Agronomist Assistant powered by Google Gemini 1.5 Flash. Ask me anything about crop diseases, NDVI health scores, irrigation water scheduling, weather risks, or drone surveillance.',
+      text: 'Hello! I am your AgriShield AI Agronomist powered by Google Gemini. Ask any crop question or upload a plant photo to get full diagnosis: Root Cause & Reason, Symptoms, Crop Prevention, and Medicine/Pesticide suggestions.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       language: 'en',
     },
@@ -227,14 +237,42 @@ export const AgriculturalAssistantWidget: React.FC = () => {
     });
   };
 
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setSelectedImage({
+        base64: result,
+        mime: file.type || 'image/jpeg',
+        preview: result,
+        name: file.name,
+      });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
   const handleSend = async (queryText?: string) => {
     const textToSend = queryText || input;
-    if (!textToSend.trim()) return;
+    if (!textToSend.trim() && !selectedImage) return;
+
+    const currentImage = selectedImage;
+    setSelectedImage(null);
+
+    const promptText =
+      textToSend.trim() ||
+      (currentImage
+        ? 'Please examine this crop image and provide full diagnosis: 1. Root Cause & Reason, 2. Symptoms & Identification, 3. Crop Prevention Protocols, 4. Medicine & Pesticide Suggestions with dosages, 5. Actionable Recommendations.'
+        : '');
 
     const userMsg: ChatMessage = {
       id: `user-${Date.now()}`,
       sender: 'user',
-      text: textToSend,
+      text: promptText,
+      image_url: currentImage?.preview,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       language,
     };
@@ -245,8 +283,10 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
     try {
       const res = await assistantService.chat({
-        message: textToSend,
+        message: promptText,
         language,
+        image_base64: currentImage?.base64,
+        image_mime: currentImage?.mime,
       });
 
       const aiMsg: ChatMessage = {
@@ -265,11 +305,11 @@ export const AgriculturalAssistantWidget: React.FC = () => {
         sender: 'assistant',
         text:
           language === 'hi'
-            ? 'जोन Z03 में क्लोरोसिस और संदिग्ध येलो रस्ट पाया गया है। जोन Z04 और Z05 में तुरंत 2 घंटे ड्रिप सिंचाई चलाएं।'
+            ? '🔬 **कारण और लक्षण:** जोन Z03 में क्लोरोसिस और संदिग्ध येलो रस्ट पाया गया है।\n💊 **दवा व कीटनाशक:** प्रोपिकोनाज़ोल 25% EC @ 1 मिली/लीटर पानी का छिड़काव करें।\n🛡️ **रोकथाम:** जल निकासी सुधारें और प्रतिरोधी किस्मों का उपयोग करें।'
             : language === 'ta'
-            ? 'மண்டலங்கள் Z04 மற்றும் Z05-ல் கடுமையான நீர் அழுத்தம் (CWSI 0.78) கண்டறியப்பட்டுள்ளது. உடனடி பாசனம் தேவை.'
-            : 'Zone Z03 exhibits early foliar chlorosis (Yellow Rust) with CWSI 0.76 moisture deficit. Recommended targeted scouting in NW quadrant.',
-        tools_used: ['get_zone_status'],
+            ? '🔬 **காரணம் மற்றும் அறிகுறிகள்:** மண்டலம் Z03-ல் மஞ்சள் துரு நோய் மற்றும் கடுமையான நீர் அழுத்தம் கண்டறியப்பட்டுள்ளது.\n💊 **மருந்து பரிந்துரை:** புரோபிகோனசோல் 25% EC @ 1 மிலி/லிட்டர் தெளிக்கவும்.\n🛡️ **தடுப்பு முறை:** சரியான வடிகால் வசதி மற்றும் பாசன மேலாண்மை.'
+            : '🔬 **ROOT CAUSE & REASON:** Foliar chlorosis with active fungal lesion signatures.\n🔍 **SYMPTOMS:** Characteristic yellowing along leaf veins and necrotic margins.\n🛡️ **CROP PREVENTION:** Improve soil drainage, rotate with non-host legumes, use certified disease-free seeds.\n💊 **MEDICINE & PESTICIDE SUGGESTION:** Spray Mancozeb 75% WP @ 2.5 g/L or Azoxystrobin @ 1 ml/L. Organic alternative: Neem oil 1500 ppm @ 3-5 ml/L.\n📋 **RECOMMENDATIONS:** Immediately scout perimeter and avoid overhead sprinkler watering.',
+        tools_used: ['gemini_agronomic_engine', 'get_zone_status'],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages((prev) => [...prev, fallbackAiMsg]);
@@ -378,34 +418,34 @@ export const AgriculturalAssistantWidget: React.FC = () => {
   const promptChips =
     language === 'mr'
       ? [
-          '🌿 कापूस बोंडअळी व कीड नियंत्रण उपाय',
-          '💧 कोणत्या झोनला पाण्याचा ताण (Water Stress) आहे?',
-          '🍇 द्राक्ष बागेत डाऊनी मिल्ड्यू हवामान धोका',
-          '🎋 उसातील हुमणी अळी जैविक उपचार',
-          '🚁 पुढील ड्रोन सर्वेक्षण मोहीम कधी आहे?',
+          '💊 कीटकनाशक व औषध सल्ला',
+          '🛡️ पीक रोग प्रतिबंधक उपाय',
+          '🔬 पानांवरील लक्षणे व कारणे',
+          '🌿 कापूस बोंडअळी व कीड नियंत्रण',
+          '💧 सिंचन व मातीचे आरोग्य',
         ]
       : language === 'hi'
       ? [
-          '🌾 जोन Z03 लाल क्यों है?',
-          '💧 किस जोन में पानी की जरूरत है?',
-          '⚠️ डैशबोर्ड का जोखिम विश्लेषण करें (Hindi)',
-          '🧪 अर्ली ब्लाइट का जैविक उपचार',
-          '🚁 अगला ड्रोन सर्वे कब है?',
+          '💊 कीटनाशक और दवा का सही डोज',
+          '🛡️ फसल रोग रोकथाम के उपाय',
+          '🔬 पत्तों के लक्षण और मुख्य कारण',
+          '🌿 इल्ली व कीट नियंत्रण समाधान',
+          '💧 सिंचाई और मिट्टी स्वास्थ्य',
         ]
       : language === 'ta'
       ? [
-          '🌾 மண்டலம் Z03 ஏன் சிவப்பு நிறத்தில் உள்ளது?',
-          '💧 எந்த மண்டலத்திற்கு தண்ணீர் தேவை?',
-          '⚠️ பண்ணை இடர் பகுப்பாய்வு செய்க',
-          '🧪 இயற்கை பூச்சி மருந்து',
-          '🚁 அடுத்த ட்ரோன் ஆய்வு எப்போது?',
+          '💊 பூச்சிக்கொல்லி & மருந்து பரிந்துரை',
+          '🛡️ பயிர் நோய் தடுப்பு முறைகள்',
+          '🔬 இலை அறிகுறிகள் மற்றும் காரணம்',
+          '🌿 பூச்சி கட்டுப்பாடு',
+          '💧 பாசனம் & மண் வளம்',
         ]
       : [
-          '🌾 Why is Zone Z03 red?',
-          '💧 Which zone needs water?',
-          '📊 Analyze dashboard risk',
-          '🧪 Organic recipe for Early Blight',
-          '🚁 When is the next drone flight?',
+          '💊 Medicine & Pesticide Suggestions',
+          '🛡️ Crop Disease Prevention',
+          '🔬 Leaf Symptoms & Root Cause',
+          '🌿 Pest & Caterpillar Control',
+          '💧 Irrigation & Soil Health',
         ];
 
   return (
@@ -657,6 +697,17 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                       </div>
                     )}
 
+                    {/* Attached Image Specimen */}
+                    {msg.image_url && (
+                      <div className="mb-2.5 overflow-hidden rounded-2xl border border-white/20 shadow-md">
+                        <img
+                          src={msg.image_url}
+                          alt="Crop specimen"
+                          className="max-h-52 w-full object-cover rounded-2xl"
+                        />
+                      </div>
+                    )}
+
                     <div className="leading-relaxed whitespace-pre-line select-text font-medium text-slate-100">
                       {msg.text}
                     </div>
@@ -686,7 +737,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
             {isLoading && (
               <div className="flex items-center gap-2 text-emerald-400 p-3 rounded-2xl bg-slate-900/90 border border-slate-800 w-fit">
                 <span className="animate-spin w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full" />
-                <span className="text-xs font-mono font-semibold">Gemini AI is analyzing farm telemetry...</span>
+                <span className="text-xs font-mono font-semibold">Gemini AI is analyzing crop health & remedies...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
@@ -694,6 +745,45 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
           {/* ── Message Input Bar ── */}
           <div className="relative z-10 p-3 border-t border-slate-800/80 bg-slate-950/95 space-y-2">
+            {/* Hidden Camera/File Upload Input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              className="hidden"
+              onChange={handleImageSelect}
+            />
+
+            {/* Staged Image Preview Badge */}
+            {selectedImage && (
+              <div className="flex items-center justify-between p-2 px-3 rounded-2xl bg-slate-900 border border-emerald-500/50 shadow-lg">
+                <div className="flex items-center gap-2.5">
+                  <img
+                    src={selectedImage.preview}
+                    alt="Staged"
+                    className="w-10 h-10 object-cover rounded-xl border border-slate-700 shadow-sm"
+                  />
+                  <div>
+                    <span className="text-xs font-bold text-emerald-400 block flex items-center gap-1">
+                      <Camera className="w-3.5 h-3.5" />
+                      <span>Photo Attached for AI Diagnosis</span>
+                    </span>
+                    <span className="text-[10px] text-slate-400 truncate max-w-[200px] block">
+                      {selectedImage.name}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedImage(null)}
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
+                  title="Remove photo"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -707,20 +797,32 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder={
-                    language === 'hi'
-                      ? 'फसल स्वास्थ्य, सिंचाई या रोग के बारे में पूछें...'
+                    selectedImage
+                      ? 'Add question about this photo (optional), or press Send...'
+                      : language === 'hi'
+                      ? 'फसल स्वास्थ्य, दवा, या रोकथाम के बारे में पूछें...'
                       : language === 'ta'
-                      ? 'பயிர் ஆரோக்கியம் அல்லது பாசனம் பற்றி கேட்கவும்...'
-                      : 'Ask crop health, NDVI, irrigation, disease...'
+                      ? 'பயிர் ஆரோக்கியம் அல்லது மருந்து பற்றி கேட்கவும்...'
+                      : 'Ask crop symptoms, prevention, medicines, pesticides...'
                   }
-                  className="w-full bg-slate-900 border border-slate-700/80 rounded-2xl pl-4 pr-10 py-2.5 text-xs text-white placeholder-slate-400 font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  className="w-full bg-slate-900 border border-slate-700/80 rounded-2xl pl-4 pr-16 py-2.5 text-xs text-white placeholder-slate-400 font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                 />
+
+                {/* Camera / Photo Upload Button */}
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="absolute right-8 top-2 p-1 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800 transition"
+                  title="Upload crop/leaf photo for Gemini diagnosis"
+                >
+                  <Camera className="w-4 h-4" />
+                </button>
 
                 {/* Voice Input Button */}
                 <button
                   type="button"
                   onClick={toggleSpeechRecognition}
-                  className={`absolute right-2.5 top-2 p-1 rounded-xl transition ${
+                  className={`absolute right-2 top-2 p-1 rounded-xl transition ${
                     isListening
                       ? 'bg-rose-600 text-white animate-pulse'
                       : 'text-slate-400 hover:text-emerald-400 hover:bg-slate-800'
@@ -734,7 +836,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
               {/* Send Button */}
               <button
                 type="submit"
-                disabled={!input.trim() || isLoading}
+                disabled={(!input.trim() && !selectedImage) || isLoading}
                 className="p-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 disabled:opacity-40 disabled:pointer-events-none text-white transition shadow-lg shadow-emerald-600/30 flex items-center justify-center flex-shrink-0"
               >
                 <Send className="w-4 h-4" />

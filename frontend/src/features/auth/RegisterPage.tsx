@@ -95,36 +95,98 @@ export const RegisterPage: React.FC = () => {
         </p>
       </div>
 
-      {/* Role Selector Tabs (Only FARMER and GOVERNMENT allowed) */}
-      <div className="space-y-1.5">
-        <label className="text-xs font-bold text-slate-800 dark:text-slate-200 block text-center">
-          Select Your Account Role
-        </label>
-        <div className="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-slate-100 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800">
+      {/* Account Type / Role Selection Cards */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-extrabold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Select Account Role *
+          </label>
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+            {role === 'FARMER' ? 'Agricultural Producer' : 'Regional Administration'}
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* FARMER Role Card */}
           <button
             type="button"
             onClick={() => setRole('FARMER')}
-            className={`py-2.5 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-2 ${
+            className={`p-3.5 rounded-2xl border text-left transition-all relative overflow-hidden group ${
               role === 'FARMER'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-emerald-500/10 dark:bg-emerald-500/15 border-emerald-500 shadow-md shadow-emerald-500/10 ring-2 ring-emerald-500/20'
+                : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
             }`}
           >
-            <Sprout className="w-4 h-4" />
-            <span>Farmer Account</span>
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`p-2 rounded-xl transition ${
+                    role === 'FARMER'
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white'
+                  }`}
+                >
+                  <Sprout className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-black tracking-wide text-slate-900 dark:text-white block">
+                    FARMER
+                  </span>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold block">
+                    Dashboard & GIS
+                  </span>
+                </div>
+              </div>
+              {role === 'FARMER' && (
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-emerald-600 text-white">
+                  Selected
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed font-medium">
+              Field boundaries, vegetation indices (NDVI), drone missions, and AI leaf diagnostics.
+            </p>
           </button>
 
+          {/* GOVERNMENT Role Card */}
           <button
             type="button"
             onClick={() => setRole('GOVERNMENT')}
-            className={`py-2.5 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-2 ${
+            className={`p-3.5 rounded-2xl border text-left transition-all relative overflow-hidden group ${
               role === 'GOVERNMENT'
-                ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-sky-500/10 dark:bg-sky-500/15 border-sky-500 shadow-md shadow-sky-500/10 ring-2 ring-sky-500/20'
+                : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
             }`}
           >
-            <Building2 className="w-4 h-4" />
-            <span>Government Official</span>
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`p-2 rounded-xl transition ${
+                    role === 'GOVERNMENT'
+                      ? 'bg-sky-600 text-white'
+                      : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white'
+                  }`}
+                >
+                  <Building2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-black tracking-wide text-slate-900 dark:text-white block">
+                    GOVERNMENT
+                  </span>
+                  <span className="text-[10px] text-sky-600 dark:text-sky-400 font-bold block">
+                    Regional Radar
+                  </span>
+                </div>
+              </div>
+              {role === 'GOVERNMENT' && (
+                <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-black bg-sky-600 text-white">
+                  Selected
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed font-medium">
+              Regional outbreak surveillance, crop disease hotspots, and quarantine advisories.
+            </p>
           </button>
         </div>
       </div>
@@ -147,9 +209,10 @@ export const RegisterPage: React.FC = () => {
               <input
                 type="text"
                 required
+                autoComplete="name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder={role === 'FARMER' ? 'Farmer Ramanathan' : 'Dr. Sundaram M.'}
+                placeholder={role === 'FARMER' ? 'e.g. Ramesh Patel' : 'e.g. Dr. K. Sharma'}
                 className="w-full bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-semibold"
               />
             </div>
@@ -164,9 +227,10 @@ export const RegisterPage: React.FC = () => {
               <input
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={role === 'FARMER' ? 'farmer@agrishield.farm' : 'officer@gov.in'}
+                placeholder={role === 'FARMER' ? 'grower@agrishield.farm' : 'officer@gov.agrishield.in'}
                 className="w-full bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-semibold"
               />
             </div>
@@ -182,6 +246,7 @@ export const RegisterPage: React.FC = () => {
               <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
               <input
                 type="tel"
+                autoComplete="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+91 98421 78901"
@@ -270,6 +335,7 @@ export const RegisterPage: React.FC = () => {
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Min 8 chars"
@@ -278,7 +344,8 @@ export const RegisterPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -294,6 +361,7 @@ export const RegisterPage: React.FC = () => {
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
+                autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter password"

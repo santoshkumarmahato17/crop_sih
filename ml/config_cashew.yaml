@@ -1,0 +1,69 @@
+# Cashew Leaf Disease & Pest Classification Configuration
+# 5 Classes: Anthracnose, Gummosis, Healthy, Leaf Miner, Red Rust
+
+dataset:
+  name: "Cashew Leaf Disease & Pest Dataset"
+  raw_dir: "Cashew"
+  splits_dir: "ml/data/splits_cashew"
+  reports_dir: "ml/reports_cashew"
+  train_split: 0.70
+  val_split: 0.15
+  test_split: 0.15
+  random_seed: 42
+  image_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".bmp"
+    - ".webp"
+
+classes:
+  - "Anthracnose"
+  - "Gummosis"
+  - "Healthy"
+  - "Leaf Miner"
+  - "Red Rust"
+
+class_mapping:
+  "anthracnose": "Anthracnose"
+  "authracnose": "Anthracnose"
+  "gumosis": "Gummosis"
+  "gummosis": "Gummosis"
+  "healthy": "Healthy"
+  "leaf miner": "Leaf Miner"
+  "leaf_miner": "Leaf Miner"
+  "red rust": "Red Rust"
+  "red_rust": "Red Rust"
+
+class_categories:
+  "Anthracnose": "disease"
+  "Gummosis": "disease"
+  "Healthy": "healthy"
+  "Leaf Miner": "pest"
+  "Red Rust": "disease"
+
+model:
+  architecture: "mobilenet_v3_small"
+  pretrained: true
+  num_classes: 5
+  input_size: 224
+  dropout: 0.25
+  save_dir: "ml/models_cashew"
+
+training:
+  batch_size: 32
+  num_workers: 0  # Safe for Windows CPU multiprocessing
+  warmup_epochs: 2
+  fine_tune_epochs: 4
+  warmup_lr: 0.001
+  fine_tune_lr: 0.0003
+  weight_decay: 0.0001
+  min_lr: 0.00001
+  device: "cpu"
+  use_class_weights: true
+
+inference:
+  confidence_threshold: 70.0
+  blur_threshold: 2.0
+  min_brightness: 25.0
+  max_brightness: 235.0

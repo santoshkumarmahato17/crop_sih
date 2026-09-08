@@ -74,6 +74,12 @@ checkpoints/
 !ml/models_maize/**/best_model_mobile.pt
 !ml/models_cassava/**/best_model.pth
 !ml/models_cassava/**/best_model_mobile.pt
+!ml/models_cashew/**/best_model.pth
+!ml/models_cashew/**/best_model_mobile.pt
+!ml/models_apple/**/best_model.pth
+!ml/models_apple/**/mobile_model/**
+!ml/models_apple/**/best_model/**
+!ml/models/crop_classifier/crop_type_classifier.pth
 
 # Node & Frontend
 node_modules/
@@ -106,6 +112,9 @@ Dataset for Crop Pest and Disease Detection/
 Tomato/
 Maize/
 Cassava/
+Cashew/
+apple dataset/
+"apple dataset"/
 
 # IDE & OS
 .idea/

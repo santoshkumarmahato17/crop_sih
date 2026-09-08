@@ -7,9 +7,6 @@ import {
   AlertCircle,
   Eye,
   EyeOff,
-  User,
-  Briefcase,
-  KeyRound,
 } from 'lucide-react';
 import { useAuth, getRoleDashboardPath } from '@/context/AuthContext';
 
@@ -18,16 +15,22 @@ export const LoginPage: React.FC = () => {
   const location = useLocation();
   const { login, isLoading } = useAuth();
 
-  const [email, setEmail] = useState<string>('ramanathan@agrishield.farm');
-  const [password, setPassword] = useState<string>('FarmerSecure2026!');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+
+    if (!email.trim() || !password) {
+      setErrorMsg('Please enter both your email address and password.');
+      return;
+    }
+
     try {
-      const userRole = await login(email, password);
+      const userRole = await login(email.trim(), password);
       const destination = location.state?.from?.pathname || getRoleDashboardPath(userRole);
       navigate(destination, { replace: true });
     } catch (err: any) {
@@ -36,19 +39,6 @@ export const LoginPage: React.FC = () => {
           err?.response?.data?.detail ||
           'Invalid email or password credentials. Please try again.'
       );
-    }
-  };
-
-  const handleQuickDemo = async (demoEmail: string, demoPass: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-    setErrorMsg(null);
-    try {
-      const userRole = await login(demoEmail, demoPass);
-      const destination = getRoleDashboardPath(userRole);
-      navigate(destination, { replace: true });
-    } catch (err: any) {
-      setErrorMsg('Demo authentication error. Please try again.');
     }
   };
 
@@ -84,9 +74,10 @@ export const LoginPage: React.FC = () => {
             <input
               type="email"
               required
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="farmer@agrishield.farm"
+              placeholder="user@agrishield.farm"
               className="w-full bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-semibold"
             />
           </div>
@@ -103,6 +94,7 @@ export const LoginPage: React.FC = () => {
             <input
               type={showPassword ? 'text' : 'password'}
               required
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••••••"
@@ -111,6 +103,7 @@ export const LoginPage: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
               className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -134,82 +127,8 @@ export const LoginPage: React.FC = () => {
         </button>
       </form>
 
-      {/* Quick Role-Switcher Cards — 1-Tap Universal Multi-Role Login */}
-      <div className="space-y-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] uppercase font-black text-slate-500 dark:text-slate-400 tracking-wider">
-            1-Tap Demo Access (Select Role)
-          </span>
-          <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
-            All Roles Ready
-          </span>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2.5">
-          {/* FARMER Role */}
-          <button
-            type="button"
-            onClick={() => handleQuickDemo('ramanathan@agrishield.farm', 'FarmerSecure2026!')}
-            className="p-3 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-left transition group active:scale-95 shadow-sm hover:shadow"
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1 text-xs font-black text-emerald-700 dark:text-emerald-400">
-                <User className="w-3.5 h-3.5" />
-                <span>FARMER</span>
-              </span>
-            </div>
-            <span className="text-[10px] text-slate-700 dark:text-slate-300 block truncate mt-1 font-semibold">
-              Dashboard & GIS
-            </span>
-            <span className="text-[9px] text-emerald-600 dark:text-emerald-400 font-mono block truncate mt-0.5">
-              ramanathan@...
-            </span>
-          </button>
-
-          {/* GOVERNMENT Role */}
-          <button
-            type="button"
-            onClick={() => handleQuickDemo('sundaram@gov.agrishield.in', 'GovSecure2026!')}
-            className="p-3 rounded-2xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 text-left transition group active:scale-95 shadow-sm hover:shadow"
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1 text-xs font-black text-sky-700 dark:text-sky-400">
-                <Briefcase className="w-3.5 h-3.5" />
-                <span>GOVT</span>
-              </span>
-            </div>
-            <span className="text-[10px] text-slate-700 dark:text-slate-300 block truncate mt-1 font-semibold">
-              Regional Radar
-            </span>
-            <span className="text-[9px] text-sky-600 dark:text-sky-400 font-mono block truncate mt-0.5">
-              sundaram@...
-            </span>
-          </button>
-
-          {/* ADMIN Role */}
-          <button
-            type="button"
-            onClick={() => handleQuickDemo('admin@agrishield.com', 'AdminRoot2026!')}
-            className="p-3 rounded-2xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-500/40 text-left transition group active:scale-95 shadow-sm hover:shadow"
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1 text-xs font-black text-purple-700 dark:text-purple-400">
-                <KeyRound className="w-3.5 h-3.5" />
-                <span>ADMIN</span>
-              </span>
-            </div>
-            <span className="text-[10px] text-slate-700 dark:text-slate-300 block truncate mt-1 font-semibold">
-              Master Console
-            </span>
-            <span className="text-[9px] text-purple-600 dark:text-purple-400 font-mono block truncate mt-0.5">
-              admin@...
-            </span>
-          </button>
-        </div>
-      </div>
-
       {/* Footer Link to Register */}
-      <div className="text-center pt-2">
+      <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800/80">
         <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
           Don't have an account?{' '}
           <Link
@@ -223,3 +142,4 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
+

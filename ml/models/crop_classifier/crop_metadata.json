@@ -1,0 +1,26 @@
+{
+  "Cashew": {
+    "scientific_name": "Anacardium occidentale",
+    "family": "Anacardiaceae",
+    "foliage_type": "Broad, leathery, simple alternate ovate leaves with prominent penniveined pinnate venation",
+    "emoji": "\ud83c\udf30"
+  },
+  "Cassava": {
+    "scientific_name": "Manihot esculenta",
+    "family": "Euphorbiaceae",
+    "foliage_type": "Distinctive deeply 5-7 lobed palmate leaves with reddish or green petioles",
+    "emoji": "\ud83c\udf43"
+  },
+  "Maize": {
+    "scientific_name": "Zea mays",
+    "family": "Poaceae (Gramineae)",
+    "foliage_type": "Elongated linear grass-like blade with prominent central midrib and parallel venation",
+    "emoji": "\ud83c\udf3d"
+  },
+  "Tomato": {
+    "scientific_name": "Solanum lycopersicum",
+    "family": "Solanaceae",
+    "foliage_type": "Pinnately compound glandular-pubescent leaves with ovate to serrated toothed leaflets",
+    "emoji": "\ud83c\udf45"
+  }
+}

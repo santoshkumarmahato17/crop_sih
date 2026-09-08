@@ -181,10 +181,10 @@ class YOLODiseaseDetector:
         spectral_bgr = cv2.cvtColor(spectral_hsv, cv2.COLOR_HSV2BGR)
 
         # Accentuate necrotic lesion fluorescence
-        spectral_bgr[necrotic_mask > 0] = cv2.addWeighted(
-            spectral_bgr[necrotic_mask > 0], 0.3,
-            np.full_like(spectral_bgr[necrotic_mask > 0], (100, 255, 230)), 0.7, 0
-        )
+        if np.any(necrotic_mask > 0):
+            overlay = spectral_bgr.copy()
+            overlay[necrotic_mask > 0] = [100, 255, 230]
+            spectral_bgr = cv2.addWeighted(spectral_bgr, 0.3, overlay, 0.7, 0.0)
 
         # -------------------------------------------------------------
         # STEP 4: YOLO Lesion Bounding Box Extraction (Figure 3 Style)

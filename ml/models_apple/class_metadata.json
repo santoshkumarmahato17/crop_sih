@@ -1,0 +1,28 @@
+{
+  "classes": [
+    {
+      "name": "Apple Scab",
+      "original_folder": "apple_scab",
+      "category": "disease",
+      "index": 0
+    },
+    {
+      "name": "Black Rot",
+      "original_folder": "black_rot",
+      "category": "disease",
+      "index": 1
+    },
+    {
+      "name": "Cedar Apple Rust",
+      "original_folder": "cedar_apple_rust",
+      "category": "disease",
+      "index": 2
+    },
+    {
+      "name": "Healthy",
+      "original_folder": "healthy",
+      "category": "healthy",
+      "index": 3
+    }
+  ]
+}

@@ -106,13 +106,13 @@ def create_application() -> FastAPI:
     app.include_router(predict.router)
     app.include_router(ai.router)
 
-    # Mount Tomato Leaf Disease ML Pipeline API
+    # Mount Tomato, Cassava, Cashew, Maize & YOLO ML Pipeline API routes
     try:
         from ml.api.app import app as ml_app
-        app.mount("/api", ml_app)
-        logger.info("Successfully mounted Tomato Leaf Disease ML API under /api")
+        app.include_router(ml_app.router)
+        logger.info("Successfully registered Multi-Crop ML API routes (/api/cassava, /api/cashew, /api/maize, /api/predict, /api/yolo)")
     except Exception as e:
-        logger.warning(f"Could not mount Tomato Leaf Disease ML API: {e}")
+        logger.warning(f"Could not register Multi-Crop ML API routes: {e}")
 
     return app
 
