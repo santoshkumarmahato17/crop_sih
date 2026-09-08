@@ -25,9 +25,9 @@ import {
 import { dashboardService } from '@/services/dashboardService';
 import { farmService } from '@/services/farmService';
 import { zoneService } from '@/services/zoneService';
-import { weatherService, mockFarmWeatherRiskData } from '@/services/weatherService';
+import { weatherService, mockFarmWeatherRiskData, WeatherRiskDataWithMeta } from '@/services/weatherService';
 import { WeatherRiskForecastCard } from '@/features/weather/WeatherRiskForecastCard';
-import { FarmWeatherRiskResponse } from '@/types/weatherRisk';
+import { AlertTriangle } from 'lucide-react';
 import { ZoneTemporalAnalyticsModal } from '@/features/temporal/ZoneTemporalAnalyticsModal';
 import { LanguageSwitcher } from '@/features/advisories/LanguageSwitcher';
 import { AdvisoryCard } from '@/features/advisories/AdvisoryCard';
@@ -193,7 +193,7 @@ export const FarmerDashboardPage: React.FC = () => {
 
   // Modals & Weather Forecasting State
   const [isTemporalModalOpen, setIsTemporalModalOpen] = useState<boolean>(false);
-  const [weatherRiskData, setWeatherRiskData] = useState<FarmWeatherRiskResponse>(mockFarmWeatherRiskData);
+  const [weatherRiskData, setWeatherRiskData] = useState<WeatherRiskDataWithMeta>(mockFarmWeatherRiskData);
   const [weatherHorizon, setWeatherHorizon] = useState<number>(7);
   const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
   const [advisories, setAdvisories] = useState<Advisory[]>([]);
@@ -228,27 +228,39 @@ export const FarmerDashboardPage: React.FC = () => {
           });
           lat = pos.coords.latitude;
           lon = pos.coords.longitude;
-          setUserLocationName(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+          // Show formatted coords now; will be replaced by resolved city name below
+          setUserLocationName(
+            `${lat >= 0 ? lat.toFixed(4) + '°N' : Math.abs(lat).toFixed(4) + '°S'}, ` +
+            `${lon >= 0 ? lon.toFixed(4) + '°E' : Math.abs(lon).toFixed(4) + '°W'}`
+          );
         } catch (e: any) {
-          console.warn("Geolocation error:", e);
+          console.warn('Geolocation error:', e);
           if (e.code === 1) {
-              setUserLocationName('Location permission denied');
+            setUserLocationName('Location permission denied');
+          } else if (e.code === 2) {
+            setUserLocationName('GPS unavailable');
           } else {
-              setUserLocationName('Location unavailable');
+            setUserLocationName('Location timeout');
           }
         }
       } else {
-          setUserLocationName('Geolocation not supported');
+        setUserLocationName('Geolocation not supported');
       }
 
       const res = await weatherService.getFarmRiskDossier(targetFarm, horizon, lat, lon);
       if (res && res.forecast_timeline && res.forecast_timeline.length > 0) {
         setWeatherRiskData(res);
+        // If AccuWeather resolved a city name, use it — it's more readable than raw coords
+        if (res.current_weather?.location_name) {
+          setUserLocationName(res.current_weather.location_name);
+        }
+        // If API succeeded but no location_name (OpenMeteo fallback) keep the formatted coords already set
       } else {
-        setWeatherRiskData(mockFarmWeatherRiskData);
+        setWeatherRiskData({ ...mockFarmWeatherRiskData, _is_mock_fallback: true });
+        if (!lat) setUserLocationName('Location unavailable');
       }
     } catch {
-      setWeatherRiskData(mockFarmWeatherRiskData);
+      setWeatherRiskData({ ...mockFarmWeatherRiskData, _is_mock_fallback: true });
     } finally {
       setIsWeatherLoading(false);
     }
@@ -666,12 +678,28 @@ export const FarmerDashboardPage: React.FC = () => {
 
 
         {/* 3. Microclimate & Weather Card — Forest Green Gradient with Rich Animations */}
+        {(() => {
+          const isMockFallback = !!(weatherRiskData as WeatherRiskDataWithMeta)?._is_mock_fallback;
+          const dataSource = weatherRiskData?.current_weather?.source ?? '';
+          const isLiveAccuWeather = dataSource === 'accuweather_live';
+          const isLiveOpenMeteo = dataSource === 'open_meteo_live';
+          return (
         <div
           className="relative p-5 rounded-3xl overflow-hidden space-y-3 shadow-xl hover:shadow-2xl transition-all duration-300 group"
           style={{ background: 'linear-gradient(135deg, #1b3e24 0%, #142e1b 55%, #0c1f11 100%)' }}
         >
           {/* Ambient radial glow with breathing animation */}
           <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-emerald-400/20 blur-3xl pointer-events-none animate-atmospheric-glow" />
+
+          {/* ⚠ Mock/Fallback Data Warning Banner */}
+          {isMockFallback && (
+            <div className="relative z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/20 border border-amber-400/40 backdrop-blur-sm mb-1">
+              <AlertTriangle className="w-3 h-3 text-amber-400 flex-shrink-0" />
+              <span className="text-[10px] font-bold text-amber-300 tracking-wide">
+                DEMO DATA — GPS or backend unavailable
+              </span>
+            </div>
+          )}
 
           {/* Row 1: Location + Animated 3D Floating Cloud & Sun */}
           <div className="flex items-center justify-between relative z-10">
@@ -733,7 +761,23 @@ export const FarmerDashboardPage: React.FC = () => {
               </p>
             </div>
           </div>
+
+          {/* Data Source Pill */}
+          <div className="relative z-10 flex justify-end pt-1">
+            {isLiveAccuWeather && (
+              <span className="text-[9px] font-mono font-bold text-emerald-400/70 px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20">
+                ● AccuWeather Live
+              </span>
+            )}
+            {isLiveOpenMeteo && (
+              <span className="text-[9px] font-mono font-bold text-sky-400/70 px-1.5 py-0.5 rounded-md bg-sky-500/10 border border-sky-500/20">
+                ● OpenMeteo Live
+              </span>
+            )}
+          </div>
         </div>
+          );
+        })()}
 
         {/* 4. Next Drone Surveillance Mission */}
         <div className="p-5 rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-sm dark:shadow-lg space-y-2.5 backdrop-blur-xl transition-colors duration-200">

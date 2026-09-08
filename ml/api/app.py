@@ -23,6 +23,17 @@ from ml.src.predict import get_tomato_predictor
 from ml.src.predict_maize import get_maize_predictor
 from ml.src.utils import load_config, load_json
 
+# Orange Leaf Disease Predictor
+from ml.inference.predictor import OrangeLeafPredictor
+from ml.inference.image_quality import check_image_quality
+
+_ORANGE_PREDICTOR = None
+def get_orange_predictor():
+    global _ORANGE_PREDICTOR
+    if _ORANGE_PREDICTOR is None:
+        _ORANGE_PREDICTOR = OrangeLeafPredictor()
+    return _ORANGE_PREDICTOR
+
 app = FastAPI(
     title="Tomato Leaf Disease Inference API",
     description="Production ML inference service for 5-class Tomato Leaf Disease classification.",
@@ -931,7 +942,50 @@ async def get_yolo_sample_image_file(rel_path: str):
     return FileResponse(full_path, media_type="image/jpeg")
 
 
+# ---------------------------------------------------------------------------
+# Orange Leaf Disease Classification Endpoints
+# ---------------------------------------------------------------------------
+
+@app.post(
+    "/api/orange/predict",
+    tags=["Orange Leaf Inference"],
+    summary="Predict Orange Leaf Disease (5 Classes)",
+    description="Accepts a photograph of an orange leaf and returns prediction and confidence.",
+)
+async def predict_orange_leaf(
+    image: UploadFile = File(..., description="Photograph of an orange leaf (JPG/PNG)"),
+    confidence_threshold: Optional[float] = Form(0.70, description="Confidence threshold"),
+):
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(image.filename)[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported format '{ext}'. Allowed: {valid_exts}")
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    # Image Quality Check
+    is_good, quality_msg = check_image_quality(contents)
+    if not is_good:
+        return JSONResponse(status_code=400, content={"success": False, "message": quality_msg})
+
+    try:
+        predictor_orange = get_orange_predictor()
+        result = predictor_orange.predict(contents, threshold=confidence_threshold)
+        if not result.get("success"):
+            return JSONResponse(status_code=500, content=result)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Orange Leaf Inference failed: {str(e)}")
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
-
