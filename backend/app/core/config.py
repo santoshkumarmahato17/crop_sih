@@ -58,9 +58,20 @@ class Settings(BaseSettings):
     DATABASE_MAX_OVERFLOW: int = 10
 
     # Supabase Specific Configuration
-    SUPABASE_URL: Optional[str] = "https://iekecrgipogdkycreqbc.supabase.co"
+    SUPABASE_URL: str = "https://iekecrgipogdkycreqbc.supabase.co"
+    SUPABASE_PUBLISHABLE_KEY: Optional[str] = "sb_publishable_qllqavPGE7kum20YazmeSA_5o_kwb-e"
+    SUPABASE_SECRET_KEY: Optional[str] = None
+    SUPABASE_JWKS_URL: str = "https://iekecrgipogdkycreqbc.supabase.co/auth/v1/.well-known/jwks.json"
     SUPABASE_ANON_KEY: Optional[str] = None
     SUPABASE_SERVICE_ROLE_KEY: Optional[str] = None
+
+    @property
+    def get_supabase_anon_key(self) -> str:
+        return self.SUPABASE_ANON_KEY or self.SUPABASE_PUBLISHABLE_KEY or ""
+
+    @property
+    def get_supabase_service_role_key(self) -> str:
+        return self.SUPABASE_SERVICE_ROLE_KEY or self.SUPABASE_SECRET_KEY or ""
 
     @property
     def async_database_url(self) -> str:
