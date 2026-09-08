@@ -58,6 +58,7 @@ data/raw/
 data/processed/
 data/tiles/
 data/exports/
+data/skills/
 
 # AI / ML Model Weights & Checkpoints
 *.pt
@@ -115,6 +116,8 @@ soybean d-set/
 # IDE & OS
 .idea/
 .vscode/
+.claude/
+agent/
 *.swp
 *.swo
 *~
