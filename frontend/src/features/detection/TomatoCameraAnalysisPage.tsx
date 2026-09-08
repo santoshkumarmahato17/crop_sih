@@ -19,6 +19,7 @@ import {
   SlidersHorizontal,
   Flame,
 } from 'lucide-react';
+import { CropRiskAdvisoryPanel } from './CropRiskAdvisoryPanel';
 
 interface QualityAssessment {
   is_acceptable: boolean;
@@ -1619,7 +1620,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             </div>
           ) : (
             /* Awaiting Scan Placeholder */
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 flex flex-col items-center justify-center text-center h-full min-h-[380px] shadow-sm">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-sm">
               <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4 text-emerald-500">
                 {selectedCrop === 'cassava' ? (
                   <span className="text-3xl">🍃</span>
@@ -1639,6 +1640,24 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               </p>
             </div>
           )}
+
+          {/* Dedicated Agronomic Risk Intelligence, Red Risk Percentage, Recommendations & Suggestions Panel */}
+          <CropRiskAdvisoryPanel
+            selectedCrop={selectedCrop}
+            prediction={result?.prediction}
+            confidence={result?.confidence}
+            isYolo={selectedCrop === 'yolo'}
+            yoloSeverityPct={yoloResult?.severity_percentage}
+            yoloLesionCount={yoloResult?.lesion_count}
+            onQuickSampleClick={(sampleName) => {
+              const matched = sampleImages.find(
+                (s: SampleImageItem) => s.class_name.toLowerCase() === sampleName.toLowerCase()
+              );
+              if (matched) {
+                handleSelectSample(matched);
+              }
+            }}
+          />
         </div>
       </div>
     </div>
