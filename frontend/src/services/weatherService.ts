@@ -5,6 +5,11 @@ import {
   WeatherObservationData,
 } from '@/types/weatherRisk';
 
+/** Extended type that adds a frontend-only mock indicator flag */
+export type WeatherRiskDataWithMeta = FarmWeatherRiskResponse & {
+  _is_mock_fallback?: boolean;
+};
+
 export interface AccuWeatherData {
   temp_celsius: number;
   condition: string;
@@ -239,10 +244,13 @@ export const mockFarmWeatherRiskData: FarmWeatherRiskResponse = {
 };
 
 export const weatherService = {
-  // Backward compatibility
+  // Backward compatibility — uses location_name from live weather if available
   async getCurrentConditions(): Promise<AccuWeatherData> {
-    const risk = await this.getFarmRiskDossier('farm-cbe-01');
+    const risk = await this.getFarmRiskDossier('farm-cbe-01') as WeatherRiskDataWithMeta;
     const w = risk.current_weather;
+    const locationName = w.location_name ?? w.latitude != null
+      ? `${(w.latitude as number).toFixed(4)}°, ${(w.longitude as number).toFixed(4)}°`
+      : 'Pollachi Agro-Corridor';
     return {
       temp_celsius: w.temperature_c,
       condition: w.condition_text,
@@ -250,7 +258,7 @@ export const weatherService = {
       precipitation_mm: w.rainfall_mm,
       wind_kmh: Math.round(w.wind_speed_mps * 3.6),
       is_day_time: true,
-      location_name: 'Pollachi Agro-Corridor',
+      location_name: locationName as string,
       weather_text: w.condition_text,
     };
   },
@@ -294,7 +302,7 @@ export const weatherService = {
     days: number = 7,
     lat?: number,
     lon?: number
-  ): Promise<FarmWeatherRiskResponse> {
+  ): Promise<WeatherRiskDataWithMeta> {
     try {
       const params: any = { days };
       if (lat !== undefined && lon !== undefined) {
@@ -305,11 +313,14 @@ export const weatherService = {
         params,
       });
       if (res.data && res.data.forecast_timeline && res.data.forecast_timeline.length > 0) {
-        return res.data;
+        // Real data from backend — no mock flag
+        return res.data as WeatherRiskDataWithMeta;
       }
-      return mockFarmWeatherRiskData;
+      // Backend returned empty/invalid — use mock with flag
+      return { ...mockFarmWeatherRiskData, _is_mock_fallback: true };
     } catch {
-      return mockFarmWeatherRiskData;
+      // Network/auth error — use mock with flag
+      return { ...mockFarmWeatherRiskData, _is_mock_fallback: true };
     }
   },
 

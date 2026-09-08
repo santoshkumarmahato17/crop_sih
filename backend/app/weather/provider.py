@@ -287,28 +287,50 @@ class OpenMeteoWeatherProvider(WeatherDataProvider):
 class AccuWeatherProvider(WeatherDataProvider):
     """AccuWeather API integration for live telemetry and forecasts."""
 
+    # Class-level cache shared across instances: (grid_lat, grid_lon) -> (location_key, location_name)
+    # Grid resolution: 0.05° ≈ 5 km, prevents repeated geoposition lookups for the same area.
+    _location_cache: Dict[tuple, tuple] = {}
+
     def __init__(self):
         self.api_key = os.environ.get("ACCUWEATHER_API_KEY", "")
         self.location_base_url = "http://dataservice.accuweather.com/locations/v1/cities/geoposition/search"
         self.current_base_url = "http://dataservice.accuweather.com/currentconditions/v1"
         self.forecast_base_url = "http://dataservice.accuweather.com/forecasts/v1/daily/5day"
 
+    @staticmethod
+    def _grid_key(lat: float, lon: float) -> tuple:
+        """Snap coordinates to 0.05° grid (~5 km) for cache keying."""
+        return (round(lat / 0.05) * 0.05, round(lon / 0.05) * 0.05)
+
     async def _get_location_key(self, client: httpx.AsyncClient, lat: float, lon: float) -> tuple[str, str]:
         if not self.api_key:
             return None, "Unknown Location"
+
+        # Check in-process cache first
+        cache_key = self._grid_key(lat, lon)
+        if cache_key in AccuWeatherProvider._location_cache:
+            return AccuWeatherProvider._location_cache[cache_key]
+
         res = await client.get(self.location_base_url, params={"apikey": self.api_key, "q": f"{lat},{lon}"})
         if res.status_code == 200:
             data = res.json()
             if isinstance(data, dict):
                 city = data.get("LocalizedName", "Unknown")
                 admin_area = data.get("AdministrativeArea", {}).get("LocalizedName", "")
-                loc_name = f"{city}, {admin_area}" if admin_area else city
-                return data.get("Key"), loc_name
+                country = data.get("Country", {}).get("LocalizedName", "")
+                loc_name = f"{city}, {admin_area}" if admin_area else f"{city}, {country}" if country else city
+                result = (data.get("Key"), loc_name)
+                AccuWeatherProvider._location_cache[cache_key] = result
+                return result
             elif isinstance(data, list) and len(data) > 0:
                 city = data[0].get("LocalizedName", "Unknown")
                 admin_area = data[0].get("AdministrativeArea", {}).get("LocalizedName", "")
-                loc_name = f"{city}, {admin_area}" if admin_area else city
-                return data[0].get("Key"), loc_name
+                country = data[0].get("Country", {}).get("LocalizedName", "")
+                loc_name = f"{city}, {admin_area}" if admin_area else f"{city}, {country}" if country else city
+                result = (data[0].get("Key"), loc_name)
+                AccuWeatherProvider._location_cache[cache_key] = result
+                return result
+        print(f"AccuWeather geoposition lookup failed: HTTP {res.status_code} for ({lat}, {lon})")
         return None, "Unknown Location"
 
     async def get_current_weather(self, latitude: float, longitude: float) -> WeatherDataPoint:

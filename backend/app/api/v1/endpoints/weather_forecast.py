@@ -77,6 +77,10 @@ async def get_current_weather(
         condition_text=data_pt.condition_text,
         source=data_pt.source,
         is_forecast=False,
+        # Pass resolved location metadata from provider (AccuWeather populates all three)
+        location_name=data_pt.location_name,
+        latitude=data_pt.latitude if data_pt.latitude is not None else target_lat,
+        longitude=data_pt.longitude if data_pt.longitude is not None else target_lon,
     )
 
 
@@ -226,6 +230,10 @@ async def get_farm_risk(
             condition_text=assessment.current_weather.condition_text,
             source=assessment.current_weather.source,
             is_forecast=False,
+            # Forward resolved location metadata from AccuWeather provider
+            location_name=assessment.current_weather.location_name,
+            latitude=assessment.current_weather.latitude if assessment.current_weather.latitude is not None else target_lat,
+            longitude=assessment.current_weather.longitude if assessment.current_weather.longitude is not None else target_lon,
         ),
         current_disease_risk=SingleRiskVectorSchema(
             risk_type=assessment.current_disease_risk.risk_type,
@@ -327,10 +335,12 @@ async def get_farm_risk(
 async def get_farm_risk_forecast(
     farm_id: str,
     days: int = Query(7, ge=1, le=14),
+    lat: Optional[float] = Query(None, description="User or farm latitude"),
+    lon: Optional[float] = Query(None, description="User or farm longitude"),
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> List[DailyForecastRiskSchema]:
-    res = await get_farm_risk(farm_id=farm_id, days=days, db=db, current_user=current_user)
+    res = await get_farm_risk(farm_id=farm_id, days=days, lat=lat, lon=lon, db=db, current_user=current_user)
     return res.forecast_timeline
 
 

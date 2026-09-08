@@ -1,7 +1,27 @@
-[
-  "Healthy",
-  "Leaf Blight",
-  "Leaf Curl",
-  "Septoria Leaf Spot",
-  "Verticillium Wilt"
-]
+{
+    "0": {
+        "original_label": "citrus_canker",
+        "display_name": "Citrus Canker",
+        "category": "Disease"
+    },
+    "1": {
+        "original_label": "citrus_Nutrient yellow",
+        "display_name": "Citrus Nutrient Yellow",
+        "category": "Nutrient Deficiency / Leaf Disorder"
+    },
+    "2": {
+        "original_label": "healthy_leaf_orange_multiple disease",
+        "display_name": "Orange Leaf - Multiple Disease",
+        "category": "Disease"
+    },
+    "3": {
+        "original_label": "young:healthy_leaf_orange",
+        "display_name": "Young Healthy Orange Leaf",
+        "category": "Healthy / Young Leaf"
+    },
+    "4": {
+        "original_label": "healthy",
+        "display_name": "Healthy Orange Leaf",
+        "category": "Healthy"
+    }
+}

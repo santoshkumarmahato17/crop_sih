@@ -15,6 +15,12 @@ export interface WeatherObservationData {
   condition_text: string;
   source: string;
   is_forecast: boolean;
+  /** Resolved location name from AccuWeather geoposition lookup (e.g. "Chennai, Tamil Nadu") */
+  location_name?: string | null;
+  /** Device GPS latitude forwarded from frontend */
+  latitude?: number | null;
+  /** Device GPS longitude forwarded from frontend */
+  longitude?: number | null;
 }
 
 export interface RiskFactorData {
