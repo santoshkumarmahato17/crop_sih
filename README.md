@@ -1,6 +1,6 @@
 # AGRI SHIELD
 
-**AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System**
+**AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System** 
 
 AGRI SHIELD is an enterprise-grade agricultural intelligence platform engineered to continuously monitor farm lands, detect crop stress and pathology early, simulate disease/pest contagion across neighboring boundaries, and provide verified Integrated Pest Management (IPM) guidance.
 
@@ -99,3 +99,4 @@ docker compose up -d --build
 - Interactive API Documentation: `http://localhost:8000/docs`
 - Frontend Portal: `http://localhost:5173`
 - MinIO Storage Console: `http://localhost:9001`
+- detail
