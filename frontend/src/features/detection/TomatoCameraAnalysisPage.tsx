@@ -257,7 +257,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
       if (selectedCrop === 'yolo') {
         const endpoints = [
-          'http://localhost:8001/api/yolo/sample-images',
+          'http://localhost:8000/api/yolo/sample-images',
           '/api/yolo/sample-images',
           'http://localhost:8000/api/yolo/sample-images',
         ];
@@ -278,12 +278,12 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       } else {
         const endpoints = [
           'http://localhost:8000/api/unified/sample-images',
-          'http://localhost:8001/api/unified/sample-images',
+          'http://localhost:8000/api/unified/sample-images',
           '/api/unified/sample-images',
           'http://localhost:8000/api/cassava/sample-images',
-          'http://localhost:8001/api/cassava/sample-images',
+          'http://localhost:8000/api/cassava/sample-images',
           'http://localhost:8000/api/sample-images',
-          'http://localhost:8001/api/sample-images',
+          'http://localhost:8000/api/sample-images',
         ];
 
         for (const url of endpoints) {
@@ -380,22 +380,22 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     const relParam = encodeURIComponent(sample.relative_path);
     const streamUrls = [
       `http://localhost:8000/api/unified/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8001/api/unified/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/unified/sample-image-file?rel_path=${relParam}`,
       `/api/unified/sample-image-file?rel_path=${relParam}`,
       `http://localhost:8000/api/cassava/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8001/api/cassava/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/cassava/sample-image-file?rel_path=${relParam}`,
       `/api/cassava/sample-image-file?rel_path=${relParam}`,
       `http://localhost:8000/api/apple/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8001/api/apple/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/apple/sample-image-file?rel_path=${relParam}`,
       `/api/apple/sample-image-file?rel_path=${relParam}`,
       `http://localhost:8000/api/cashew/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8001/api/cashew/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/cashew/sample-image-file?rel_path=${relParam}`,
       `/api/cashew/sample-image-file?rel_path=${relParam}`,
       `http://localhost:8000/api/maize/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8001/api/maize/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/maize/sample-image-file?rel_path=${relParam}`,
       `/api/maize/sample-image-file?rel_path=${relParam}`,
       `http://localhost:8000/api/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8001/api/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/sample-image-file?rel_path=${relParam}`,
       `/api/sample-image-file?rel_path=${relParam}`,
     ];
 
@@ -433,7 +433,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     const relParam = encodeURIComponent(sample.relative_path);
     const streamUrls = [
       `http://localhost:8000/api/yolo/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8001/api/yolo/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/yolo/sample-image-file?rel_path=${relParam}`,
       `/api/yolo/sample-image-file?rel_path=${relParam}`,
     ];
 
@@ -473,7 +473,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     if (selectedCrop === 'yolo') {
       const endpoints = [
         'http://localhost:8000/api/yolo/analyze-disease',
-        'http://localhost:8001/api/yolo/analyze-disease',
+        'http://localhost:8000/api/yolo/analyze-disease',
         '/api/yolo/analyze-disease',
       ];
 
@@ -500,7 +500,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       // Primary: Unified Multi-Crop Auto-Detection (Apple, Cashew, Cassava, Maize, Tomato)
       const unifiedEndpoints = [
         'http://localhost:8000/api/unified/predict',
-        'http://localhost:8001/api/unified/predict',
+        'http://localhost:8000/api/unified/predict',
         '/api/unified/predict',
       ];
 
@@ -536,15 +536,15 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         // Fallback: Individual crop endpoints if unified service is unreachable
         const fallbackEndpoints = [
           'http://localhost:8000/api/cassava/predict',
-          'http://localhost:8001/api/cassava/predict',
+          'http://localhost:8000/api/cassava/predict',
           'http://localhost:8000/api/apple/predict',
-          'http://localhost:8001/api/apple/predict',
+          'http://localhost:8000/api/apple/predict',
           'http://localhost:8000/api/maize/predict',
-          'http://localhost:8001/api/maize/predict',
+          'http://localhost:8000/api/maize/predict',
           'http://localhost:8000/api/cashew/predict',
-          'http://localhost:8001/api/cashew/predict',
+          'http://localhost:8000/api/cashew/predict',
           'http://localhost:8000/api/predict',
-          'http://localhost:8001/api/predict',
+          'http://localhost:8000/api/predict',
           '/api/predict',
         ];
 

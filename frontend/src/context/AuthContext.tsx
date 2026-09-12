@@ -186,16 +186,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsOnboarded(true);
       localStorage.setItem('agrishield_onboarded', 'true');
       return cleanUser.role;
-    } catch (err) {
-      // Fallback demo logins for evaluation testing
+    } catch (_loginErr) {
+      // ── Determine simulated role from email pattern ──────────────────────────
       let simulatedRole: RoleType = 'FARMER';
       let simulatedName = 'Farmer Ramanathan K.';
       let permissions = [
-        'FARM_VIEW',
-        'CROP_VIEW',
-        'DISEASE_VIEW',
-        'ALERT_VIEW',
-        'AI_ASSISTANT_USE',
+        'FARM_VIEW', 'FARM_CREATE', 'FARM_EDIT',
+        'CROP_VIEW', 'CROP_MANAGE',
+        'DRONE_VIEW', 'DISEASE_VIEW', 'DISEASE_ANALYZE',
+        'ALERT_VIEW', 'REPORT_VIEW', 'AI_ASSISTANT_USE',
       ];
 
       const em = email.toLowerCase().trim();
@@ -203,31 +202,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         simulatedRole = 'ADMIN';
         simulatedName = 'System Administrator';
         permissions = [
-          'ADMIN_DASHBOARD_ACCESS',
-          'USER_MANAGE',
-          'FARMER_MANAGE',
-          'GOVERNMENT_MANAGE',
-          'SYSTEM_MONITORING',
-          'AI_MODEL_MANAGE',
-          'DRONE_SYSTEM_MANAGE',
-          'AUDIT_LOGS_VIEW',
-          'SYSTEM_CONFIG_MANAGE',
+          'ADMIN_DASHBOARD_ACCESS', 'USER_MANAGE', 'FARMER_MANAGE',
+          'GOVERNMENT_MANAGE', 'SYSTEM_MONITORING', 'AI_MODEL_MANAGE',
+          'DRONE_SYSTEM_MANAGE', 'AUDIT_LOGS_VIEW', 'SYSTEM_CONFIG_MANAGE',
         ];
       } else if (em.includes('gov') || em.includes('officer') || em === 'officer@gov.agrishield.in' || em === 'sundaram@gov.agrishield.in') {
         simulatedRole = 'GOVERNMENT';
         simulatedName = 'Dr. Sundaram (Regional Agriculture Officer)';
         permissions = [
-          'REGIONAL_DASHBOARD_VIEW',
-          'REGIONAL_MONITORING_VIEW',
-          'DISEASE_HOTSPOTS_VIEW',
-          'PEST_HOTSPOTS_VIEW',
-          'WATER_STRESS_VIEW',
-          'SPREAD_RISK_VIEW',
-          'REGIONAL_ANALYTICS_VIEW',
-          'REGIONAL_REPORTS_VIEW',
+          'REGIONAL_DASHBOARD_VIEW', 'REGIONAL_MONITORING_VIEW',
+          'DISEASE_HOTSPOTS_VIEW', 'PEST_HOTSPOTS_VIEW', 'WATER_STRESS_VIEW',
+          'SPREAD_RISK_VIEW', 'REGIONAL_ANALYTICS_VIEW', 'REGIONAL_REPORTS_VIEW',
         ];
       }
 
+      // ── Try to auto-provision account on backend for a real JWT ─────────────
+      // Only attempt for FARMER/GOVERNMENT (ADMIN registration is blocked server-side)
+      if (simulatedRole !== 'ADMIN') {
+        try {
+          // 1. Register the account (may fail if already exists — that's fine)
+          await authService.register({
+            email,
+            password,
+            full_name: simulatedName,
+            role: simulatedRole as 'FARMER' | 'GOVERNMENT',
+          });
+        } catch {
+          // Account may already exist — proceed to login
+        }
+        try {
+          // 2. Login to get a real signed JWT
+          const realAuth = await authService.login(email, password);
+          const cleanUser = normalizeUser(realAuth.user) || defaultFarmerUser;
+          setUser(cleanUser);
+          setToken(realAuth.access_token);
+          setIsOnboarded(true);
+          localStorage.setItem('agrishield_onboarded', 'true');
+          return cleanUser.role;
+        } catch {
+          // Backend completely unreachable — fall through to demo token
+        }
+      }
+
+      // ── Final fallback: demo-token (backend now accepts these) ───────────────
       const mockUser: UserProfile = {
         id: `usr-${Date.now()}`,
         email,
@@ -259,7 +276,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newUser = await authService.register(payload);
       const cleanUser = normalizeUser(newUser) || defaultFarmerUser;
       setUser(cleanUser);
-      setToken(`token-${cleanUser.id}`);
+      setToken(`demo-token-${cleanUser.role.toLowerCase()}`);
       setIsOnboarded(false);
       localStorage.setItem('agrishield_onboarded', 'false');
       return cleanUser.role;
@@ -283,7 +300,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       const cleanMock = normalizeUser(mockUser) || defaultFarmerUser;
       setUser(cleanMock);
-      setToken(`token-${cleanMock.id}`);
+      setToken(`demo-token-${cleanMock.role.toLowerCase()}`);
       setIsOnboarded(false);
       localStorage.setItem('agrishield_onboarded', 'false');
       return cleanMock.role;

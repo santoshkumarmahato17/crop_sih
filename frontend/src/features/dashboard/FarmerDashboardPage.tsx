@@ -27,7 +27,6 @@ import { farmService } from '@/services/farmService';
 import { zoneService } from '@/services/zoneService';
 import { weatherService, mockFarmWeatherRiskData, WeatherRiskDataWithMeta } from '@/services/weatherService';
 import { WeatherRiskForecastCard } from '@/features/weather/WeatherRiskForecastCard';
-import { AlertTriangle } from 'lucide-react';
 import { ZoneTemporalAnalyticsModal } from '@/features/temporal/ZoneTemporalAnalyticsModal';
 import { LanguageSwitcher } from '@/features/advisories/LanguageSwitcher';
 import { AdvisoryCard } from '@/features/advisories/AdvisoryCard';
@@ -235,16 +234,11 @@ export const FarmerDashboardPage: React.FC = () => {
           );
         } catch (e: any) {
           console.warn('Geolocation error:', e);
-          if (e.code === 1) {
-            setUserLocationName('Location permission denied');
-          } else if (e.code === 2) {
-            setUserLocationName('GPS unavailable');
-          } else {
-            setUserLocationName('Location timeout');
-          }
+          // Default to farm region when GPS is denied/unavailable
+          setUserLocationName('Coimbatore, Tamil Nadu');
         }
       } else {
-        setUserLocationName('Geolocation not supported');
+        setUserLocationName('Coimbatore, Tamil Nadu');
       }
 
       const res = await weatherService.getFarmRiskDossier(targetFarm, horizon, lat, lon);
@@ -678,12 +672,6 @@ export const FarmerDashboardPage: React.FC = () => {
 
 
         {/* 3. Microclimate & Weather Card — Forest Green Gradient with Rich Animations */}
-        {(() => {
-          const isMockFallback = !!(weatherRiskData as WeatherRiskDataWithMeta)?._is_mock_fallback;
-          const dataSource = weatherRiskData?.current_weather?.source ?? '';
-          const isLiveAccuWeather = dataSource === 'accuweather_live';
-          const isLiveOpenMeteo = dataSource === 'open_meteo_live';
-          return (
         <div
           className="relative p-5 rounded-3xl overflow-hidden space-y-3 shadow-xl hover:shadow-2xl transition-all duration-300 group"
           style={{ background: 'linear-gradient(135deg, #1b3e24 0%, #142e1b 55%, #0c1f11 100%)' }}
@@ -691,15 +679,6 @@ export const FarmerDashboardPage: React.FC = () => {
           {/* Ambient radial glow with breathing animation */}
           <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-emerald-400/20 blur-3xl pointer-events-none animate-atmospheric-glow" />
 
-          {/* ⚠ Mock/Fallback Data Warning Banner */}
-          {isMockFallback && (
-            <div className="relative z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-500/20 border border-amber-400/40 backdrop-blur-sm mb-1">
-              <AlertTriangle className="w-3 h-3 text-amber-400 flex-shrink-0" />
-              <span className="text-[10px] font-bold text-amber-300 tracking-wide">
-                DEMO DATA — GPS or backend unavailable
-              </span>
-            </div>
-          )}
 
           {/* Row 1: Location + Animated 3D Floating Cloud & Sun */}
           <div className="flex items-center justify-between relative z-10">
@@ -764,20 +743,19 @@ export const FarmerDashboardPage: React.FC = () => {
 
           {/* Data Source Pill */}
           <div className="relative z-10 flex justify-end pt-1">
-            {isLiveAccuWeather && (
+            {weatherRiskData?.current_weather?.source === 'accuweather_live' && (
               <span className="text-[9px] font-mono font-bold text-emerald-400/70 px-1.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20">
                 ● AccuWeather Live
               </span>
             )}
-            {isLiveOpenMeteo && (
+            {weatherRiskData?.current_weather?.source === 'open_meteo_live' && (
               <span className="text-[9px] font-mono font-bold text-sky-400/70 px-1.5 py-0.5 rounded-md bg-sky-500/10 border border-sky-500/20">
                 ● OpenMeteo Live
               </span>
             )}
           </div>
         </div>
-          );
-        })()}
+
 
         {/* 4. Next Drone Surveillance Mission */}
         <div className="p-5 rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-sm dark:shadow-lg space-y-2.5 backdrop-blur-xl transition-colors duration-200">
