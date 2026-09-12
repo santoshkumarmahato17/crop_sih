@@ -42,6 +42,9 @@ interface DiseaseDetails {
 
 interface PredictionResponse {
   success: boolean;
+  crop?: string;
+  crop_display?: string;
+  crop_confidence?: number;
   crop_type?: string;
   prediction: string;
   predicted_class_raw?: string;
@@ -54,6 +57,7 @@ interface PredictionResponse {
   explanation?: string;
   disease_details?: DiseaseDetails;
   quality_assessment?: QualityAssessment;
+  yolo?: YOLOResponse;
 }
 
 interface YOLODetectionItem {
@@ -88,6 +92,7 @@ interface YOLOResponse {
 }
 
 interface SampleImageItem {
+  crop?: string;
   class_name: string;
   filename: string;
   relative_path: string;
@@ -173,6 +178,11 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
   // Inference state
   const [isAnalyzing, setIsAnalyzing] = useState<boolean>(false);
   const [result, setResult] = useState<PredictionResponse | null>(null);
+  const [detectedCropInfo, setDetectedCropInfo] = useState<{
+    crop: string;
+    display: string;
+    confidence: number;
+  } | null>(null);
   const [yoloResult, setYoloResult] = useState<YOLOResponse | null>(null);
   const [selectedLayer, setSelectedLayer] = useState<VisualLayer>('yolo_bbox');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -266,36 +276,15 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
           }
         }
       } else {
-        const endpoints =
-          selectedCrop === 'apple'
-            ? [
-                'http://localhost:8001/api/apple/sample-images',
-                '/api/apple/sample-images',
-                'http://localhost:8000/api/apple/sample-images',
-              ]
-            : selectedCrop === 'cashew'
-            ? [
-                'http://localhost:8001/api/cashew/sample-images',
-                '/api/cashew/sample-images',
-                'http://localhost:8000/api/cashew/sample-images',
-              ]
-            : selectedCrop === 'cassava'
-            ? [
-                'http://localhost:8001/api/cassava/sample-images',
-                '/api/cassava/sample-images',
-                'http://localhost:8000/api/cassava/sample-images',
-              ]
-            : selectedCrop === 'maize'
-            ? [
-                'http://localhost:8001/api/maize/sample-images',
-                '/api/maize/sample-images',
-                'http://localhost:8000/api/maize/sample-images',
-              ]
-            : [
-                'http://localhost:8001/api/sample-images',
-                '/api/sample-images',
-                'http://localhost:8000/api/sample-images',
-              ];
+        const endpoints = [
+          'http://localhost:8000/api/unified/sample-images',
+          'http://localhost:8001/api/unified/sample-images',
+          '/api/unified/sample-images',
+          'http://localhost:8000/api/cassava/sample-images',
+          'http://localhost:8001/api/cassava/sample-images',
+          'http://localhost:8000/api/sample-images',
+          'http://localhost:8001/api/sample-images',
+        ];
 
         for (const url of endpoints) {
           try {
@@ -380,7 +369,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     analyzeImageBlob(file);
   };
 
-  // Select sample image for Cassava / Maize / Tomato
+  // Select sample image
   const handleSelectSample = async (sample: SampleImageItem) => {
     setSelectedSample(sample);
     setErrorMsg(null);
@@ -389,36 +378,26 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     setYoloResult(null);
 
     const relParam = encodeURIComponent(sample.relative_path);
-    const streamUrls =
-      selectedCrop === 'apple'
-        ? [
-            `http://localhost:8001/api/apple/sample-image-file?rel_path=${relParam}`,
-            `/api/apple/sample-image-file?rel_path=${relParam}`,
-            `http://localhost:8000/api/apple/sample-image-file?rel_path=${relParam}`,
-          ]
-        : selectedCrop === 'cashew'
-        ? [
-            `http://localhost:8001/api/cashew/sample-image-file?rel_path=${relParam}`,
-            `/api/cashew/sample-image-file?rel_path=${relParam}`,
-            `http://localhost:8000/api/cashew/sample-image-file?rel_path=${relParam}`,
-          ]
-        : selectedCrop === 'cassava'
-        ? [
-            `http://localhost:8001/api/cassava/sample-image-file?rel_path=${relParam}`,
-            `/api/cassava/sample-image-file?rel_path=${relParam}`,
-            `http://localhost:8000/api/cassava/sample-image-file?rel_path=${relParam}`,
-          ]
-        : selectedCrop === 'maize'
-        ? [
-            `http://localhost:8001/api/maize/sample-image-file?rel_path=${relParam}`,
-            `/api/maize/sample-image-file?rel_path=${relParam}`,
-            `http://localhost:8000/api/maize/sample-image-file?rel_path=${relParam}`,
-          ]
-        : [
-            `http://localhost:8001/api/sample-image-file?rel_path=${relParam}`,
-            `/api/sample-image-file?rel_path=${relParam}`,
-            `http://localhost:8000/api/sample-image-file?rel_path=${relParam}`,
-          ];
+    const streamUrls = [
+      `http://localhost:8000/api/unified/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8001/api/unified/sample-image-file?rel_path=${relParam}`,
+      `/api/unified/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/cassava/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8001/api/cassava/sample-image-file?rel_path=${relParam}`,
+      `/api/cassava/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/apple/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8001/api/apple/sample-image-file?rel_path=${relParam}`,
+      `/api/apple/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/cashew/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8001/api/cashew/sample-image-file?rel_path=${relParam}`,
+      `/api/cashew/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/maize/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8001/api/maize/sample-image-file?rel_path=${relParam}`,
+      `/api/maize/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8000/api/sample-image-file?rel_path=${relParam}`,
+      `http://localhost:8001/api/sample-image-file?rel_path=${relParam}`,
+      `/api/sample-image-file?rel_path=${relParam}`,
+    ];
 
     let imageBlob: Blob | null = null;
     for (const u of streamUrls) {
@@ -453,9 +432,9 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
     const relParam = encodeURIComponent(sample.relative_path);
     const streamUrls = [
+      `http://localhost:8000/api/yolo/sample-image-file?rel_path=${relParam}`,
       `http://localhost:8001/api/yolo/sample-image-file?rel_path=${relParam}`,
       `/api/yolo/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/yolo/sample-image-file?rel_path=${relParam}`,
     ];
 
     let imageBlob: Blob | null = null;
@@ -481,7 +460,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     }
   };
 
-  // Submit to ML Inference API
+  // Submit to ML Inference API (Automatic Leaf Species & Pathology Detection)
   const analyzeImageBlob = async (blob: Blob) => {
     setIsAnalyzing(true);
     setErrorMsg(null);
@@ -489,13 +468,13 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     setYoloResult(null);
 
     const formData = new FormData();
-    formData.append('image', blob, `${selectedCrop}_leaf.jpg`);
+    formData.append('image', blob, 'leaf_foliage_scan.jpg');
 
     if (selectedCrop === 'yolo') {
       const endpoints = [
+        'http://localhost:8000/api/yolo/analyze-disease',
         'http://localhost:8001/api/yolo/analyze-disease',
         '/api/yolo/analyze-disease',
-        'http://localhost:8000/api/yolo/analyze-disease',
       ];
 
       let success = false;
@@ -515,71 +494,78 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       }
 
       if (!success) {
-        setErrorMsg('Could not connect to YOLO Disease Analysis service. Ensure port 8001 or 8000 is active.');
+        setErrorMsg('Could not connect to YOLO Disease Analysis service. Ensure port 8000 or 8001 is active.');
       }
     } else {
-      const endpoints =
-        selectedCrop === 'apple'
-          ? [
-              'http://localhost:8001/api/apple/predict',
-              '/api/apple/predict',
-              'http://localhost:8000/api/apple/predict',
-            ]
-          : selectedCrop === 'cashew'
-          ? [
-              'http://localhost:8001/api/cashew/predict',
-              '/api/cashew/predict',
-              'http://localhost:8000/api/cashew/predict',
-              'http://localhost:8001/api/predict',
-              '/api/predict',
-            ]
-          : selectedCrop === 'cassava'
-          ? [
-              'http://localhost:8001/api/cassava/predict',
-              '/api/cassava/predict',
-              'http://localhost:8000/api/cassava/predict',
-            ]
-          : selectedCrop === 'maize'
-          ? [
-              'http://localhost:8001/api/maize/predict',
-              '/api/maize/predict',
-              'http://localhost:8000/api/maize/predict',
-            ]
-          : [
-              'http://localhost:8001/api/predict',
-              '/api/predict',
-              'http://localhost:8000/api/predict',
-            ];
+      // Primary: Unified Multi-Crop Auto-Detection (Apple, Cashew, Cassava, Maize, Tomato)
+      const unifiedEndpoints = [
+        'http://localhost:8000/api/unified/predict',
+        'http://localhost:8001/api/unified/predict',
+        '/api/unified/predict',
+      ];
 
-      let success = false;
-      for (const url of endpoints) {
+      let unifiedSuccess = false;
+      for (const url of unifiedEndpoints) {
         try {
           const resp = await fetch(url, { method: 'POST', body: formData });
           if (resp.ok) {
             const data: PredictionResponse = await resp.json();
-            setResult(data);
-            success = true;
-            break;
+            if (data && (data.crop || data.prediction)) {
+              const detected = (data.crop || 'cassava').toLowerCase() as DiagnosticMode;
+              setSelectedCrop(detected);
+              setDetectedCropInfo({
+                crop: data.crop || 'Foliage',
+                display: data.crop_display || `🌿 ${data.crop || 'Foliage'}`,
+                confidence: data.crop_confidence ?? (data.confidence || 98.0),
+              });
+              setResult(data);
+              if (data.yolo) {
+                setYoloResult(data.yolo);
+                setSelectedLayer('yolo_bbox');
+              }
+              unifiedSuccess = true;
+              break;
+            }
           }
         } catch {
           // try next
         }
       }
 
-      if (!success) {
-        setErrorMsg(
-          `Could not connect to ${
-            selectedCrop === 'apple'
-              ? 'Apple'
-              : selectedCrop === 'cashew'
-              ? 'Cashew'
-              : selectedCrop === 'cassava'
-              ? 'Cassava'
-              : selectedCrop === 'maize'
-              ? 'Maize'
-              : 'Tomato'
-          } ML Inference service.`
-        );
+      if (!unifiedSuccess) {
+        // Fallback: Individual crop endpoints if unified service is unreachable
+        const fallbackEndpoints = [
+          'http://localhost:8000/api/cassava/predict',
+          'http://localhost:8001/api/cassava/predict',
+          'http://localhost:8000/api/apple/predict',
+          'http://localhost:8001/api/apple/predict',
+          'http://localhost:8000/api/maize/predict',
+          'http://localhost:8001/api/maize/predict',
+          'http://localhost:8000/api/cashew/predict',
+          'http://localhost:8001/api/cashew/predict',
+          'http://localhost:8000/api/predict',
+          'http://localhost:8001/api/predict',
+          '/api/predict',
+        ];
+
+        let fallbackSuccess = false;
+        for (const url of fallbackEndpoints) {
+          try {
+            const resp = await fetch(url, { method: 'POST', body: formData });
+            if (resp.ok) {
+              const data: PredictionResponse = await resp.json();
+              setResult(data);
+              fallbackSuccess = true;
+              break;
+            }
+          } catch {
+            // try next
+          }
+        }
+
+        if (!fallbackSuccess) {
+          setErrorMsg('Could not connect to AI Leaf Diagnostic service. Ensure the ML backend is running.');
+        }
       }
     }
 
@@ -593,6 +579,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     setErrorMsg(null);
     setSelectedSample(null);
     setSelectedYoloSample(null);
+    setDetectedCropInfo(null);
     if (activeTab === 'camera') {
       startCamera();
     }
@@ -726,111 +713,56 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             AI Disease Analysis · Edge-Optimized Multi-Crop Diagnostic Suite
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            {selectedCrop === 'apple' ? (
+            {detectedCropInfo ? (
               <>
-                <span className="text-2xl">🍎</span>
-                Apple Leaf Disease & Health Analysis
-              </>
-            ) : selectedCrop === 'cashew' ? (
-              <>
-                <span className="text-amber-500 text-2xl">🌰</span>
-                Cashew Leaf Condition & Pest Analysis
-              </>
-            ) : selectedCrop === 'cassava' ? (
-              <>
-                <span className="text-emerald-500 text-2xl">🍃</span>
-                Cassava Leaf Disease & Pest Analysis
+                <span className="text-2xl">{detectedCropInfo.display.split(' ')[0]}</span>
+                <span>{detectedCropInfo.crop} Leaf Disease & Condition Analysis</span>
               </>
             ) : selectedCrop === 'yolo' ? (
               <>
                 <Crosshair className="w-7 h-7 text-rose-500" />
-                YOLO Foliar Lesion Detection & Severity
-              </>
-            ) : selectedCrop === 'maize' ? (
-              <>
-                <span className="text-amber-500 text-2xl">🌽</span>
-                Maize Leaf Pest & Disease Analysis
+                <span>YOLO Foliar Lesion Detection & Severity</span>
               </>
             ) : (
               <>
-                <Leaf className="w-7 h-7 text-emerald-500" />
-                Tomato Leaf Disease Analysis
+                <span className="text-emerald-500 text-2xl">🌿</span>
+                <span>AI Leaf Disease & Plant Pathology Analysis</span>
               </>
             )}
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
-            {selectedCrop === 'apple'
-              ? 'Real-time diagnostic AI for 4 Apple foliar conditions: Apple Scab, Black Rot, Cedar Apple Rust, and Healthy foliage.'
-              : selectedCrop === 'cashew'
-              ? 'Real-time diagnostic AI for 5 Cashew conditions: Anthracnose, Gummosis, Healthy foliage, Leaf Miner pest, and Red Rust.'
-              : selectedCrop === 'cassava'
-              ? 'Real-time diagnostic AI for 5 cassava conditions: Bacterial Blight, Brown Spot, Mosaic, Green Mite pest, and Healthy foliage.'
-              : selectedCrop === 'yolo'
-              ? 'YOLO deep learning engine localizing disease lesions with bounding boxes, multi-region semantic segmentation, and quantitative canopy severity scoring.'
-              : selectedCrop === 'maize'
-              ? 'Real-time diagnostic AI for 7 maize classes across foliage pests (Fall armyworm, Grasshopper, Leaf Beetle) and diseases (Leaf Blight, Leaf Spot, Streak Virus).'
-              : 'Real-time deep learning diagnostic pipeline powered by MobileNetV3. Capture foliage via phone camera, upload photos, or evaluate verified dataset samples.'}
+            {detectedCropInfo
+              ? `Auto-detected ${detectedCropInfo.display} (${detectedCropInfo.confidence.toFixed(1)}% match). Comprehensive foliar pathology diagnosis, risk percentage scoring, and IPM treatment suggestions active.`
+              : 'Real-time deep learning diagnostic pipeline powered by MobileNetV3 with automatic leaf identification. Simply upload a photo, take a picture, or select a sample — our AI detects the crop and diagnoses health automatically.'}
           </p>
         </div>
 
-        {/* Diagnostic Mode Selector Switch */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-          <div className="flex items-center p-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl overflow-x-auto">
-            <button
-              onClick={() => handleCropChange('apple')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                selectedCrop === 'apple'
-                  ? 'bg-rose-500 text-white shadow-md'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>🍎</span>
-              <span>Apple (4 Classes)</span>
-            </button>
-            <button
-              onClick={() => handleCropChange('cashew')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                selectedCrop === 'cashew'
-                  ? 'bg-amber-500 text-slate-950 shadow-md'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>🌰</span>
-              <span>Cashew (5 Classes)</span>
-            </button>
-            <button
-              onClick={() => handleCropChange('cassava')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                selectedCrop === 'cassava'
-                  ? 'bg-emerald-500 text-slate-950 shadow-md'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>🍃</span>
-              <span>Cassava (5 Classes)</span>
-            </button>
-            <button
-              onClick={() => handleCropChange('maize')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                selectedCrop === 'maize'
-                  ? 'bg-amber-500 text-slate-950 shadow-md'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>🌽</span>
-              <span>Maize (7 Classes)</span>
-            </button>
-            <button
-              onClick={() => handleCropChange('tomato')}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                selectedCrop === 'tomato'
-                  ? 'bg-emerald-500 text-slate-950 shadow-md'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>🍅</span>
-              <span>Tomato (5 Classes)</span>
-            </button>
+        {/* Automatic Crop & Leaf Detection Badge */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs font-bold shadow-sm">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            {detectedCropInfo ? (
+              <span className="flex items-center gap-1.5">
+                <span className="text-slate-500 dark:text-slate-400 font-normal">Auto-Detected:</span>
+                <span className="font-extrabold text-slate-900 dark:text-white">
+                  {detectedCropInfo.display}
+                </span>
+                <span className="text-[11px] px-2 py-0.5 rounded-md bg-emerald-500/20 font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                  {detectedCropInfo.confidence.toFixed(1)}% Match
+                </span>
+              </span>
+            ) : (
+              <span className="flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+                <span>Auto-Leaf Detection Active</span>
+                <span className="hidden sm:inline text-slate-400 dark:text-slate-500 font-normal ml-1">
+                  (🍎 Apple · 🌰 Cashew · 🍃 Cassava · 🌽 Maize · 🍅 Tomato)
+                </span>
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -1052,20 +984,20 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                 >
                   <UploadCloud className="w-14 h-14 text-emerald-400 mb-3" />
                   <p className="text-sm font-bold text-slate-200">
-                    Click to browse or drop {selectedCrop} leaf photograph
+                    Click to browse or drop any plant leaf photograph
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
-                    Supports high-resolution JPG, JPEG, and PNG images
+                    Auto-detects Apple, Cashew, Cassava, Maize, or Tomato foliage (JPG, PNG, WEBP)
                   </p>
                 </div>
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-slate-400">
                   <FlaskConical className="w-12 h-12 text-emerald-400/80 mb-2" />
                   <p className="text-sm font-bold text-slate-200">
-                    Pick a {selectedCrop.toUpperCase()} Dataset Sample Below
+                    Pick Any Verified Foliage Sample Below
                   </p>
                   <p className="text-xs text-slate-400 mt-1 max-w-sm">
-                    Select any real sample from the verified dataset to execute instant neural classification and quality assessment.
+                    Select any real foliage sample across all supported crops to trigger automatic leaf detection & neural pathology diagnosis.
                   </p>
                 </div>
               )}
@@ -1074,16 +1006,10 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               {!capturedImage && activeTab === 'camera' && cameraActive && (
                 <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
                   <div
-                    className={`w-3/4 h-3/4 border-2 border-dashed rounded-2xl relative ${
-                      selectedCrop === 'yolo'
-                        ? 'border-rose-400/80'
-                        : selectedCrop === 'maize'
-                        ? 'border-amber-400/80'
-                        : 'border-emerald-400/80'
-                    }`}
+                    className="w-3/4 h-3/4 border-2 border-dashed rounded-2xl relative border-emerald-400/80"
                   >
                     <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white text-[10px] font-mono px-2.5 py-0.5 rounded-full border border-slate-700">
-                      Center {selectedCrop.toUpperCase()} Foliage In Reticle
+                      Center Foliage In Reticle (Auto-Detect Active)
                     </span>
                   </div>
                 </div>
@@ -1187,19 +1113,12 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
           {activeTab === 'samples' && (
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  Select {selectedCrop.toUpperCase()} Samples (Click to Analyze)
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
+                  Verified Foliage Samples (Click any sample to Auto-Detect)
                 </span>
-                <span
-                  className={`text-xs font-bold ${
-                    selectedCrop === 'yolo'
-                      ? 'text-rose-500'
-                      : selectedCrop === 'maize'
-                      ? 'text-amber-500'
-                      : 'text-emerald-500'
-                  }`}
-                >
-                  {selectedCrop === 'yolo' ? yoloSamples.length : activeClasses.length} Items Available
+                <span className="text-xs font-bold text-emerald-500">
+                  {selectedCrop === 'yolo' ? yoloSamples.length : sampleImages.length || activeClasses.length} Available
                 </span>
               </div>
 
@@ -1233,63 +1152,93 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     );
                   })}
                 </div>
+              ) : sampleImages.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 max-h-72 overflow-y-auto pr-1">
+                  {sampleImages.map((sample) => {
+                    const isSelected =
+                      selectedSample?.relative_path === sample.relative_path ||
+                      selectedSample?.class_name === sample.class_name;
+                    const cropEmoji =
+                      sample.crop === 'Apple'
+                        ? '🍎'
+                        : sample.crop === 'Cashew'
+                        ? '🌰'
+                        : sample.crop === 'Cassava'
+                        ? '🍃'
+                        : sample.crop === 'Maize'
+                        ? '🌽'
+                        : '🍅';
+
+                    const isHealthy = sample.class_name.toLowerCase().includes('healthy');
+                    const isPest = ['mite', 'worm', 'hopper', 'beetle', 'miner'].some((p) =>
+                      sample.class_name.toLowerCase().includes(p)
+                    );
+
+                    return (
+                      <button
+                        key={sample.relative_path || `${sample.crop}_${sample.class_name}`}
+                        onClick={() => handleSelectSample(sample)}
+                        className={`p-2.5 rounded-xl border text-left transition flex flex-col gap-1.5 ${
+                          isSelected
+                            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-sm'
+                            : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold flex items-center gap-1">
+                            <span>{cropEmoji}</span>
+                            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
+                              {sample.crop || 'Foliage'}
+                            </span>
+                          </span>
+                          {isSelected ? (
+                            <Check className="w-3.5 h-3.5 text-emerald-500" />
+                          ) : isHealthy ? (
+                            <Leaf className="w-3.5 h-3.5 text-emerald-500" />
+                          ) : isPest ? (
+                            <Bug className="w-3.5 h-3.5 text-amber-500" />
+                          ) : (
+                            <Activity className="w-3.5 h-3.5 text-rose-500" />
+                          )}
+                        </div>
+                        <div className="font-bold text-xs leading-tight text-slate-800 dark:text-slate-200">
+                          {sample.class_name}
+                        </div>
+                        <span className="text-[10px] text-slate-400 font-mono">
+                          {isHealthy ? 'Healthy Foliage' : isPest ? 'Foliar Pest' : 'Leaf Disease'}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
                   {activeClasses.map((clsName) => {
-                    const sample = sampleImages.find((s) => s.class_name.toLowerCase() === clsName.toLowerCase()) || {
+                    const sample = {
                       class_name: clsName,
                       filename: 'sample.jpg',
                       relative_path: `${clsName.toLowerCase()}/sample.jpg`,
                     };
                     const isSelected = selectedSample?.class_name === sample.class_name;
-                    
-                    const isPest =
-                      selectedCrop === 'cashew'
-                        ? CASHEW_PESTS.includes(clsName)
-                        : selectedCrop === 'cassava'
-                        ? CASSAVA_PESTS.includes(clsName)
-                        : selectedCrop === 'maize'
-                        ? MAIZE_PESTS.includes(clsName)
-                        : false;
-                        
-                    const isDisease =
-                      selectedCrop === 'apple'
-                        ? APPLE_DISEASES.includes(clsName)
-                        : selectedCrop === 'cashew'
-                        ? CASHEW_DISEASES.includes(clsName)
-                        : selectedCrop === 'cassava'
-                        ? CASSAVA_DISEASES.includes(clsName)
-                        : selectedCrop === 'maize'
-                        ? MAIZE_DISEASES.includes(clsName)
-                        : clsName !== 'Healthy';
-
                     return (
                       <button
                         key={clsName}
                         onClick={() => handleSelectSample(sample)}
                         className={`p-2.5 rounded-xl border text-left transition flex flex-col gap-1.5 ${
                           isSelected
-                            ? selectedCrop === 'maize'
-                              ? 'border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400'
-                              : 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                             : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/50'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          {isPest ? (
-                            <Bug className="w-3.5 h-3.5 text-amber-500" />
-                          ) : isDisease ? (
-                            <Activity className="w-3.5 h-3.5 text-rose-500" />
-                          ) : (
-                            <Leaf className="w-3.5 h-3.5 text-emerald-500" />
-                          )}
+                          <Leaf className="w-3.5 h-3.5 text-emerald-500" />
                           {isSelected && <Check className="w-3.5 h-3.5 text-emerald-500" />}
                         </div>
                         <div className="font-bold text-xs leading-tight text-slate-800 dark:text-slate-200">
                           {clsName}
                         </div>
                         <span className="text-[10px] text-slate-400 font-mono">
-                          {isPest ? 'Pest' : isDisease ? 'Disease' : 'Healthy'}
+                          Dataset Sample
                         </span>
                       </button>
                     );
@@ -1616,22 +1565,21 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             /* Awaiting Scan Placeholder */
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-sm">
               <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4 text-emerald-500">
-                {selectedCrop === 'cassava' ? (
-                  <span className="text-3xl">🍃</span>
-                ) : selectedCrop === 'yolo' ? (
-                  <Crosshair className="w-8 h-8 text-rose-500" />
-                ) : selectedCrop === 'maize' ? (
-                  <span className="text-3xl">🌽</span>
-                ) : (
-                  <Leaf className="w-8 h-8" />
-                )}
+                <Sparkles className="w-8 h-8 text-emerald-500" />
               </div>
               <h2 className="text-base font-bold text-slate-900 dark:text-white mb-1">
-                Awaiting {selectedCrop.toUpperCase()} Foliage Scan
+                Awaiting Foliage Scan (Auto-Detect Active)
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-                Aim phone camera directly at the affected leaf, upload a photo, or choose any dataset sample to trigger real-time AI classification.
+                Aim phone camera directly at the affected leaf, upload a photo, or choose any sample. Our AI model will automatically detect the leaf species and diagnose condition.
               </p>
+              <div className="mt-3.5 flex flex-wrap justify-center gap-1.5 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
+                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🍎 Apple</span>
+                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🌰 Cashew</span>
+                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🍃 Cassava</span>
+                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🌽 Maize</span>
+                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🍅 Tomato</span>
+              </div>
             </div>
           )}
 

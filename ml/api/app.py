@@ -791,13 +791,14 @@ async def get_unified_sample_images():
     """Retrieve verified foliage samples across all 4 crops."""
     all_samples = []
     folder_mappings = {
+        "Apple": {"Apple Scab": "test/apple_scab", "Black Rot": "test/black_rot", "Cedar Apple Rust": "test/cedar_apple_rust", "Healthy": "test/healthy"},
         "Cashew": {"Anthracnose": "anthracnose", "Healthy": "healthy", "Leaf Miner": "leaf miner", "Red Rust": "red rust"},
         "Cassava": {"Bacterial Blight": "bacterial blight", "Green Mite": "green mite", "Healthy": "healthy", "Mosaic": "mosaic"},
         "Maize": {"Fall army worm": "fall armyworm", "Healthy": "healthy", "Leaf Blight": "leaf blight"},
         "Tomato": {"Healthy": "healthy", "Leaf Blight": "leaf blight", "Leaf Curl": "leaf curl"},
     }
     for crop, classes in folder_mappings.items():
-        crop_dir = os.path.join(REPO_ROOT, crop)
+        crop_dir = os.path.join(REPO_ROOT, "apple dataset" if crop == "Apple" else crop)
         if not os.path.isdir(crop_dir):
             continue
         for cls_name, fld in classes.items():
@@ -809,7 +810,7 @@ async def get_unified_sample_images():
                         "crop": crop,
                         "class_name": cls_name,
                         "filename": files[0],
-                        "relative_path": f"{crop}/{fld}/{files[0]}",
+                        "relative_path": f"{'apple dataset' if crop == 'Apple' else crop}/{fld}/{files[0]}",
                     })
     return {"samples": all_samples}
 
