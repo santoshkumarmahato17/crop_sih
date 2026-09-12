@@ -106,3 +106,23 @@ def preprocess_image_input(
     tensor = transform(rgb_img).unsqueeze(0)  # Shape: (1, 3, H, W)
 
     return tensor, rgb_img, quality
+
+
+def is_valid_image(image_input: Union[str, bytes, io.BytesIO, Image.Image]) -> bool:
+    """Check if input is a readable, non-corrupted image."""
+    try:
+        if isinstance(image_input, str):
+            with Image.open(image_input) as img:
+                img.verify()
+        elif isinstance(image_input, (bytes, io.BytesIO)):
+            buf = io.BytesIO(image_input) if isinstance(image_input, bytes) else image_input
+            with Image.open(buf) as img:
+                img.verify()
+        elif isinstance(image_input, Image.Image):
+            return True
+        else:
+            return False
+        return True
+    except Exception:
+        return False
+
