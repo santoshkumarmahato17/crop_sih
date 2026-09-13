@@ -371,7 +371,102 @@ class CCMTCropHealthModel(CropHealthModel):
                 prediction_metadata=prediction_meta,
             )
 
-        # 3. Real Python AI/ML Computer Vision & Morphological Feature Analysis
+        # 3. EfficientNetB0 Keras 22-class model (offline ML fallback — no Gemini API needed)
+        logger.info("[AI Model] Gemini unavailable — running EfficientNetB0 22-class Keras inference.")
+        try:
+            import sys, os as _os
+            _repo = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "../../.."))
+            if _repo not in sys.path:
+                sys.path.insert(0, _repo)
+            from ml.src.predict_efficientnet import get_efficientnet_predictor
+
+            enb0_predictor = get_efficientnet_predictor()
+            if enb0_predictor.model is not None:
+                enb0_result = enb0_predictor.predict(rgb_image_bytes)
+
+                raw_class = enb0_result.get("prediction", "")
+                confidence_pct = enb0_result.get("confidence", 70.0)
+                confidence = round(confidence_pct / 100.0, 4)
+                category = enb0_result.get("category", "disease")
+                is_healthy_enb0 = "healthy" in raw_class.lower()
+
+                # Parse "Crop_condition" format  e.g. "Maize_fall armyworm"
+                if "_" in raw_class:
+                    crop_part, cond_part = raw_class.split("_", 1)
+                else:
+                    crop_part, cond_part = raw_class, raw_class
+
+                crop = crop_part.strip().title()
+                condition = cond_part.strip().title()
+                pathogen_type = "Healthy" if is_healthy_enb0 else (
+                    "Pest / Insect" if category == "pest" else "Fungal"
+                )
+
+                if is_healthy_enb0:
+                    health_score_enb0 = 0.88
+                    stress_score_enb0 = 0.12
+                    anomaly_enb0 = 0.08
+                    disease_prob_enb0 = 0.05
+                    pest_prob_enb0 = 0.05
+                elif category == "pest":
+                    health_score_enb0 = 0.35
+                    stress_score_enb0 = 0.65
+                    anomaly_enb0 = 0.65
+                    disease_prob_enb0 = 0.10
+                    pest_prob_enb0 = round(min(0.95, confidence), 2)
+                else:
+                    health_score_enb0 = 0.30
+                    stress_score_enb0 = 0.70
+                    anomaly_enb0 = 0.70
+                    disease_prob_enb0 = round(min(0.95, confidence), 2)
+                    pest_prob_enb0 = 0.10
+
+                all_probs = enb0_result.get("probabilities", {})
+                top_candidates_enb0 = [
+                    {"crop": k.split("_")[0].title(), "condition": k.split("_", 1)[-1].title(),
+                     "probability": round(v / 100.0, 4), "confidence_percent": v,
+                     "pathogen_type": "Healthy" if "healthy" in k.lower() else ("Pest" if any(p in k.lower() for p in ["mite", "miner", "armyworm", "grasshoper", "beetle"]) else "Disease"),
+                     "scientific_name": "", "urgency": "Medium"}
+                    for k, v in sorted(all_probs.items(), key=lambda x: x[1], reverse=True)[:5]
+                ]
+
+                prediction_meta_enb0 = {
+                    "model_type": "EfficientNetB0 Keras 22-class Crop Disease Classifier",
+                    "backbone": "EfficientNetB0 Transfer Learning",
+                    "dataset": "CCMT — Cashew, Cassava, Maize, Tomato (22 classes)",
+                    "accuracy": "~86.5% test accuracy",
+                    "input_resolution": f"{width}x{height}",
+                    "inference_latency_ms": round((time.time() - start_time) * 1000.0, 1),
+                    "detected_crop": crop,
+                    "detected_condition": condition,
+                    "pathogen_type": pathogen_type,
+                    "scientific_name": "",
+                    "urgency": "Low" if is_healthy_enb0 else "High",
+                    "description": f"EfficientNetB0 classified this as {raw_class.replace('_', ' ')} with {confidence_pct:.1f}% confidence.",
+                    "top_candidates": top_candidates_enb0,
+                    "ipm_recommendations": [],
+                    "detected_patches": cv_patches,
+                    "selected_patch": parsed_roi,
+                    "context_metadata": metadata or {},
+                    "disclaimer": "Prediction from trained EfficientNetB0 model (~86.5% accuracy). Expert review recommended.",
+                }
+
+                return CropHealthPrediction(
+                    health_score=health_score_enb0,
+                    vegetation_stress_score=stress_score_enb0,
+                    anomaly_score=anomaly_enb0,
+                    disease_probability=disease_prob_enb0,
+                    pest_probability=pest_prob_enb0,
+                    confidence=confidence,
+                    model_name="AgriShield-EfficientNetB0-22class-v1.0",
+                    model_version=self.model_version,
+                    inference_timestamp=datetime.now(timezone.utc),
+                    prediction_metadata=prediction_meta_enb0,
+                )
+        except Exception as enb0_err:
+            logger.warning(f"[AI Model] EfficientNetB0 inference failed: {enb0_err}")
+
+        # 4. Real Python AI/ML Computer Vision & Morphological Feature Analysis
         logger.info("[AI Model] Executing real-data Python AI/ML Computer Vision & Deep Analysis.")
         real_result = None
         try:

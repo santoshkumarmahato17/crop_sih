@@ -216,7 +216,7 @@ class CropHealthAnalysisService:
         candidates = p_meta.get("top_candidates", [])
         crop_confidence = candidates[0].get("probability", prediction.confidence) if candidates else prediction.confidence
         
-        supported_crops = ["maize", "cassava", "tomato", "cashew", "apple", "rice"]
+        supported_crops = ["maize", "cassava", "tomato", "cashew", "apple", "rice", "corn", "wheat"]
         crop_status = "CONFIDENT"
         
         if crop_confidence < 0.40 or detected_crop.lower() not in supported_crops:

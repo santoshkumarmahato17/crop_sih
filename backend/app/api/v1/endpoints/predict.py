@@ -1,8 +1,10 @@
 """
 FastAPI endpoints for Crop Pest & Disease Vision AI Prediction and Agronomic Advisory.
-Exposes /predict, /predict-with-explanation, and /classes endpoints.
+Exposes /predict, /predict-with-explanation, /classes, and /efficientnet/predict endpoints.
 """
 
+import os
+import sys
 from typing import Any, Dict, List, Optional
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile, status
 from fastapi.responses import JSONResponse
@@ -168,3 +170,84 @@ async def list_supported_classes(all_crops: bool = False) -> SupportedClassesRes
         condition_categories=categories,
         classes=class_list,
     )
+
+
+# ---------------------------------------------------------------------------
+# EfficientNetB0 22-class Direct Backend Endpoint
+# ---------------------------------------------------------------------------
+
+@router.post(
+    "/efficientnet/predict",
+    status_code=status.HTTP_200_OK,
+    summary="Predict using 22-class EfficientNetB0 Keras Model",
+    description=(
+        "Directly runs the trained EfficientNetB0 Keras model on an uploaded image. "
+        "Returns 22-class probabilities for Cashew, Cassava, Maize, and Tomato conditions. "
+        "Approximate test accuracy: ~86.5%. Expert review is recommended for critical decisions."
+    ),
+    tags=["Crop Pathology Prediction & Advisory"],
+)
+async def efficientnet_predict_endpoint(
+    file: UploadFile = File(..., description="Crop leaf image file (JPG/PNG)"),
+    confidence_threshold: Optional[float] = Form(70.0, description="Custom confidence threshold (0-100)"),
+) -> Any:
+    """
+    Runs the trained 22-class EfficientNetB0 Keras model directly.
+    Crops: Cashew (5 classes), Cassava (5 classes), Maize (7 classes), Tomato (5 classes).
+    """
+    if not file or not file.filename:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(file.filename or "")[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported image format '{ext}'. Allowed: {valid_exts}",
+        )
+
+    try:
+        contents = await file.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Failed to read image: {e}")
+
+    try:
+        _repo = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../.."))
+        if _repo not in sys.path:
+            sys.path.insert(0, _repo)
+        from ml.src.predict_efficientnet import get_efficientnet_predictor
+        predictor = get_efficientnet_predictor()
+        result = predictor.predict(image_input=contents, confidence_threshold=confidence_threshold)
+        return {
+            **result,
+            "model": "EfficientNetB0 — 22-class CCMT Crop Disease Classifier",
+            "disclaimer": "Prediction is ~86.5% accurate. Not a substitute for expert agronomist review.",
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"EfficientNetB0 inference failed: {str(e)}",
+        )
+
+
+@router.get(
+    "/efficientnet/classes",
+    summary="List EfficientNetB0 22 Supported Classes",
+    tags=["Crop Pathology Prediction & Advisory"],
+)
+async def efficientnet_classes() -> Any:
+    """Returns all 22 supported crop disease/pest/healthy classes for the EfficientNetB0 model."""
+    _repo = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../.."))
+    if _repo not in sys.path:
+        sys.path.insert(0, _repo)
+    from ml.src.predict_efficientnet import get_efficientnet_predictor
+    predictor = get_efficientnet_predictor()
+    return {
+        "total_classes": len(predictor.classes),
+        "classes": predictor.classes,
+        "crops": ["Cashew", "Cassava", "Maize", "Tomato"],
+        "model": "EfficientNetB0 Transfer Learning",
+        "accuracy": "~86.5% test accuracy",
+    }

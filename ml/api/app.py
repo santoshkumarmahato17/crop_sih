@@ -27,6 +27,9 @@ from ml.src.utils import load_config, load_json
 from ml.inference.predictor import OrangeLeafPredictor
 from ml.inference.image_quality import check_image_quality
 
+# Unified EfficientNetB0 Predictor
+from ml.src.predict_efficientnet import get_efficientnet_predictor
+
 _ORANGE_PREDICTOR = None
 def get_orange_predictor():
     global _ORANGE_PREDICTOR
@@ -80,6 +83,18 @@ class MaizePredictResponse(BaseModel):
     explanation: Optional[str] = None
     disease_details: Optional[Dict] = None
     quality_assessment: Optional[Dict] = None
+
+
+class EfficientNetPredictResponse(BaseModel):
+    success: bool = True
+    prediction: str = Field(description="Predicted class name or 'Uncertain prediction'")
+    display_name: str = Field(description="Display name")
+    category: str = Field(description="'pest', 'disease', or 'healthy'")
+    confidence: float = Field(description="Confidence percentage (0-100)")
+    reliable: bool = Field(description="Whether the prediction is considered reliable")
+    status: str = Field(description="High Confidence or Uncertain prediction")
+    probabilities: Dict[str, float] = Field(description="Class probabilities for all 22 classes")
+    explanation: Optional[str] = None
 
 
 class HealthResponse(BaseModel):
@@ -229,6 +244,66 @@ async def predict_leaf(
             detail=f"ML Inference failed: {str(e)}",
         )
 
+
+# ---------------------------------------------------------------------------
+# EfficientNet 22-Class Disease & Pest Classification Endpoints
+# ---------------------------------------------------------------------------
+
+@app.post(
+    "/api/efficientnet/predict",
+    response_model=EfficientNetPredictResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["Unified Diagnostics"],
+    summary="Predict using 22-class EfficientNetB0 model",
+    description="Accepts an image and returns a 22-class prediction across multiple crops.",
+)
+@app.post(
+    "/efficientnet/predict",
+    response_model=EfficientNetPredictResponse,
+    status_code=status.HTTP_200_OK,
+    tags=["Unified Diagnostics"],
+)
+async def predict_efficientnet(
+    image: UploadFile = File(..., description="Photograph of a leaf (JPG/PNG)"),
+    confidence_threshold: Optional[float] = Form(None, description="Custom confidence threshold (0.0 - 100.0)"),
+):
+    """EfficientNet 22-class inference endpoint."""
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(image.filename)[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported format '{ext}'. Allowed: {valid_exts}")
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    try:
+        predictor = get_efficientnet_predictor()
+        result = predictor.predict(
+            image_input=contents,
+            confidence_threshold=confidence_threshold,
+        )
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"EfficientNet ML Inference failed: {str(e)}")
+
+
+@app.get("/api/efficientnet/classes", tags=["Unified Diagnostics"])
+@app.get("/efficientnet/classes", tags=["Unified Diagnostics"])
+async def get_efficientnet_classes():
+    """Retrieve supported EfficientNet 22-class taxonomy."""
+    predictor = get_efficientnet_predictor()
+    return {
+        "classes": predictor.classes,
+        "count": len(predictor.classes),
+        "confidence_threshold": predictor.confidence_threshold,
+    }
 
 @app.post(
     "/api/maize/predict",
