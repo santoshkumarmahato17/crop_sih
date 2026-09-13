@@ -1,0 +1,22 @@
+{
+  "crop": "soybean",
+  "model_name": "soybean_model",
+  "framework": "keras",
+  "architecture": "MobileNetV2",
+  "input_size": [224, 224],
+  "preprocessing": {
+    "rescaling_scale": 0.00784313725490196,
+    "rescaling_offset": -1.0,
+    "note": "Rescaling layer is baked into the model. Pass raw [0-255] images."
+  },
+  "num_classes": 10,
+  "version": "1.0",
+  "status": "production",
+  "weights_file": "soybean_model.weights.h5",
+  "class_names_file": "class_names.json",
+  "confidence_thresholds": {
+    "high": 0.70,
+    "medium": 0.45
+  },
+  "notes": "IMPORTANT: Replace class_names.json with the EXACT class_names.json generated during training."
+}

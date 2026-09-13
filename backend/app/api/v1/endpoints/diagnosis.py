@@ -97,6 +97,7 @@ async def submit_expert_validation_endpoint(
 
 from fastapi import UploadFile, File
 from app.services.apple_diagnosis import AppleDiagnosisService
+from app.services.soybean_diagnosis import SoybeanDiagnosisService
 
 @router.post(
     "/apple",
@@ -113,4 +114,23 @@ async def analyze_apple_leaf_endpoint(
     apple_service = AppleDiagnosisService()
     result = await apple_service.analyze_image(file)
     return result
+
+
+@router.post(
+    "/soybean",
+    summary="Real Soybean Leaf Disease Inference using MobileNetV2",
+)
+async def analyze_soybean_leaf_endpoint(
+    file: UploadFile = File(..., description="Soybean leaf image"),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Run the trained MobileNetV2 10-class model on an uploaded Soybean leaf image.
+    Returns 10-class disease classification, confidence policy evaluation,
+    Grad-CAM visual attention overlay, and verified agronomic advisory.
+    """
+    soybean_service = SoybeanDiagnosisService()
+    result = await soybean_service.analyze_image(file, include_explanation=True)
+    return result
+
 

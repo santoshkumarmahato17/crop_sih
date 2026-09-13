@@ -1,0 +1,32 @@
+{
+  "Bacterial Blight": {
+    "precision": 0.9452,
+    "recall": 0.9306,
+    "f1_score": 0.9378,
+    "test_samples": 389
+  },
+  "Brown Spot": {
+    "precision": 0.9103,
+    "recall": 0.9227,
+    "f1_score": 0.9165,
+    "test_samples": 220
+  },
+  "Green Mite": {
+    "precision": 0.9241,
+    "recall": 0.9605,
+    "f1_score": 0.9419,
+    "test_samples": 152
+  },
+  "Healthy": {
+    "precision": 0.9718,
+    "recall": 0.9609,
+    "f1_score": 0.9663,
+    "test_samples": 179
+  },
+  "Mosaic": {
+    "precision": 0.9639,
+    "recall": 0.9581,
+    "f1_score": 0.961,
+    "test_samples": 167
+  }
+}

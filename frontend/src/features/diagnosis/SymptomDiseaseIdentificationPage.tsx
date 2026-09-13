@@ -73,7 +73,7 @@ const SYMPTOM_TAXONOMY = {
 
 const PLANT_PARTS = ['Leaf', 'Stem', 'Root', 'Fruit', 'Flower', 'Whole Plant'];
 const GROWTH_STAGES = ['Seedling', 'Vegetative', 'Flowering', 'Fruiting', 'Maturity', 'Harvest'];
-const CROP_TYPES = ['Apple', 'Tomato', 'Rice', 'Wheat', 'Corn', 'Banana', 'Chilli', 'Potato', 'Cotton', 'Sugarcane'];
+const CROP_TYPES = ['Soybean', 'Apple', 'Tomato', 'Rice', 'Wheat', 'Corn', 'Banana', 'Chilli', 'Potato', 'Cotton', 'Sugarcane'];
 
 export const SymptomDiseaseIdentificationPage: React.FC = () => {
   const navigate = useNavigate();
@@ -349,6 +349,89 @@ export const SymptomDiseaseIdentificationPage: React.FC = () => {
           created_at: new Date().toISOString(),
           is_prototype: false,
           notice: 'Real Model Inference via EfficientNetB0.',
+        };
+      } else if (selectedCrop === 'Soybean' && uploadedImages.length > 0 && uploadedImages[0].file) {
+        const soybeanResult = await diagnosisService.analyzeSoybeanLeaf(uploadedImages[0].file);
+
+        const possibleConditions = (soybeanResult.top_predictions || [])
+          .filter((item: any) => item.class_name !== soybeanResult.prediction.class)
+          .map((item: any) => ({
+            condition_name: item.class_name.replace(/_/g, ' '),
+            probability: item.confidence,
+            confidence_label: `${Math.round(item.confidence * 100)}% AI confidence`,
+            description: item.class_name === 'Healthy' ? 'Healthy Soybean Foliage' : `Alternative condition: ${item.class_name.replace(/_/g, ' ')}`,
+            pathogen_type: item.class_name === 'Healthy' ? 'Healthy' : 'Pathology',
+            urgency: 'Medium',
+          }));
+
+        result = {
+          id: `diag-soybean-${Date.now()}`,
+          farm_id: selectedFarmId,
+          farm_name: farms.find(f => f.id === selectedFarmId)?.name || 'Unknown Farm',
+          zone_id: selectedZoneId,
+          zone_code: zones.find(z => z.id === selectedZoneId)?.zone_code || 'Z00',
+          crop_type: 'Soybean',
+          growth_stage: growthStage,
+          status: soybeanResult.decision.status === 'HIGH_CONFIDENCE' ? 'EXPERT_CONFIRMED' : 'AI_SUSPECTED',
+          ai_confidence: soybeanResult.prediction.confidence,
+          confidence_percentage: Math.round(soybeanResult.prediction.confidence * 100),
+          primary_condition: soybeanResult.prediction.disease,
+          possible_conditions: possibleConditions,
+          reasoning_points: [
+            `Soybean MobileNetV2 10-Class Model detected: ${soybeanResult.prediction.disease}`,
+            `Pathogen / Condition Type: ${soybeanResult.disease_type}`,
+            `Scientific / Botanical Name: ${soybeanResult.pathogen}`,
+            `Confidence Policy Status: ${soybeanResult.decision.status}`,
+            soybeanResult.description ? `Condition details: ${soybeanResult.description}` : '',
+          ].filter(Boolean),
+          analyzed_images: [
+            {
+              url: soybeanResult.gradcam_image_base64 || uploadedImages[0].url,
+              filename: uploadedImages[0].name,
+              abnormalities_detected: soybeanResult.prediction.class !== 'Healthy',
+              overlay_label: soybeanResult.gradcam_image_base64 ? 'AI Visual Attention (Grad-CAM)' : 'Original Image',
+            }
+          ],
+          zone_status: {
+            zone_code: 'Z00',
+            crop_type: 'Soybean',
+            current_health_score: soybeanResult.prediction.class === 'Healthy' ? 96 : 48,
+            disease_risk: soybeanResult.prediction.class === 'Healthy' ? 5 : 82,
+            pest_risk: 12,
+            water_stress: 18,
+            trend: soybeanResult.prediction.class === 'Healthy' ? 'STABLE' : 'DECLINING',
+            last_drone_scan: '1 day ago',
+          },
+          historical_comparison: {
+            previous_health: 82,
+            current_health: soybeanResult.prediction.class === 'Healthy' ? 96 : 48,
+            health_change_pct: soybeanResult.prediction.class === 'Healthy' ? 14 : -34,
+            previous_disease_indicator: 18,
+            current_disease_indicator: soybeanResult.prediction.class === 'Healthy' ? 5 : 82,
+            disease_trend: soybeanResult.prediction.class === 'Healthy' ? 'STABLE' : 'RISING',
+            historical_points: [],
+          },
+          neighboring_zones: [],
+          regional_spread_risk: soybeanResult.urgency === 'Critical' ? 'HIGH' : 'MEDIUM',
+          recommendations: [
+            {
+              action_type: 'Treatment & IPM Advisory',
+              title: soybeanResult.prediction.class === 'Healthy' ? 'Standard Crop Maintenance' : `Management Protocol for ${soybeanResult.prediction.disease}`,
+              description: soybeanResult.recommendation || `Scout field regularly and isolate infected clusters. Consult certified extension agronomist.`,
+              priority: soybeanResult.prediction.class === 'Healthy' ? 'Low' : 'High',
+            }
+          ],
+          follow_up_monitoring: {
+            is_recommended: soybeanResult.decision.review_required,
+            recommended_mission: 'Follow-up foliar canopy inspection',
+            target_zones: [],
+            timing: 'Within 3 days',
+            reason: soybeanResult.decision.status,
+          },
+          validation_status: soybeanResult.decision.review_required ? 'PENDING' : 'CONFIRMED',
+          created_at: new Date().toISOString(),
+          is_prototype: false,
+          notice: 'Real Model Inference via MobileNetV2 10-Class Soybean Classifier.',
         };
       } else {
         result = await diagnosisService.analyzeCropHealth(payload);

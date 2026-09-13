@@ -1,0 +1,48 @@
+{
+  "dataset_name": "Cashew Leaf Disease & Pest Dataset",
+  "dataset_location": "C:\\Users\\krsan\\Desktop\\crop\\Cashew",
+  "total_images_scanned": 6549,
+  "corrupted_images_count": 0,
+  "corrupted_files": [],
+  "duplicate_images_count": 1,
+  "duplicate_files": [
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Cashew\\red rust\\red rust1681_.jpg",
+      "duplicate_of": "C:\\Users\\krsan\\Desktop\\crop\\Cashew\\red rust\\red rust1345_.jpg",
+      "class": "Red Rust"
+    }
+  ],
+  "clean_unique_images_count": 6548,
+  "classes_detected": [
+    "Anthracnose",
+    "Gummosis",
+    "Healthy",
+    "Leaf Miner",
+    "Red Rust"
+  ],
+  "class_categories": {
+    "Anthracnose": "disease",
+    "Gummosis": "disease",
+    "Healthy": "healthy",
+    "Leaf Miner": "pest",
+    "Red Rust": "disease"
+  },
+  "raw_class_distribution": {
+    "Anthracnose": 1729,
+    "Gummosis": 392,
+    "Healthy": 1368,
+    "Leaf Miner": 1378,
+    "Red Rust": 1681
+  },
+  "formats_distribution": {
+    ".jpg": 6549
+  },
+  "dimensions": {
+    "min_width": 191,
+    "max_width": 400,
+    "min_height": 203,
+    "max_height": 400,
+    "avg_width": 399.4834325851275,
+    "avg_height": 399.25652771415486
+  }
+}

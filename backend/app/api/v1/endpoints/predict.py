@@ -251,3 +251,124 @@ async def efficientnet_classes() -> Any:
         "model": "EfficientNetB0 Transfer Learning",
         "accuracy": "~86.5% test accuracy",
     }
+
+
+# ---------------------------------------------------------------------------
+# Soybean MobileNetV2 10-class Backend Endpoints
+# ---------------------------------------------------------------------------
+
+def _soybean_repo_path() -> str:
+    _repo = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../.."))
+    if _repo not in sys.path:
+        sys.path.insert(0, _repo)
+    return _repo
+
+
+@router.post(
+    "/soybean/predict",
+    status_code=status.HTTP_200_OK,
+    summary="Predict Soybean Leaf Disease — 10-Class MobileNetV2",
+    description=(
+        "Runs the trained soybean MobileNetV2 model on an uploaded soybean leaf image. "
+        "Applies HIGH/MEDIUM/LOW confidence policy. Low-confidence results are labelled "
+        "as 'Uncertain' — the system never forces a class name when evidence is insufficient. "
+        "Returns Top-3 predictions and verified agronomic advisory from the knowledge base."
+    ),
+    tags=["Crop Pathology Prediction & Advisory"],
+)
+async def soybean_predict_endpoint(
+    file: UploadFile = File(..., description="Soybean leaf image (JPG/PNG/WEBP, max 10 MB)"),
+    include_explanation: bool = Form(False, description="Whether to include Grad-CAM visual attention heatmap"),
+) -> Any:
+    """
+    Soybean 10-class disease classification endpoint.
+    Classes: Bacterial Pustule, Frogeye Leaf Spot, Healthy, Iron Deficiency Chlorosis,
+             Potassium Deficiency, Powdery Mildew, Rhizoctonia Aerial Blight, Rust,
+             Sudden Death Syndrome, Target Spot.
+    """
+    if not file or not file.filename:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(file.filename or "")[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported image format '{ext}'. Allowed: {valid_exts}",
+        )
+
+    try:
+        contents = await file.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded image is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Failed to read image: {e}")
+
+    try:
+        _soybean_repo_path()
+        from ml.src.predict_soybean import get_soybean_predictor
+        predictor = get_soybean_predictor()
+        result = predictor.predict(contents, include_explanation=include_explanation)
+        return result
+    except ValueError as ve:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(ve))
+    except RuntimeError as re:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(re))
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Soybean inference failed: {str(e)}")
+
+
+@router.get(
+    "/soybean/health",
+    summary="Soybean Model Health Check",
+    tags=["Crop Pathology Prediction & Advisory"],
+)
+async def soybean_health_endpoint() -> Any:
+    """Returns health status of the soybean MobileNetV2 model."""
+    _soybean_repo_path()
+    from ml.src.predict_soybean import get_soybean_predictor
+    predictor = get_soybean_predictor()
+    return {
+        "service": "soybean",
+        "status": "healthy" if predictor.is_ready else "degraded",
+        "model_loaded": predictor.is_ready,
+        "version": predictor.MODEL_VERSION,
+        "classes": predictor.classes,
+        "num_classes": len(predictor.classes),
+    }
+
+
+@router.get(
+    "/soybean/classes",
+    summary="Soybean 10 Supported Classes",
+    tags=["Crop Pathology Prediction & Advisory"],
+)
+async def soybean_classes_endpoint() -> Any:
+    """Returns all 10 soybean disease/condition classes supported by the model."""
+    _soybean_repo_path()
+    from ml.src.predict_soybean import get_soybean_predictor
+    predictor = get_soybean_predictor()
+    return {
+        "crop": "soybean",
+        "classes": predictor.classes,
+        "count": len(predictor.classes),
+        "architecture": "MobileNetV2",
+        "version": predictor.MODEL_VERSION,
+        "confidence_thresholds": {
+            "high": predictor.high_conf_threshold,
+            "medium": predictor.medium_conf_threshold,
+        },
+    }
+
+
+@router.get(
+    "/soybean/validate",
+    summary="Validate Soybean Model (Internal Check)",
+    tags=["Crop Pathology Prediction & Advisory"],
+)
+async def soybean_validate_endpoint() -> Any:
+    """Runs internal model validation: shape check, synthetic inference, probability validation."""
+    _soybean_repo_path()
+    from ml.src.predict_soybean import get_soybean_predictor
+    predictor = get_soybean_predictor()
+    return predictor.validate_model()

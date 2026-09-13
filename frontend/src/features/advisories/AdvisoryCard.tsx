@@ -56,9 +56,8 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     
     // Set appropriate TTS language voice
-    if (currentLanguage === 'ta') utterance.lang = 'ta-IN';
-    else if (currentLanguage === 'hi') utterance.lang = 'hi-IN';
-    else if (currentLanguage === 'mr') utterance.lang = 'mr-IN';
+    if (currentLanguage === 'hi-IN') utterance.lang = 'hi-IN';
+    else if (currentLanguage === 'mr-IN') utterance.lang = 'mr-IN';
     else utterance.lang = 'en-US';
 
     utterance.rate = 0.95;

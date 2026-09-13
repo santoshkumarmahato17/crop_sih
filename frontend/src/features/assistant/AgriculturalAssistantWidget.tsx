@@ -380,9 +380,25 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang =
-      language === 'mr' ? 'mr-IN' : language === 'hi' ? 'hi-IN' : language === 'ta' ? 'ta-IN' : 'en-US';
+    const targetLang =
+      language === 'mr' ? 'mr-IN' : language === 'hi' ? 'hi-IN' : language === 'ta' ? 'ta-IN' : 'en-IN';
+    utterance.lang = targetLang;
     utterance.rate = 0.95;
+
+    // Explicitly set the voice to match the language
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find((v) => v.lang.startsWith(targetLang) || v.lang.startsWith(language));
+    
+    if (voice) {
+      utterance.voice = voice;
+    } else if (language === 'mr') {
+      // Fallback for Marathi: If no Marathi voice, try Hindi as they share Devnagari
+      const fallbackHindi = voices.find((v) => v.lang.startsWith('hi'));
+      if (fallbackHindi) utterance.voice = fallbackHindi;
+    } else if (language === 'en') {
+       const fallbackEn = voices.find((v) => v.lang.startsWith('en-US') || v.lang.startsWith('en'));
+       if (fallbackEn) utterance.voice = fallbackEn;
+    }
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
@@ -525,15 +541,10 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                   zIndex: 9999,
                 }
           }
-          className="relative bg-slate-950/95 border border-emerald-500/40 rounded-3xl shadow-2xl flex flex-col backdrop-blur-3xl overflow-hidden animate-in fade-in-50 duration-150"
+          className="relative bg-white/70 dark:bg-slate-950/70 border border-emerald-500/30 dark:border-emerald-500/40 rounded-3xl shadow-2xl flex flex-col backdrop-blur-3xl overflow-hidden animate-in fade-in-50 duration-150"
         >
           {/* ── Rich Agricultural Crop Background Overlay ── */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-15 mix-blend-screen bg-cover bg-center z-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.4), transparent 45%), radial-gradient(circle at 20% 80%, rgba(20, 184, 166, 0.3), transparent 50%), repeating-linear-gradient(45deg, rgba(34,197,94,0.06) 0px, rgba(34,197,94,0.06) 2px, transparent 2px, transparent 12px)`,
-            }}
-          />
+
 
           {/* Subtle Crop Motifs Watermark */}
           <div className="absolute top-16 right-4 pointer-events-none opacity-5 text-emerald-300 z-0">
@@ -545,22 +556,27 @@ export const AgriculturalAssistantWidget: React.FC = () => {
             onPointerDown={handleModalHeaderPointerDown}
             onPointerMove={handleModalHeaderPointerMove}
             onPointerUp={handleModalHeaderPointerUp}
-            className={`relative z-10 p-3.5 border-b border-emerald-500/20 bg-slate-900/90 dark:bg-slate-950/90 flex items-center justify-between gap-2 select-none ${
+            className={`relative z-10 p-3.5 border-b border-emerald-500/20 bg-white/50 dark:bg-slate-950/50 flex items-center justify-between gap-2 select-none backdrop-blur-md overflow-hidden ${
               isMaximized ? '' : 'cursor-move active:cursor-grabbing'
             }`}
           >
+            {/* Header Background */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-20 dark:opacity-[0.08] mix-blend-multiply dark:mix-blend-screen bg-cover bg-center z-[-1]"
+              style={{ backgroundImage: `url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80')` }}
+            />
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 shadow-sm shadow-emerald-500/20">
                 <Sparkles className="w-4 h-4 animate-pulse" />
               </div>
               <div>
-                <h3 className="font-extrabold text-white text-xs flex items-center gap-1.5">
+                <h3 className="font-extrabold text-slate-900 dark:text-white text-xs flex items-center gap-1.5">
                   <span className="tracking-tight">AGRI SHIELD Assistant</span>
-                  <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500/25 to-teal-500/25 border border-emerald-400/40 text-[9px] text-emerald-300 font-mono font-black">
+                  <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 dark:from-emerald-500/25 dark:to-teal-500/25 border border-emerald-400/40 text-[9px] text-emerald-700 dark:text-emerald-300 font-mono font-black">
                     ✨ Gemini 1.5
                   </span>
                 </h3>
-                <p className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono flex items-center gap-1">
                   <span>Hold & drag header to reposition</span>
                 </p>
               </div>
@@ -575,10 +591,10 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                   e.stopPropagation();
                   cycleLanguage();
                 }}
-                className="px-2.5 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 text-[10px] font-bold border border-slate-700 transition flex items-center gap-1 shadow-sm active:scale-95"
+                className="px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-emerald-700 dark:text-emerald-300 text-[10px] font-bold border border-slate-200 dark:border-slate-700 transition flex items-center gap-1 shadow-sm active:scale-95"
                 title="Switch Language (English / मराठी / हिन्दी / தமிழ்)"
               >
-                <Globe className="w-3 h-3 text-emerald-400" />
+                <Globe className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                 <span>
                   {language === 'en'
                     ? 'EN'
@@ -633,7 +649,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
           </div>
 
           {/* ── Suggested Prompt Chips ── */}
-          <div className="relative z-10 px-3 py-2 border-b border-slate-800/80 bg-slate-950/80 flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <div className="relative z-10 px-3 py-2 border-b border-slate-200/50 dark:border-slate-800/80 bg-white/50 dark:bg-slate-950/50 backdrop-blur-md flex items-center gap-1.5 overflow-x-auto no-scrollbar">
             <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider flex-shrink-0">
               Suggestions:
             </span>
@@ -642,7 +658,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                 key={idx}
                 type="button"
                 onClick={() => handleSend(chip.replace(/^[^\w\s\u0900-\u097F\u0B80-\u0BFF]+/, '').trim())}
-                className="px-2.5 py-1 rounded-xl bg-slate-900/90 hover:bg-emerald-600/30 text-slate-200 hover:text-emerald-200 text-[11px] font-semibold border border-slate-700/80 whitespace-nowrap transition-all flex-shrink-0 active:scale-95 shadow-sm"
+                className="px-2.5 py-1 rounded-xl bg-white/80 dark:bg-slate-900/90 hover:bg-emerald-100 dark:hover:bg-emerald-600/30 text-slate-700 dark:text-slate-200 hover:text-emerald-700 dark:hover:text-emerald-200 text-[11px] font-semibold border border-slate-200 dark:border-slate-700/80 whitespace-nowrap transition-all flex-shrink-0 active:scale-95 shadow-sm"
               >
                 {chip}
               </button>
@@ -662,21 +678,21 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                     className={`max-w-[90%] p-4 rounded-3xl ${
                       isUser
                         ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-br-xs shadow-lg font-medium border border-emerald-400/30'
-                        : 'bg-slate-900/95 text-slate-100 rounded-bl-xs border border-slate-700/90 shadow-2xl backdrop-blur-md'
+                        : 'bg-white/90 dark:bg-slate-900/95 text-slate-800 dark:text-slate-100 rounded-bl-xs border border-slate-200 dark:border-slate-700/90 shadow-2xl backdrop-blur-md'
                     }`}
                   >
                     {/* Header badge for AI */}
                     {!isUser && (
-                      <div className="flex items-center justify-between gap-2 pb-1.5 mb-2 border-b border-slate-800 text-[10px] text-emerald-400 font-bold">
+                      <div className="flex items-center justify-between gap-2 pb-1.5 mb-2 border-b border-slate-200 dark:border-slate-800 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
                         <span className="flex items-center gap-1.5">
-                          <Bot className="w-3.5 h-3.5 text-emerald-400" />
+                          <Bot className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                           <span>Gemini AI Agronomist</span>
                         </span>
                         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
                           <button
                             type="button"
                             onClick={() => speakText(msg.text)}
-                            className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white"
+                            className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-white"
                             title="Speak answer"
                           >
                             <Volume2 className="w-3.5 h-3.5" />
@@ -684,7 +700,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => copyMessage(msg.id, msg.text)}
-                            className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white"
+                            className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-white"
                             title="Copy response"
                           >
                             {copiedId === msg.id ? (
@@ -708,13 +724,13 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="leading-relaxed whitespace-pre-line select-text font-medium text-slate-100">
+                    <div className={`leading-relaxed whitespace-pre-line select-text font-medium ${isUser ? 'text-white' : 'text-slate-800 dark:text-slate-100'}`}>
                       {msg.text}
                     </div>
 
                     {/* Tools / Telemetry Tags */}
                     {msg.tools_used && msg.tools_used.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-3 pt-2.5 border-t border-slate-800">
+                      <div className="flex flex-wrap gap-1.5 mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800">
                         {msg.tools_used.map((tool, idx) => (
                           <span
                             key={idx}
@@ -744,7 +760,12 @@ export const AgriculturalAssistantWidget: React.FC = () => {
           </div>
 
           {/* ── Message Input Bar ── */}
-          <div className="relative z-10 p-3 border-t border-slate-800/80 bg-slate-950/95 space-y-2">
+          <div className="relative z-10 p-3 border-t border-slate-200/50 dark:border-slate-800/80 bg-white/50 dark:bg-slate-950/50 backdrop-blur-md overflow-hidden space-y-2">
+            {/* Footer Background */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-20 dark:opacity-[0.08] mix-blend-multiply dark:mix-blend-screen bg-cover bg-center z-[-1]"
+              style={{ backgroundImage: `url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80')` }}
+            />
             {/* Hidden Camera/File Upload Input */}
             <input
               type="file"
@@ -756,7 +777,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
             {/* Staged Image Preview Badge */}
             {selectedImage && (
-              <div className="flex items-center justify-between p-2 px-3 rounded-2xl bg-slate-900 border border-emerald-500/50 shadow-lg">
+              <div className="flex items-center justify-between p-2 px-3 rounded-2xl bg-white/90 dark:bg-slate-900 border border-emerald-500/30 dark:border-emerald-500/50 shadow-lg backdrop-blur-md">
                 <div className="flex items-center gap-2.5">
                   <img
                     src={selectedImage.preview}
@@ -768,7 +789,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                       <Camera className="w-3.5 h-3.5" />
                       <span>Photo Attached for AI Diagnosis</span>
                     </span>
-                    <span className="text-[10px] text-slate-400 truncate max-w-[200px] block">
+                    <span className="text-[10px] text-slate-600 dark:text-slate-400 truncate max-w-[200px] block">
                       {selectedImage.name}
                     </span>
                   </div>
@@ -776,7 +797,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedImage(null)}
-                  className="p-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
+                  className="p-1.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                   title="Remove photo"
                 >
                   <X className="w-4 h-4" />
@@ -805,14 +826,14 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                       ? 'பயிர் ஆரோக்கியம் அல்லது மருந்து பற்றி கேட்கவும்...'
                       : 'Ask crop symptoms, prevention, medicines, pesticides...'
                   }
-                  className="w-full bg-slate-900 border border-slate-700/80 rounded-2xl pl-4 pr-16 py-2.5 text-xs text-white placeholder-slate-400 font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  className="w-full bg-white/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-2xl pl-4 pr-16 py-2.5 text-xs text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 shadow-inner"
                 />
 
                 {/* Camera / Photo Upload Button */}
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute right-8 top-2 p-1 rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-slate-800 transition"
+                  className="absolute right-8 top-2 p-1 rounded-xl text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
                   title="Upload crop/leaf photo for Gemini diagnosis"
                 >
                   <Camera className="w-4 h-4" />
@@ -825,7 +846,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
                   className={`absolute right-2 top-2 p-1 rounded-xl transition ${
                     isListening
                       ? 'bg-rose-600 text-white animate-pulse'
-                      : 'text-slate-400 hover:text-emerald-400 hover:bg-slate-800'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                   title={isListening ? 'Stop listening' : 'Speak your question'}
                 >
@@ -843,7 +864,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
               </button>
             </form>
 
-            <div className="flex items-center justify-between text-[10px] text-slate-400 px-1 font-mono">
+            <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 px-1 font-mono">
               <span className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span>Google Gemini AI Connected</span>
@@ -851,7 +872,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
               <button
                 type="button"
                 onClick={clearChat}
-                className="hover:text-slate-200 flex items-center gap-1 transition"
+                className="hover:text-slate-700 dark:hover:text-slate-200 flex items-center gap-1 transition"
               >
                 <RotateCcw className="w-3 h-3" />
                 <span>Clear</span>

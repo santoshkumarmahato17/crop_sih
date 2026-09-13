@@ -1,0 +1,229 @@
+{
+  "dataset_name": "Maize Pest and Disease Classification Dataset",
+  "dataset_root": "C:\\Users\\krsan\\Desktop\\crop\\Maize",
+  "total_images_scanned": 5358,
+  "valid_images_count": 5074,
+  "corrupted_images_count": 37,
+  "duplicate_images_count": 247,
+  "classes_count": 7,
+  "classes": [
+    "Fall army worm",
+    "Grasshopper",
+    "Healthy",
+    "Leaf Beetle",
+    "Leaf Blight",
+    "Leaf Spot",
+    "Streak Virus"
+  ],
+  "class_categories": {
+    "Fall army worm": "pest",
+    "Grasshopper": "pest",
+    "Healthy": "healthy",
+    "Leaf Beetle": "pest",
+    "Leaf Blight": "disease",
+    "Leaf Spot": "disease",
+    "Streak Virus": "disease"
+  },
+  "raw_counts_per_class": {
+    "Fall army worm": 285,
+    "Grasshopper": 673,
+    "Healthy": 208,
+    "Leaf Beetle": 948,
+    "Leaf Blight": 1006,
+    "Leaf Spot": 1259,
+    "Streak Virus": 979
+  },
+  "format_distribution": {
+    ".jpg": 5358
+  },
+  "dimension_statistics": {
+    "min_dimensions": [
+      93,
+      107
+    ],
+    "max_dimensions": [
+      400,
+      400
+    ],
+    "average_dimensions": [
+      399.9,
+      399.9
+    ],
+    "top_5_dimensions": {
+      "400x400": 5318,
+      "93x107": 1,
+      "188x184": 1,
+      "207x205": 1
+    }
+  },
+  "class_imbalance_percentage": {
+    "Fall army worm": 5.32,
+    "Grasshopper": 12.56,
+    "Healthy": 3.88,
+    "Leaf Beetle": 17.69,
+    "Leaf Blight": 18.78,
+    "Leaf Spot": 23.5,
+    "Streak Virus": 18.27
+  },
+  "splits_summary": {
+    "train": {
+      "total": 3551,
+      "per_class": {
+        "Fall army worm": 199,
+        "Grasshopper": 471,
+        "Healthy": 144,
+        "Leaf Beetle": 656,
+        "Leaf Blight": 696,
+        "Leaf Spot": 738,
+        "Streak Virus": 647
+      }
+    },
+    "validation": {
+      "total": 761,
+      "per_class": {
+        "Fall army worm": 43,
+        "Grasshopper": 101,
+        "Healthy": 31,
+        "Leaf Beetle": 141,
+        "Leaf Blight": 149,
+        "Leaf Spot": 158,
+        "Streak Virus": 138
+      }
+    },
+    "test": {
+      "total": 762,
+      "per_class": {
+        "Fall army worm": 42,
+        "Grasshopper": 101,
+        "Healthy": 31,
+        "Leaf Beetle": 141,
+        "Leaf Blight": 150,
+        "Leaf Spot": 158,
+        "Streak Virus": 139
+      }
+    }
+  },
+  "corrupted_files_sample": [
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\healthy\\healthy18_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\healthy\\\\healthy18_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\healthy\\healthy88_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\healthy\\\\healthy88_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle207_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle207_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle208_.jpg",
+      "error": "Truncated File Read"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle326_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle326_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle458_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle458_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle573_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle573_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle690_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle690_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle691_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle691_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle798_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle798_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle90_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle90_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf beetle\\leaf beetle910_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf beetle\\\\leaf beetle910_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf blight\\leaf blight37_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf blight\\\\leaf blight37_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf blight\\leaf blight453_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf blight\\\\leaf blight453_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf blight\\leaf blight590_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf blight\\\\leaf blight590_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf blight\\leaf blight667_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf blight\\\\leaf blight667_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf blight\\leaf blight746_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf blight\\\\leaf blight746_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf blight\\leaf blight830_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf blight\\\\leaf blight830_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf blight\\leaf blight913_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf blight\\\\leaf blight913_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf blight\\leaf blight98_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf blight\\\\leaf blight98_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot187_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot187_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot272_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot272_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot353_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot353_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot425_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot425_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot497_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot497_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot64_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot64_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot724_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot724_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot799_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot799_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot882_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot882_.jpg'"
+    },
+    {
+      "filepath": "C:\\Users\\krsan\\Desktop\\crop\\Maize\\leaf spot\\leaf spot958_.jpg",
+      "error": "cannot identify image file 'C:\\\\Users\\\\krsan\\\\Desktop\\\\crop\\\\Maize\\\\leaf spot\\\\leaf spot958_.jpg'"
+    }
+  ],
+  "zero_data_leakage_verified": true
+}

@@ -1,0 +1,73 @@
+{
+  "dataset": "Apple Leaf Disease Dataset",
+  "model_architecture": "mobilenet_v3_small",
+  "checkpoint": "C:\\Users\\krsan\\Desktop\\crop\\ml/models_apple\\best_model\\best_model.pth",
+  "test_samples_count": 1943,
+  "overall_metrics": {
+    "accuracy": 99.74,
+    "macro_precision": 99.75,
+    "macro_recall": 99.74,
+    "macro_f1": 99.75,
+    "weighted_precision": 99.74,
+    "weighted_recall": 99.74,
+    "weighted_f1": 99.74
+  },
+  "per_class_metrics": {
+    "Apple Scab": {
+      "precision": 0.9941,
+      "recall": 0.998,
+      "f1_score": 0.996,
+      "test_samples": 504
+    },
+    "Black Rot": {
+      "precision": 0.996,
+      "recall": 1.0,
+      "f1_score": 0.998,
+      "test_samples": 497
+    },
+    "Cedar Apple Rust": {
+      "precision": 1.0,
+      "recall": 0.9977,
+      "f1_score": 0.9989,
+      "test_samples": 440
+    },
+    "Healthy": {
+      "precision": 1.0,
+      "recall": 0.994,
+      "f1_score": 0.997,
+      "test_samples": 502
+    }
+  },
+  "confusion_matrix": [
+    [
+      503,
+      1,
+      0,
+      0
+    ],
+    [
+      0,
+      497,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      439,
+      0
+    ],
+    [
+      2,
+      1,
+      0,
+      499
+    ]
+  ],
+  "class_categories": {
+    "Apple Scab": "disease",
+    "Black Rot": "disease",
+    "Cedar Apple Rust": "disease",
+    "Healthy": "healthy"
+  }
+}

@@ -107,8 +107,30 @@ interface YOLOSampleItem {
   relative_path: string;
 }
 
-type DiagnosticMode = 'apple' | 'cashew' | 'cassava' | 'maize' | 'tomato' | 'yolo';
+type DiagnosticMode = 'apple' | 'cashew' | 'cassava' | 'maize' | 'tomato' | 'yolo' | 'soybean';
 type VisualLayer = 'original' | 'yolo_bbox' | 'segmentation' | 'spectral_heatmap';
+
+const SOYBEAN_CLASSES = [
+  'Bacterial Pustule',
+  'Frogeye Leaf Spot',
+  'Healthy',
+  'Iron Deficiency Chlorosis',
+  'Potassium Deficiency',
+  'Powdery Mildew',
+  'Rhizoctonia Aerial Blight',
+  'Rust',
+  'Sudden Death Syndrome',
+  'Target Spot',
+];
+export const SOYBEAN_DISEASES = [
+  'Bacterial Pustule',
+  'Frogeye Leaf Spot',
+  'Powdery Mildew',
+  'Rhizoctonia Aerial Blight',
+  'Rust',
+  'Sudden Death Syndrome',
+  'Target Spot',
+];
 
 const APPLE_CLASSES = [
   'Apple Scab',
@@ -203,6 +225,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       ? CASSAVA_CLASSES
       : selectedCrop === 'maize'
       ? MAIZE_CLASSES
+      : selectedCrop === 'soybean'
+      ? SOYBEAN_CLASSES
       : TOMATO_CLASSES;
 
   // Start Camera Stream
@@ -485,6 +509,51 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
       if (!success) {
         setErrorMsg('Could not connect to YOLO Disease Analysis service. Ensure port 8000 or 8001 is active.');
+      }
+    } else if (targetMode === 'soybean') {
+      const endpoints = ['/api/soybean/predict', '/api/v1/soybean/predict'];
+      let success = false;
+      for (const url of endpoints) {
+        try {
+          const resp = await fetch(url, { method: 'POST', body: formData });
+          if (resp.ok) {
+            const data = await resp.json();
+            const predName = (data.prediction?.class_name || 'Uncertain').replace(/_/g, ' ');
+            const conf = data.prediction?.confidence_percent ?? (data.prediction?.confidence ? data.prediction.confidence * 100 : 0);
+            setDetectedCropInfo({
+              crop: 'Soybean',
+              display: '🌱 Soybean',
+              confidence: 99.0,
+            });
+            setResult({
+              success: true,
+              crop: 'Soybean',
+              crop_display: '🌱 Soybean Foliage',
+              prediction: predName,
+              confidence: conf,
+              status: data.prediction?.confidence_status || 'HIGH_CONFIDENCE',
+              reliable: data.prediction?.confidence_status === 'HIGH_CONFIDENCE',
+              probabilities: data.top_predictions
+                ? Object.fromEntries(data.top_predictions.map((p: any) => [p.class_name.replace(/_/g, ' '), p.confidence]))
+                : {},
+              explanation: data.prediction?.message,
+              disease_details: {
+                scientific_name: data.disease_info?.scientific_name,
+                condition_type: data.disease_info?.category,
+                description: data.disease_info?.description,
+                urgency: data.disease_info?.urgency,
+                recommendation: data.disease_info?.recommendation,
+              },
+            });
+            success = true;
+            break;
+          }
+        } catch {
+          // try next
+        }
+      }
+      if (!success) {
+        setErrorMsg('Could not connect to Soybean Disease Analysis service. Ensure the backend server is active.');
       }
     } else {
       // Primary: Unified Multi-Crop Auto-Detection (Apple, Cashew, Cassava, Maize, Tomato)
@@ -868,6 +937,21 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                 >
                   <Crosshair className="w-3.5 h-3.5" />
                   YOLO Lesions
+                </button>
+                <button
+                  onClick={() => {
+                    handleCropChange('soybean');
+                    setActiveTab('upload');
+                  }}
+                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
+                    selectedCrop === 'soybean'
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  }`}
+                  title="Soybean 10-Class MobileNetV2 Disease Classifier"
+                >
+                  <Leaf className="w-3.5 h-3.5 text-emerald-400" />
+                  Soybean AI
                 </button>
               </div>
 

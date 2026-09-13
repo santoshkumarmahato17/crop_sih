@@ -1,0 +1,39 @@
+{
+  "Apple Scab": {
+    "precision": 0.9940711462450593,
+    "recall": 0.998015873015873,
+    "f1-score": 0.996039603960396,
+    "support": 504.0
+  },
+  "Black Rot": {
+    "precision": 0.9959919839679359,
+    "recall": 1.0,
+    "f1-score": 0.9979919678714859,
+    "support": 497.0
+  },
+  "Cedar Apple Rust": {
+    "precision": 1.0,
+    "recall": 0.9977272727272727,
+    "f1-score": 0.9988623435722411,
+    "support": 440.0
+  },
+  "Healthy": {
+    "precision": 1.0,
+    "recall": 0.9940239043824701,
+    "f1-score": 0.997002997002997,
+    "support": 502.0
+  },
+  "accuracy": 0.9974266598044261,
+  "macro avg": {
+    "precision": 0.9975157825532488,
+    "recall": 0.9974417625314039,
+    "f1-score": 0.9974742281017801,
+    "support": 1943.0
+  },
+  "weighted avg": {
+    "precision": 0.9974368881830026,
+    "recall": 0.9974266598044261,
+    "f1-score": 0.9974271251134631,
+    "support": 1943.0
+  }
+}

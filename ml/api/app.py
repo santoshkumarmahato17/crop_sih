@@ -30,6 +30,9 @@ from ml.inference.image_quality import check_image_quality
 # Unified EfficientNetB0 Predictor
 from ml.src.predict_efficientnet import get_efficientnet_predictor
 
+# Soybean MobileNetV2 10-class Predictor
+from ml.src.predict_soybean import get_soybean_predictor
+
 _ORANGE_PREDICTOR = None
 def get_orange_predictor():
     global _ORANGE_PREDICTOR
@@ -118,6 +121,146 @@ async def health_check():
         model_loaded=is_loaded,
         classes=predictor.classes,
     )
+
+
+# ---------------------------------------------------------------------------
+# Soybean 10-Class Disease Classification Endpoints (MobileNetV2 + Keras)
+# ---------------------------------------------------------------------------
+
+@app.get("/api/ml/health", tags=["System"])
+async def ml_models_health():
+    """Unified health check for all registered ML models."""
+    try:
+        soy = get_soybean_predictor()
+        soy_loaded = soy.is_ready
+    except Exception:
+        soy_loaded = False
+    try:
+        eff = get_efficientnet_predictor()
+        eff_loaded = eff.model is not None
+    except Exception:
+        eff_loaded = False
+    return {
+        "service": "ml",
+        "status": "healthy" if (soy_loaded or eff_loaded) else "degraded",
+        "models": {
+            "soybean": {"loaded": soy_loaded, "version": "1.0", "classes": 10, "architecture": "MobileNetV2"},
+            "efficientnet_22class": {"loaded": eff_loaded, "version": "1.0", "classes": 22, "architecture": "EfficientNetB0"},
+        },
+    }
+
+
+@app.post(
+    "/api/soybean/predict",
+    tags=["Soybean Inference"],
+    summary="Predict Soybean Leaf Disease — 10 Classes (MobileNetV2)",
+    description=(
+        "Accepts a soybean leaf image and runs MobileNetV2 10-class inference. "
+        "Returns prediction, confidence, Top-3 predictions, confidence status, and verified agronomic advisory. "
+        "Implements HIGH/MEDIUM/LOW confidence policy — low-confidence results are clearly labelled as Uncertain."
+    ),
+)
+@app.post("/soybean/predict", tags=["Soybean Inference"])
+async def predict_soybean(
+    image: UploadFile = File(..., description="Soybean leaf photograph (JPG/PNG/WEBP)"),
+):
+    """Soybean 10-class disease/pest/healthy inference endpoint."""
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(image.filename or "")[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported image format '{ext}'. Accepted: {valid_exts}",
+        )
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    try:
+        predictor = get_soybean_predictor()
+        result = predictor.predict(contents)
+        return result
+    except ValueError as ve:
+        raise HTTPException(status_code=422, detail=str(ve))
+    except RuntimeError as re:
+        raise HTTPException(status_code=503, detail=str(re))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Soybean inference failed: {str(e)}")
+
+
+@app.get("/api/soybean/health", tags=["Soybean Inference"])
+@app.get("/soybean/health", tags=["Soybean Inference"])
+async def soybean_health():
+    """Health check for the Soybean MobileNetV2 classifier."""
+    try:
+        predictor = get_soybean_predictor()
+        return {
+            "status": "healthy" if predictor.is_ready else "degraded",
+            "service": "Soybean Leaf Disease Classifier",
+            "architecture": "MobileNetV2",
+            "version": predictor.MODEL_VERSION,
+            "model_loaded": predictor.is_ready,
+            "classes": predictor.classes,
+            "num_classes": len(predictor.classes),
+            "weights_path": predictor.weights_path,
+            "weights_exists": os.path.exists(predictor.weights_path),
+        }
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
+
+@app.get("/api/soybean/classes", tags=["Soybean Inference"])
+@app.get("/soybean/classes", tags=["Soybean Inference"])
+async def get_soybean_classes():
+    """List the 10 supported soybean disease/condition classes."""
+    predictor = get_soybean_predictor()
+    return {
+        "crop": "soybean",
+        "classes": predictor.classes,
+        "count": len(predictor.classes),
+        "model": predictor.MODEL_NAME,
+        "version": predictor.MODEL_VERSION,
+        "architecture": "MobileNetV2",
+        "confidence_thresholds": {
+            "high": predictor.high_conf_threshold,
+            "medium": predictor.medium_conf_threshold,
+        },
+    }
+
+
+@app.get("/api/soybean/model-info", tags=["Soybean Inference"])
+@app.get("/soybean/model-info", tags=["Soybean Inference"])
+async def get_soybean_model_info():
+    """Return soybean model metadata (version, architecture, class count, etc.)."""
+    metadata_path = os.path.join(REPO_ROOT, "ml", "models_soybean", "model_metadata.json")
+    if os.path.exists(metadata_path):
+        import json
+        with open(metadata_path) as f:
+            return json.load(f)
+    return {"status": "metadata not found"}
+
+
+@app.get("/api/soybean/validate", tags=["Soybean Inference"])
+@app.get("/soybean/validate", tags=["Soybean Inference"])
+async def validate_soybean_model():
+    """
+    Run internal model validation:
+    - input/output shape check
+    - synthetic inference
+    - probability vector validation
+    - class-name mapping verification
+    """
+    predictor = get_soybean_predictor()
+    result = predictor.validate_model()
+    return result
+
 
 
 @app.get("/api/classes", tags=["Metadata"])
