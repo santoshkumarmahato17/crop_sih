@@ -118,6 +118,9 @@ def create_application() -> FastAPI:
         app.include_router(ml_app.router)
         logger.info("Successfully registered Multi-Crop ML API routes (/api/cassava, /api/cashew, /api/maize, /api/predict, /api/yolo)")
     except Exception as e:
+        import traceback
+        with open("ml_route_error.log", "w") as f:
+            f.write(traceback.format_exc())
         logger.warning(f"Could not register Multi-Crop ML API routes: {e}")
 
     return app

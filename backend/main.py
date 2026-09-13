@@ -17,7 +17,7 @@ from app.main import app
 
 if __name__ == "__main__":
     print("==========================================================")
-    print("Starting AGRI SHIELD Backend Server on http://localhost:8000")
-    print("Interactive API Docs available at http://localhost:8000/docs")
+    print("Starting AGRI SHIELD Backend Server on http://localhost:8001")
+    print("Interactive API Docs available at http://localhost:8001/docs")
     print("==========================================================")
-    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8001, reload=True)

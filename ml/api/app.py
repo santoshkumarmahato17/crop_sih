@@ -40,10 +40,17 @@ app = FastAPI(
     version="1.0.0",
 )
 
+import sys, os
+BACKEND_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../backend"))
+if BACKEND_ROOT not in sys.path:
+    sys.path.insert(0, BACKEND_ROOT)
+from app.core.config import get_settings
+settings = get_settings()
+
 # Enable CORS for local web and mobile development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"] if settings.DEBUG else settings.ALLOWED_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -88,11 +95,12 @@ class HealthResponse(BaseModel):
 async def health_check():
     """Verify that the ML inference service and model are operational."""
     predictor = get_tomato_predictor()
+    is_loaded = predictor.model is not None
     return HealthResponse(
-        status="healthy",
+        status="healthy" if is_loaded else "degraded",
         service="Tomato Leaf Disease Classifier",
         version="1.0.0",
-        model_loaded=predictor.model is not None,
+        model_loaded=is_loaded,
         classes=predictor.classes,
     )
 

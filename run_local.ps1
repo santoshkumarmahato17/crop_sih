@@ -4,7 +4,7 @@ Write-Host " Starting AGRI SHIELD Local Development Servers" -ForegroundColor Gr
 Write-Host "==========================================================" -ForegroundColor Green
 
 # 1. Start Backend in background process or separate window
-Write-Host "Starting Backend FastAPI on http://localhost:8000..." -ForegroundColor Cyan
+Write-Host "Starting Backend FastAPI on http://localhost:8001..." -ForegroundColor Cyan
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\backend'; python main.py"
 
 # 2. Start Frontend Vite in separate window
@@ -13,4 +13,4 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot
 
 Write-Host "`nSystem Launch Initiated!" -ForegroundColor Green
 Write-Host "Access Frontend at: http://localhost:5173" -ForegroundColor Yellow
-Write-Host "Access Swagger API at: http://localhost:8000/docs" -ForegroundColor Yellow
+Write-Host "Access Swagger API at: http://localhost:8001/docs" -ForegroundColor Yellow

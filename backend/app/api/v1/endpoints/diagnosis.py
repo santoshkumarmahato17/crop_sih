@@ -93,3 +93,24 @@ async def submit_expert_validation_endpoint(
     """Submit agronomist validation verdict: CONFIRMED, REJECTED, UNCERTAIN, or LAB_REFERRAL."""
     service = DiagnosisService(db)
     return await service.submit_expert_validation(id, validation_request, current_user)
+
+
+from fastapi import UploadFile, File
+from app.services.apple_diagnosis import AppleDiagnosisService
+
+@router.post(
+    "/apple",
+    summary="Real Apple Leaf Disease Inference using EfficientNetB0",
+)
+async def analyze_apple_leaf_endpoint(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Run the trained Keras EfficientNetB0 model on an uploaded Apple leaf image.
+    Returns disease classification, confidence, Grad-CAM, and advisory info.
+    """
+    apple_service = AppleDiagnosisService()
+    result = await apple_service.analyze_image(file)
+    return result
+

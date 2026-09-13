@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, Suspense, lazy } from 'react';
 import {
   Camera,
   RefreshCw,
@@ -18,7 +18,8 @@ import {
   SlidersHorizontal,
   Flame,
 } from 'lucide-react';
-import { CropRiskAdvisoryPanel } from './CropRiskAdvisoryPanel';
+
+const CropRiskAdvisoryPanel = lazy(() => import('./CropRiskAdvisoryPanel').then(module => ({ default: module.CropRiskAdvisoryPanel })));
 
 interface QualityAssessment {
   is_acceptable: boolean;
@@ -376,26 +377,15 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     setIsAnalyzing(true);
     setResult(null);
     setYoloResult(null);
+    setDetectedCropInfo(null);
 
     const relParam = encodeURIComponent(sample.relative_path);
     const streamUrls = [
-      `http://localhost:8000/api/unified/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/unified/sample-image-file?rel_path=${relParam}`,
       `/api/unified/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/cassava/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/cassava/sample-image-file?rel_path=${relParam}`,
       `/api/cassava/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/apple/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/apple/sample-image-file?rel_path=${relParam}`,
       `/api/apple/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/cashew/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/cashew/sample-image-file?rel_path=${relParam}`,
       `/api/cashew/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/maize/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/maize/sample-image-file?rel_path=${relParam}`,
       `/api/maize/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/sample-image-file?rel_path=${relParam}`,
       `/api/sample-image-file?rel_path=${relParam}`,
     ];
 
@@ -429,11 +419,10 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     setIsAnalyzing(true);
     setResult(null);
     setYoloResult(null);
+    setDetectedCropInfo(null);
 
     const relParam = encodeURIComponent(sample.relative_path);
     const streamUrls = [
-      `http://localhost:8000/api/yolo/sample-image-file?rel_path=${relParam}`,
-      `http://localhost:8000/api/yolo/sample-image-file?rel_path=${relParam}`,
       `/api/yolo/sample-image-file?rel_path=${relParam}`,
     ];
 
@@ -461,19 +450,20 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
   };
 
   // Submit to ML Inference API (Automatic Leaf Species & Pathology Detection)
-  const analyzeImageBlob = async (blob: Blob) => {
+  const analyzeImageBlob = async (blob: Blob, forceMode?: DiagnosticMode) => {
     setIsAnalyzing(true);
     setErrorMsg(null);
     setResult(null);
     setYoloResult(null);
+    setDetectedCropInfo(null);
 
     const formData = new FormData();
     formData.append('image', blob, 'leaf_foliage_scan.jpg');
 
-    if (selectedCrop === 'yolo') {
+    const targetMode = forceMode || selectedCrop;
+
+    if (targetMode === 'yolo') {
       const endpoints = [
-        'http://localhost:8000/api/yolo/analyze-disease',
-        'http://localhost:8000/api/yolo/analyze-disease',
         '/api/yolo/analyze-disease',
       ];
 
@@ -499,8 +489,6 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     } else {
       // Primary: Unified Multi-Crop Auto-Detection (Apple, Cashew, Cassava, Maize, Tomato)
       const unifiedEndpoints = [
-        'http://localhost:8000/api/unified/predict',
-        'http://localhost:8000/api/unified/predict',
         '/api/unified/predict',
       ];
 
@@ -511,14 +499,30 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
           if (resp.ok) {
             const data: PredictionResponse = await resp.json();
             if (data && (data.crop || data.prediction)) {
-              const detected = (data.crop || 'cassava').toLowerCase() as DiagnosticMode;
-              setSelectedCrop(detected);
-              setDetectedCropInfo({
-                crop: data.crop || 'Foliage',
-                display: data.crop_display || `🌿 ${data.crop || 'Foliage'}`,
-                confidence: data.crop_confidence ?? (data.confidence || 98.0),
-              });
-              setResult(data);
+              const confidence = data.crop_confidence ?? (data.confidence || 98.0);
+              
+              if (confidence < 40) {
+                // If crop confidence is too low: Crop = UNKNOWN, Disease = INSUFFICIENT EVIDENCE
+                setDetectedCropInfo({
+                  crop: 'UNKNOWN',
+                  display: '🌿 Unknown Crop',
+                  confidence: confidence,
+                });
+                setResult({
+                  ...data,
+                  prediction: 'INSUFFICIENT EVIDENCE',
+                  status: 'Low Confidence',
+                });
+              } else {
+                const detected = (data.crop || 'cassava').toLowerCase() as DiagnosticMode;
+                setSelectedCrop(detected);
+                setDetectedCropInfo({
+                  crop: data.crop || 'Foliage',
+                  display: data.crop_display || `🌿 ${data.crop || 'Foliage'}`,
+                  confidence: confidence,
+                });
+                setResult(data);
+              }
               if (data.yolo) {
                 setYoloResult(data.yolo);
                 setSelectedLayer('yolo_bbox');
@@ -535,16 +539,10 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       if (!unifiedSuccess) {
         // Fallback: Individual crop endpoints if unified service is unreachable
         const fallbackEndpoints = [
-          'http://localhost:8000/api/cassava/predict',
-          'http://localhost:8000/api/cassava/predict',
-          'http://localhost:8000/api/apple/predict',
-          'http://localhost:8000/api/apple/predict',
-          'http://localhost:8000/api/maize/predict',
-          'http://localhost:8000/api/maize/predict',
-          'http://localhost:8000/api/cashew/predict',
-          'http://localhost:8000/api/cashew/predict',
-          'http://localhost:8000/api/predict',
-          'http://localhost:8000/api/predict',
+          '/api/cassava/predict',
+          '/api/apple/predict',
+          '/api/maize/predict',
+          '/api/cashew/predict',
           '/api/predict',
         ];
 
@@ -843,18 +841,23 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                 <button
                   onClick={async () => {
                     const currentImg = capturedImage;
+                    const prevSample = selectedSample;
                     handleCropChange('yolo');
+                    
                     if (currentImg) {
                       setCapturedImage(currentImg);
+                      if (prevSample) setSelectedSample(prevSample);
+                      
                       try {
                         const res = await fetch(currentImg);
                         const blob = await res.blob();
-                        analyzeImageBlob(blob);
+                        analyzeImageBlob(blob, 'yolo');
                       } catch (e) {
                         setActiveTab('samples');
                       }
                     } else {
                       setActiveTab('samples');
+                      setErrorMsg('Please select a dataset sample or upload an image first.');
                     }
                   }}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
@@ -1267,9 +1270,14 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               {/* Verdict Header */}
               <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
-                    YOLO Foliar Pathology Diagnosis
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
+                      YOLO Foliar Pathology Diagnosis
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-mono mt-0.5">
+                      Analysis Source: {selectedSample ? 'Dataset Sample' : activeTab === 'camera' ? 'Phone Camera' : 'Uploaded Image'}
+                    </span>
+                  </div>
                   <span
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold border ${
                       yoloResult.severity_percentage < 5.0
@@ -1352,7 +1360,10 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                   <span className="text-[10px] text-slate-400 font-normal">Figure 3 YOLO Instances</span>
                 </h3>
                 <div className="max-h-48 overflow-y-auto space-y-1.5 pr-1 text-xs">
-                  {yoloResult.detections.slice(0, 10).map((det) => (
+                  {yoloResult.detections.length === 0 ? (
+                    <div className="p-4 text-center text-slate-500 italic">No lesion detected with sufficient confidence.</div>
+                  ) : (
+                    yoloResult.detections.slice(0, 10).map((det) => (
                     <div
                       key={det.id}
                       className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between"
@@ -1370,7 +1381,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                         <span className="text-slate-400">({det.area_px} px²)</span>
                       </div>
                     </div>
-                  ))}
+                  )))}
                   {yoloResult.detections.length > 10 && (
                     <p className="text-[10px] text-center text-slate-400 pt-1">
                       + {yoloResult.detections.length - 10} additional smaller lesion clusters detected
@@ -1403,9 +1414,14 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               {/* Verdict Header */}
               <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
-                    {selectedCrop.toUpperCase()} Pathology & Agronomic Verdict
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
+                      {selectedCrop.toUpperCase()} Pathology & Agronomic Verdict
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-mono mt-0.5">
+                      Analysis Source: {selectedSample ? 'Dataset Sample' : activeTab === 'camera' ? 'Phone Camera' : 'Uploaded Image'}
+                    </span>
+                  </div>
                   <span
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold border ${
                       result.status === 'High Confidence'
@@ -1584,22 +1600,24 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
           )}
 
           {/* Dedicated Agronomic Risk Intelligence, Red Risk Percentage, Recommendations & Suggestions Panel */}
-          <CropRiskAdvisoryPanel
-            selectedCrop={selectedCrop}
-            prediction={result?.prediction}
-            confidence={result?.confidence}
-            isYolo={selectedCrop === 'yolo'}
-            yoloSeverityPct={yoloResult?.severity_percentage}
-            yoloLesionCount={yoloResult?.lesion_count}
-            onQuickSampleClick={(sampleName) => {
-              const matched = sampleImages.find(
-                (s: SampleImageItem) => s.class_name.toLowerCase() === sampleName.toLowerCase()
-              );
-              if (matched) {
-                handleSelectSample(matched);
-              }
-            }}
-          />
+          <Suspense fallback={<div className="min-h-[500px] w-full rounded-2xl bg-slate-100 dark:bg-slate-800/50 animate-pulse border border-slate-200 dark:border-slate-700/80 shadow-sm flex items-center justify-center"><span className="text-slate-400 font-medium">Loading Risk Advisory Engine...</span></div>}>
+            <CropRiskAdvisoryPanel
+              selectedCrop={selectedCrop}
+              prediction={result?.prediction}
+              confidence={result?.confidence}
+              isYolo={selectedCrop === 'yolo'}
+              yoloSeverityPct={yoloResult?.severity_percentage}
+              yoloLesionCount={yoloResult?.lesion_count}
+              onQuickSampleClick={(sampleName) => {
+                const matched = sampleImages.find(
+                  (s: SampleImageItem) => s.class_name.toLowerCase() === sampleName.toLowerCase()
+                );
+                if (matched) {
+                  handleSelectSample(matched);
+                }
+              }}
+            />
+          </Suspense>
         </div>
       </div>
     </div>

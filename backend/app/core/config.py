@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
     API_V1_STR: str = "/api/v1"
     BACKEND_HOST: str = "0.0.0.0"
-    BACKEND_PORT: int = 8000
+    BACKEND_PORT: int = 8001
     ALLOWED_CORS_ORIGINS: Union[List[str], str] = [
         "http://localhost:5173",
         "http://localhost:3000",
