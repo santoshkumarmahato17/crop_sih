@@ -52,7 +52,7 @@ class User(Base, TimestampMixin):
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     last_login_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-    preferred_language: Mapped[str] = mapped_column(String(10), default="en", nullable=False)
+    preferred_language: Mapped[str] = mapped_column(String(10), default="mr-IN", nullable=False)
 
     role_id: Mapped[Optional[str]] = mapped_column(
         String(36), ForeignKey("roles.id", ondelete="SET NULL"), nullable=True, index=True

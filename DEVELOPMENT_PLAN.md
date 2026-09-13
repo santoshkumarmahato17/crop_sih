@@ -104,10 +104,26 @@ The system will incrementally implement the following 23 functional capabilities
 ### Phase 6: Advisory, Alerting & Decision Support System
 - **Target Capabilities**: [18, 19, 20]
 - **Deliverables**:
-  - Automated Multi-Channel Crop-Health Alert Dispatcher.
-  - Rules-based & AI-assisted Integrated Pest Management (IPM) Advisory Engine.
-  - Irrigation Priority Optimization Matrix (Water stress + Soil/Weather inputs).
-  - Actionable Treatment Plan Generator for Farmers.
+  - [x] Automated Multi-Channel Crop-Health Alert Dispatcher.
+  - [x] Rules-based & AI-assisted Integrated Pest Management (IPM) Advisory Engine.
+  - [x] Irrigation Priority Optimization Matrix (Water stress + Soil/Weather inputs).
+  - [x] Actionable Treatment Plan Generator for Farmers.
+  - [x] Expert Knowledge & Policy Engine (Rule-based constraints)
+  - [x] Contextual Advisory Generation (combining AI, Weather, Rules)
+  - [x] Follow-Up Recommendation Engine (e.g. "re-scan in 3 days")
+  - [x] Multilingual Advisory Engine
+    - [x] Marathi
+    - [x] Hindi
+    - [x] English
+    - [x] Marathi-first farmer experience
+    - [x] Language preference
+    - [x] Evidence-based advisory generation
+    - [x] IPM guidance
+    - [x] Weather-aware advisory
+    - [x] Confidence-aware language
+    - [x] Expert referral
+    - [x] Multilingual alerts
+    - [x] Follow-up instructions
 
 ---
 

@@ -10,13 +10,13 @@ from typing import Dict, Any, List, Optional
 class TranslationService:
     """Localized agricultural translation provider with strict agronomic safety guards."""
 
-    SUPPORTED_LANGUAGES = ["en", "ta", "hi", "mr"]
-    DEFAULT_LANGUAGE = "en"
+    SUPPORTED_LANGUAGES = ["mr-IN", "hi-IN", "en-IN"]
+    DEFAULT_LANGUAGE = "mr-IN"
 
     # Static Curated Dictionaries for Agronomic Conditions & Advisories
     TEMPLATES: Dict[str, Dict[str, Any]] = {
         "early_blight": {
-            "en": {
+            "en-IN": {
                 "title": "Early Blight Risk Advisory",
                 "summary": "AI signals and microclimate indicators suggest potential Alternaria solani (Early Blight) foliar stress.",
                 "why_this_matters": "High relative humidity and wet leaf duration accelerate spore germination, leading to concentric leaf spot lesions and defoliation.",
@@ -40,31 +40,8 @@ class TranslationService:
                 ],
                 "audio_text": "Early Blight advisory active. Inspect lower leaves for dark spots, avoid wetting crop canopy, and consult local extension expert if lesions spread.",
             },
-            "ta": {
-                "title": "ஆரம்ப இலைக்கருகல் நோய் எச்சரிக்கை (Early Blight)",
-                "summary": "வானிலை மற்றும் நுண்ணிய சென்சார் தகவல்கள் ஆரம்ப இலைக்கருகல் நோய் அபாயத்தைக் காட்டுகின்றன.",
-                "why_this_matters": "அதிக ஈரப்பதம் மற்றும் இலைகளில் தங்கும் தண்ணீர் பூஞ்சை தொற்று பரவுவதை துரிதப்படுத்துகிறது.",
-                "what_to_do_now": [
-                    "செடியின் அடிப்பகுதி இலைகளில் வட்ட வடிவ பழுப்பு புள்ளிகள் உள்ளதா என உடனே பரிசோதிக்கவும்.",
-                    "நோய்த்தொற்று தாக்கிய பழைய இலைகளை அகற்றி முறையாக அப்புறப்படுத்தவும்.",
-                    "சொட்டு நீர் பாசனத்தை மட்டும் பயன்படுத்தி இலைகளில் தண்ணீர் படுவதைத் தவிர்க்கவும்.",
-                ],
-                "what_to_monitor": [
-                    "அடுத்த 48 மணி நேரத்திற்குள் அருகிலுள்ள பாத்திகளை தீவிரமாக கண்காணிக்கவும்.",
-                    "இரவு நேர ஈரப்பதம் மற்றும் இலை ஈரப்பத கால அளவை கண்காணிக்கவும்.",
-                ],
-                "what_to_avoid": [
-                    "மாலை வேளைகளில் தெளிப்பு பாசனம் (Sprinkler) செய்வதைத் தவிர்க்கவும்.",
-                    "அதிகப்படியான தழைச்சத்து (Nitrogen) உரம் இடுவதைத் தவிர்க்கவும்.",
-                ],
-                "when_to_seek_expert_help": "புள்ளிகள் மேல் இலைகளுக்கும் அல்லது காய்களுக்கும் பரவினால் உடனே வேளாண் அலுவலர் சரிபார்ப்பைக் கோரவும்.",
-                "safety_warnings": [
-                    "பரிந்துரைக்கப்பட்ட இயற்கை உயிர் பூஞ்சாண மருந்துகளை மட்டும் பயன்படுத்தவும்.",
-                    "அங்கீகரிக்கப்படாத ரசாயன மருந்துகளை சுயமாக தெளிப்பதைத் தவிர்க்கவும்.",
-                ],
-                "audio_text": "ஆரம்ப இலைக்கருகல் எச்சரிக்கை. கீழ் இலைகளை பரிசோதிக்கவும், இலைகளில் தண்ணீர் தேங்காமல் பார்த்துக் கொள்ளவும்.",
-            },
-            "hi": {
+
+            "hi-IN": {
                 "title": "अगेती झुलसा रोग परामर्श (Early Blight)",
                 "summary": "मौसम और एआई संकेतकों के अनुसार फसल में अगेती झुलसा (अल्टरनेरिया) का जोखिम बढ़ रहा है।",
                 "why_this_matters": "अधिक आर्द्रता और पत्तों पर नमी रहने से फफूंद तेजी से फैलती है जिससे पत्तियों पर गोल भूरे धब्बे बनते हैं।",
@@ -88,7 +65,7 @@ class TranslationService:
                 ],
                 "audio_text": "अगेती झुलसा रोग चेतावनी। निचली पत्तियों की जाँच करें, पत्तों पर पानी न ठहरने दें और कृषि विशेषज्ञ से सलाह लें।",
             },
-            "mr": {
+            "mr-IN": {
                 "title": "करपा रोग सल्ला व दक्षता (Early Blight / Alternaria)",
                 "summary": "हवामान घटक आणि एआय तपासणीनुसार पिकावर करपा रोगाचा संभाव्य धोका दिसून येत आहे.",
                 "why_this_matters": "हवेतील जादा दमटपणा व पानांवरील ओलावा यामुळे करप्याच्या बुरशीचा प्रादुर्भाव वाढून पानांवर गोल काळे डाग पडतात.",
@@ -114,7 +91,7 @@ class TranslationService:
             },
         },
         "general_disease": {
-            "en": {
+            "en-IN": {
                 "title": "Crop Health & Pathogen Advisory",
                 "summary": "Elevated agronomic risk detected in zone. Immediate scouting recommended.",
                 "why_this_matters": "Environmental stress indicators match favorable disease sporulation conditions.",
@@ -129,22 +106,8 @@ class TranslationService:
                 "safety_warnings": ["Always practice Integrated Pest Management (IPM)."],
                 "audio_text": "Crop health advisory active. Inspect affected zone and submit photos for expert validation.",
             },
-            "ta": {
-                "title": "பயிர் பாதுகாப்பு மற்றும் இடர் மேலாண்மை",
-                "summary": "மண்டலத்தில் பயிர் நோய் அபாயம் கண்டறியப்பட்டுள்ளது. நேரடி கள ஆய்வு தேவை.",
-                "why_this_matters": "தற்போதைய வானிலை காரணிகள் பயிர் நோய்க்கிருமிகள் வளர சாதகமாக உள்ளன.",
-                "what_to_do_now": [
-                    "பாதிக்கப்பட்ட மண்டலத்தில் நேரில் சென்று பயிர்களை உன்னிப்பாக கவனிக்கவும்.",
-                    "தெளிவான புகைப்படங்களை எடுத்து நிபுணர் சரிபார்ப்புக்கு பதிவேற்றவும்.",
-                    "பண்ணை கருவிகளை சுத்தமாக பராமரிக்கவும்.",
-                ],
-                "what_to_monitor": ["பயிர் வளர்ச்சி மற்றும் இலைகளின் பசுமை குறியீட்டை (NDVI) கண்காணிக்கவும்."],
-                "what_to_avoid": ["பாதிக்கப்பட்ட செடிகளை தொட்டபின் உடனே ஆரோக்கியமான செடிகளை தொட வேண்டாம்."],
-                "when_to_seek_expert_help": "அறிகுறிகள் 3 நாட்களுக்கு மேல் நீடித்தால் வேளாண் அலுவலரை தொடர்பு கொள்ளவும்.",
-                "safety_warnings": ["ஒருங்கிணைந்த பயிர் பாதுகாப்பு (IPM) முறைகளை எப்போதும் பின்பற்றவும்."],
-                "audio_text": "பயிர் பாதுகாப்பு எச்சரிக்கை. பாதிக்கப்பட்ட பயிர்களை ஆய்வு செய்து புகைப்படங்களை பதிவேற்றவும்.",
-            },
-            "hi": {
+
+            "hi-IN": {
                 "title": "फसल स्वास्थ्य एवं सुरक्षा परामर्श",
                 "summary": "खेत के इस क्षेत्र में रोग जोखिम देखा गया है। तत्काल निरीक्षण की आवश्यकता है।",
                 "why_this_matters": "मौसम के मौजूदा आंकड़े फसल पर कीट व रोग के अनुकूल परिस्थिति दर्शा रहे हैं।",
@@ -159,7 +122,7 @@ class TranslationService:
                 "safety_warnings": ["हमेशा एकीकृत कीट प्रबंधन (IPM) तकनीकों का पालन करें।"],
                 "audio_text": "फसल सुरक्षा परामर्श। खेत की जाँच करें और विशेषज्ञ सत्यापन के लिए फोटो अपलोड करें।",
             },
-            "mr": {
+            "mr-IN": {
                 "title": "पीक आरोग्य व कीड-रोग दक्षता सल्ला",
                 "summary": "या पट्ट्यात पीक आरोग्यास धोका निर्माण होण्याची शक्यता आहे. त्वरित पाहणी करा.",
                 "why_this_matters": "सध्याचे हवामान घटक पिकावर रोग निर्माण करणाऱ्या घटकांना पोषक आहेत.",
@@ -181,7 +144,7 @@ class TranslationService:
     def get_localized_content(
         cls,
         condition_key: str,
-        target_language: str = "en",
+        target_language: str = "mr-IN",
         custom_replacements: Optional[Dict[str, str]] = None,
     ) -> Dict[str, Any]:
         """
@@ -194,7 +157,7 @@ class TranslationService:
         
         is_fallback = False
         if lang not in template_group:
-            content = template_group.get(cls.DEFAULT_LANGUAGE, cls.TEMPLATES["general_disease"]["en"])
+            content = template_group.get(cls.DEFAULT_LANGUAGE, cls.TEMPLATES["general_disease"]["mr-IN"])
             is_fallback = True
         else:
             content = template_group[lang]

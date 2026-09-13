@@ -212,6 +212,25 @@ class CropHealthAnalysisService:
         scientific_name = p_meta.get("scientific_name", "")
         specific_class = p_meta.get("specific_class", detected_condition.lower().replace(" ", "_"))
 
+        # Crop Validation Gate (Rule 3 & 4)
+        candidates = p_meta.get("top_candidates", [])
+        crop_confidence = candidates[0].get("probability", prediction.confidence) if candidates else prediction.confidence
+        
+        supported_crops = ["maize", "cassava", "tomato", "cashew", "apple", "rice"]
+        crop_status = "CONFIDENT"
+        
+        if crop_confidence < 0.40 or detected_crop.lower() not in supported_crops:
+            crop_status = "UNKNOWN" if crop_confidence < 0.40 else "UNSUPPORTED"
+            detected_crop = "UNKNOWN"
+            detected_condition = "INSUFFICIENT_EVIDENCE"
+            pathogen_type_str = "Unknown"
+            specific_class = "unknown_condition"
+            prediction.confidence = crop_confidence
+            prediction.disease_probability = 0.0
+            prediction.pest_probability = 0.0
+            p_meta["detected_crop"] = "UNKNOWN"
+            p_meta["detected_condition"] = "INSUFFICIENT_EVIDENCE"
+            
         # Determine true biological health
         is_healthy = "healthy" in pathogen_type_str.lower() or "healthy" in detected_condition.lower()
 
@@ -321,16 +340,25 @@ class CropHealthAnalysisService:
 
         # Assemble Comprehensive Response
         analysis_id = str(uuid.uuid4())
-        cond_category = "Healthy" if is_healthy else ("Pest" if "pest" in pathogen_type_str.lower() else "Disease")
+        cond_category = "Healthy" if is_healthy else ("Pest" if "pest" in pathogen_type_str.lower() else ("Unknown" if detected_crop == "UNKNOWN" else "Disease"))
+        
+        # Uncertainty Handling (Rule 11)
+        if crop_status != "CONFIDENT" or prediction.confidence < 0.40:
+            condition_status = "INSUFFICIENT_EVIDENCE"
+        elif prediction.confidence < 0.65:
+            condition_status = "LOW_CONFIDENCE"
+        else:
+            condition_status = "CONFIDENT"
+
         response = CropHealthAnalysisResponse(
             id=analysis_id,
             analysis_id=analysis_id,
             image_quality=quality_data,
             crop=detected_crop,
-            crop_confidence=round(prediction.confidence, 2),
-            crop_status="CONFIDENT",
+            crop_confidence=round(crop_confidence, 2),
+            crop_status=crop_status,
             crop_origin="MODEL_IDENTIFIED",
-            condition=detected_condition,
+            condition=detected_condition if condition_status == "CONFIDENT" else f"Possible {detected_condition}",
             condition_category=cond_category,
             specific_class=specific_class,
             confidence=round(prediction.confidence, 4),
@@ -340,7 +368,7 @@ class CropHealthAnalysisService:
                 "description": p_meta.get("description", ""),
             },
             symptoms=[p.get("label", "Lesion") for p in detected_patches] if detected_patches else [],
-            severity=severity_eval["level"].lower(),
+            severity="unknown" if condition_status == "INSUFFICIENT_EVIDENCE" else severity_eval["level"].lower(),
             severity_percentage=affected_area_pct,
             severity_detail=severity_eval,
             risk_detail=risk_eval,
@@ -356,7 +384,7 @@ class CropHealthAnalysisService:
             anomaly_score=prediction.anomaly_score,
             disease_probability=prediction.disease_probability,
             pest_probability=prediction.pest_probability,
-            needs_expert_review=(prediction.confidence < 0.70),
+            needs_expert_review=(prediction.confidence < 0.70 or crop_status != "CONFIDENT"),
             model_name=prediction.model_name,
             model_version=prediction.model_version,
             inference_timestamp=now,

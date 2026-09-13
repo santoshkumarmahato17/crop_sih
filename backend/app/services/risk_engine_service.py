@@ -22,6 +22,7 @@ from app.schemas.risk import (
     RiskContributingFactor,
     ZoneRiskResponse,
 )
+from app.models.sensor import PestTrapObservation, FieldSensorReading, SensorType
 
 
 class RiskEngineService:
@@ -94,6 +95,29 @@ class RiskEngineService:
                     trend_str = "DECLINING" if diff <= -5.0 else ("IMPROVING" if diff >= 5.0 else "STABLE")
                 has_disease = any(len(o.disease_observations or []) > 0 for o in observations)
 
+            # --- Fetch latest Pest Trap count ---
+            trap_res = await db.execute(
+                select(PestTrapObservation)
+                .where(PestTrapObservation.zone_id == resolved_zone_id)
+                .order_by(PestTrapObservation.observation_time.desc())
+                .limit(1)
+            )
+            latest_trap = trap_res.scalars().first()
+            trap_count = latest_trap.count if latest_trap else None
+
+            # --- Fetch latest Soil Moisture reading ---
+            sensor_res = await db.execute(
+                select(FieldSensorReading)
+                .where(
+                    FieldSensorReading.zone_id == resolved_zone_id,
+                    FieldSensorReading.sensor_type == SensorType.SOIL_MOISTURE
+                )
+                .order_by(FieldSensorReading.timestamp.desc())
+                .limit(1)
+            )
+            latest_soil = sensor_res.scalars().first()
+            soil_moisture = latest_soil.measurement if latest_soil else None
+
             inputs = RiskEngineInputs(
                 crop_type="Wheat",
                 growth_stage="Grain Filling",
@@ -106,6 +130,8 @@ class RiskEngineService:
                 has_pest_history=False,
                 nearby_disease_activity_km=4.2,
                 cwsi_water_stress=cwsi,
+                recent_pest_trap_count=trap_count,
+                recent_soil_moisture_pct=soil_moisture,
             )
 
         # Run Explainable Risk Evaluation

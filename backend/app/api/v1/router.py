@@ -21,6 +21,7 @@ from app.api.v1.endpoints import (
     officer,
     predict,
     risk,
+    sensors,
     spread,
     temporal,
     validation,
@@ -58,4 +59,5 @@ api_router.include_router(validation.router)
 api_router.include_router(predict.router)
 api_router.include_router(advisories.router)
 api_router.include_router(monitoring.router)
+api_router.include_router(sensors.router, prefix="/sensors", tags=["sensors"])
 

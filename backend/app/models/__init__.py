@@ -107,6 +107,18 @@ from app.models.monitoring import (
     HotspotTrendStatus,
 )
 
+# IoT & Field Sensor Models
+from app.models.sensor import (
+    FieldSensor,
+    FieldSensorReading,
+    PestTrap,
+    PestTrapObservation,
+    SensorType,
+    TrapType,
+    DataQualityStatus,
+    FreshnessStatus,
+)
+
 __all__ = [
     # Base
     "Base",
@@ -201,4 +213,13 @@ __all__ = [
     "MonitoringTaskStatus",
     "MonitoringTrend",
     "HotspotTrendStatus",
+    # Sensors & Traps
+    "FieldSensor",
+    "FieldSensorReading",
+    "PestTrap",
+    "PestTrapObservation",
+    "SensorType",
+    "TrapType",
+    "DataQualityStatus",
+    "FreshnessStatus",
 ]

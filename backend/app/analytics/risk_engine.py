@@ -27,6 +27,8 @@ class RiskEngineInputs:
     nearby_disease_activity_km: Optional[float] = 3.5  # Distance in km to nearest outbreak
     cwsi_water_stress: float = 0.45  # 0.0 to 1.0
     has_contextual_data: bool = True  # Golden Rule 9: Set to False if weather/history/spatial context is absent
+    recent_pest_trap_count: Optional[int] = None
+    recent_soil_moisture_pct: Optional[float] = None
 
 
 @dataclass
@@ -198,7 +200,57 @@ def evaluate_crop_health_risk(
             )
         )
 
-    # 5. Historical Pathology & Pest Recurrence
+    # 5. Field Evidence (Sensors & Traps)
+    if inputs.recent_pest_trap_count is not None:
+        if inputs.recent_pest_trap_count >= 20:
+            pts = 25
+            base_pest += pts
+            factors.append(
+                ContributingFactor(
+                    factor_name=f"High Pest Trap Activity ({inputs.recent_pest_trap_count} count)",
+                    category="field_sensor",
+                    points=pts,
+                    description="Elevated vector counts on local traps corroborate active infestation.",
+                )
+            )
+        elif inputs.recent_pest_trap_count >= 5:
+            pts = 10
+            base_pest += pts
+            factors.append(
+                ContributingFactor(
+                    factor_name="Moderate Pest Trap Activity",
+                    category="field_sensor",
+                    points=pts,
+                    description="Trap counts indicate emerging vector pressure in the zone.",
+                )
+            )
+
+    if inputs.recent_soil_moisture_pct is not None:
+        if inputs.recent_soil_moisture_pct < 20.0:
+            pts = 15
+            base_water += pts
+            factors.append(
+                ContributingFactor(
+                    factor_name=f"Critical Soil Moisture ({inputs.recent_soil_moisture_pct}%)",
+                    category="field_sensor",
+                    points=pts,
+                    description="In-situ sensor indicates root-zone volumetric water deficit.",
+                )
+            )
+        elif inputs.recent_soil_moisture_pct > 80.0:
+            pts = 10
+            base_disease += pts
+            base_water = max(0, base_water - 20)
+            factors.append(
+                ContributingFactor(
+                    factor_name="Saturated Soil Matrix",
+                    category="field_sensor",
+                    points=pts,
+                    description="Prolonged soil saturation increases risk of root-rot and damping off.",
+                )
+            )
+
+    # 6. Historical Vulnerability
     if inputs.has_disease_history:
         pts = 10
         base_disease += pts

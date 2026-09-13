@@ -4,7 +4,7 @@ import ta from './locales/ta.json';
 import hi from './locales/hi.json';
 import mr from './locales/mr.json';
 
-export type SupportedLanguage = 'en' | 'ta' | 'hi' | 'mr';
+export type SupportedLanguage = 'en-IN' | 'hi-IN' | 'mr-IN';
 
 export interface LanguageMeta {
   code: SupportedLanguage;
@@ -14,26 +14,24 @@ export interface LanguageMeta {
 }
 
 export const SUPPORTED_LANGUAGES: LanguageMeta[] = [
-  { code: 'en', name: 'English', nativeName: 'English', badge: 'Default' },
-  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', badge: 'National' },
-  { code: 'mr', name: 'Marathi', nativeName: 'मराठी', badge: 'Regional' },
-  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்', badge: 'Regional' },
+  { code: 'mr-IN', name: 'Marathi', nativeName: 'मराठी', badge: 'Default' },
+  { code: 'hi-IN', name: 'Hindi', nativeName: 'हिन्दी', badge: 'National' },
+  { code: 'en-IN', name: 'English', nativeName: 'English', badge: 'Global' },
 ];
 
 const dictionaries: Record<SupportedLanguage, any> = {
-  en,
-  ta,
-  hi,
-  mr,
+  'en-IN': en,
+  'hi-IN': hi,
+  'mr-IN': mr,
 };
 
 export function useTranslation() {
   const [currentLanguage, setCurrentLanguageState] = useState<SupportedLanguage>(() => {
     const saved = localStorage.getItem('agrishield_preferred_lang');
-    if (saved && (saved === 'en' || saved === 'ta' || saved === 'hi' || saved === 'mr')) {
+    if (saved && (saved === 'en-IN' || saved === 'hi-IN' || saved === 'mr-IN')) {
       return saved as SupportedLanguage;
     }
-    return 'en'; // English default
+    return 'mr-IN'; // Marathi default
   });
 
   useEffect(() => {
@@ -66,8 +64,8 @@ export function useTranslation() {
         if (current && typeof current === 'object' && k in current) {
           current = current[k];
         } else {
-          // Fallback to English
-          let fallback: any = dictionaries['en'];
+          // Fallback to Marathi
+          let fallback: any = dictionaries['mr-IN'];
           for (const fbKey of keys) {
             if (fallback && typeof fallback === 'object' && fbKey in fallback) {
               fallback = fallback[fbKey];

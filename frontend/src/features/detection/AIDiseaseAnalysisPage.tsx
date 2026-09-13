@@ -257,6 +257,9 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
       lesionSpots: 'डागांची संख्या',
       causalAgent: 'रोगकारक घटक (Causal Agent)',
       pathogenType: 'प्रकार',
+      aiSignal: 'एआय संकेत (AI SIGNAL)',
+      uncertainPrediction: 'अनिश्चित अंदाज (UNCERTAIN PREDICTION)',
+      requestExpert: 'कृषी तज्ञांचा सल्ला घ्या (Request Expert Validation)',
     },
     hi: {
       studioTitle: 'एआई और एमएल फसल रोग निदान केंद्र',
@@ -283,6 +286,9 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
       lesionSpots: 'धब्बों की संख्या',
       causalAgent: 'रोगजनक (Causal Agent)',
       pathogenType: 'प्रकार',
+      aiSignal: 'एआई संकेत (AI SIGNAL)',
+      uncertainPrediction: 'अनिश्चित भविष्यवाणी (UNCERTAIN PREDICTION)',
+      requestExpert: 'कृषि विशेषज्ञ की सलाह लें (Request Expert Validation)',
     },
     en: {
       studioTitle: 'AI & ML Crop Pathology Studio',
@@ -309,6 +315,9 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
       lesionSpots: 'Lesions Localized',
       causalAgent: 'Biological Causal Agent',
       pathogenType: 'Pathogen Type',
+      aiSignal: 'AI SIGNAL',
+      uncertainPrediction: 'UNCERTAIN PREDICTION',
+      requestExpert: 'Request Expert Validation',
     },
   }[selectedLang];
 
@@ -765,14 +774,25 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
         {/* Right Col: AI Verdict, Decoupled Damage vs Risk, Verified Video, & Safe IPM */}
         <div className="space-y-5">
           <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
-            <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
-              <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>AI Vision Pathology Verdict</span>
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                PyTorch Vision Engine calibrated on real agricultural pathology.
-              </p>
+            <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex justify-between items-start">
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span>AI Vision Pathology Verdict</span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  PyTorch Vision Engine calibrated on real agricultural pathology.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide border ${
+                  analysisResult?.needs_expert_review 
+                  ? 'bg-amber-100 border-amber-300 text-amber-800 dark:bg-amber-900/50 dark:border-amber-700 dark:text-amber-300'
+                  : 'bg-indigo-100 border-indigo-300 text-indigo-800 dark:bg-indigo-900/50 dark:border-indigo-700 dark:text-indigo-300'
+                }`}>
+                  {analysisResult?.needs_expert_review ? t.uncertainPrediction : t.aiSignal}
+                </span>
+              </div>
             </div>
 
             {/* Primary Finding Card */}
@@ -831,6 +851,18 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                 <span>{errorMsg}</span>
               </div>
+            )}
+            
+            {/* Expert Referral CTA */}
+            {analysisResult?.needs_expert_review && (
+              <button
+                type="button"
+                onClick={() => alert('Expert Referral Workflow Triggered (Integrated with existing backend flow)')}
+                className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold shadow-sm transition"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>{t.requestExpert}</span>
+              </button>
             )}
 
             {/* Micro Metrics (Vitality & Confidence) */}

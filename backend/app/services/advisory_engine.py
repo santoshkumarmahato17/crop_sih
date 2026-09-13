@@ -66,20 +66,16 @@ class AdvisoryEngine:
             # Custom trust level prefix
             trust_prefix = ""
             if req.trust_level == 3:
-                if lang == "ta":
-                    trust_prefix = "[வேளாண் நிபுணர் சரிபார்க்கப்பட்டது] "
-                elif lang == "hi":
+                if lang == "hi-IN":
                     trust_prefix = "[कृषि विशेषज्ञ द्वारा सत्यापित] "
-                elif lang == "mr":
+                elif lang == "mr-IN":
                     trust_prefix = "[कृषी तज्ञांद्वारे पडताळणी पूर्ण] "
                 else:
                     trust_prefix = "[Expert Validated] "
             elif req.trust_level == 4:
-                if lang == "ta":
-                    trust_prefix = "[ஆய்வக பரிசோதனை உறுதிப்படுத்தப்பட்டது] "
-                elif lang == "hi":
+                if lang == "hi-IN":
                     trust_prefix = "[प्रयोगशाला परिणाम उपलब्ध] "
-                elif lang == "mr":
+                elif lang == "mr-IN":
                     trust_prefix = "[प्रयोगशाळा तपासणी अहवाल प्राप्त] "
                 else:
                     trust_prefix = "[Lab Confirmed] "
@@ -127,7 +123,7 @@ class AdvisoryEngine:
         db: Session,
         current_user: User,
         farm_id: Optional[str] = None,
-        language: str = "en",
+        language: str = "mr-IN",
         priority: Optional[str] = None,
         skip: int = 0,
         limit: int = 50,
@@ -149,7 +145,7 @@ class AdvisoryEngine:
             # Find translation matching language, fallback to English
             active_trans = next((t for t in adv.translations if t.language == language), None)
             if not active_trans:
-                active_trans = next((t for t in adv.translations if t.language == "en"), None)
+                active_trans = next((t for t in adv.translations if t.language == "en-IN"), None)
 
             results.append({
                 "id": adv.id,

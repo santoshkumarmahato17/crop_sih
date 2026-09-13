@@ -83,6 +83,8 @@ class Farm(Base, TimestampMixin):
     disease_events: Mapped[List["DiseaseEvent"]] = relationship("DiseaseEvent", back_populates="farm", cascade="all, delete-orphan")
     alerts: Mapped[List["Alert"]] = relationship("Alert", back_populates="farm", cascade="all, delete-orphan")
     recommendations: Mapped[List["Recommendation"]] = relationship("Recommendation", back_populates="farm", cascade="all, delete-orphan")
+    field_sensors: Mapped[List["FieldSensor"]] = relationship("FieldSensor", cascade="all, delete-orphan")
+    pest_traps: Mapped[List["PestTrap"]] = relationship("PestTrap", cascade="all, delete-orphan")
 
 
 class FarmMember(Base, TimestampMixin):
@@ -208,3 +210,5 @@ class FarmZone(Base, TimestampMixin):
     health_observations: Mapped[List["HealthObservation"]] = relationship(
         "HealthObservation", back_populates="zone", cascade="all, delete-orphan"
     )
+    field_sensors: Mapped[List["FieldSensor"]] = relationship("FieldSensor", cascade="all, delete-orphan")
+    pest_traps: Mapped[List["PestTrap"]] = relationship("PestTrap", cascade="all, delete-orphan")

@@ -540,28 +540,34 @@ export const FarmerDashboardPage: React.FC = () => {
       </div>
 
 
-      {/* Farm Selector Pill Bar */}
+      {/* Top Action Bar (Farm Selector & Language) */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-sm backdrop-blur-xl transition-colors duration-200">
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold px-2">Active Field Holding:</span>
-          <select
-            value={selectedFarmId}
-            onChange={(e) => {
-              setSelectedFarmId(e.target.value);
-              loadFarmZones(e.target.value);
-            }}
-            className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs text-emerald-700 dark:text-emerald-400 font-bold focus:outline-none focus:border-emerald-500 shadow-sm"
-          >
-            {farms.length > 0 ? (
-              farms.map((f) => (
-                <option key={f.id} value={f.id}>
-                  {f.name} ({f.active_crop?.crop_name || 'Wheat'})
-                </option>
-              ))
-            ) : (
-              <option value="">West Valley Holdings (Wheat)</option>
-            )}
-          </select>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold px-2">Active Field Holding:</span>
+            <select
+              value={selectedFarmId}
+              onChange={(e) => {
+                setSelectedFarmId(e.target.value);
+                loadFarmZones(e.target.value);
+              }}
+              className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs text-emerald-700 dark:text-emerald-400 font-bold focus:outline-none focus:border-emerald-500 shadow-sm"
+            >
+              {farms.length > 0 ? (
+                farms.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.name} ({f.active_crop?.crop_name || 'Wheat'})
+                  </option>
+                ))
+              ) : (
+                <option value="">West Valley Holdings (Wheat)</option>
+              )}
+            </select>
+          </div>
+          
+          <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block" />
+          
+          <LanguageSwitcher variant="minimal" />
         </div>
 
         <button
@@ -774,6 +780,36 @@ export const FarmerDashboardPage: React.FC = () => {
             <p className="text-[11px] text-purple-700 dark:text-purple-400 font-mono font-semibold">MSN-20260831-TGT1</p>
           </div>
           <p className="text-[11px] text-slate-500 dark:text-slate-400">Targeting Zones Z03, Z04, Z05 (45m Alt)</p>
+        </div>
+
+        {/* 5. Field Evidence (Sensors & Pest Traps) */}
+        <div className="p-5 rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-sm dark:shadow-lg space-y-2.5 backdrop-blur-xl transition-colors duration-200">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+              Field Evidence
+            </span>
+            <div className="flex gap-2">
+              <div className="p-1.5 rounded-xl bg-orange-50 dark:bg-orange-500/10 border border-orange-200 dark:border-orange-500/30 text-orange-600 dark:text-orange-400">
+                <Wind className="w-4 h-4" />
+              </div>
+              <div className="p-1.5 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-400">
+                <Stethoscope className="w-4 h-4" />
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-2 border border-slate-100 dark:border-slate-800 text-center">
+              <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Pest Traps</span>
+              <span className="text-xl font-black text-orange-500">24</span>
+              <span className="text-[9px] text-orange-500/80 block uppercase">High Activity</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-2 border border-slate-100 dark:border-slate-800 text-center">
+              <span className="text-[10px] text-slate-400 uppercase font-bold block mb-1">Soil Moisture</span>
+              <span className="text-xl font-black text-cyan-500">18%</span>
+              <span className="text-[9px] text-cyan-500/80 block uppercase">Critically Low</span>
+            </div>
+          </div>
+          <p className="text-[10px] text-slate-400 mt-2">Zone Z04 • Real-time (Updated 10m ago)</p>
         </div>
       </div>
 
