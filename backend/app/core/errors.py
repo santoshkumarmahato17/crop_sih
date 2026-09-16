@@ -46,6 +46,11 @@ def register_error_handlers(app: FastAPI, debug: bool = False) -> None:
         request: Request, exc: AgriShieldException
     ) -> JSONResponse:
         logger.warning(f"Domain error at {request.method} {request.url.path}: {exc.message}")
+        origin = request.headers.get("origin")
+        headers = {}
+        if origin:
+            headers["access-control-allow-origin"] = origin
+            headers["access-control-allow-credentials"] = "true"
         return JSONResponse(
             status_code=exc.status_code,
             content={
@@ -53,12 +58,21 @@ def register_error_handlers(app: FastAPI, debug: bool = False) -> None:
                 "message": exc.message,
                 "detail": exc.details,
             },
+            headers=headers,
         )
 
     @app.exception_handler(StarletteHTTPException)
     async def http_exception_handler(
         request: Request, exc: StarletteHTTPException
     ) -> JSONResponse:
+        origin = request.headers.get("origin")
+        headers = {}
+        if origin:
+            headers["access-control-allow-origin"] = origin
+            headers["access-control-allow-credentials"] = "true"
+        if getattr(exc, "headers", None):
+            headers.update(exc.headers)
+            
         return JSONResponse(
             status_code=exc.status_code,
             content={
@@ -66,6 +80,7 @@ def register_error_handlers(app: FastAPI, debug: bool = False) -> None:
                 "message": exc.detail if isinstance(exc.detail, str) else "HTTP Error",
                 "detail": exc.detail if not isinstance(exc.detail, str) else None,
             },
+            headers=headers,
         )
 
     @app.exception_handler(RequestValidationError)

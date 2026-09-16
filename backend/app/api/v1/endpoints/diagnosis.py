@@ -98,6 +98,7 @@ async def submit_expert_validation_endpoint(
 from fastapi import UploadFile, File
 from app.services.apple_diagnosis import AppleDiagnosisService
 from app.services.soybean_diagnosis import SoybeanDiagnosisService
+from app.services.rice_diagnosis import RiceDiagnosisService
 
 @router.post(
     "/apple",
@@ -131,6 +132,21 @@ async def analyze_soybean_leaf_endpoint(
     """
     soybean_service = SoybeanDiagnosisService()
     result = await soybean_service.analyze_image(file, include_explanation=True)
+    return result
+
+@router.post(
+    "/rice",
+    summary="Real Rice Leaf Disease Inference using Keras",
+)
+async def analyze_rice_leaf_endpoint(
+    file: UploadFile = File(..., description="Rice leaf image"),
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Run the trained Keras model on an uploaded Rice leaf image.
+    """
+    rice_service = RiceDiagnosisService()
+    result = await rice_service.analyze_image(file)
     return result
 
 

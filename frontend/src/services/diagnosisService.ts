@@ -154,6 +154,17 @@ export const diagnosisService = {
     return response.data;
   },
 
+  async analyzeRiceLeaf(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await apiClient.post('/diagnosis/rice', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
   async analyzeCropHealth(payload: SymptomAnalysisPayload): Promise<SymptomAnalysisResult> {
     try {
       const response = await apiClient.post<SymptomAnalysisResult>('/diagnosis/symptom-analysis', payload);

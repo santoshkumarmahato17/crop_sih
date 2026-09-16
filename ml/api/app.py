@@ -33,6 +33,9 @@ from ml.src.predict_efficientnet import get_efficientnet_predictor
 # Soybean MobileNetV2 10-class Predictor
 from ml.src.predict_soybean import get_soybean_predictor
 
+# Rice Keras 2-class Predictor
+from ml.src.predict_rice import get_rice_predictor
+
 _ORANGE_PREDICTOR = None
 def get_orange_predictor():
     global _ORANGE_PREDICTOR
@@ -53,10 +56,23 @@ if BACKEND_ROOT not in sys.path:
 from app.core.config import get_settings
 settings = get_settings()
 
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://10.0.30.9:5173",
+    "http://10.0.30.9:3000",
+]
+if settings.ALLOWED_CORS_ORIGINS:
+    for orig in settings.ALLOWED_CORS_ORIGINS:
+        if orig not in origins:
+            origins.append(str(orig))
+
 # Enable CORS for local web and mobile development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if settings.DEBUG else settings.ALLOWED_CORS_ORIGINS,
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -1211,6 +1227,82 @@ async def predict_orange_leaf(
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Orange Leaf Inference failed: {str(e)}")
+
+
+# ---------------------------------------------------------------------------
+# Rice 2-Class Disease Classification Endpoints
+# ---------------------------------------------------------------------------
+
+@app.post(
+    "/api/rice/predict",
+    tags=["Rice Inference"],
+    summary="Predict Rice Leaf Disease (2 Classes)",
+    description="Accepts a photograph of a rice leaf and returns prediction and confidence.",
+)
+@app.post("/rice/predict", tags=["Rice Inference"])
+async def predict_rice_leaf(
+    image: UploadFile = File(..., description="Photograph of a rice leaf (JPG/PNG)"),
+    confidence_threshold: Optional[float] = Form(None, description="Confidence threshold"),
+):
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(image.filename)[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported format '{ext}'. Allowed: {valid_exts}")
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    try:
+        predictor = get_rice_predictor()
+        result = predictor.predict(contents, confidence_threshold=confidence_threshold)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Rice ML Inference failed: {str(e)}")
+
+
+@app.get("/api/rice/health", tags=["Rice Inference"])
+@app.get("/rice/health", tags=["Rice Inference"])
+async def rice_health_check():
+    try:
+        predictor = get_rice_predictor()
+        return {
+            "status": "healthy" if predictor.is_ready else "degraded",
+            "service": "Rice Leaf Classifier",
+            "version": "1.0.0",
+            "model_loaded": predictor.is_ready,
+            "classes": predictor.classes,
+        }
+    except Exception as e:
+        return {"status": "degraded", "error": str(e)}
+
+
+@app.get("/api/rice/classes", tags=["Rice Inference"])
+@app.get("/rice/classes", tags=["Rice Inference"])
+async def get_rice_classes():
+    predictor = get_rice_predictor()
+    return {
+        "classes": predictor.classes,
+        "count": len(predictor.classes),
+        "confidence_threshold": predictor.confidence_threshold,
+    }
+
+
+@app.get("/api/rice/model-info", tags=["Rice Inference"])
+@app.get("/rice/model-info", tags=["Rice Inference"])
+async def get_rice_model_info():
+    metadata_path = os.path.join(REPO_ROOT, "ml", "models_rice", "model_metadata.json")
+    if os.path.exists(metadata_path):
+        import json
+        with open(metadata_path) as f:
+            return json.load(f)
+    return {"status": "metadata not found"}
 
 
 if __name__ == "__main__":

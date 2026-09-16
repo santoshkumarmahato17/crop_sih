@@ -17,6 +17,7 @@ import { FarmerDashboardPage } from '@/features/dashboard/FarmerDashboardPage';
 import { GovernmentDashboardShell } from '@/features/government/GovernmentDashboardShell';
 import { AdminDashboardShell } from '@/features/admin/AdminDashboardShell';
 import { ExtensionOfficerDashboardPage } from '@/features/officer/ExtensionOfficerDashboardPage';
+import ExtensionDashboard from '@/features/extension/ExtensionDashboard';
 
 // Operational Modules
 import { TomatoCameraAnalysisPage } from '@/features/detection/TomatoCameraAnalysisPage';
@@ -54,6 +55,9 @@ const RootRoleRedirect: React.FC = () => {
   }
   if (user.role === 'GOVERNMENT') {
     return <GovernmentDashboardShell />;
+  }
+  if (user.role === 'EXTENSION_WORKER') {
+    return <Navigate to="/extension/dashboard" replace />;
   }
   return <FarmerDashboardPage />;
 };
@@ -158,6 +162,16 @@ export const AppRoutes: React.FC = () => {
           element={
             <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
               <MonitoringWorkspacePage />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* ── EXTENSION WORKER Role Routes ── */}
+        <Route
+          path="extension/dashboard"
+          element={
+            <RoleProtectedRoute allowedRoles={['EXTENSION_WORKER', 'ADMIN', 'GOVERNMENT']}>
+              <ExtensionDashboard />
             </RoleProtectedRoute>
           }
         />

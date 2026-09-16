@@ -8,7 +8,6 @@ import {
   Sparkles,
   TrendingUp,
   ArrowRight,
-  RefreshCw,
   BrainCircuit,
   MapPin,
   ChevronRight,
@@ -60,7 +59,7 @@ export interface CropMonitoringCardData {
 export const FarmerDashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [summary, setSummary] = useState<FarmerDashboardSummary | null>(null);
-  const [farms, setFarms] = useState<Farm[]>([]);
+  const [, setFarms] = useState<Farm[]>([]);
   const [selectedFarmId, setSelectedFarmId] = useState<string>('');
   const [, setZones] = useState<Zone[]>([]);
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
@@ -540,46 +539,6 @@ export const FarmerDashboardPage: React.FC = () => {
       </div>
 
 
-      {/* Top Action Bar (Farm Selector & Language) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-3xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-sm backdrop-blur-xl transition-colors duration-200">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold px-2">Active Field Holding:</span>
-            <select
-              value={selectedFarmId}
-              onChange={(e) => {
-                setSelectedFarmId(e.target.value);
-                loadFarmZones(e.target.value);
-              }}
-              className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 text-xs text-emerald-700 dark:text-emerald-400 font-bold focus:outline-none focus:border-emerald-500 shadow-sm"
-            >
-              {farms.length > 0 ? (
-                farms.map((f) => (
-                  <option key={f.id} value={f.id}>
-                    {f.name} ({f.active_crop?.crop_name || 'Wheat'})
-                  </option>
-                ))
-              ) : (
-                <option value="">West Valley Holdings (Wheat)</option>
-              )}
-            </select>
-          </div>
-          
-          <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block" />
-          
-          <LanguageSwitcher variant="minimal" />
-        </div>
-
-        <button
-          type="button"
-          onClick={loadInitialData}
-          className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 transition flex items-center gap-1.5 text-xs font-semibold"
-          title="Refresh Telemetry"
-        >
-          <RefreshCw className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-          <span>Sync Telemetry</span>
-        </button>
-      </div>
 
       {/* Action Notification Toast */}
       {actionSuccess && (
@@ -754,9 +713,9 @@ export const FarmerDashboardPage: React.FC = () => {
                 ● AccuWeather Live
               </span>
             )}
-            {weatherRiskData?.current_weather?.source === 'open_meteo_live' && (
+            {(weatherRiskData?.current_weather?.source === 'open_meteo_live' || weatherRiskData?.current_weather?.source === 'openweathermap_live') && (
               <span className="text-[9px] font-mono font-bold text-sky-400/70 px-1.5 py-0.5 rounded-md bg-sky-500/10 border border-sky-500/20">
-                ● OpenMeteo Live
+                ● OpenWeatherMap Live
               </span>
             )}
           </div>

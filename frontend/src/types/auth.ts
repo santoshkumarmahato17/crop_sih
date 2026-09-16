@@ -1,4 +1,4 @@
-export type RoleType = 'FARMER' | 'GOVERNMENT' | 'ADMIN';
+export type RoleType = 'FARMER' | 'GOVERNMENT' | 'ADMIN' | 'EXTENSION_WORKER';
 
 export interface UserRole {
   id?: string;

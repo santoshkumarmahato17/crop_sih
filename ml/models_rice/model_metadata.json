@@ -1,0 +1,12 @@
+{
+  "status": "production",
+  "input_size": [
+    224,
+    224
+  ],
+  "keras_version": "3.13.2",
+  "model_name": "RICE_ML_model",
+  "framework": "keras",
+  "crop": "rice",
+  "num_classes": 2
+}

@@ -1,0 +1,18 @@
+dataset:
+  name: "rice_leaf_diseases"
+  classes:
+    - "Bacterial leaf blight"
+    - "Brown spot"
+    - "Leaf smut"
+  
+training:
+  input_size: [224, 224]
+  batch_size: 16
+  epochs: 5
+  learning_rate: 0.001
+  backbone: "MobileNetV2"
+
+paths:
+  train_dir: "ml/data/rice/train"
+  val_dir: "ml/data/rice/val"
+  models_dir: "ml/models_rice"

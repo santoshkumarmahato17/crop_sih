@@ -13,9 +13,11 @@ from sqlalchemy import desc, func
 from app.models.validation import (
     ExpertValidationRequest,
     ExpertValidationRecord as ValidationRecord,
-    LabReferral,
     ValidationRequestStatus,
     ValidationPriority,
+)
+from app.models.laboratory import (
+    LabReferral,
     LabReferralStatus,
 )
 from app.models.auth import User
@@ -169,6 +171,7 @@ class ValidationService:
             ValidationRequestStatus.REJECTED: AuditEventType.VALIDATION_REJECTED,
             ValidationRequestStatus.UNCERTAIN: AuditEventType.VALIDATION_UNCERTAIN,
             ValidationRequestStatus.LAB_REFERRAL: AuditEventType.LAB_REFERRAL_CREATED,
+            ValidationRequestStatus.REQUEST_MORE_EVIDENCE: AuditEventType.VALIDATION_UNCERTAIN,  # Fallback to uncertain for audit
         }
         audit_event = audit_type_map.get(decision_in.decision, AuditEventType.VALIDATION_CONFIRMED)
 

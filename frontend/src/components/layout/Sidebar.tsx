@@ -45,13 +45,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
   // 1. Farmer Specific Navigation
   const farmerNavItems: NavItem[] = [
     { to: '/farmer/dashboard', label: 'Farmer Dashboard', icon: LayoutDashboard },
+    { to: '/analysis', label: 'AI Disease Analysis', icon: BrainCircuit },
     { to: '/onboarding/create-field', label: 'Draw Satellite Field', icon: Pentagon, badge: 'EOS' },
     { to: '/field-map', label: 'Precision Field Map', icon: Map },
     { to: '/monitoring', label: 'Follow-Up Tracking', icon: Activity, badge: 'Loop' },
     { to: '/advisories', label: 'Crop Advisories', icon: Sprout, badge: 'IPM' },
     { to: '/validation', label: 'Expert Validation', icon: ShieldCheck },
     { to: '/diagnosis', label: 'Symptom Disease ID', icon: Stethoscope, badge: 'AI' },
-    { to: '/analysis', label: 'AI Disease Analysis', icon: BrainCircuit },
     { to: '/community', label: 'Community Hub', icon: MessageSquare },
     { to: '/drones', label: 'Drone Fleet & Missions', icon: Plane },
     { to: '/profile', label: 'Account Profile', icon: User },
@@ -73,7 +73,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
     { to: '/settings', label: 'Regional Settings', icon: Settings },
   ];
 
-  // 3. System Administrator Navigation
+  // 3. Extension Worker Navigation
+  const extensionNavItems: NavItem[] = [
+    { to: '/extension/dashboard', label: 'Field Operations', icon: LayoutDashboard, badge: 'Queue' },
+    { to: '/field-map', label: 'Jurisdiction Map', icon: Map },
+    { to: '/validation', label: 'Expert Validation', icon: ShieldCheck },
+    { to: '/advisories', label: 'Regional Advisories', icon: Sprout },
+    { to: '/monitoring', label: 'Follow-Up Monitoring', icon: Activity },
+    { to: '/profile', label: 'Worker Profile', icon: User },
+    { to: '/settings', label: 'Settings', icon: Settings },
+  ];
+
+  // 4. System Administrator Navigation
   const adminNavItems: NavItem[] = [
     { to: '/admin/dashboard', label: 'Admin Console', icon: KeyRound, badge: 'Root' },
     { to: '/monitoring', label: 'Monitoring Engine', icon: Activity },
@@ -93,13 +104,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
       ? adminNavItems
       : role === 'GOVERNMENT'
       ? governmentNavItems
+      : role === 'EXTENSION_WORKER'
+      ? extensionNavItems
       : farmerNavItems;
 
   const roleLabel =
     role === 'ADMIN'
       ? 'Administrator Controls'
       : role === 'GOVERNMENT'
-      ? 'Government Authority'
+      ? 'Government Operations'
+      : role === 'EXTENSION_WORKER'
+      ? 'Field Officer Operations'
       : 'Farmer Operations';
 
   return (

@@ -5,8 +5,8 @@ from pydantic import BaseModel, Field, ConfigDict
 from app.models.validation import (
     ValidationRequestStatus,
     ValidationPriority,
-    LabReferralStatus,
 )
+from app.models.laboratory import LabReferralStatus
 
 
 class ValidationRequestCreate(BaseModel):

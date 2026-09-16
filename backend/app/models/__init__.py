@@ -76,10 +76,30 @@ from app.models.diagnosis import (
 from app.models.validation import (
     ExpertValidationRequest,
     ExpertValidationRecord,
-    LabReferral,
     ValidationRequestStatus,
     ValidationPriority,
+)
+
+# Unified Diagnostic Workflow Models
+from app.models.diagnostic_case import (
+    DiagnosticCase,
+    DiagnosticSourceType,
+    AIStatus,
+    ExpertStatus,
+    LabStatus,
+    FinalStatus,
+)
+
+# Laboratory Integration Models
+from app.models.laboratory import (
+    Laboratory,
+    LabReferral,
+    LabSample,
+    LabResult,
+    LabReport,
     LabReferralStatus,
+    SampleStatus,
+    LabResultStatus,
 )
 
 # Multilingual Agricultural Advisory Models
@@ -190,10 +210,24 @@ __all__ = [
     # Validation
     "ExpertValidationRequest",
     "ExpertValidationRecord",
-    "LabReferral",
     "ValidationRequestStatus",
     "ValidationPriority",
+    # Diagnostic Workflow
+    "DiagnosticCase",
+    "DiagnosticSourceType",
+    "AIStatus",
+    "ExpertStatus",
+    "LabStatus",
+    "FinalStatus",
+    # Laboratory
+    "Laboratory",
+    "LabReferral",
+    "LabSample",
+    "LabResult",
+    "LabReport",
     "LabReferralStatus",
+    "SampleStatus",
+    "LabResultStatus",
     # Advisory
     "AdvisoryTemplate",
     "Advisory",

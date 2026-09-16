@@ -69,7 +69,7 @@ export const datasetService = {
   },
 
   getImageStreamUrl: (relativePath: string): string => {
-    const baseURL = apiClient.defaults.baseURL || 'http://localhost:8000/api/v1';
+    const baseURL = apiClient.defaults.baseURL || `http://${window.location.hostname}:8000/api/v1`;
     return `${baseURL}/dataset/image-file?path=${encodeURIComponent(relativePath)}`;
   },
 

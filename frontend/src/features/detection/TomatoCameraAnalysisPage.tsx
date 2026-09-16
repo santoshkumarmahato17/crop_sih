@@ -282,9 +282,9 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
       if (selectedCrop === 'yolo') {
         const endpoints = [
-          'http://localhost:8000/api/yolo/sample-images',
-          '/api/yolo/sample-images',
-          'http://localhost:8000/api/yolo/sample-images',
+          `http://${window.location.hostname}:8000/api/yolo/sample-images`,
+          `/api/yolo/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/yolo/sample-images`,
         ];
         for (const url of endpoints) {
           try {
@@ -302,13 +302,14 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         }
       } else {
         const endpoints = [
-          'http://localhost:8000/api/unified/sample-images',
-          'http://localhost:8000/api/unified/sample-images',
-          '/api/unified/sample-images',
-          'http://localhost:8000/api/cassava/sample-images',
-          'http://localhost:8000/api/cassava/sample-images',
-          'http://localhost:8000/api/sample-images',
-          'http://localhost:8000/api/sample-images',
+          `http://${window.location.hostname}:8000/api/yolo/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/yolo/sample-images`,
+          `http://${window.location.hostname}:8000/api/unified/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/unified/sample-images`,
+          `http://${window.location.hostname}:8000/api/cassava/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/cassava/sample-images`,
+          `http://${window.location.hostname}:8000/api/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/sample-images`,
         ];
 
         for (const url of endpoints) {

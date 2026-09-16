@@ -130,8 +130,10 @@ The system will incrementally implement the following 23 functional capabilities
 ### Phase 7: Expert Validation & Follow-up Closed Loop
 - **Target Capabilities**: [21, 22]
 - **Deliverables**:
-  - Agronomist / Extension Worker Verification Queue.
-  - Ground-Truth Annotation & Model Calibration Feedback Loop.
+  - [x] Agronomist / Extension Worker Verification Queue.
+  - [x] Ground-Truth Annotation & Model Calibration Feedback Loop.
+  - [x] Laboratory Referral & Confirmed Diagnosis Workflow.
+  - [x] Extension Worker / Field Officer Workflow & Dashboard.
   - Automated Targeted Follow-Up Mission Generator (Flight path recommendations based on hotspots).
   - Continuous Monitoring Rescheduling Pipeline.
 
