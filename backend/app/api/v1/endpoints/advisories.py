@@ -24,14 +24,16 @@ from app.services.advisory_engine import AdvisoryEngine
 router = APIRouter(prefix="/advisories", tags=["Multilingual Agricultural Advisories"])
 
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
 @router.get("", response_model=List[AdvisoryResponse])
-def list_advisories(
+async def list_advisories(
     farm_id: Optional[str] = Query(None),
     language: Optional[str] = Query(None, description="Language code: en, ta, hi, mr"),
     priority: Optional[str] = Query(None),
     skip: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
     """
@@ -39,7 +41,7 @@ def list_advisories(
     """
     target_lang = language or getattr(current_user, "preferred_language", "en")
     
-    return AdvisoryEngine.list_advisories(
+    return await AdvisoryEngine.list_advisories(
         db=db,
         current_user=current_user,
         farm_id=farm_id,

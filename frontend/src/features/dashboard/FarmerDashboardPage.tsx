@@ -36,6 +36,7 @@ import {
   Farm,
   Zone,
 } from '@/types';
+import { useAuth } from '@/context/AuthContext';
 
 export interface CropMonitoringCardData {
   id: string;
@@ -58,6 +59,7 @@ export interface CropMonitoringCardData {
 
 export const FarmerDashboardPage: React.FC = () => {
   const navigate = useNavigate();
+  const { status: authStatus } = useAuth();
   const [summary, setSummary] = useState<FarmerDashboardSummary | null>(null);
   const [, setFarms] = useState<Farm[]>([]);
   const [selectedFarmId, setSelectedFarmId] = useState<string>('');
@@ -260,15 +262,25 @@ export const FarmerDashboardPage: React.FC = () => {
   };
 
   const loadInitialData = async () => {
+    // Block API calls until auth is initialized
+    if (authStatus === 'AUTH_INITIALIZING') return;
+    
     try {
-      const [sumRes, farmsRes, advRes] = await Promise.all([
+      // Only fetch protected data if we are authenticated
+      let advRes: Advisory[] = [];
+      if (authStatus === 'AUTHENTICATED') {
+        advRes = await advisoryService.getAdvisories();
+      }
+
+      const [sumRes, farmsRes] = await Promise.all([
         dashboardService.getFarmerSummary(),
         farmService.listFarms(),
-        advisoryService.getAdvisories(),
       ]);
+      
       setSummary(sumRes);
       setFarms(farmsRes.farms);
       setAdvisories(advRes);
+      
       if (farmsRes.farms.length > 0) {
         const firstFarmId = farmsRes.farms[0].id;
         setSelectedFarmId(firstFarmId);
@@ -282,6 +294,10 @@ export const FarmerDashboardPage: React.FC = () => {
       loadWeatherRisk('farm-cbe-01', weatherHorizon);
     }
   };
+
+  useEffect(() => {
+    loadInitialData();
+  }, [authStatus]);
 
   const loadFarmZones = async (fId: string) => {
     try {

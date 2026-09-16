@@ -6,8 +6,8 @@ import pytest
 from app.models.validation import (
     ValidationRequestStatus,
     ValidationPriority,
-    LabReferralStatus,
 )
+from app.models.laboratory import LabReferralStatus
 from app.services.validation_policy import ValidationPolicyEngine
 from app.schemas.validation import (
     ValidationRequestCreate,

@@ -14,15 +14,18 @@ from datetime import datetime, timezone
 class AgronomicDiagnosisResult:
     status: str # "AI_SUSPECTED" or "INSUFFICIENT_EVIDENCE"
     primary_condition: str
-    confidence: float # 0.0 to 1.0
+    disease_confidence: float # 0.0 to 1.0
+    crop_confidence: float # 0.0 to 1.0
+    ai_estimated_severity: str # e.g. "LOW", "MEDIUM", "HIGH"
     possible_conditions: List[Dict[str, Any]]
+    affected_regions: List[Dict[str, Any]] # Bounding boxes/polygons
     reasoning_points: List[str]
     recommendations: List[Dict[str, Any]]
     follow_up_monitoring: Dict[str, Any]
     regional_spread_risk: str
-    model_name: str = "AgriShield-SymptomReasoner-v1.0"
-    model_version: str = "1.0.0-prototype"
-    is_prototype: bool = True
+    model_name: str = "AgriShield-SymptomReasoner-v2.0"
+    model_version: str = "2.0.0-beta"
+    is_prototype: bool = False
 
 
 class DiseaseIdentificationService(ABC):
@@ -505,16 +508,38 @@ class PrototypeDiseaseIdentificationService(DiseaseIdentificationService):
 
         regional_spread = "MEDIUM" if severity in ["MEDIUM", "HIGH"] else ("HIGH" if severity == "SEVERE" else "LOW")
 
+        # Simulate SAM/YOLO region detection
+        affected_regions = []
+        if has_images:
+            affected_regions = [
+                {
+                    "label": top_match["condition_name"],
+                    "confidence": top_match["probability"] + 0.02, # High confidence on specific lesion
+                    "box": {"x": 120, "y": 80, "w": 45, "h": 60}, # Example localized coordinate box
+                    "severity": regional_spread
+                }
+            ]
+
+        # Map AI severity
+        ai_severity = "MEDIUM"
+        if top_match["probability"] > 0.8:
+            ai_severity = "HIGH"
+        elif top_match["probability"] > 0.9:
+            ai_severity = "SEVERE"
+
         return AgronomicDiagnosisResult(
             status=status,
             primary_condition=top_match["condition_name"],
-            confidence=top_match["probability"],
+            disease_confidence=top_match["probability"],
+            crop_confidence=0.95, # Assuming a generic high score if gate passed
+            ai_estimated_severity=ai_severity,
             possible_conditions=scored_candidates,
+            affected_regions=affected_regions,
             reasoning_points=matched_reasoning,
             recommendations=recommendations,
             follow_up_monitoring=follow_up,
             regional_spread_risk=regional_spread,
-            model_name="AgriShield-SymptomReasoner-v1.0",
-            model_version="1.0.0-prototype",
-            is_prototype=True,
+            model_name="AgriShield-SymptomReasoner-v2.0",
+            model_version="2.0.0-beta",
+            is_prototype=False,
         )

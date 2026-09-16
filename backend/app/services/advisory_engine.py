@@ -9,6 +9,7 @@ from datetime import datetime, timezone, timedelta
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.advisory import (
     Advisory,
@@ -118,9 +119,9 @@ class AdvisoryEngine:
         return advisory
 
     @classmethod
-    def list_advisories(
+    async def list_advisories(
         cls,
-        db: Session,
+        db: AsyncSession,
         current_user: User,
         farm_id: Optional[str] = None,
         language: str = "mr-IN",
@@ -129,16 +130,32 @@ class AdvisoryEngine:
         limit: int = 50,
     ) -> List[Dict[str, Any]]:
         """Lists advisories with active localization matching requested language."""
-        query = db.query(Advisory)
+        from sqlalchemy import select
+        
+        query = select(Advisory)
 
         if current_user.role == "FARMER":
+            # Avoid lazy-load issues by using a flat list of ids if they were preloaded,
+            # or just load them if needed. But assuming `current_user.owned_farms` is available:
             query = query.filter(Advisory.farm_id.in_([f.id for f in current_user.owned_farms]))
         if farm_id:
             query = query.filter(Advisory.farm_id == farm_id)
         if priority:
             query = query.filter(Advisory.priority == priority)
 
-        advisories = query.order_by(desc(Advisory.created_at)).offset(skip).limit(limit).all()
+        query = query.order_by(desc(Advisory.created_at)).offset(skip).limit(limit)
+        
+        # Load joined translations and farm/zone/crop safely
+        from sqlalchemy.orm import selectinload
+        query = query.options(
+            selectinload(Advisory.translations),
+            selectinload(Advisory.farm),
+            selectinload(Advisory.zone),
+            selectinload(Advisory.crop)
+        )
+
+        result = await db.execute(query)
+        advisories = result.scalars().all()
 
         results = []
         for adv in advisories:

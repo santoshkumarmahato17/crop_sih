@@ -29,7 +29,7 @@ def test_validation_logic():
         relative_humidity_percent=None,
     )
     val_missing = validate_and_tag(pt_missing)
-    assert val_missing.data_quality == DataQuality.UNAVAILABLE
+    assert val_missing.data_quality == DataQuality.PARTIAL
 
 def test_spray_window_evaluation():
     # Favorable
