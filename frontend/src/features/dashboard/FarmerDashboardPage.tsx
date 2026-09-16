@@ -29,6 +29,7 @@ import { WeatherRiskForecastCard } from '@/features/weather/WeatherRiskForecastC
 import { ZoneTemporalAnalyticsModal } from '@/features/temporal/ZoneTemporalAnalyticsModal';
 import { LanguageSwitcher } from '@/features/advisories/LanguageSwitcher';
 import { AdvisoryCard } from '@/features/advisories/AdvisoryCard';
+import { WaterRequirementMapViewer } from '@/features/water/WaterRequirementMapViewer';
 import { advisoryService } from '@/services/advisoryService';
 import { Advisory } from '@/types/advisory';
 import {
@@ -193,6 +194,8 @@ export const FarmerDashboardPage: React.FC = () => {
 
   // Modals & Weather Forecasting State
   const [isTemporalModalOpen, setIsTemporalModalOpen] = useState<boolean>(false);
+  const [isWeatherModalOpen, setIsWeatherModalOpen] = useState<boolean>(false);
+  const [isWaterModalOpen, setIsWaterModalOpen] = useState<boolean>(false);
   const [weatherRiskData, setWeatherRiskData] = useState<WeatherRiskDataWithMeta>(mockFarmWeatherRiskData);
   const [weatherHorizon, setWeatherHorizon] = useState<number>(7);
   const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
@@ -610,7 +613,11 @@ export const FarmerDashboardPage: React.FC = () => {
         </div>
 
         {/* 2. Soil Moisture & Water Stress Level — High-res Seedling Irrigation Background */}
-        <div className="relative rounded-3xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300" style={{ minHeight: '170px' }}>
+        <div 
+          onClick={() => setIsWaterModalOpen(true)}
+          className="relative rounded-3xl overflow-hidden shadow-lg group hover:shadow-xl transition-all duration-300 cursor-pointer" 
+          style={{ minHeight: '170px' }}
+        >
 
           {/* ── High-res Seedling Irrigation photo background ── */}
           <div
@@ -654,7 +661,8 @@ export const FarmerDashboardPage: React.FC = () => {
 
         {/* 3. Microclimate & Weather Card — Forest Green Gradient with Rich Animations */}
         <div
-          className="relative p-5 rounded-3xl overflow-hidden space-y-3 shadow-xl hover:shadow-2xl transition-all duration-300 group"
+          onClick={() => setIsWeatherModalOpen(true)}
+          className="relative p-5 rounded-3xl overflow-hidden space-y-3 shadow-xl hover:shadow-2xl transition-all duration-300 group cursor-pointer"
           style={{ background: 'linear-gradient(135deg, #1b3e24 0%, #142e1b 55%, #0c1f11 100%)' }}
         >
           {/* Ambient radial glow with breathing animation */}
@@ -788,17 +796,7 @@ export const FarmerDashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* ═══ Weather & Multi-Vector Predictive Risk Forecasting ═══ */}
-      <WeatherRiskForecastCard
-        riskData={weatherRiskData}
-        selectedHorizon={weatherHorizon}
-        isLoading={isWeatherLoading}
-        onHorizonChange={(days) => {
-          setWeatherHorizon(days);
-          loadWeatherRisk(selectedFarmId, days);
-        }}
-        onRefresh={() => loadWeatherRisk(selectedFarmId, weatherHorizon)}
-      />
+      {/* Removed WeatherRiskForecastCard from dashboard flow per user request (now only in modal) */}
 
       {/* 3. Multi-Crop Precision Monitoring Grid (Box-wise view & Add Crop) */}
       <div className="p-6 rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-sm dark:shadow-2xl space-y-6 backdrop-blur-xl transition-colors duration-200">
@@ -1368,6 +1366,57 @@ export const FarmerDashboardPage: React.FC = () => {
           </div>
         </div>
       )}
+      {/* 5. Weather Forecast Modal */}
+      {isWeatherModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            onClick={() => setIsWeatherModalOpen(false)}
+          />
+          <div className="relative z-10 w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl">
+            <div className="absolute top-4 right-4 z-20">
+              <button 
+                onClick={() => setIsWeatherModalOpen(false)}
+                className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full text-slate-500 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <WeatherRiskForecastCard 
+              riskData={weatherRiskData} 
+              onRefresh={() => loadWeatherRisk(selectedFarmId, weatherHorizon)}
+              onHorizonChange={(days) => setWeatherHorizon(days)}
+              selectedHorizon={weatherHorizon}
+              isLoading={isWeatherLoading}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 6. Water Stress Modal */}
+      {isWaterModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div 
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+            onClick={() => setIsWaterModalOpen(false)}
+          />
+          <div className="relative z-10 w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl shadow-2xl bg-white dark:bg-slate-900">
+            <div className="absolute top-4 right-4 z-20">
+              <button 
+                onClick={() => setIsWaterModalOpen(false)}
+                className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full text-slate-500 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <WaterRequirementMapViewer 
+              farmId={selectedFarmId || 'farm-cbe-01'}
+              farmName={summary?.farm_name || 'AgriShield Demo Farm'}
+            />
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

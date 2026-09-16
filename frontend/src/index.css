@@ -209,3 +209,8 @@
 .animate-metric-pulse {
   animation: metricPulse 4s ease-in-out infinite;
 }
+/* Google Maps API Dev Error Overrides */
+.gm-err-container { display: none !important; }
+.dismissButton { display: none !important; }
+/* Remove the darkened overlay caused by auth failure */
+.gm-style iframe + div { display: none !important; }
