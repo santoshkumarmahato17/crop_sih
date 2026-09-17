@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { MapPin, Info } from 'lucide-react';
 import { GeoJSONGeometry, Zone } from '@/types';
 
@@ -83,24 +83,24 @@ export const FarmMapViewer: React.FC<FarmMapViewerProps> = ({
       <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
 
       {/* Top Left Farm Info Header */}
-      <div className="absolute top-3 left-3 z-10 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-200 backdrop-blur shadow-md">
-        <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+      <div className="absolute top-3 left-3 z-10 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-agri-200 backdrop-blur shadow-md">
+        <MapPin className="w-3.5 h-3.5 text-agri-400" />
         <span className="font-semibold">{farmName}</span>
-        <span className="text-slate-500">|</span>
-        <span className="text-emerald-400 font-mono font-medium">{totalHectares.toFixed(2)} ha</span>
+        <span className="text-agri-500/70">|</span>
+        <span className="text-agri-400 font-mono font-medium">{totalHectares.toFixed(2)} ha</span>
         {zones.length > 0 && (
           <>
-            <span className="text-slate-500">|</span>
+            <span className="text-agri-500/70">|</span>
             <span className="text-blue-400 font-mono font-medium">{zones.length} Subdivided Zones</span>
           </>
         )}
       </div>
 
       {/* Status Color Legend */}
-      <div className="absolute top-3 right-3 z-10 hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-slate-300 backdrop-blur shadow-md">
-        <span className="text-slate-400 font-medium">Zone Health:</span>
+      <div className="absolute top-3 right-3 z-10 hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-agri-300 backdrop-blur shadow-md">
+        <span className="text-agri-400/70 font-medium">Zone Health:</span>
         <div className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+          <span className="w-2.5 h-2.5 rounded-full bg-agri-500 inline-block" />
           <span>Healthy</span>
         </div>
         <div className="flex items-center gap-1">
@@ -118,8 +118,8 @@ export const FarmMapViewer: React.FC<FarmMapViewerProps> = ({
       </div>
 
       {/* Bottom Hint */}
-      <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-md bg-slate-900/80 border border-slate-800 text-[10px] font-mono text-slate-400 flex items-center gap-1.5">
-        <Info className="w-3 h-3 text-emerald-400" />
+      <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-md bg-agri-900/60 border border-slate-800 text-[10px] font-mono text-agri-400/70 flex items-center gap-1.5">
+        <Info className="w-3 h-3 text-agri-400" />
         <span>Click any zone to inspect detailed telemetry & risk indicators</span>
       </div>
 

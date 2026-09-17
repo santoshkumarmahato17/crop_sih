@@ -10,7 +10,7 @@ import {
   SupportedClassesResponse,
 } from '@/types/cropPrediction';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || `http://${window.location.hostname}:8000/api/v1`;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 /**
  * Enhanced implementation of connectToService(data):
@@ -25,7 +25,7 @@ export async function connectToService<T = CropPredictionResponse>(
 ): Promise<T | null> {
   try {
     // Normalize URL
-    const rootBase = API_BASE_URL.replace(/\/api\/v1\/?$/, '');
+    const rootBase = API_BASE_URL.replace(/\/api\/v1\/?$/, '') || '';
     const url = endpoint.startsWith('http') ? endpoint : `${rootBase}${endpoint}`;
 
     const headers: Record<string, string> = {

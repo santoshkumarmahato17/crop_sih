@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Send, AlertCircle, Check } from 'lucide-react';
 import { FarmMapViewer } from '@/components/map/FarmMapViewer';
@@ -132,7 +132,7 @@ export const CreateMissionPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-12 text-center text-slate-400">Loading mission configuration...</div>;
+    return <div className="p-12 text-center text-agri-400/70">Loading mission configuration...</div>;
   }
 
   return (
@@ -141,13 +141,13 @@ export const CreateMissionPage: React.FC = () => {
       <div className="flex items-center gap-3">
         <Link
           to="/missions"
-          className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition"
+          className="p-2 rounded-xl bg-agri-900 border border-slate-800 hover:bg-agri-800 text-agri-400/70 hover:text-agri-200 transition"
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Schedule Drone Survey Mission</h1>
-          <p className="text-xs text-slate-400">
+          <h1 className="text-2xl font-bold text-agri-100">Schedule Drone Survey Mission</h1>
+          <p className="text-xs text-agri-400/70">
             Define survey corridors, target monitoring zones, and autonomous flight parameters.
           </p>
         </div>
@@ -163,20 +163,20 @@ export const CreateMissionPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Farm & Airframe Selection */}
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <h2 className="text-base font-semibold text-slate-100">
+          <h2 className="text-base font-semibold text-agri-100">
             1. Target Farm & Drone Assignment
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Target Farm Holding *
               </label>
               <select
                 required
                 value={selectedFarmId}
                 onChange={handleFarmChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               >
                 {farms.map((f) => (
                   <option key={f.id} value={f.id}>
@@ -187,14 +187,14 @@ export const CreateMissionPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Assigned UAV Airframe *
               </label>
               <select
                 required
                 value={selectedDroneId}
                 onChange={(e) => setSelectedDroneId(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               >
                 {drones.map((d) => (
                   <option key={d.id} value={d.id}>
@@ -210,10 +210,10 @@ export const CreateMissionPage: React.FC = () => {
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-base font-semibold text-slate-100">
+              <h2 className="text-base font-semibold text-agri-100">
                 2. Target Monitoring Zones Selection
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-agri-400/70 mt-0.5">
                 Click zones on the map or buttons below to select survey targets ({selectedZoneCodes.length} selected).
               </p>
             </div>
@@ -221,7 +221,7 @@ export const CreateMissionPage: React.FC = () => {
             <button
               type="button"
               onClick={selectAllZones}
-              className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+              className="px-3 py-1.5 rounded-lg bg-agri-800 hover:bg-slate-700 text-agri-300 text-xs font-semibold transition"
             >
               Select All Zones
             </button>
@@ -250,7 +250,7 @@ export const CreateMissionPage: React.FC = () => {
                   className={`px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition flex items-center gap-1.5 ${
                     isSelected
                       ? 'bg-blue-600/20 border-blue-500 text-blue-400 shadow-sm'
-                      : 'bg-slate-950 border-slate-800 text-slate-400 hover:bg-slate-800'
+                      : 'bg-slate-950 border-slate-800 text-agri-400/70 hover:bg-agri-800'
                   }`}
                 >
                   {isSelected && <Check className="w-3.5 h-3.5" />}
@@ -263,13 +263,13 @@ export const CreateMissionPage: React.FC = () => {
 
         {/* Flight Parameters & Priority */}
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <h2 className="text-base font-semibold text-slate-100">
+          <h2 className="text-base font-semibold text-agri-100">
             3. Autonomous Flight Telemetry & Timing
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Scheduled Execution Date/Time *
               </label>
               <input
@@ -277,16 +277,16 @@ export const CreateMissionPage: React.FC = () => {
                 required
                 value={missionDate}
                 onChange={(e) => setMissionDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Mission Priority</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Mission Priority</label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as MissionPriorityType)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 font-bold"
+                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-agri-100 focus:outline-none focus:border-agri-500 font-bold"
               >
                 <option value="NORMAL">NORMAL</option>
                 <option value="MEDIUM">MEDIUM</option>
@@ -296,7 +296,7 @@ export const CreateMissionPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Altitude AGL (Meters)
               </label>
               <input
@@ -305,12 +305,12 @@ export const CreateMissionPage: React.FC = () => {
                 max="500"
                 value={altitudeMeters}
                 onChange={(e) => setAltitudeMeters(parseFloat(e.target.value) || 50.0)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-agri-100 focus:outline-none focus:border-agri-500 font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Speed (m/s)
               </label>
               <input
@@ -319,12 +319,12 @@ export const CreateMissionPage: React.FC = () => {
                 max="25"
                 value={flightSpeedMps}
                 onChange={(e) => setFlightSpeedMps(parseFloat(e.target.value) || 5.0)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-agri-100 focus:outline-none focus:border-agri-500 font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Forward Overlap %
               </label>
               <input
@@ -333,7 +333,7 @@ export const CreateMissionPage: React.FC = () => {
                 max="95"
                 value={overlapPercentage}
                 onChange={(e) => setOverlapPercentage(parseFloat(e.target.value) || 75.0)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 font-mono"
+                className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs text-agri-100 focus:outline-none focus:border-agri-500 font-mono"
               />
             </div>
           </div>
@@ -343,7 +343,7 @@ export const CreateMissionPage: React.FC = () => {
         <div className="flex items-center justify-end gap-3 pt-2">
           <Link
             to="/missions"
-            className="px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 font-medium text-sm transition"
+            className="px-5 py-2.5 rounded-xl bg-agri-900 border border-slate-800 hover:bg-agri-800 text-agri-300 font-medium text-sm transition"
           >
             Cancel
           </Link>
@@ -351,7 +351,7 @@ export const CreateMissionPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-lg shadow-emerald-950/40 transition hover:scale-[1.02] flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-agri-500 hover:bg-agri-500 text-white font-semibold text-sm shadow-lg shadow-emerald-950/40 transition hover:scale-[1.02] flex items-center gap-2 disabled:opacity-50"
           >
             <Send className="w-4 h-4" />
             <span>{isSubmitting ? 'Compiling Corridor...' : 'Schedule Survey Flight'}</span>

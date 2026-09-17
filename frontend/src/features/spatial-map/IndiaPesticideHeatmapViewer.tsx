@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   MapPin,
@@ -212,9 +212,9 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
       case 'LOW':
       default:
         return {
-          bg: 'bg-emerald-500/20',
+          bg: 'bg-agri-500/15',
           border: 'border-emerald-500',
-          text: 'text-emerald-400',
+          text: 'text-agri-400',
           fill: '#10b981',
           glow: 'rgba(16, 185, 129, 0.3)',
         };
@@ -229,11 +229,11 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-16 transition-colors duration-200">
       {/* 1. Header Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl backdrop-blur-xl flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="p-6 sm:p-8 rounded-3xl bg-agri-900 border border-slate-800 shadow-2xl backdrop-blur-xl flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/60 via-slate-900 to-transparent pointer-events-none" />
 
         <div className="relative z-10 space-y-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-agri-500/15 border border-agri-500/25 text-agri-400 text-xs font-mono font-bold">
             <Flame className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
             <span>Full India GIS Pesticide Heatmap & Diagnostic Intelligence</span>
           </div>
@@ -242,7 +242,7 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
             India Agricultural Pesticide & Pathogen Heatmap Studio
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-agri-300 leading-relaxed">
             Real-time multispectral satellite diagnosis of regional crop pest outbreaks, chemical spray dosage guidelines, and bio-pesticide prescription protocols across all Indian agro-climatic zones.
           </p>
         </div>
@@ -251,7 +251,7 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate('/analysis')}
-            className="px-4 py-2.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition shadow-lg shadow-emerald-500/20 flex items-center gap-2"
+            className="px-4 py-2.5 rounded-2xl bg-agri-500 hover:bg-agri-400 text-slate-950 text-xs font-bold transition shadow-lg shadow-agri-500/15 flex items-center gap-2"
           >
             <Droplets className="w-4 h-4" />
             <span>Upload Field Photo for Diagnosis</span>
@@ -263,11 +263,11 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* LEFT COLUMN: Interactive Full India Vector SVG Map & Layer Selector (7 Cols) */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl space-y-4 backdrop-blur-xl">
+          <div className="p-6 rounded-3xl bg-agri-900 border border-slate-800 shadow-xl space-y-4 backdrop-blur-xl">
             {/* Map Filter Dock */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <Layers className="w-4 h-4 text-emerald-400" />
+                <Layers className="w-4 h-4 text-agri-400" />
                 <h3 className="font-bold text-white text-sm">Interactive India Geo-Spatial Layer</h3>
               </div>
 
@@ -285,8 +285,8 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
                     onClick={() => setActiveLayer(mode.key as any)}
                     className={`px-2.5 py-1 rounded-lg font-semibold transition whitespace-nowrap ${
                       activeLayer === mode.key
-                        ? 'bg-emerald-500 text-slate-950 shadow-sm font-bold'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-agri-500 text-slate-950 shadow-sm font-bold'
+                        : 'text-agri-400/70 hover:text-agri-200'
                     }`}
                   >
                     {mode.label}
@@ -399,15 +399,15 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
 
               {/* Floating Top Left Active Region Badge */}
               <div className="absolute top-4 left-4 z-10 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white backdrop-blur flex items-center gap-2 shadow-lg">
-                <MapPin className="w-4 h-4 text-emerald-400" />
+                <MapPin className="w-4 h-4 text-agri-400" />
                 <span className="font-bold">{selectedRegion.name}</span>
-                <span className="text-slate-500">|</span>
-                <span className="text-emerald-400 font-mono font-bold">{selectedRegion.pestRisk} RISK</span>
+                <span className="text-agri-500/70">|</span>
+                <span className="text-agri-400 font-mono font-bold">{selectedRegion.pestRisk} RISK</span>
               </div>
 
               {/* Floating Bottom Right Legend Box */}
-              <div className="absolute bottom-4 right-4 z-10 p-3 rounded-2xl bg-slate-900/95 border border-slate-800 text-[11px] text-slate-300 backdrop-blur space-y-1.5 shadow-xl">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block">
+              <div className="absolute bottom-4 right-4 z-10 p-3 rounded-2xl bg-slate-900/95 border border-slate-800 text-[11px] text-agri-300 backdrop-blur space-y-1.5 shadow-xl">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-agri-400/70 block">
                   Pesticide Heatmap Scale:
                 </span>
                 <div className="flex items-center gap-2 text-[10px]">
@@ -428,19 +428,19 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
             {/* Quick Regional Selector & Search Bar */}
             <div className="space-y-2.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs text-slate-400 font-bold uppercase tracking-wider block">
+                <span className="text-xs text-agri-400/70 font-bold uppercase tracking-wider block">
                   Select Indian Agricultural Zone:
                 </span>
 
                 {/* Filter Search Input */}
                 <div className="relative w-48 sm:w-64">
-                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                  <Search className="w-3.5 h-3.5 text-agri-400/70 absolute left-3 top-2.5" />
                   <input
                     type="text"
                     placeholder="Search state or pathogen..."
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-agri-500/40 focus:outline-none focus:border-agri-500"
                   />
                 </div>
               </div>
@@ -456,8 +456,8 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
                       onClick={() => setSelectedRegion(reg)}
                       className={`px-3 py-2 rounded-xl border transition flex items-center gap-2 flex-shrink-0 font-semibold ${
                         isSelected
-                          ? 'bg-emerald-500/15 border-emerald-500 text-emerald-300 shadow-sm'
-                          : 'bg-slate-950/80 border-slate-800 text-slate-400 hover:text-white'
+                          ? 'bg-agri-500/15 border-emerald-500 text-agri-300 shadow-sm'
+                          : 'bg-agri-950/80 border-slate-800 text-agri-400/70 hover:text-white'
                       }`}
                     >
                       <span className={`w-2 h-2 rounded-full ${style.bg} ${style.border}`} />
@@ -472,11 +472,11 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
 
         {/* RIGHT COLUMN: Diagnostic Pesticide Prescription Inspector (5 Cols) */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-5 backdrop-blur-xl">
+          <div className="p-6 rounded-3xl bg-agri-900 border border-slate-800 shadow-2xl space-y-5 backdrop-blur-xl">
             {/* Header Title */}
             <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 font-mono block">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-agri-400 font-mono block">
                   AI Prescriptive Agronomy Engine
                 </span>
                 <h3 className="text-base font-extrabold text-white flex items-center gap-2">
@@ -496,9 +496,9 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
 
             {/* Target Region Overview */}
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-              <span className="text-[10px] text-slate-400 font-bold uppercase">Region Monitored:</span>
+              <span className="text-[10px] text-agri-400/70 font-bold uppercase">Region Monitored:</span>
               <h4 className="text-sm font-bold text-white">{selectedRegion.name}</h4>
-              <p className="text-xs text-slate-400 font-mono">
+              <p className="text-xs text-agri-400/70 font-mono">
                 {selectedRegion.lat}° N, {selectedRegion.lng}° E • Affected: {selectedRegion.affectedAreaHectares}
               </p>
             </div>
@@ -509,27 +509,27 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
                 <Flame className="w-3.5 h-3.5" />
                 <span>Primary Pathogen Diagnosed</span>
               </span>
-              <h4 className="text-sm font-bold text-slate-100">{selectedRegion.activePathogen}</h4>
+              <h4 className="text-sm font-bold text-agri-100">{selectedRegion.activePathogen}</h4>
             </div>
 
             {/* Prescribed Pesticide & Dosage */}
-            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-3">
+            <div className="p-4 rounded-2xl bg-agri-500/10 border border-agri-500/25 space-y-3">
               <div className="space-y-1">
-                <span className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider font-mono flex items-center gap-1">
+                <span className="text-[10px] text-agri-400 font-bold uppercase tracking-wider font-mono flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Prescribed Pesticide Formulation</span>
                 </span>
                 <p className="text-sm font-extrabold text-white">{selectedRegion.prescribedPesticide}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-emerald-500/20">
+              <div className="grid grid-cols-2 gap-2 text-xs pt-1 border-t border-agri-500/20">
                 <div>
-                  <span className="text-[10px] text-slate-400 font-medium block">Recommended Dosage</span>
-                  <span className="font-bold text-emerald-300 font-mono">{selectedRegion.dosage}</span>
+                  <span className="text-[10px] text-agri-400/70 font-medium block">Recommended Dosage</span>
+                  <span className="font-bold text-agri-300 font-mono">{selectedRegion.dosage}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 font-medium block">Application Mode</span>
-                  <span className="font-bold text-emerald-300 font-mono">{selectedRegion.applicationMode}</span>
+                  <span className="text-[10px] text-agri-400/70 font-medium block">Application Mode</span>
+                  <span className="font-bold text-agri-300 font-mono">{selectedRegion.applicationMode}</span>
                 </div>
               </div>
             </div>
@@ -537,14 +537,14 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
             {/* Safety & Pre-Harvest Specs */}
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Pre-Harvest Interval</span>
+                <span className="text-[10px] text-agri-400/70 font-bold uppercase block">Pre-Harvest Interval</span>
                 <p className="text-base font-extrabold text-white font-mono">
                   {selectedRegion.preHarvestIntervalDays} Days
                 </p>
               </div>
 
               <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Soil Toxicity Index</span>
+                <span className="text-[10px] text-agri-400/70 font-bold uppercase block">Soil Toxicity Index</span>
                 <p className="text-base font-extrabold text-amber-400 font-mono">
                   {selectedRegion.soilToxicityIndex} / 10.0
                 </p>
@@ -554,17 +554,17 @@ export const IndiaPesticideHeatmapViewer: React.FC = () => {
             {/* Best Spray Window */}
             <div className="p-3.5 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
               <div className="space-y-0.5">
-                <span className="text-[10px] text-slate-400 font-bold uppercase block">Optimal Spray Window</span>
-                <p className="font-bold text-emerald-400">{selectedRegion.recommendedSprayWindow}</p>
+                <span className="text-[10px] text-agri-400/70 font-bold uppercase block">Optimal Spray Window</span>
+                <p className="font-bold text-agri-400">{selectedRegion.recommendedSprayWindow}</p>
               </div>
-              <Activity className="w-5 h-5 text-emerald-400 animate-pulse" />
+              <Activity className="w-5 h-5 text-agri-400 animate-pulse" />
             </div>
 
             {/* Download Official Prescription PDF */}
             <button
               type="button"
               onClick={handleDownloadPrescription}
-              className="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95"
+              className="w-full py-3 rounded-2xl bg-agri-500 hover:bg-agri-400 text-slate-950 text-xs font-black transition flex items-center justify-center gap-2 shadow-lg shadow-agri-500/15 active:scale-95"
             >
               <Download className="w-4 h-4" />
               <span>

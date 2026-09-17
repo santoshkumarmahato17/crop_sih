@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
   BrainCircuit,
@@ -324,25 +324,25 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-16 transition-colors duration-200">
       {/* Top Header & Language Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-xl transition-colors duration-200">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm dark:shadow-xl transition-colors duration-200">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="p-2 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition"
+              className="p-2 rounded-2xl bg-agri-50 hover:bg-agri-100 dark:bg-agri-800/50 dark:hover:bg-agri-700/40 text-agri-600 dark:text-agri-300 transition"
               title="Go Back"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
-            <div className="p-2 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
+            <div className="p-2 rounded-2xl bg-agri-500/10 dark:bg-agri-500/15 border border-agri-500/25 text-agri-600 dark:text-agri-400">
               <BrainCircuit className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-xl font-bold tracking-tight text-agri-900 dark:text-white">
               {t.studioTitle}
             </h1>
           </div>
-          <p className="text-xs text-slate-600 dark:text-slate-400">
+          <p className="text-xs text-agri-600 dark:text-agri-400/70">
             {t.studioSubtitle}
           </p>
         </div>
@@ -350,8 +350,8 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
         {/* Right Header: Source Tabs & Language Toggle */}
         <div className="flex flex-wrap items-center gap-2">
           {/* Language Switcher */}
-          <div className="flex items-center p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
-            <Globe className="w-3.5 h-3.5 ml-1.5 mr-1 text-slate-500" />
+          <div className="flex items-center p-1 rounded-2xl bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30 text-xs">
+            <Globe className="w-3.5 h-3.5 ml-1.5 mr-1 text-agri-500/70" />
             {[
               { code: 'mr', label: 'मराठी' },
               { code: 'hi', label: 'हिंदी' },
@@ -363,8 +363,8 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 onClick={() => setSelectedLang(lang.code as any)}
                 className={`px-2 py-1 rounded-xl font-bold transition ${
                   selectedLang === lang.code
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-agri-500 text-white shadow-sm'
+                    : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
                 }`}
               >
                 {lang.label}
@@ -373,20 +373,20 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
           </div>
 
           {/* Mode Switcher */}
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">
             <button
               type="button"
               onClick={() => setActiveTab('dataset')}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 ${
                 activeTab === 'dataset'
-                  ? 'bg-white dark:bg-slate-900 text-emerald-600 dark:text-emerald-400 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                  ? 'bg-white dark:bg-surface-darkCard text-agri-600 dark:text-agri-400 shadow-sm'
+                  : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Dataset Gallery</span>
             </button>
-            <label className="px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition flex items-center gap-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+            <label className="px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition flex items-center gap-1.5 text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white">
               <UploadCloud className="w-3.5 h-3.5" />
               <span>Upload Photo</span>
               <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
@@ -397,11 +397,11 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
 
       {/* Dataset Ground-Truth Gallery Bar */}
       {activeTab === 'dataset' && (
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+        <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Leaf className="w-4 h-4 text-emerald-500" />
-              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
+              <Leaf className="w-4 h-4 text-agri-500" />
+              <span className="text-xs font-bold text-agri-900 dark:text-agri-100 uppercase tracking-wider">
                 Ground-Truth Multi-Crop Pathology Gallery:
               </span>
             </div>
@@ -414,8 +414,8 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                   onClick={() => setSelectedCropFilter(c)}
                   className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
                     selectedCropFilter === c
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200'
+                      ? 'bg-agri-500 text-white'
+                      : 'bg-agri-50 dark:bg-agri-800/50 text-agri-600 dark:text-agri-400/70 hover:bg-agri-100'
                   }`}
                 >
                   {c}
@@ -427,9 +427,9 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
           {/* Sample Cards Scroll */}
           <div className="flex gap-3 overflow-x-auto pb-2 pt-1 scrollbar-thin">
             {loadingSamples ? (
-              <div className="text-xs text-slate-400 py-4">Loading verified dataset images...</div>
+              <div className="text-xs text-agri-400/70 py-4">Loading verified dataset images...</div>
             ) : filteredSamples.length === 0 ? (
-              <div className="text-xs text-slate-400 py-4">No ground-truth samples found for this crop.</div>
+              <div className="text-xs text-agri-400/70 py-4">No ground-truth samples found for this crop.</div>
             ) : (
               filteredSamples.map((s) => {
                 const isSelected = currentImageName.includes(s.condition);
@@ -440,11 +440,11 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                     onClick={() => selectSample(s)}
                     className={`flex-shrink-0 w-44 text-left p-2.5 rounded-2xl border transition group ${
                       isSelected
-                        ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-500 shadow-md ring-1 ring-emerald-500'
-                        : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-emerald-400'
+                        ? 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-500 shadow-md ring-1 ring-agri-500'
+                        : 'bg-surface-light dark:bg-agri-950/60 border-agri-200/50 dark:border-agri-700/25 hover:border-emerald-400'
                     }`}
                   >
-                    <div className="w-full h-24 rounded-xl overflow-hidden bg-slate-200 dark:bg-slate-800 mb-2 relative">
+                    <div className="w-full h-24 rounded-xl overflow-hidden bg-slate-200 dark:bg-agri-800/50 mb-2 relative">
                       <img
                         src={datasetService.getImageStreamUrl(s.relative_path)}
                         alt={s.condition}
@@ -457,10 +457,10 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                         {s.crop}
                       </span>
                     </div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
+                    <p className="text-xs font-bold text-agri-900 dark:text-agri-100 truncate">
                       {s.condition}
                     </p>
-                    <span className="text-[10px] text-slate-500 dark:text-slate-400 block truncate font-mono">
+                    <span className="text-[10px] text-agri-500/70 dark:text-agri-400/70 block truncate font-mono">
                       {s.class_key}
                     </span>
                   </button>
@@ -479,7 +479,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
               ? 'bg-rose-50 dark:bg-rose-950/30 border-rose-300 dark:border-rose-900 text-rose-800 dark:text-rose-300'
               : imageQuality.status === 'POOR'
               ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-300 dark:border-amber-900 text-amber-800 dark:text-amber-300'
-              : 'bg-emerald-50/60 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
+              : 'bg-emerald-50/60 dark:bg-emerald-950/20 border-agri-200 dark:border-emerald-800 text-agri-800 dark:text-agri-300'
           }`}
         >
           <div className="flex items-start gap-3">
@@ -488,7 +488,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
             ) : imageQuality.status === 'POOR' ? (
               <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
             ) : (
-              <ShieldCheck className="w-5 h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+              <ShieldCheck className="w-5 h-5 text-agri-600 flex-shrink-0 mt-0.5" />
             )}
             <div className="space-y-0.5">
               <h4 className="font-bold text-xs">
@@ -502,16 +502,16 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
 
           {/* Diagnostic Metrics Pills */}
           <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono">
-            <span className="px-2.5 py-1 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-current/20">
+            <span className="px-2.5 py-1 rounded-xl bg-white/85 dark:bg-surface-darkCard/80 border border-current/20">
               Blur Var: {imageQuality.blur_variance}
             </span>
-            <span className="px-2.5 py-1 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-current/20">
+            <span className="px-2.5 py-1 rounded-xl bg-white/85 dark:bg-surface-darkCard/80 border border-current/20">
               Luminance: {imageQuality.mean_luminance}
             </span>
-            <span className="px-2.5 py-1 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-current/20">
+            <span className="px-2.5 py-1 rounded-xl bg-white/85 dark:bg-surface-darkCard/80 border border-current/20">
               Contrast Std: {imageQuality.contrast_std}
             </span>
-            <span className="px-2.5 py-1 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-current/20">
+            <span className="px-2.5 py-1 rounded-xl bg-white/85 dark:bg-surface-darkCard/80 border border-current/20">
               Res: {imageQuality.image_dimensions?.width}×{imageQuality.image_dimensions?.height}
             </span>
           </div>
@@ -522,20 +522,20 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Cols: High-Resolution Viewport with Zoom, Pan, & Layer Overlays */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+          <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm space-y-4">
             {/* Viewport Header Bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-agri-200/50 dark:border-agri-700/25 pb-3">
               <div className="space-y-0.5">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                <span className="text-[10px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase tracking-wider">
                   Target Inspection Media:
                 </span>
-                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-xs truncate max-w-md">
+                <h3 className="font-bold text-agri-900 dark:text-agri-100 text-xs truncate max-w-md">
                   {currentImageName}
                 </h3>
               </div>
 
               {/* Layer Overlay Dock */}
-              <div className="p-1 rounded-xl bg-slate-100 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 flex items-center gap-1 text-[11px]">
+              <div className="p-1 rounded-xl bg-agri-50 dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 flex items-center gap-1 text-[11px]">
                 {[
                   { key: 'rgb', label: 'RGB Optical' },
                   { key: 'lesions', label: '🔴 Foliar Lesions' },
@@ -548,8 +548,8 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                     onClick={() => setActiveOverlay(mode.key as any)}
                     className={`px-2.5 py-1 rounded-lg font-semibold transition whitespace-nowrap ${
                       activeOverlay === mode.key
-                        ? 'bg-emerald-600 text-white shadow-sm'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                        ? 'bg-agri-500 text-white shadow-sm'
+                        : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-agri-200'
                     }`}
                   >
                     {mode.label}
@@ -572,7 +572,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
               {isProcessing ? (
                 <div className="text-center space-y-3 p-8">
                   <div className="w-10 h-10 border-3 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
-                  <p className="text-xs font-mono text-emerald-400 animate-pulse">
+                  <p className="text-xs font-mono text-agri-400 animate-pulse">
                     Executing Real Foliar Segmentation & Pathology Forward Pass...
                   </p>
                 </div>
@@ -600,7 +600,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
 
                   {/* Botanical Mask Highlights Overlay */}
                   {activeOverlay === 'mask' && analysisResult && (
-                    <div className="absolute inset-0 bg-emerald-500/10 mix-blend-overlay pointer-events-none" />
+                    <div className="absolute inset-0 bg-agri-500/10 mix-blend-overlay pointer-events-none" />
                   )}
 
                   {/* Real Foliar Lesion Bounding Boxes (Golden Rule 2 & 3: No Fake Boxes) */}
@@ -656,7 +656,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleZoomIn}
-                  className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition"
+                  className="p-1.5 rounded-xl hover:bg-agri-800 text-agri-300 hover:text-white transition"
                   title={t.zoomIn}
                 >
                   <ZoomIn className="w-4 h-4" />
@@ -664,7 +664,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleZoomOut}
-                  className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition"
+                  className="p-1.5 rounded-xl hover:bg-agri-800 text-agri-300 hover:text-white transition"
                   title={t.zoomOut}
                 >
                   <ZoomOut className="w-4 h-4" />
@@ -673,7 +673,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleResetZoom}
-                  className="px-2 py-1 rounded-xl text-[10px] font-bold font-mono hover:bg-slate-800 text-slate-300 hover:text-white transition"
+                  className="px-2 py-1 rounded-xl text-[10px] font-bold font-mono hover:bg-agri-800 text-agri-300 hover:text-white transition"
                   title={t.resetZoom}
                 >
                   {Math.round(zoom * 100)}%
@@ -681,7 +681,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleResetZoom}
-                  className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-300 hover:text-white transition"
+                  className="p-1.5 rounded-xl hover:bg-agri-800 text-agri-300 hover:text-white transition"
                   title={t.fitZoom}
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
@@ -689,14 +689,14 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
               </div>
 
               {/* Canopy Health Status Badge */}
-              <span className="absolute bottom-3 left-3 px-3 py-1 rounded-xl bg-slate-950/85 backdrop-blur text-emerald-400 text-xs font-mono font-bold border border-slate-800 z-30">
+              <span className="absolute bottom-3 left-3 px-3 py-1 rounded-xl bg-slate-950/85 backdrop-blur text-agri-400 text-xs font-mono font-bold border border-slate-800 z-30">
                 AI Vision • {detectedCrop} • {isHealthyCanopy ? 'Healthy' : detectedCondition}
               </span>
             </div>
 
             {/* Selected Region Inspector Dock (Golden Rule 3: Original Coordinates & Telemetry) */}
             {selectedRegion ? (
-              <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-800/80 text-slate-900 dark:text-slate-100 space-y-3">
+              <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-800/80 text-agri-900 dark:text-agri-100 space-y-3">
                 <div className="flex items-center justify-between border-b border-amber-200 dark:border-amber-900/60 pb-2">
                   <div className="flex items-center gap-2">
                     <Crosshair className="w-4 h-4 text-amber-600 dark:text-amber-400" />
@@ -707,7 +707,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedRegionId(null)}
-                    className="p-1 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-900 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition"
+                    className="p-1 rounded-lg hover:bg-amber-200 dark:hover:bg-amber-900 text-agri-500/70 hover:text-agri-900 dark:text-agri-400/70 dark:hover:text-white transition"
                   >
                     <XCircle className="w-4 h-4" />
                   </button>
@@ -715,26 +715,26 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                   <div className="p-2.5 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-amber-200 dark:border-amber-900/40">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Foliar Condition</span>
-                    <p className="font-bold text-slate-900 dark:text-white truncate">
+                    <span className="text-[10px] text-agri-500/70 uppercase font-bold block">Foliar Condition</span>
+                    <p className="font-bold text-agri-900 dark:text-white truncate">
                       {selectedRegion.label || detectedCondition}
                     </p>
                   </div>
                   <div className="p-2.5 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-amber-200 dark:border-amber-900/40">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Affected Blade %</span>
+                    <span className="text-[10px] text-agri-500/70 uppercase font-bold block">Affected Blade %</span>
                     <p className="font-bold text-amber-600 dark:text-amber-400 font-mono">
                       {selectedRegion.affected_area_pct ? `${selectedRegion.affected_area_pct}%` : 'Localized'}
                     </p>
                   </div>
                   <div className="p-2.5 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-amber-200 dark:border-amber-900/40">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Severity Rating</span>
+                    <span className="text-[10px] text-agri-500/70 uppercase font-bold block">Severity Rating</span>
                     <p className="font-bold text-rose-600 dark:text-rose-400 uppercase font-mono">
                       {selectedRegion.severity || physicalSeverityLevel}
                     </p>
                   </div>
                   <div className="p-2.5 rounded-xl bg-white/70 dark:bg-slate-900/70 border border-amber-200 dark:border-amber-900/40">
-                    <span className="text-[10px] text-slate-500 uppercase font-bold block">Original Pixels</span>
-                    <p className="font-mono text-[11px] text-slate-700 dark:text-slate-300">
+                    <span className="text-[10px] text-agri-500/70 uppercase font-bold block">Original Pixels</span>
+                    <p className="font-mono text-[11px] text-agri-700 dark:text-agri-300">
                       {selectedRegion.bbox
                         ? `${selectedRegion.bbox.width}×${selectedRegion.bbox.height}px (at ${selectedRegion.bbox.x},${selectedRegion.bbox.y})`
                         : 'Calibrated'}
@@ -745,7 +745,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 {/* Symptoms Tags */}
                 {selectedRegion.symptoms && selectedRegion.symptoms.length > 0 && (
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[10px] font-bold uppercase text-slate-500">Observed Lesion Symptoms:</span>
+                    <span className="text-[10px] font-bold uppercase text-agri-500/70">Observed Lesion Symptoms:</span>
                     {selectedRegion.symptoms.map((sym: string, sIdx: number) => (
                       <span
                         key={sIdx}
@@ -759,12 +759,12 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
               </div>
             ) : (
               !isHealthyCanopy && !isQualityUnusable && detectedPatches.length > 0 && (
-                <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-between">
+                <div className="p-3 rounded-2xl bg-surface-light dark:bg-agri-950/60 border border-agri-200/50 dark:border-agri-700/25 text-xs text-agri-600 dark:text-agri-400/70 flex items-center justify-between">
                   <span className="flex items-center gap-2">
-                    <Info className="w-4 h-4 text-emerald-500" />
+                    <Info className="w-4 h-4 text-agri-500" />
                     <span>{t.clickToInspect} ({detectedPatches.length} {t.lesionSpots})</span>
                   </span>
-                  <span className="text-[10px] font-mono text-slate-500">Coordinates Scaled 1:1</span>
+                  <span className="text-[10px] font-mono text-agri-500/70">Coordinates Scaled 1:1</span>
                 </div>
               )
             )}
@@ -773,14 +773,14 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
 
         {/* Right Col: AI Verdict, Decoupled Damage vs Risk, Verified Video, & Safe IPM */}
         <div className="space-y-5">
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
-            <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex justify-between items-start">
+          <div className="p-6 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm space-y-5">
+            <div className="border-b border-agri-200/50 dark:border-agri-700/25 pb-3 flex justify-between items-start">
               <div>
-                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <h3 className="font-bold text-agri-900 dark:text-agri-100 text-sm flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-agri-600 dark:text-agri-400" />
                   <span>AI Vision Pathology Verdict</span>
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                   PyTorch Vision Engine calibrated on real agricultural pathology.
                 </p>
               </div>
@@ -799,9 +799,9 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
             <div
               className={`p-4 rounded-2xl border space-y-2.5 ${
                 isHealthyCanopy
-                  ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/20 border-agri-200 dark:border-emerald-800'
                   : isQualityUnusable
-                  ? 'bg-slate-100 dark:bg-slate-950 border-slate-300 dark:border-slate-800'
+                  ? 'bg-agri-50 dark:bg-surface-darkBg border-slate-300 dark:border-agri-700/25'
                   : 'bg-rose-50 dark:bg-rose-500/10 border-rose-200 dark:border-rose-500/30'
               }`}
             >
@@ -809,9 +809,9 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 <span
                   className={`text-[10px] font-bold uppercase tracking-wider font-mono ${
                     isHealthyCanopy
-                      ? 'text-emerald-700 dark:text-emerald-400'
+                      ? 'text-agri-700 dark:text-agri-400'
                       : isQualityUnusable
-                      ? 'text-slate-600 dark:text-slate-400'
+                      ? 'text-agri-600 dark:text-agri-400/70'
                       : 'text-rose-700 dark:text-rose-400'
                   }`}
                 >
@@ -820,7 +820,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 <span
                   className={`px-2 py-0.5 rounded-full text-white text-[10px] font-bold font-mono ${
                     isHealthyCanopy
-                      ? 'bg-emerald-600'
+                      ? 'bg-agri-500'
                       : isQualityUnusable
                       ? 'bg-slate-600'
                       : urgency === 'Urgent'
@@ -831,16 +831,16 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                   {urgency.toUpperCase()}
                 </span>
               </div>
-              <h4 className="text-base font-bold text-slate-900 dark:text-slate-100">
+              <h4 className="text-base font-bold text-agri-900 dark:text-agri-100">
                 {detectedCondition}
               </h4>
               {scientificName && scientificName !== 'None' && (
-                <p className="text-xs italic text-slate-500 dark:text-slate-400 font-mono">
+                <p className="text-xs italic text-agri-500/70 dark:text-agri-400/70 font-mono">
                   {scientificName}
                 </p>
               )}
               {causalDescription && (
-                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-[11px] text-agri-600 dark:text-agri-400/70 leading-relaxed">
                   {causalDescription}
                 </p>
               )}
@@ -867,17 +867,17 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
 
             {/* Micro Metrics (Vitality & Confidence) */}
             <div className="grid grid-cols-3 gap-2 text-xs">
-              <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-0.5">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">
+              <div className="p-3 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-0.5">
+                <span className="text-[10px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase">
                   Confidence
                 </span>
-                <p className="text-base font-black text-emerald-600 dark:text-emerald-400 font-mono">
+                <p className="text-base font-black text-agri-600 dark:text-agri-400 font-mono">
                   {confidencePercent}%
                 </p>
               </div>
 
-              <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-0.5">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">
+              <div className="p-3 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-0.5">
+                <span className="text-[10px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase">
                   Health Index
                 </span>
                 <p className="text-base font-black text-sky-600 dark:text-sky-400 font-mono">
@@ -885,8 +885,8 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 </p>
               </div>
 
-              <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-0.5">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase">
+              <div className="p-3 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-0.5">
+                <span className="text-[10px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase">
                   Stress Level
                 </span>
                 <p className="text-base font-black text-amber-600 dark:text-amber-400 font-mono">
@@ -898,49 +898,49 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
             {/* Decoupled Physical Severity vs Future Risk (Golden Rule 6 & 9) */}
             <div className="space-y-3">
               {/* 1. Observed Physical Severity */}
-              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5">
+              <div className="p-3.5 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                  <span className="text-[10px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase tracking-wider">
                     {t.observedSeverityTitle}:
                   </span>
                   <span className="text-xs font-bold font-mono uppercase text-rose-600 dark:text-rose-400">
                     {physicalSeverityLevel} ({affectedAreaPct}% leaf blade)
                   </span>
                 </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div className="w-full bg-slate-200 dark:bg-agri-800/50 h-1.5 rounded-full overflow-hidden">
                   <div
                     style={{ width: `${Math.min(100, Math.max(5, affectedAreaPct * 2))}%` }}
                     className={`h-full rounded-full ${
-                      affectedAreaPct < 5 ? 'bg-emerald-500' : affectedAreaPct < 20 ? 'bg-amber-500' : 'bg-rose-500'
+                      affectedAreaPct < 5 ? 'bg-agri-500' : affectedAreaPct < 20 ? 'bg-amber-500' : 'bg-rose-500'
                     }`}
                   />
                 </div>
               </div>
 
               {/* 2. Epidemiological Spread Risk (Disclosed if Limited) */}
-              <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5">
+              <div className="p-3.5 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
+                  <span className="text-[10px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase tracking-wider">
                     {t.epidemiologicalRiskTitle}:
                   </span>
                   <span
                     className={`text-xs font-bold font-mono uppercase ${
                       isRiskLimited
-                        ? 'text-slate-500 dark:text-slate-400'
+                        ? 'text-agri-500/70 dark:text-agri-400/70'
                         : riskDetail?.level === 'CRITICAL' || riskDetail?.level === 'HIGH'
                         ? 'text-rose-600 dark:text-rose-400'
-                        : 'text-emerald-600 dark:text-emerald-400'
+                        : 'text-agri-600 dark:text-agri-400'
                     }`}
                   >
                     {riskDetail?.level || 'LIMITED'}
                   </span>
                 </div>
                 {isRiskLimited ? (
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 italic leading-snug">
+                  <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70 italic leading-snug">
                     {t.riskLimitedDesc}
                   </p>
                 ) : (
-                  <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-snug">
+                  <p className="text-[11px] text-agri-600 dark:text-agri-300 leading-snug">
                     {riskDetail?.summary || 'Epidemiological spread risk calculated from foliar damage telemetry.'}
                   </p>
                 )}
@@ -955,10 +955,10 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                   <span>{t.videoTitle}</span>
                 </div>
                 <div className="space-y-1">
-                  <h5 className="font-bold text-xs text-slate-900 dark:text-white leading-snug">
+                  <h5 className="font-bold text-xs text-agri-900 dark:text-white leading-snug">
                     {videoResource.title}
                   </h5>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400">
+                  <p className="text-[10px] text-agri-500/70 dark:text-agri-400/70">
                     Publisher: {videoResource.publisher || videoResource.channel} • {videoResource.language}
                   </p>
                 </div>
@@ -975,8 +975,8 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
             )}
 
             {/* Curated Safe IPM Prescription (Golden Rule 7) */}
-            <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 space-y-3">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-400 flex items-center gap-1 font-mono">
+            <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-agri-500/10 border border-agri-200 dark:border-agri-500/25 space-y-3">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-agri-800 dark:text-agri-400 flex items-center gap-1 font-mono">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>{t.ipmTitle}</span>
               </span>
@@ -988,10 +988,10 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 </div>
               )}
 
-              <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-2.5 list-disc pl-4 leading-relaxed">
+              <ul className="text-xs text-agri-700 dark:text-agri-300 space-y-2.5 list-disc pl-4 leading-relaxed">
                 {ipmRecommendations.map((rec: any, idx: number) => (
                   <li key={idx}>
-                    <strong className="text-slate-900 dark:text-white">
+                    <strong className="text-agri-900 dark:text-white">
                       {rec.action_type ? `[${rec.action_type}] ` : ''}
                       {rec.title || rec.action}:{' '}
                     </strong>
@@ -1008,7 +1008,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                 setReportExported(true);
                 setTimeout(() => setReportExported(false), 3000);
               }}
-              className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm"
+              className="w-full py-2.5 rounded-xl bg-agri-900 hover:bg-agri-800 dark:bg-agri-800/50 dark:hover:bg-agri-700/40 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm"
             >
               <FileText className="w-4 h-4" />
               <span>{reportExported ? '✓ Report PDF Generated' : t.exportReport}</span>

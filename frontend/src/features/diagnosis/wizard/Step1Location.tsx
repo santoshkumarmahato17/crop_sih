@@ -117,7 +117,7 @@ export const Step1Location: React.FC<Props> = ({ onNext }) => {
             ) : (
               zones.map((z) => (
                 <option key={z.id} value={z.id}>
-                  {z.name} - {z.crop_type} ({z.area_hectares} ha)
+                  {z.name} - {(z as any).crop_type || 'Zone'} ({z.area_hectares} ha)
                 </option>
               ))
             )}

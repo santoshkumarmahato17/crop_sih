@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Undo, Trash2, Check, Sparkles, Layers, AlertCircle } from 'lucide-react';
 
 interface Point {
@@ -114,12 +114,12 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
       {/* Map Control Header */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-slate-300 font-medium">
-            <MapPin className="w-4 h-4 text-emerald-400" />
+          <div className="flex items-center gap-1.5 text-agri-300 font-medium">
+            <MapPin className="w-4 h-4 text-agri-400" />
             <span>Boundary Coordinates ({points.length} vertices)</span>
           </div>
 
-          <div className="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono font-semibold">
+          <div className="px-2.5 py-1 rounded-full bg-agri-500/10 border border-agri-500/25 text-agri-400 font-mono font-semibold">
             Live Area: {liveAreaHa.toFixed(2)} ha (~{(liveAreaHa * 2.47105).toFixed(2)} acres)
           </div>
         </div>
@@ -128,7 +128,7 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
           <button
             type="button"
             onClick={loadPresetDemoPolygon}
-            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition flex items-center gap-1"
+            className="px-2.5 py-1 rounded-lg bg-agri-800 hover:bg-slate-700 text-agri-300 transition flex items-center gap-1"
           >
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
             <span>Load Demo Polygon</span>
@@ -138,7 +138,7 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
             <button
               type="button"
               onClick={handleClosePolygon}
-              className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium transition flex items-center gap-1"
+              className="px-3 py-1 rounded-lg bg-agri-500 hover:bg-agri-500 text-white font-medium transition flex items-center gap-1"
             >
               <Check className="w-3.5 h-3.5" />
               <span>Complete Boundary</span>
@@ -150,7 +150,7 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
               <button
                 type="button"
                 onClick={handleUndo}
-                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
+                className="p-1.5 rounded-lg bg-agri-800 hover:bg-slate-700 text-agri-300 transition"
                 title="Undo last vertex"
               >
                 <Undo className="w-3.5 h-3.5" />
@@ -174,13 +174,13 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
         <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
 
         {/* Map Center Coordinates Overlay */}
-        <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-md bg-slate-900/80 border border-slate-800 text-[10px] font-mono text-slate-400">
+        <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-md bg-agri-900/60 border border-slate-800 text-[10px] font-mono text-agri-400/70">
           Center: {baseCenter.lat.toFixed(4)}° N, {baseCenter.lng.toFixed(4)}° E (SRID 4326)
         </div>
 
         {/* Instruction Banner */}
-        <div className="absolute top-3 left-3 z-10 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs text-slate-300 backdrop-blur flex items-center gap-2">
-          <Layers className="w-3.5 h-3.5 text-emerald-400" />
+        <div className="absolute top-3 left-3 z-10 px-3 py-1.5 rounded-lg bg-agri-900/60 border border-slate-800 text-xs text-agri-300 backdrop-blur flex items-center gap-2">
+          <Layers className="w-3.5 h-3.5 text-agri-400" />
           <span>
             {isClosed
               ? 'Boundary closed and validated. Click "Load Demo Polygon" or "Clear" to modify.'

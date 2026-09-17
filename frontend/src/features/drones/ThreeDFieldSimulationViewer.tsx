@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+﻿import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import {
   Play,
@@ -288,17 +288,17 @@ export const ThreeDFieldSimulationViewer: React.FC<ThreeDFieldSimulationViewerPr
   }, [isPlaying, droneAltitude, scanSpeed, cameraView]);
 
   return (
-    <div className="p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-2xl space-y-4 backdrop-blur-xl relative overflow-hidden">
+    <div className="p-6 rounded-3xl bg-agri-900 border border-slate-800 shadow-2xl space-y-4 backdrop-blur-xl relative overflow-hidden">
       {/* Top Controls Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
         <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono font-bold">
+            <span className="px-2.5 py-0.5 rounded-full bg-agri-500/15 border border-agri-500/25 text-agri-400 text-[10px] font-mono font-bold">
               THREE.JS WEBGL SIMULATOR
             </span>
             <h3 className="font-extrabold text-white text-base">3D Drone Telemetry & Crop Field Simulator</h3>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-agri-400/70">
             Real-time WebGL 3D flight trajectory, multispectral canopy mesh, and quadcopter sensor payload.
           </p>
         </div>
@@ -316,8 +316,8 @@ export const ThreeDFieldSimulationViewer: React.FC<ThreeDFieldSimulationViewerPr
               onClick={() => setCameraView(mode.key as any)}
               className={`px-3 py-1.5 rounded-xl font-bold transition ${
                 cameraView === mode.key
-                  ? 'bg-emerald-500 text-slate-950 shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-agri-500 text-slate-950 shadow-sm'
+                  : 'text-agri-400/70 hover:text-white'
               }`}
             >
               {mode.label}
@@ -334,22 +334,22 @@ export const ThreeDFieldSimulationViewer: React.FC<ThreeDFieldSimulationViewerPr
         {/* Floating Top-Left Telemetry HUD Badge */}
         <div className="absolute top-4 left-4 z-10 p-3.5 rounded-2xl bg-slate-950/85 border border-slate-800 text-white backdrop-blur space-y-1 shadow-2xl">
           <div className="flex items-center justify-between gap-3 text-xs font-bold">
-            <span className="text-emerald-400 flex items-center gap-1.5">
+            <span className="text-agri-400 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>LIVE 3D SIMULATION</span>
             </span>
-            <span className="text-slate-400 font-mono text-[10px]">MSN-2026-3D</span>
+            <span className="text-agri-400/70 font-mono text-[10px]">MSN-2026-3D</span>
           </div>
-          <p className="text-xs font-extrabold text-slate-200">{farmName}</p>
-          <div className="flex items-center gap-3 text-[11px] font-mono text-slate-400 pt-1">
-            <span>ALT: <strong className="text-emerald-400">{droneAltitude}m</strong></span>
+          <p className="text-xs font-extrabold text-agri-200">{farmName}</p>
+          <div className="flex items-center gap-3 text-[11px] font-mono text-agri-400/70 pt-1">
+            <span>ALT: <strong className="text-agri-400">{droneAltitude}m</strong></span>
             <span>•</span>
             <span>SPEED: <strong className="text-blue-400">{(scanSpeed * 15).toFixed(1)} km/h</strong></span>
           </div>
         </div>
 
         {/* Floating Bottom-Left Layer Switcher */}
-        <div className="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-950/90 border border-slate-800 text-xs backdrop-blur shadow-2xl">
+        <div className="absolute bottom-4 left-4 z-10 flex items-center gap-1.5 p-1.5 rounded-2xl bg-agri-950/90 border border-slate-800 text-xs backdrop-blur shadow-2xl">
           {[
             { key: 'health', label: '🌿 Health' },
             { key: 'thermal', label: '🌡️ Thermal' },
@@ -362,8 +362,8 @@ export const ThreeDFieldSimulationViewer: React.FC<ThreeDFieldSimulationViewerPr
               onClick={() => setActiveLayer(layer.key as any)}
               className={`px-3 py-1 rounded-xl font-bold transition ${
                 activeLayer === layer.key
-                  ? 'bg-slate-800 text-emerald-400 border border-emerald-500/40 shadow-sm'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-agri-800 text-agri-400 border border-agri-500/30 shadow-sm'
+                  : 'text-agri-400/70 hover:text-white'
               }`}
             >
               {layer.label}
@@ -376,7 +376,7 @@ export const ThreeDFieldSimulationViewer: React.FC<ThreeDFieldSimulationViewerPr
           <button
             type="button"
             onClick={() => setIsPlaying(!isPlaying)}
-            className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 active:scale-95"
+            className="px-4 py-2 rounded-xl bg-agri-500 hover:bg-agri-400 text-slate-950 font-bold text-xs transition flex items-center gap-1.5 shadow-lg shadow-agri-500/15 active:scale-95"
           >
             {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
             <span>{isPlaying ? 'Pause 3D Flight' : 'Resume Flight'}</span>
@@ -385,11 +385,11 @@ export const ThreeDFieldSimulationViewer: React.FC<ThreeDFieldSimulationViewerPr
       </div>
 
       {/* Interactive Control Sliders */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-slate-950/80 border border-slate-800/80 text-xs backdrop-blur">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-2xl bg-agri-950/80 border border-slate-800/80 text-xs backdrop-blur">
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-slate-300">
+          <div className="flex items-center justify-between text-agri-300">
             <span className="font-bold">Drone Flight Altitude:</span>
-            <span className="font-mono text-emerald-400 font-bold">{droneAltitude} meters</span>
+            <span className="font-mono text-agri-400 font-bold">{droneAltitude} meters</span>
           </div>
           <input
             type="range"
@@ -402,7 +402,7 @@ export const ThreeDFieldSimulationViewer: React.FC<ThreeDFieldSimulationViewerPr
         </div>
 
         <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-slate-300">
+          <div className="flex items-center justify-between text-agri-300">
             <span className="font-bold">Scan Flight Velocity:</span>
             <span className="font-mono text-blue-400 font-bold">{(scanSpeed * 15).toFixed(1)} km/h</span>
           </div>

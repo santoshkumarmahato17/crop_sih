@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { RoleProtectedRoute } from '@/components/auth/RoleProtectedRoute';
@@ -524,18 +524,18 @@ export const AppRoutes: React.FC = () => {
         <Route
           path="*"
           element={
-            <div className="max-w-md mx-auto py-16 px-6 text-center rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 shadow-lg">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center text-lg font-mono font-bold">
+            <div className="max-w-md mx-auto py-16 px-6 text-center rounded-2xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 space-y-4 shadow-lg">
+              <div className="w-14 h-14 rounded-2xl bg-agri-500/10 text-agri-600 dark:text-agri-400 mx-auto flex items-center justify-center text-lg font-mono font-bold">
                 404
               </div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Page Not Found</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+              <h2 className="text-xl font-bold text-agri-900 dark:text-white">Page Not Found</h2>
+              <p className="text-xs text-agri-500/70 dark:text-agri-400/70 leading-relaxed">
                 The requested agricultural module or resource route does not exist.
               </p>
               <div className="pt-2">
                 <a
                   href="/"
-                  className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-sm"
+                  className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold transition shadow-sm"
                 >
                   Return to Dashboard
                 </a>

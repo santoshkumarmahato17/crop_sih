@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import {
   Layers,
   Plane,
@@ -384,7 +384,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full ${heightClass} rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl transition-all duration-300 select-none`}
+      className={`relative w-full ${heightClass} rounded-3xl overflow-hidden border border-agri-200/50 dark:border-agri-700/25 bg-slate-950 shadow-2xl transition-all duration-300 select-none`}
     >
       {/* ── Layer 1A: Live Google Cloud Satellite / Hybrid Map Canvas ── */}
       <div
@@ -508,18 +508,18 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
       {/* ── Layer 5: Top Left Controls (Layer Switcher & Indian Agricultural Region Selector) ── */}
       <div className="absolute top-4 left-4 z-30 flex flex-col sm:flex-row items-start sm:items-center gap-2">
         {/* Layer Switcher Pill */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-slate-950/90 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl">
+        <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-agri-950/90 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl">
           <button
             type="button"
             onClick={() => setMapLayer('google_satellite')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
               mapLayer === 'google_satellite'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-agri-500 text-white shadow-md shadow-agri-500/25'
+                : 'text-agri-400/70 hover:text-white'
             }`}
             title="Real-time Google Cloud High-Resolution Satellite View"
           >
-            <Radio className="w-3.5 h-3.5 text-emerald-300 animate-pulse" />
+            <Radio className="w-3.5 h-3.5 text-agri-300 animate-pulse" />
             <span>🛰️ Google Satellite</span>
           </button>
 
@@ -529,7 +529,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
               mapLayer === 'google_hybrid'
                 ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
-                : 'text-slate-400 hover:text-white'
+                : 'text-agri-400/70 hover:text-white'
             }`}
             title="Google Satellite with Roads & Field Landmarks"
           >
@@ -543,7 +543,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
               mapLayer === 'ndvi'
                 ? 'bg-lime-600 text-white shadow-md shadow-lime-600/30'
-                : 'text-slate-400 hover:text-white'
+                : 'text-agri-400/70 hover:text-white'
             }`}
             title="Multispectral Sentinel-2 NDVI Foliar Vegetation Index"
           >
@@ -557,7 +557,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
               mapLayer === 'thermal'
                 ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                : 'text-slate-400 hover:text-white'
+                : 'text-agri-400/70 hover:text-white'
             }`}
             title="Crop Water Stress Index Thermal Radiometry"
           >
@@ -571,7 +571,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
             className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition ${
               mapLayer === 'google_terrain'
                 ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
-                : 'text-slate-400 hover:text-white'
+                : 'text-agri-400/70 hover:text-white'
             }`}
             title="Google Maps Topographical Elevation & Relief"
           >
@@ -585,16 +585,16 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
           <button
             type="button"
             onClick={() => setIsRegionMenuOpen((prev) => !prev)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-slate-950/90 border border-slate-700/80 text-emerald-300 hover:text-emerald-200 text-xs font-bold backdrop-blur-xl shadow-xl transition"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-agri-950/90 border border-slate-700/80 text-agri-300 hover:text-emerald-200 text-xs font-bold backdrop-blur-xl shadow-xl transition"
           >
-            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+            <MapPin className="w-3.5 h-3.5 text-agri-400" />
             <span>{activeRegion.name.split('—')[0]}</span>
-            <span className="text-[10px] text-slate-400">({activeRegion.state})</span>
+            <span className="text-[10px] text-agri-400/70">({activeRegion.state})</span>
           </button>
 
           {isRegionMenuOpen && (
             <div className="absolute top-full left-0 mt-2 w-72 p-2 rounded-2xl bg-slate-950/95 border border-slate-700 backdrop-blur-2xl shadow-2xl space-y-1 z-50 animate-in fade-in zoom-in-95 duration-150">
-              <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-slate-400 border-b border-slate-800">
+              <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-agri-400/70 border-b border-slate-800">
                 Select Agro-Climatic Belt (Google Satellite)
               </div>
               {AGRO_REGION_PRESETS.map((preset) => (
@@ -604,20 +604,20 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
                   onClick={() => handleSelectRegion(preset)}
                   className={`w-full text-left px-3 py-2 rounded-xl text-xs font-medium transition flex items-center justify-between ${
                     activeRegion.id === preset.id
-                      ? 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/30'
-                      : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
+                      ? 'bg-agri-500/20 text-agri-300 border border-agri-500/25'
+                      : 'text-agri-300 hover:bg-agri-800/40 hover:text-white'
                   }`}
                 >
                   <div>
                     <div className="font-bold text-white flex items-center gap-1.5">
-                      {activeRegion.id === preset.id && <Check className="w-3.5 h-3.5 text-emerald-400" />}
+                      {activeRegion.id === preset.id && <Check className="w-3.5 h-3.5 text-agri-400" />}
                       <span>{preset.name}</span>
                     </div>
-                    <div className="text-[10px] text-slate-400 font-mono">
+                    <div className="text-[10px] text-agri-400/70 font-mono">
                       {preset.state} • {preset.primaryCrops}
                     </div>
                   </div>
-                  <span className="text-[10px] text-emerald-400 font-mono">
+                  <span className="text-[10px] text-agri-400 font-mono">
                     {preset.lat.toFixed(2)}°N
                   </span>
                 </button>
@@ -631,20 +631,20 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
       <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
         {/* Drone Live Telemetry Badge */}
         {showDrone && (
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-slate-950/90 border border-sky-500/40 text-sky-300 backdrop-blur-xl text-xs font-mono shadow-xl">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-agri-950/90 border border-sky-500/40 text-sky-300 backdrop-blur-xl text-xs font-mono shadow-xl">
             <Plane className="w-3.5 h-3.5 text-sky-400 animate-pulse" />
             <span>UAV-01 ALT: {dronePos.alt.toFixed(0)}m</span>
-            <span className="text-slate-500">|</span>
+            <span className="text-agri-500/70">|</span>
             <span>SPEED: 14.2 m/s</span>
           </div>
         )}
 
         {/* Live Satellite Feed Status Badge */}
         <div
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-slate-950/90 border backdrop-blur-xl text-xs font-mono shadow-xl ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-agri-950/90 border backdrop-blur-xl text-xs font-mono shadow-xl ${
             googleMapsError
               ? 'border-amber-500/40 text-amber-300'
-              : 'border-emerald-500/40 text-emerald-300'
+              : 'border-agri-500/30 text-agri-300'
           }`}
           title={googleMapsError || 'Connected to Google Cloud High-Resolution Satellite Feed'}
         >
@@ -667,7 +667,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
         <button
           type="button"
           onClick={toggleFullscreen}
-          className="p-2 rounded-2xl bg-slate-950/85 hover:bg-slate-800 text-white border border-slate-700 transition backdrop-blur-xl shadow-lg"
+          className="p-2 rounded-2xl bg-slate-950/85 hover:bg-agri-800 text-white border border-slate-700 transition backdrop-blur-xl shadow-lg"
           title={isFullscreen ? 'Exit Fullscreen' : 'Fullscreen Satellite View'}
         >
           {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -675,11 +675,11 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
       </div>
 
       {/* ── Layer 7: Right Side Zoom & Tool Buttons ── */}
-      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2 p-1.5 bg-slate-950/90 border border-slate-800 backdrop-blur-xl rounded-2xl shadow-2xl">
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2 p-1.5 bg-agri-950/90 border border-slate-800 backdrop-blur-xl rounded-2xl shadow-2xl">
         <button
           type="button"
           onClick={handleZoomIn}
-          className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
+          className="p-2 rounded-xl text-agri-300 hover:text-white hover:bg-agri-800 transition"
           title="Zoom In Satellite"
         >
           <ZoomIn className="w-4 h-4" />
@@ -687,7 +687,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
         <button
           type="button"
           onClick={handleZoomOut}
-          className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
+          className="p-2 rounded-xl text-agri-300 hover:text-white hover:bg-agri-800 transition"
           title="Zoom Out Satellite"
         >
           <ZoomOut className="w-4 h-4" />
@@ -695,17 +695,17 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
         <button
           type="button"
           onClick={handleResetView}
-          className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition text-[10px] font-mono font-bold"
+          className="p-2 rounded-xl text-agri-300 hover:text-white hover:bg-agri-800 transition text-[10px] font-mono font-bold"
           title="Reset View to Region Center"
         >
           Reset
         </button>
-        <div className="w-full h-px bg-slate-800 my-0.5" />
+        <div className="w-full h-px bg-agri-800 my-0.5" />
         <button
           type="button"
           onClick={() => setShowGrid((prev) => !prev)}
           className={`p-2 rounded-xl transition ${
-            showGrid ? 'text-emerald-400 bg-emerald-500/20' : 'text-slate-500 hover:text-slate-300'
+            showGrid ? 'text-agri-400 bg-agri-500/15' : 'text-agri-500/70 hover:text-agri-300'
           }`}
           title="Toggle Sub-Meter Precision Grid"
         >
@@ -715,7 +715,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
           type="button"
           onClick={() => setShowDrone((prev) => !prev)}
           className={`p-2 rounded-xl transition ${
-            showDrone ? 'text-sky-400 bg-sky-500/20' : 'text-slate-500 hover:text-slate-300'
+            showDrone ? 'text-sky-400 bg-sky-500/20' : 'text-agri-500/70 hover:text-agri-300'
           }`}
           title="Toggle Drone Mission Overlay"
         >
@@ -725,7 +725,7 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
 
       {/* ── Layer 8: Bottom Left Selected Zone Telemetry Card (Glassmorphic) ── */}
       {selectedZone && (
-        <div className="absolute bottom-4 left-4 z-30 max-w-[calc(100vw-32px)] sm:max-w-md p-4 rounded-3xl bg-slate-950/90 border border-emerald-500/30 backdrop-blur-2xl text-white shadow-2xl space-y-3 animate-in slide-in-from-bottom-3 duration-200">
+        <div className="absolute bottom-4 left-4 z-30 max-w-[calc(100vw-32px)] sm:max-w-md p-4 rounded-3xl bg-agri-950/90 border border-agri-500/25 backdrop-blur-2xl text-white shadow-2xl space-y-3 animate-in slide-in-from-bottom-3 duration-200">
           <div className="flex items-start justify-between gap-3 border-b border-slate-800 pb-2.5">
             <div>
               <div className="flex items-center gap-2">
@@ -733,24 +733,24 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
                   className={`px-2 py-0.5 rounded-full text-[10px] font-black border font-mono ${
                     selectedZone.healthStatus === 'HIGH_RISK'
                       ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                      : 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                      : 'bg-agri-500/15 text-agri-300 border-agri-500/30'
                   }`}
                 >
                   {selectedZone.healthStatus.replace('_', ' ')}
                 </span>
-                <span className="text-[10px] text-slate-400 font-mono">
+                <span className="text-[10px] text-agri-400/70 font-mono">
                   {selectedZone.areaHa} Hectares
                 </span>
               </div>
               <h4 className="font-extrabold text-sm sm:text-base text-white tracking-tight mt-1">
                 {selectedZone.name}
               </h4>
-              <p className="text-xs text-emerald-300 font-medium">{selectedZone.crop}</p>
+              <p className="text-xs text-agri-300 font-medium">{selectedZone.crop}</p>
             </div>
 
             <div className="text-right">
-              <span className="text-[10px] text-slate-400 block font-mono">NDVI Index</span>
-              <span className="text-xl font-black font-mono text-emerald-400">
+              <span className="text-[10px] text-agri-400/70 block font-mono">NDVI Index</span>
+              <span className="text-xl font-black font-mono text-agri-400">
                 {selectedZone.ndvi.toFixed(2)}
               </span>
             </div>
@@ -758,30 +758,30 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
 
           {/* Telemetry Strip */}
           <div className="grid grid-cols-3 gap-2 text-[11px] font-mono">
-            <div className="p-2 rounded-xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[9px] text-slate-400 block">Soil Moisture</span>
+            <div className="p-2 rounded-xl bg-agri-900/60 border border-slate-800">
+              <span className="text-[9px] text-agri-400/70 block">Soil Moisture</span>
               <strong className="text-sky-300 text-xs">{selectedZone.soilMoisture}%</strong>
             </div>
-            <div className="p-2 rounded-xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[9px] text-slate-400 block">Canopy Temp</span>
+            <div className="p-2 rounded-xl bg-agri-900/60 border border-slate-800">
+              <span className="text-[9px] text-agri-400/70 block">Canopy Temp</span>
               <strong className="text-amber-300 text-xs">{selectedZone.canopyTemp}°C</strong>
             </div>
-            <div className="p-2 rounded-xl bg-slate-900/80 border border-slate-800">
-              <span className="text-[9px] text-slate-400 block">CWSI Stress</span>
+            <div className="p-2 rounded-xl bg-agri-900/60 border border-slate-800">
+              <span className="text-[9px] text-agri-400/70 block">CWSI Stress</span>
               <strong className="text-rose-300 text-xs">{selectedZone.cwsi.toFixed(2)}</strong>
             </div>
           </div>
 
           {/* Pathogen Threat Banner */}
-          <div className="p-2.5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between text-xs">
-            <span className="text-[11px] text-slate-300 flex items-center gap-1.5">
+          <div className="p-2.5 rounded-2xl bg-agri-900 border border-slate-800 flex items-center justify-between text-xs">
+            <span className="text-[11px] text-agri-300 flex items-center gap-1.5">
               <ShieldAlert className="w-3.5 h-3.5 text-rose-400 flex-shrink-0" />
               <span className="truncate max-w-[220px]">{selectedZone.pathogenRisk}</span>
             </span>
             <button
               type="button"
               onClick={() => (window.location.href = '/advisories')}
-              className="text-[10px] font-bold text-emerald-400 hover:text-emerald-300 transition underline whitespace-nowrap ml-2"
+              className="text-[10px] font-bold text-agri-400 hover:text-agri-300 transition underline whitespace-nowrap ml-2"
             >
               View Advisory →
             </button>
@@ -790,14 +790,14 @@ export const LiveSatelliteGISMap: React.FC<LiveSatelliteGISMapProps> = ({
       )}
 
       {/* ── Layer 9: Bottom Right Real-Time Satellite Coordinates Strip ── */}
-      <div className="absolute bottom-4 right-4 z-30 hidden md:flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-slate-950/85 border border-slate-800 text-slate-300 text-[10px] font-mono backdrop-blur-xl shadow-xl">
-        <span className="flex items-center gap-1 text-emerald-400">
+      <div className="absolute bottom-4 right-4 z-30 hidden md:flex items-center gap-3 px-3 py-1.5 rounded-2xl bg-slate-950/85 border border-slate-800 text-agri-300 text-[10px] font-mono backdrop-blur-xl shadow-xl">
+        <span className="flex items-center gap-1 text-agri-400">
           <Compass className="w-3 h-3 animate-spin" style={{ animationDuration: '10s' }} />
           <span>LAT: {currentCoords.lat.toFixed(4)}° N</span>
         </span>
-        <span className="text-slate-600">|</span>
-        <span className="text-emerald-400">LNG: {currentCoords.lng.toFixed(4)}° E</span>
-        <span className="text-slate-600">|</span>
+        <span className="text-agri-600">|</span>
+        <span className="text-agri-400">LNG: {currentCoords.lng.toFixed(4)}° E</span>
+        <span className="text-agri-600">|</span>
         <span className="text-sky-300">GSD: 0.3m (Google High-Res)</span>
       </div>
     </div>

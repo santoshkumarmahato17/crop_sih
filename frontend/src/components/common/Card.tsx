@@ -17,11 +17,11 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   const variantStyles = {
     glass:
-      'bg-slate-900/80 border border-slate-800 backdrop-blur-xl shadow-xl text-slate-100',
+      'bg-white/90 dark:bg-surface-darkCard/80 border border-agri-200/50 dark:border-agri-700/25 backdrop-blur-xl shadow-card dark:shadow-card-dark text-agri-900 dark:text-agri-50',
     solid:
-      'bg-slate-900 border border-slate-800 shadow-md text-slate-100',
+      'bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-card dark:shadow-card-dark text-agri-900 dark:text-agri-50',
     gradient:
-      'bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 border border-emerald-500/20 shadow-xl text-slate-100',
+      'bg-gradient-to-br from-white via-white/95 to-agri-50/80 dark:from-surface-darkCard dark:via-surface-darkCard/90 dark:to-agri-900/40 border border-agri-500/15 dark:border-agri-500/20 shadow-card dark:shadow-card-dark text-agri-900 dark:text-agri-50',
   };
 
   const paddingStyles = {
@@ -32,7 +32,7 @@ export const Card: React.FC<CardProps> = ({
   };
 
   const hoverStyles = hoverEffect
-    ? 'transition-all duration-300 hover:border-emerald-500/50 hover:shadow-emerald-500/10 hover:-translate-y-0.5'
+    ? 'transition-all duration-300 hover:border-agri-500/40 dark:hover:border-agri-500/30 hover:shadow-card-hover dark:hover:shadow-card-dark-hover hover:-translate-y-0.5'
     : '';
 
   return (

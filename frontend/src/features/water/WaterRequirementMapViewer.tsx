@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import {
   Droplets,
   CloudRain,
@@ -179,15 +179,15 @@ export const WaterRequirementMapViewer: React.FC<WaterRequirementMapViewerProps>
   };
 
   return (
-    <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-xl">
+    <div className="p-5 rounded-2xl bg-agri-900/60 border border-slate-800 space-y-5 shadow-xl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
         <div>
-          <h3 className="font-bold text-slate-100 text-sm flex items-center gap-2">
+          <h3 className="font-bold text-agri-100 text-sm flex items-center gap-2">
             <Droplets className="w-4 h-4 text-sky-400" />
             <span>Precision Water-Stress Analysis & Irrigation Priority Map</span>
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-agri-400/70 mt-0.5">
             Zonal Crop Water Stress Index (CWSI), thermal canopy transpiration delta, and decision support guidance.
           </p>
         </div>
@@ -204,15 +204,15 @@ export const WaterRequirementMapViewer: React.FC<WaterRequirementMapViewerProps>
       </div>
 
       {/* Decision Support Disclaimer */}
-      <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 text-xs flex items-start gap-2">
+      <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-agri-300 text-xs flex items-start gap-2">
         <Info className="w-4 h-4 flex-shrink-0 mt-0.5 text-sky-400" />
         <p className="text-[11px] leading-relaxed">
-          <strong className="text-slate-200">Agronomic Decision Support:</strong> This model estimates Crop Water Stress Index (CWSI) and transpiration deficit to prioritize irrigation cycles. It does NOT claim exact volumetric prescription without calibrated in-situ soil tension lysimeters.
+          <strong className="text-agri-200">Agronomic Decision Support:</strong> This model estimates Crop Water Stress Index (CWSI) and transpiration deficit to prioritize irrigation cycles. It does NOT claim exact volumetric prescription without calibrated in-situ soil tension lysimeters.
         </p>
       </div>
 
       {isLoading ? (
-        <div className="p-12 text-center text-slate-400 space-y-2">
+        <div className="p-12 text-center text-agri-400/70 space-y-2">
           <div className="w-8 h-8 border-2 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-xs">Analyzing thermal and moisture indices...</p>
         </div>
@@ -221,27 +221,27 @@ export const WaterRequirementMapViewer: React.FC<WaterRequirementMapViewerProps>
           {/* Top Status Summary Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
             <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-              <span className="text-[11px] text-slate-400 block font-medium">Adequate Moisture</span>
+              <span className="text-[11px] text-agri-400/70 block font-medium">Adequate Moisture</span>
               <p className="text-2xl font-black font-mono text-sky-400">{data.adequate_count} Zones</p>
-              <span className="text-[10px] text-slate-500 block">Z01, Z02 Optimal</span>
+              <span className="text-[10px] text-agri-500/70 block">Z01, Z02 Optimal</span>
             </div>
 
             <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-              <span className="text-[11px] text-slate-400 block font-medium">Moderate Stress</span>
+              <span className="text-[11px] text-agri-400/70 block font-medium">Moderate Stress</span>
               <p className="text-2xl font-black font-mono text-amber-400">{data.moderate_count} Zone</p>
-              <span className="text-[10px] text-slate-500 block">Z03 Routine Cycle</span>
+              <span className="text-[10px] text-agri-500/70 block">Z03 Routine Cycle</span>
             </div>
 
             <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-              <span className="text-[11px] text-slate-400 block font-medium">High Deficit Stress</span>
+              <span className="text-[11px] text-agri-400/70 block font-medium">High Deficit Stress</span>
               <p className="text-2xl font-black font-mono text-rose-400">{data.high_stress_count} Zones</p>
-              <span className="text-[10px] text-slate-500 block">Z04, Z05 Priority</span>
+              <span className="text-[10px] text-agri-500/70 block">Z04, Z05 Priority</span>
             </div>
 
             <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-              <span className="text-[11px] text-slate-400 block font-medium">Waterlogging Risk</span>
+              <span className="text-[11px] text-agri-400/70 block font-medium">Waterlogging Risk</span>
               <p className="text-2xl font-black font-mono text-indigo-400">{data.waterlogged_count} Zones</p>
-              <span className="text-[10px] text-slate-500 block">0 Saturated</span>
+              <span className="text-[10px] text-agri-500/70 block">0 Saturated</span>
             </div>
           </div>
 
@@ -249,7 +249,7 @@ export const WaterRequirementMapViewer: React.FC<WaterRequirementMapViewerProps>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
             {/* Zonal Grid Requirement Map List */}
             <div className="lg:col-span-2 space-y-3">
-              <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+              <h4 className="text-xs font-bold text-agri-200 uppercase tracking-wider flex items-center gap-1.5">
                 <Layers className="w-3.5 h-3.5 text-sky-400" />
                 <span>Water Requirement Map — Zonal Breakdown ({data.zones.length})</span>
               </h4>
@@ -261,28 +261,28 @@ export const WaterRequirementMapViewer: React.FC<WaterRequirementMapViewerProps>
                     onClick={() => setSelectedZone(z)}
                     className={`p-3.5 rounded-2xl bg-slate-950 border transition cursor-pointer space-y-2.5 ${
                       selectedZone?.zone_id === z.zone_id
-                        ? 'border-sky-500/80 bg-slate-950/90 shadow-md shadow-sky-950/30'
+                        ? 'border-sky-500/80 bg-agri-950/90 shadow-md shadow-sky-950/30'
                         : 'border-slate-800 hover:border-slate-700'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-mono font-bold text-sm text-slate-100">{z.zone_code}</span>
+                      <span className="font-mono font-bold text-sm text-agri-100">{z.zone_code}</span>
                       {getStatusBadge(z.status)}
                     </div>
 
                     <div className="space-y-1 text-xs font-mono">
-                      <div className="flex justify-between text-slate-400 text-[11px]">
+                      <div className="flex justify-between text-agri-400/70 text-[11px]">
                         <span>CWSI Index:</span>
-                        <span className="text-slate-200 font-bold">{z.cwsi_index.toFixed(2)}</span>
+                        <span className="text-agri-200 font-bold">{z.cwsi_index.toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between text-slate-400 text-[11px]">
+                      <div className="flex justify-between text-agri-400/70 text-[11px]">
                         <span>Canopy Temp Diff:</span>
-                        <span className={z.canopy_air_temp_diff_c > 2.0 ? 'text-rose-400 font-bold' : 'text-slate-300'}>
+                        <span className={z.canopy_air_temp_diff_c > 2.0 ? 'text-rose-400 font-bold' : 'text-agri-300'}>
                           +{z.canopy_air_temp_diff_c.toFixed(1)}°C
                         </span>
                       </div>
                       {z.soil_moisture_pct && (
-                        <div className="flex justify-between text-slate-400 text-[11px]">
+                        <div className="flex justify-between text-agri-400/70 text-[11px]">
                           <span>Soil Moisture:</span>
                           <span className="text-sky-400">{z.soil_moisture_pct.toFixed(1)}%</span>
                         </div>
@@ -302,7 +302,7 @@ export const WaterRequirementMapViewer: React.FC<WaterRequirementMapViewerProps>
                       <span className="px-2 py-0.5 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-400 font-mono font-bold text-xs">
                         {selectedZone.zone_code}
                       </span>
-                      <h4 className="font-bold text-slate-100 text-xs">Decision Support Advisor</h4>
+                      <h4 className="font-bold text-agri-100 text-xs">Decision Support Advisor</h4>
                     </div>
                     {getStatusBadge(selectedZone.status)}
                   </div>
@@ -310,30 +310,30 @@ export const WaterRequirementMapViewer: React.FC<WaterRequirementMapViewerProps>
                   <div className="space-y-2 text-xs">
                     <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-1 font-mono">
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Irrigation Priority:</span>
+                        <span className="text-agri-400/70">Irrigation Priority:</span>
                         <span className="font-bold text-amber-400">{selectedZone.irrigation_priority}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-slate-400">Canopy Transpiration:</span>
-                        <span className={selectedZone.canopy_air_temp_diff_c > 2.0 ? 'text-rose-400 font-bold' : 'text-emerald-400'}>
+                        <span className="text-agri-400/70">Canopy Transpiration:</span>
+                        <span className={selectedZone.canopy_air_temp_diff_c > 2.0 ? 'text-rose-400 font-bold' : 'text-agri-400'}>
                           {selectedZone.canopy_air_temp_diff_c > 2.0 ? 'Stomata Closed (Deficit)' : 'Active Transpiration'}
                         </span>
                       </div>
                     </div>
 
-                    <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1.5">
+                    <div className="p-3 rounded-xl bg-agri-900/60 border border-slate-800 space-y-1.5">
                       <span className="text-[11px] font-semibold text-sky-400 flex items-center gap-1">
                         <Info className="w-3.5 h-3.5" />
                         <span>Prescribed Field Action:</span>
                       </span>
-                      <p className="text-slate-300 text-[11px] leading-relaxed">
+                      <p className="text-agri-300 text-[11px] leading-relaxed">
                         {selectedZone.decision_support_guidance}
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-agri-500/70 font-mono">
                   <span>Method: Drip System</span>
                   <span>Decision Tier: Non-prescriptive</span>
                 </div>

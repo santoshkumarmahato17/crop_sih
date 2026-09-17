@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import {
   ShieldCheck,
   AlertTriangle,
@@ -121,7 +121,7 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
         );
       default:
         return (
-          <span className="px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 font-bold text-xs flex items-center gap-1">
+          <span className="px-3 py-1 rounded-full bg-agri-500/15 border border-agri-500/30 text-agri-600 dark:text-agri-400 font-bold text-xs flex items-center gap-1">
             <CheckCircle className="w-3.5 h-3.5" />
             <span>LOW (BASELINE)</span>
           </span>
@@ -152,7 +152,7 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-16">
       {/* ── 1. Header Banner with Scope & Jurisdiction ── */}
-      <div className="p-6 rounded-3xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+      <div className="p-6 rounded-3xl bg-white dark:bg-surface-darkCard/90 border border-agri-200/50 dark:border-agri-700/25 shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
@@ -160,15 +160,15 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Agricultural Extension Officer Portal</span>
               </span>
-              <span className="text-xs text-slate-500 font-mono">
+              <span className="text-xs text-agri-500/70 font-mono">
                 Jurisdiction: Coimbatore & Western Ghats Agro Basin (Zone IV)
               </span>
             </div>
-            <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            <h1 className="text-2xl font-black text-agri-900 dark:text-white tracking-tight">
               Field Prioritization & Expert Validation Dashboard
             </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-              Assigned Officer: <strong className="text-slate-800 dark:text-slate-200">{data.officer_name}</strong> • Scope-Enforced Security
+            <p className="text-xs text-agri-500/70 dark:text-agri-400/70 font-medium">
+              Assigned Officer: <strong className="text-agri-800 dark:text-agri-200">{data.officer_name}</strong> • Scope-Enforced Security
             </p>
           </div>
 
@@ -176,12 +176,12 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
             <button
               type="button"
               onClick={fetchDashboard}
-              className="p-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition"
+              className="p-2.5 rounded-2xl bg-agri-50 hover:bg-agri-100 dark:bg-agri-800/50 dark:hover:bg-agri-700/40 text-agri-700 dark:text-agri-300 transition"
               title="Refresh Ground Telemetry"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
-            <div className="px-3.5 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-400 font-bold">
+            <div className="px-3.5 py-2 rounded-2xl bg-agri-500/10 border border-agri-500/25 flex items-center gap-2 text-xs text-agri-700 dark:text-agri-400 font-bold">
               <Lock className="w-3.5 h-3.5" />
               <span>Audited & Scope-Protected</span>
             </div>
@@ -191,32 +191,32 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
 
       {/* ── 2. Metric KPI Cards ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900/85 border border-slate-200 dark:border-slate-800 space-y-1 text-center shadow-lg hover:border-rose-500/40 transition">
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">
+        <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard/85 border border-agri-200/50 dark:border-agri-700/25 space-y-1 text-center shadow-lg hover:border-rose-500/40 transition">
+          <span className="text-[11px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase tracking-wider block">
             Critical Urgency
           </span>
           <p className="text-3xl font-black font-mono text-rose-600 dark:text-rose-400">{data.critical_count} Holdings</p>
           <span className="text-[10px] text-rose-600 dark:text-rose-400 font-bold block">Immediate Intervention</span>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900/85 border border-slate-200 dark:border-slate-800 space-y-1 text-center shadow-lg hover:border-orange-500/40 transition">
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">
+        <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard/85 border border-agri-200/50 dark:border-agri-700/25 space-y-1 text-center shadow-lg hover:border-orange-500/40 transition">
+          <span className="text-[11px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase tracking-wider block">
             High Risk Holdings
           </span>
           <p className="text-3xl font-black font-mono text-orange-600 dark:text-orange-400">{data.high_count} Holdings</p>
-          <span className="text-[10px] text-slate-500 font-semibold block">Close Monitoring</span>
+          <span className="text-[10px] text-agri-500/70 font-semibold block">Close Monitoring</span>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900/85 border border-slate-200 dark:border-slate-800 space-y-1 text-center shadow-lg hover:border-amber-500/40 transition">
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">
+        <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard/85 border border-agri-200/50 dark:border-agri-700/25 space-y-1 text-center shadow-lg hover:border-amber-500/40 transition">
+          <span className="text-[11px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase tracking-wider block">
             Pending Validations
           </span>
           <p className="text-3xl font-black font-mono text-amber-600 dark:text-amber-400">{data.pending_validations_total} Requests</p>
           <span className="text-[10px] text-amber-600 dark:text-amber-400/90 font-bold block">AI Calibration Required</span>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white dark:bg-slate-900/85 border border-slate-200 dark:border-slate-800 space-y-1 text-center shadow-lg hover:border-sky-500/40 transition">
-          <span className="text-[11px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider block">
+        <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard/85 border border-agri-200/50 dark:border-agri-700/25 space-y-1 text-center shadow-lg hover:border-sky-500/40 transition">
+          <span className="text-[11px] text-agri-500/70 dark:text-agri-400/70 font-bold uppercase tracking-wider block">
             Recommended Visits
           </span>
           <p className="text-3xl font-black font-mono text-sky-600 dark:text-sky-400">{data.recommended_visits_total} Visits</p>
@@ -225,23 +225,23 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
       </div>
 
       {/* ── 3. Search and Multi-Filter Toolbar ── */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 space-y-3 shadow-md">
+      <div className="p-4 rounded-2xl bg-white dark:bg-surface-darkCard/80 border border-agri-200/50 dark:border-agri-700/25 space-y-3 shadow-md">
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           {/* Search Box */}
           <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Search className="w-4 h-4 text-agri-400/70 absolute left-3.5 top-3" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search holding, farmer, crop, region..."
-              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-sky-500 font-medium"
+              className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl pl-9 pr-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/50 focus:outline-none focus:border-sky-500 font-medium"
             />
           </div>
 
           {/* Filter Pills */}
           <div className="flex items-center gap-1.5 flex-wrap w-full md:w-auto">
-            <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mr-1 font-bold">
+            <span className="text-xs text-agri-500/70 dark:text-agri-400/70 flex items-center gap-1 mr-1 font-bold">
               <Filter className="w-3.5 h-3.5" /> Filter by:
             </span>
             {[
@@ -258,7 +258,7 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
                 className={`px-3 py-1.5 rounded-xl text-xs font-black transition ${
                   filterTier === tab.key
                     ? 'bg-sky-600 text-white shadow-md shadow-sky-600/30'
-                    : 'bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                    : 'bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30 text-agri-600 dark:text-agri-300 hover:text-agri-900 dark:hover:text-white'
                 }`}
               >
                 {tab.label}
@@ -267,9 +267,9 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+        <div className="flex items-center justify-between text-xs text-agri-500/70 dark:text-agri-400/70 pt-1 border-t border-agri-100 dark:border-agri-700/25">
           <span>
-            Showing <strong className="text-slate-900 dark:text-slate-100 font-bold">{filteredFarms.length}</strong> of {data.total_assigned_farms} assigned holdings
+            Showing <strong className="text-agri-900 dark:text-agri-100 font-bold">{filteredFarms.length}</strong> of {data.total_assigned_farms} assigned holdings
           </span>
           <span className="font-mono text-[11px]">Evaluated: {new Date(data.evaluated_at).toLocaleTimeString()}</span>
         </div>
@@ -277,15 +277,15 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
 
       {/* ── 4. Assigned Farms Priority Ranking Cards Grid ── */}
       {isLoading ? (
-        <div className="p-16 text-center text-slate-400 space-y-2">
+        <div className="p-16 text-center text-agri-400/70 space-y-2">
           <div className="w-8 h-8 border-2 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-xs font-medium">Loading assigned farm prioritization matrix...</p>
         </div>
       ) : filteredFarms.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3">
+        <div className="p-12 text-center rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 space-y-3">
           <AlertTriangle className="w-8 h-8 text-amber-500 mx-auto" />
-          <h3 className="font-bold text-slate-800 dark:text-slate-200 text-sm">No Holdings Match Current Filter</h3>
-          <p className="text-xs text-slate-500">Try resetting your search query or selecting "All Assigned Holdings".</p>
+          <h3 className="font-bold text-agri-800 dark:text-agri-200 text-sm">No Holdings Match Current Filter</h3>
+          <p className="text-xs text-agri-500/70">Try resetting your search query or selecting "All Assigned Holdings".</p>
           <button
             type="button"
             onClick={() => {
@@ -302,24 +302,24 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
           {filteredFarms.map((farm) => (
             <div
               key={farm.farm_id}
-              className="p-5 rounded-3xl bg-white dark:bg-slate-900/85 border border-slate-200 dark:border-slate-800 hover:border-sky-500/40 transition space-y-4 shadow-xl flex flex-col justify-between"
+              className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard/85 border border-agri-200/50 dark:border-agri-700/25 hover:border-sky-500/40 transition space-y-4 shadow-xl flex flex-col justify-between"
             >
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-black text-slate-900 dark:text-white text-base">{farm.farm_name}</h3>
+                      <h3 className="font-black text-agri-900 dark:text-white text-base">{farm.farm_name}</h3>
                       {farm.recommended_visit && (
                         <span className="px-2 py-0.5 rounded-full bg-sky-500/15 border border-sky-500/30 text-sky-600 dark:text-sky-400 text-[10px] font-bold">
                           Visit Recommended
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5 flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-                      <span>Farmer: <strong className="text-slate-800 dark:text-slate-200">{farm.owner_name}</strong> • {farm.location_name}</span>
+                    <p className="text-xs text-agri-600 dark:text-agri-400/70 mt-0.5 flex items-center gap-1">
+                      <MapPin className="w-3.5 h-3.5 text-agri-400/70 flex-shrink-0" />
+                      <span>Farmer: <strong className="text-agri-800 dark:text-agri-200">{farm.owner_name}</strong> • {farm.location_name}</span>
                     </p>
-                    <p className="text-[11px] text-slate-500 font-mono">
+                    <p className="text-[11px] text-agri-500/70 font-mono">
                       {farm.area_hectares.toFixed(1)} ha • {farm.crop_type} ({farm.growth_stage})
                     </p>
                   </div>
@@ -327,16 +327,16 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
                 </div>
 
                 {/* Telemetry Metrics Bar */}
-                <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 text-center">
+                <div className="grid grid-cols-3 gap-2 p-3 rounded-2xl bg-surface-light dark:bg-surface-darkBg/80 border border-agri-200/50 dark:border-agri-700/25 text-center">
                   <div>
-                    <span className="text-[10px] text-slate-500 block font-semibold">Priority Risk</span>
+                    <span className="text-[10px] text-agri-500/70 block font-semibold">Priority Risk</span>
                     <span
                       className={`text-sm font-black font-mono ${
                         farm.risk_score >= 80
                           ? 'text-rose-600 dark:text-rose-400'
                           : farm.risk_score >= 60
                           ? 'text-orange-600 dark:text-orange-400'
-                          : 'text-emerald-600 dark:text-emerald-400'
+                          : 'text-agri-600 dark:text-agri-400'
                       }`}
                     >
                       {farm.risk_score}/100
@@ -344,14 +344,14 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-slate-500 block font-semibold">Critical Zones</span>
-                    <span className="text-sm font-black font-mono text-slate-800 dark:text-slate-200">
+                    <span className="text-[10px] text-agri-500/70 block font-semibold">Critical Zones</span>
+                    <span className="text-sm font-black font-mono text-agri-800 dark:text-agri-200">
                       {farm.critical_zones_count} Zones
                     </span>
                   </div>
 
                   <div>
-                    <span className="text-[10px] text-slate-500 block font-semibold">Spread Risk</span>
+                    <span className="text-[10px] text-agri-500/70 block font-semibold">Spread Risk</span>
                     <span className="text-sm font-black font-mono text-purple-600 dark:text-purple-400">
                       {farm.spread_risk_score}%
                     </span>
@@ -381,8 +381,8 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-                <span className="text-[10px] text-slate-400 font-mono">
+              <div className="pt-2 border-t border-agri-100 dark:border-agri-700/25 flex items-center justify-between gap-2">
+                <span className="text-[10px] text-agri-400/70 font-mono">
                   Last Inspected: {farm.last_visit_date ? new Date(farm.last_visit_date).toLocaleDateString() : 'Pending'}
                 </span>
                 <button
@@ -402,30 +402,30 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
       {/* ── 5. Audited Ground-Truth Validation Modal ── */}
       {isModalOpen && selectedFarm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in">
-          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 space-y-6 shadow-2xl overflow-y-auto max-h-[90vh]">
-            <div className="flex items-start justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+          <div className="w-full max-w-2xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-3xl p-6 sm:p-7 space-y-6 shadow-2xl overflow-y-auto max-h-[90vh]">
+            <div className="flex items-start justify-between gap-4 border-b border-agri-200/50 dark:border-agri-700/25 pb-4">
               <div>
                 <span className="px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-600 dark:text-sky-400 text-[10px] font-mono font-bold uppercase">
                   Official Ground Calibration
                 </span>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white mt-1">
+                <h2 className="text-xl font-black text-agri-900 dark:text-white mt-1">
                   Validate Finding for {selectedFarm.farm_name}
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                   Observation ID: <span className="font-mono font-bold">obs-{selectedFarm.farm_id}-latest</span> • Farmer: {selectedFarm.owner_name}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white transition"
+                className="p-2 rounded-xl bg-agri-50 hover:bg-agri-100 dark:bg-agri-800/50 text-agri-500/70 hover:text-agri-800 dark:hover:text-white transition"
               >
                 <XCircle className="w-5 h-5" />
               </button>
             </div>
 
             {lastAuditResult && (
-              <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold flex items-center gap-2">
+              <div className="p-3.5 rounded-2xl bg-agri-500/10 border border-agri-500/25 text-agri-700 dark:text-agri-400 text-xs font-semibold flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 flex-shrink-0" />
                 <span>{lastAuditResult}</span>
               </div>
@@ -433,7 +433,7 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
 
             <div className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                <label className="text-xs font-bold text-agri-800 dark:text-agri-200">
                   Extension Agronomist Notes / Ground Symptoms
                 </label>
                 <textarea
@@ -441,12 +441,12 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Record physical symptom check, pathogen stage, lesion progression, or soil moisture findings..."
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-sky-500 font-medium"
+                  className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-2xl p-3 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/50 focus:outline-none focus:border-sky-500 font-medium"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                <label className="text-xs font-bold text-agri-800 dark:text-agri-200">
                   Override AI Suspected Pathogen (Optional)
                 </label>
                 <input
@@ -454,11 +454,11 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
                   value={overridePathogen}
                   onChange={(e) => setOverridePathogen(e.target.value)}
                   placeholder="e.g. Puccinia striiformis (Yellow Rust) / Severe Potassium Deficiency"
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-sky-500 font-medium"
+                  className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-2xl p-3 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/50 focus:outline-none focus:border-sky-500 font-medium"
                 />
               </div>
 
-              <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25">
                 <input
                   type="checkbox"
                   id="schedule-visit-cb"
@@ -466,14 +466,14 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
                   onChange={(e) => setScheduleVisit(e.target.checked)}
                   className="w-4 h-4 text-sky-600 rounded"
                 />
-                <label htmlFor="schedule-visit-cb" className="text-xs font-bold text-slate-800 dark:text-slate-200 cursor-pointer">
+                <label htmlFor="schedule-visit-cb" className="text-xs font-bold text-agri-800 dark:text-agri-200 cursor-pointer">
                   Schedule In-Person Extension Officer Field Visit & Lab Sampling
                 </label>
               </div>
 
               {/* Action Decision Buttons */}
-              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2">
-                <span className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider block">
+              <div className="pt-3 border-t border-agri-200/50 dark:border-agri-700/25 space-y-2">
+                <span className="text-[10px] font-extrabold uppercase text-agri-400/70 tracking-wider block">
                   Submit Official Determination (Audited Record)
                 </span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -481,7 +481,7 @@ export const ExtensionOfficerDashboardPage: React.FC = () => {
                     type="button"
                     disabled={isSubmitting}
                     onClick={() => handleSubmitValidation('VALIDATED')}
-                    className="p-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-emerald-600/30"
+                    className="p-3 rounded-2xl bg-agri-500 hover:bg-agri-500 active:scale-95 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md shadow-agri-500/25"
                   >
                     <CheckCircle className="w-4 h-4" />
                     <span>Confirm & Validate AI Finding</span>

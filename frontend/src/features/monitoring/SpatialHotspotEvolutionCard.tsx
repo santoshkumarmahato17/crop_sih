@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import {
   Flame,
   Layers,
@@ -41,9 +41,9 @@ export const SpatialHotspotEvolutionCard: React.FC<SpatialHotspotEvolutionCardPr
       case 'CONTRACTING':
         return {
           label: 'Hotspot Contracting',
-          color: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
+          color: 'bg-agri-500/15 text-agri-700 dark:text-agri-300 border-agri-500/25',
           desc: `Infection footprint shrunk by ${Math.abs(deltaArea).toFixed(1)} ha.`,
-          icon: <TrendingDown className="w-4 h-4 text-emerald-600" />,
+          icon: <TrendingDown className="w-4 h-4 text-agri-600" />,
         };
       case 'RESOLVED':
         return {
@@ -65,18 +65,18 @@ export const SpatialHotspotEvolutionCard: React.FC<SpatialHotspotEvolutionCardPr
   const badge = getStatusBadge();
 
   return (
-    <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+    <div className="p-6 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-xl space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-agri-100 dark:border-agri-700/25 pb-3">
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-xl bg-rose-500/10 text-rose-600">
             <Flame className="w-5 h-5" />
           </div>
           <div>
-            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+            <span className="text-[10px] font-bold text-agri-500/70 uppercase tracking-wider block">
               Geospatial Hotspot Tracking
             </span>
-            <h3 className="text-sm font-black text-slate-900 dark:text-white">
+            <h3 className="text-sm font-black text-agri-900 dark:text-white">
               {hotspotCode}
             </h3>
           </div>
@@ -93,8 +93,8 @@ export const SpatialHotspotEvolutionCard: React.FC<SpatialHotspotEvolutionCardPr
       {/* Spatial Envelope Progression Visualizer */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Initial Baseline Envelope */}
-        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="p-4 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-2">
+          <span className="text-[10px] font-bold text-agri-500/70 uppercase tracking-wider block">
             Initial Hotspot Envelope (Day 1)
           </span>
           <div className="flex flex-wrap items-center gap-1.5">
@@ -107,14 +107,14 @@ export const SpatialHotspotEvolutionCard: React.FC<SpatialHotspotEvolutionCardPr
               </span>
             ))}
           </div>
-          <span className="text-xs font-medium text-slate-500 block">
+          <span className="text-xs font-medium text-agri-500/70 block">
             Primary Area: <strong>{previousAreaHa} ha</strong>
           </span>
         </div>
 
         {/* Current Follow-up Envelope */}
-        <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-2">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="p-4 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-2">
+          <span className="text-[10px] font-bold text-agri-500/70 uppercase tracking-wider block">
             Follow-up Target Envelope (Today)
           </span>
           <div className="flex flex-wrap items-center gap-1.5">
@@ -134,7 +134,7 @@ export const SpatialHotspotEvolutionCard: React.FC<SpatialHotspotEvolutionCardPr
               );
             })}
           </div>
-          <span className="text-xs font-medium text-slate-500 block">
+          <span className="text-xs font-medium text-agri-500/70 block">
             Active Area: <strong>{currentAreaHa} ha</strong> ({deltaArea > 0 ? '+' : ''}
             {deltaArea.toFixed(1)} ha)
           </span>
@@ -142,7 +142,7 @@ export const SpatialHotspotEvolutionCard: React.FC<SpatialHotspotEvolutionCardPr
       </div>
 
       {/* Narrative Footer */}
-      <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-slate-700 dark:text-slate-300 flex items-center gap-2 font-medium">
+      <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-agri-700 dark:text-agri-300 flex items-center gap-2 font-medium">
         <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
         <span>{badge.desc}</span>
       </div>

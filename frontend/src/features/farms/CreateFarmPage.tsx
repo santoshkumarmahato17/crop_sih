@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Save, MapPin, Sprout, Layers, AlertCircle } from 'lucide-react';
 import { FarmMapDrawer } from '@/components/map/FarmMapDrawer';
@@ -100,13 +100,13 @@ export const CreateFarmPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <Link
             to="/farms"
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition"
+            className="p-2 rounded-xl bg-agri-900 border border-slate-800 hover:bg-agri-800 text-agri-400/70 hover:text-agri-200 transition"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-100">Register Farm Holding</h1>
-            <p className="text-xs text-slate-400">
+            <h1 className="text-2xl font-bold text-agri-100">Register Farm Holding</h1>
+            <p className="text-xs text-agri-400/70">
               Draw farm boundaries with PostGIS SRID 4326 and attach active crop cycles.
             </p>
           </div>
@@ -124,19 +124,19 @@ export const CreateFarmPage: React.FC = () => {
         {/* Section 1: Spatial Boundary Mapping */}
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-emerald-400" />
+            <h2 className="text-base font-semibold text-agri-100 flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-agri-400" />
               <span>1. Geospatial Farm Boundary (PostGIS)</span>
             </h2>
 
             {calculatedAreaHa > 0 && (
-              <span className="text-xs font-mono font-bold text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+              <span className="text-xs font-mono font-bold text-agri-400 px-3 py-1 rounded-full bg-agri-500/10 border border-agri-500/25">
                 Authoritative Area: {calculatedAreaHa.toFixed(2)} ha
               </span>
             )}
           </div>
 
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-agri-400/70">
             Use the interactive tool below to plot farm perimeter vertices. The system calculates surface acreage automatically.
           </p>
 
@@ -145,14 +145,14 @@ export const CreateFarmPage: React.FC = () => {
 
         {/* Section 2: General Farm Information */}
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-emerald-400" />
+          <h2 className="text-base font-semibold text-agri-100 flex items-center gap-2">
+            <Layers className="w-4 h-4 text-agri-400" />
             <span>2. Farm Identity & Agronomic Baseline</span>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Farm Holding Name *
               </label>
               <input
@@ -161,12 +161,12 @@ export const CreateFarmPage: React.FC = () => {
                 placeholder="e.g. Sahyadri Bio-Wheat Estate"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Description / Notes
               </label>
               <input
@@ -174,12 +174,12 @@ export const CreateFarmPage: React.FC = () => {
                 placeholder="e.g. Organic cultivation plot"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">
+              <label className="block text-xs font-medium text-agri-300 mb-1">
                 Street Address / Gat No.
               </label>
               <input
@@ -187,46 +187,46 @@ export const CreateFarmPage: React.FC = () => {
                 placeholder="e.g. Gat No. 142, Pune Highway"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">City / Tehsil</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">City / Tehsil</label>
               <input
                 type="text"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">State / Region</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">State / Region</label>
               <input
                 type="text"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Country</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Country</label>
               <input
                 type="text"
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Soil Classification</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Soil Classification</label>
               <select
                 value={soilType}
                 onChange={(e) => setSoilType(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               >
                 <option value="Black Cotton Clay Loam">Black Cotton Clay Loam (Vertisol)</option>
                 <option value="Red Sandy Loam">Red Sandy Loam (Alfisol)</option>
@@ -236,7 +236,7 @@ export const CreateFarmPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Soil pH</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Soil pH</label>
               <input
                 type="number"
                 step="0.1"
@@ -244,16 +244,16 @@ export const CreateFarmPage: React.FC = () => {
                 max="14"
                 value={soilPh}
                 onChange={(e) => setSoilPh(parseFloat(e.target.value) || 7.0)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Irrigation Method</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Irrigation Method</label>
               <select
                 value={irrigationType}
                 onChange={(e) => setIrrigationType(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               >
                 <option value="drip">Drip Irrigation</option>
                 <option value="sprinkler">Micro-Sprinkler</option>
@@ -263,11 +263,11 @@ export const CreateFarmPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Farming Method</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Farming Method</label>
               <select
                 value={farmingMethod}
                 onChange={(e) => setFarmingMethod(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               >
                 <option value="organic">Organic</option>
                 <option value="conventional">Conventional</option>
@@ -279,65 +279,65 @@ export const CreateFarmPage: React.FC = () => {
 
         {/* Section 3: Active Crop Cycle */}
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
-            <Sprout className="w-4 h-4 text-emerald-400" />
+          <h2 className="text-base font-semibold text-agri-100 flex items-center gap-2">
+            <Sprout className="w-4 h-4 text-agri-400" />
             <span>3. Active Sowing & Crop Cycle</span>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Crop Species *</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Crop Species *</label>
               <input
                 type="text"
                 required
                 placeholder="e.g. Wheat, Rice, Cotton"
                 value={cropName}
                 onChange={(e) => setCropName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Cultivar / Variety</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Cultivar / Variety</label>
               <input
                 type="text"
                 placeholder="e.g. PBW-343, Basmati-1121"
                 value={variety}
                 onChange={(e) => setVariety(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Sowing Date *</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Sowing Date *</label>
               <input
                 type="date"
                 required
                 value={plantingDate}
                 onChange={(e) => setPlantingDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Growth Stage</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Growth Stage</label>
               <input
                 type="text"
                 placeholder="e.g. Tillering, Flowering"
                 value={growthStage}
                 onChange={(e) => setGrowthStage(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Target Yield (Tonnes/Ha)</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Target Yield (Tonnes/Ha)</label>
               <input
                 type="number"
                 step="0.1"
                 value={targetYield}
                 onChange={(e) => setTargetYield(parseFloat(e.target.value) || 0)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
           </div>
@@ -347,7 +347,7 @@ export const CreateFarmPage: React.FC = () => {
         <div className="flex items-center justify-end gap-3 pt-2">
           <Link
             to="/farms"
-            className="px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 font-medium text-sm transition"
+            className="px-5 py-2.5 rounded-xl bg-agri-900 border border-slate-800 hover:bg-agri-800 text-agri-300 font-medium text-sm transition"
           >
             Cancel
           </Link>
@@ -355,7 +355,7 @@ export const CreateFarmPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-lg shadow-emerald-950/40 transition hover:scale-[1.02] flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-agri-500 hover:bg-agri-500 text-white font-semibold text-sm shadow-lg shadow-emerald-950/40 transition hover:scale-[1.02] flex items-center gap-2 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             <span>{isSubmitting ? 'Registering Farm...' : 'Register Farm & Boundary'}</span>

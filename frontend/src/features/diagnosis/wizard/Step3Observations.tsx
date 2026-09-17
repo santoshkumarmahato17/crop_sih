@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, ChevronLeft, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Layers, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useDiagnosisWizard } from './DiagnosisWizardContext';
 
 interface Props {

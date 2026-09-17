@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   Sprout,
   ShieldCheck,
@@ -68,12 +68,12 @@ export const AdvisoriesPage: React.FC = () => {
       <div className="p-6 rounded-3xl bg-gradient-to-r from-emerald-900 via-teal-950 to-slate-900 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-extrabold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-full bg-agri-500/15 border border-emerald-400/40 text-agri-300 font-mono text-[10px] font-extrabold uppercase tracking-wider">
               IPM Precision Advisory Pipeline
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2.5">
-            <Sprout className="w-7 h-7 text-emerald-400" />
+            <Sprout className="w-7 h-7 text-agri-400" />
             <span>{t('advisories.title')}</span>
           </h1>
           <p className="text-xs sm:text-sm text-emerald-200/80 max-w-2xl">
@@ -98,18 +98,18 @@ export const AdvisoriesPage: React.FC = () => {
 
       {/* ── Metrics Ribbon ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-        <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-1">
-          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+        <div className="p-4 rounded-2xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm space-y-1">
+          <span className="text-[11px] font-bold text-agri-500/70 uppercase tracking-wider block">
             Total Active Advisories
           </span>
-          <p className="text-2xl font-black text-slate-900 dark:text-white">{advisories.length}</p>
+          <p className="text-2xl font-black text-agri-900 dark:text-white">{advisories.length}</p>
         </div>
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 shadow-sm space-y-1">
-          <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider block flex items-center gap-1">
+        <div className="p-4 rounded-2xl bg-agri-500/10 border border-agri-500/25 shadow-sm space-y-1">
+          <span className="text-[11px] font-bold text-agri-700 dark:text-agri-300 uppercase tracking-wider block flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5" />
             <span>Expert Validated</span>
           </span>
-          <p className="text-2xl font-black text-emerald-700 dark:text-emerald-400">{validatedCount}</p>
+          <p className="text-2xl font-black text-agri-700 dark:text-agri-400">{validatedCount}</p>
         </div>
         <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 shadow-sm space-y-1">
           <span className="text-[11px] font-bold text-rose-700 dark:text-rose-300 uppercase tracking-wider block flex items-center gap-1">
@@ -127,16 +127,16 @@ export const AdvisoriesPage: React.FC = () => {
       </div>
 
       {/* ── Search & Filter Controls ── */}
-      <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="p-4 rounded-2xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Search */}
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-agri-400/70 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search condition, crop or farm..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-agri-500"
           />
         </div>
 
@@ -146,7 +146,7 @@ export const AdvisoriesPage: React.FC = () => {
           <select
             value={priorityFilter}
             onChange={(e) => setPriorityFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="px-3 py-2 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-bold text-agri-700 dark:text-agri-300 focus:outline-none focus:ring-2 focus:ring-agri-500"
           >
             <option value="ALL">All Priorities</option>
             <option value="CRITICAL">Critical Only</option>
@@ -158,7 +158,7 @@ export const AdvisoriesPage: React.FC = () => {
           <select
             value={trustFilter}
             onChange={(e) => setTrustFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="px-3 py-2 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-bold text-agri-700 dark:text-agri-300 focus:outline-none focus:ring-2 focus:ring-agri-500"
           >
             <option value="ALL">All Trust Levels</option>
             <option value="VALIDATED">Expert Validated (Level 3)</option>
@@ -172,16 +172,16 @@ export const AdvisoriesPage: React.FC = () => {
       {isLoading ? (
         <div className="space-y-4">
           {[1, 2].map((n) => (
-            <div key={n} className="h-64 rounded-3xl bg-slate-200 dark:bg-slate-800 animate-pulse" />
+            <div key={n} className="h-64 rounded-3xl bg-slate-200 dark:bg-agri-800/50 animate-pulse" />
           ))}
         </div>
       ) : filteredAdvisories.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-white dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-800 space-y-3">
-          <Sparkles className="w-10 h-10 text-emerald-500 mx-auto opacity-70" />
-          <h3 className="text-base font-black text-slate-900 dark:text-white">
+        <div className="p-12 text-center rounded-3xl bg-white dark:bg-surface-darkCard border border-dashed border-slate-300 dark:border-agri-700/25 space-y-3">
+          <Sparkles className="w-10 h-10 text-agri-500 mx-auto opacity-70" />
+          <h3 className="text-base font-black text-agri-900 dark:text-white">
             No Advisories Found
           </h3>
-          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+          <p className="text-xs text-agri-500/70 max-w-sm mx-auto">
             Your crops in monitored zones are currently within nominal healthy thresholds.
           </p>
         </div>

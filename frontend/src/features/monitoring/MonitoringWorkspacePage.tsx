@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Activity,
@@ -102,12 +102,12 @@ export const MonitoringWorkspacePage: React.FC = () => {
       <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-950 via-teal-950 to-emerald-950 text-white shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-extrabold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-full bg-agri-500/15 border border-emerald-400/40 text-agri-300 font-mono text-[10px] font-extrabold uppercase tracking-wider">
               Closed-Loop Feedback Intelligence
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2.5">
-            <Activity className="w-7 h-7 text-emerald-400" />
+            <Activity className="w-7 h-7 text-agri-400" />
             <span>{t('monitoring.title')}</span>
           </h1>
           <p className="text-xs sm:text-sm text-emerald-200/80 max-w-2xl">
@@ -134,11 +134,11 @@ export const MonitoringWorkspacePage: React.FC = () => {
           <p className="text-2xl font-black text-blue-700 dark:text-blue-400">{stats.scheduled}</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 space-y-1">
-          <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider block">
+        <div className="p-4 rounded-2xl bg-agri-500/10 border border-agri-500/20 space-y-1">
+          <span className="text-[10px] font-bold text-agri-700 dark:text-agri-300 uppercase tracking-wider block">
             Completed
           </span>
-          <p className="text-2xl font-black text-emerald-700 dark:text-emerald-400">{stats.completed}</p>
+          <p className="text-2xl font-black text-agri-700 dark:text-agri-400">{stats.completed}</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-1">
@@ -162,8 +162,8 @@ export const MonitoringWorkspacePage: React.FC = () => {
           <p className="text-2xl font-black text-purple-700 dark:text-purple-400">{stats.hotspots_under_monitoring}</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-slate-900 text-white space-y-1">
-          <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider block">
+        <div className="p-4 rounded-2xl bg-agri-900 text-white space-y-1">
+          <span className="text-[10px] font-bold text-agri-400 uppercase tracking-wider block">
             Monitoring Coverage
           </span>
           <p className="text-2xl font-black font-mono">{stats.monitoring_coverage_pct}%</p>
@@ -171,7 +171,7 @@ export const MonitoringWorkspacePage: React.FC = () => {
       </div>
 
       {/* ── Navigation Tabs ── */}
-      <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-x-auto no-scrollbar">
+      <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-agri-50 dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 overflow-x-auto no-scrollbar">
         {[
           { id: 'schedule', label: t('monitoring.schedule'), icon: <Calendar className="w-4 h-4" /> },
           { id: 'comparison', label: t('monitoring.beforeAfter'), icon: <Layers className="w-4 h-4" /> },
@@ -188,8 +188,8 @@ export const MonitoringWorkspacePage: React.FC = () => {
               onClick={() => setActiveTab(tab.id as any)}
               className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 whitespace-nowrap active:scale-95 ${
                 isActive
-                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-900/20'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800'
+                  ? 'bg-agri-500 text-white shadow-md shadow-emerald-900/20'
+                  : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white hover:bg-agri-100 dark:hover:bg-agri-800/60'
               }`}
             >
               {tab.icon}
@@ -223,7 +223,7 @@ export const MonitoringWorkspacePage: React.FC = () => {
               onRequestExpertReview={() => navigate('/validation')}
             />
           ) : (
-            <div className="p-12 text-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-400">
+            <div className="p-12 text-center rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 text-xs text-agri-400/70">
               Select a completed monitoring task to view before vs after delta comparison.
             </div>
           )}
