@@ -1,0 +1,37 @@
+{
+  "0": {
+    "original_label": "Bacterial Blight",
+    "display_name": "Bacterial Blight",
+    "category": "Disease"
+  },
+  "1": {
+    "original_label": "Curl Virus",
+    "display_name": "Curl Virus",
+    "category": "Disease / Viral Condition"
+  },
+  "2": {
+    "original_label": "Healthy Leaf",
+    "display_name": "Healthy Cotton Leaf",
+    "category": "Healthy"
+  },
+  "3": {
+    "original_label": "Herbicide Growth Damage",
+    "display_name": "Herbicide Growth Damage",
+    "category": "Chemical / Herbicide Damage"
+  },
+  "4": {
+    "original_label": "Leaf Hopper Jassids",
+    "display_name": "Leaf Hopper / Jassids",
+    "category": "Pest"
+  },
+  "5": {
+    "original_label": "Leaf Redding",
+    "display_name": "Leaf Redding",
+    "category": "Leaf Condition"
+  },
+  "6": {
+    "original_label": "Leaf Variegation",
+    "display_name": "Leaf Variegation",
+    "category": "Leaf Condition"
+  }
+}

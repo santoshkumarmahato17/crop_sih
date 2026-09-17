@@ -1,0 +1,139 @@
+{
+  "Bacterial Blight": {
+    "original_label": "Bacterial Blight",
+    "display_name": "Bacterial Blight",
+    "crop": "Cotton",
+    "category": "Disease",
+    "description": "A serious bacterial disease caused by Xanthomonas citri pv. malvacearum affecting leaves, stems, and bolls.",
+    "common_symptoms": [
+      "Water-soaked angular leaf spots delimited by leaf veins",
+      "Lesions turning dark brown to black (angular leaf spot stage)",
+      "Blackening of leaf veins ('black vein' stage)",
+      "Stem lesions causing black arm and seedling blight"
+    ],
+    "general_management": [
+      "Use certified disease-free and acid-delinted seeds",
+      "Treat seeds with approved bactericides/fungicides prior to planting",
+      "Maintain adequate field drainage and avoid overhead irrigation",
+      "Rotate crops with non-host plants to reduce bacterial carryover",
+      "Destroy and plow under infected crop residue after harvest"
+    ]
+  },
+  "Curl Virus": {
+    "original_label": "Curl Virus",
+    "display_name": "Curl Virus",
+    "crop": "Cotton",
+    "category": "Disease / Viral Condition",
+    "description": "Cotton Leaf Curl Virus (CLCuV) is a begomovirus transmitted by whiteflies (Bemisia tabaci) leading to severe stunting and yield reduction.",
+    "common_symptoms": [
+      "Upward or downward leaf curling and leaf thickening",
+      "Prominent vein swelling and enations (outgrowths) on underside of veins",
+      "Dark green, brittle leaves with shortened internodes",
+      "Severe plant stunting and reduced boll production"
+    ],
+    "general_management": [
+      "Plant certified leaf curl virus-resistant cotton cultivars",
+      "Manage vector whitefly populations through integrated pest management (IPM)",
+      "Eradicate alternative weed hosts (e.g., Abutilon, Solanum species) near field borders",
+      "Avoid excess nitrogen fertilizer which attracts sucking pests",
+      "Maintain proper field hygiene and observe regional planting windows"
+    ]
+  },
+  "Healthy Leaf": {
+    "original_label": "Healthy Leaf",
+    "display_name": "Healthy Cotton Leaf",
+    "crop": "Cotton",
+    "category": "Healthy",
+    "description": "Normal, healthy cotton foliage showing standard leaf vigor, uniform pigmentation, and no symptoms of pathogenic infection or pest infestation.",
+    "common_symptoms": [
+      "Uniform green pigmentation across the leaf blade",
+      "Smooth, unblemished leaf lamina with well-formed veins",
+      "No discoloration, chlorosis, curling, necrosis, or insect feeding signs"
+    ],
+    "general_management": [
+      "Maintain balanced N-P-K fertilization and adequate micro-nutrients (Boron, Zinc)",
+      "Practice optimal irrigation schedule avoiding waterlogging or drought stress",
+      "Regularly scout crops for early pest or disease signs",
+      "Preserve natural beneficial predators and pollinators"
+    ]
+  },
+  "Herbicide Growth Damage": {
+    "original_label": "Herbicide Growth Damage",
+    "display_name": "Herbicide Growth Damage",
+    "crop": "Cotton",
+    "category": "Chemical / Herbicide Damage",
+    "description": "Physiological injury caused by drift, volatilization, or soil persistence of non-selective or growth-regulator herbicides (e.g., 2,4-D, dicamba, or glyphosate).",
+    "common_symptoms": [
+      "Severe leaf strapping, feathering, and epinasty (stem twisting)",
+      "Chlorotic banding or yellowing along midrib and secondary veins",
+      "Malformed, cup-shaped, or fan-shaped foliage with stunted terminal buds",
+      "Brittle petioles and delayed flowering"
+    ],
+    "general_management": [
+      "Use dedicated spray equipment and thoroughly clean sprayers between applications",
+      "Apply herbicides under low-drift environmental conditions (optimal nozzle pressure, low wind)",
+      "Avoid spraying during high-temperature inversion conditions",
+      "Maintain buffer zones between sensitive cotton and adjacent treated fields",
+      "Provide supplemental irrigation and mild fertilization to encourage recovery if injury is minor"
+    ]
+  },
+  "Leaf Hopper Jassids": {
+    "original_label": "Leaf Hopper Jassids",
+    "display_name": "Leaf Hopper / Jassids",
+    "crop": "Cotton",
+    "category": "Pest",
+    "description": "Damage caused by sap-sucking nymphs and adults of cotton leafhoppers / jassids (Amrasca biguttula biguttula).",
+    "common_symptoms": [
+      "Yellowing or pale chlorosis along outer leaf margins",
+      "Upward curling of leaf margins ('hopper burn')",
+      "Leaf margins turning reddish-brown and necrotic/brittle",
+      "Heavy infestation leading to leaf drop and stunted plant vigor"
+    ],
+    "general_management": [
+      "Scout underside of leaves regularly for yellow-green wedge-shaped nymphs",
+      "Adopt hairy/pubescent cotton varieties that deter jassid feeding",
+      "Conserve generalist predators like spiders, ladybird beetles, and lacewings",
+      "Use yellow sticky traps to monitor adult jassid populations",
+      "Apply recommended organic deterrents (e.g., neem seed kernel extract) at threshold"
+    ]
+  },
+  "Leaf Redding": {
+    "original_label": "Leaf Redding",
+    "display_name": "Leaf Redding",
+    "crop": "Cotton",
+    "category": "Leaf Condition",
+    "description": "A physiological disorder caused by low temperatures, magnesium/nitrogen deficiency, waterlogging, or severe moisture stress, triggering anthocyanin accumulation.",
+    "common_symptoms": [
+      "Red, bronze, or purplish discoloration of leaves starting from margins",
+      "Interveinal reddening while major veins initially remain greenish",
+      "Premature leaf aging, desiccation, and shedding",
+      "Reduced photosynthesis resulting in smaller bolls"
+    ],
+    "general_management": [
+      "Apply foliar sprays of magnesium sulphate (MgSO4) and urea if deficiency is suspected",
+      "Improve soil drainage and avoid prolonged water stagnation around roots",
+      "Maintain balanced nutrition with potassium and secondary nutrients",
+      "Ensure proper irrigation to prevent abrupt moisture stress during boll development",
+      "Choose varieties adapted to local micro-climatic fluctuations"
+    ]
+  },
+  "Leaf Variegation": {
+    "original_label": "Leaf Variegation",
+    "display_name": "Leaf Variegation",
+    "crop": "Cotton",
+    "category": "Leaf Condition",
+    "description": "Foliar discoloration featuring irregular patches of green, yellow, or white due to genetic mutations, chimeric traits, or localized nutrient imbalances.",
+    "common_symptoms": [
+      "Irregular chlorotic or albino blotches on leaf blades",
+      "Patterned or mottled coloring without fungal/bacterial necrosis",
+      "Slightly uneven leaf texture without enations or viral vein swelling",
+      "Typically localized to specific branches or individual plants"
+    ],
+    "general_management": [
+      "Distinguish from viral mosaic through laboratory or symptom progression tests",
+      "Ensure adequate micronutrient supply (iron, manganese, zinc) to prevent mimic symptoms",
+      "Rogue out severely stunted or mutant plants if impacting plot uniformity",
+      "Maintain normal agronomic care for healthy non-variegated portions of crop"
+    ]
+  }
+}

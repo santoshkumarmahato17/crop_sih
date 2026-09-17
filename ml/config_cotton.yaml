@@ -1,0 +1,83 @@
+# Cotton Leaf Disease & Pest Classification Configuration
+# 7 Classes: Bacterial Blight, Curl Virus, Healthy Leaf, Herbicide Growth Damage,
+#            Leaf Hopper Jassids, Leaf Redding, Leaf Variegation
+
+dataset:
+  name: "Cotton Leaf Disease & Pest Dataset (SAR-CLD-2024)"
+  raw_dir: "cotton d-set/original/Original Dataset"
+  splits_dir: "ml/data/splits_cotton"
+  reports_dir: "ml/reports_cotton"
+  train_split: 0.80
+  val_split: 0.10
+  test_split: 0.10
+  random_seed: 42
+  image_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".bmp"
+    - ".webp"
+
+classes:
+  - "Bacterial Blight"
+  - "Curl Virus"
+  - "Healthy Leaf"
+  - "Herbicide Growth Damage"
+  - "Leaf Hopper Jassids"
+  - "Leaf Redding"
+  - "Leaf Variegation"
+
+class_mapping:
+  "bacterial blight": "Bacterial Blight"
+  "curl virus": "Curl Virus"
+  "healthy leaf": "Healthy Leaf"
+  "herbicide growth damage": "Herbicide Growth Damage"
+  "leaf hopper jassids": "Leaf Hopper Jassids"
+  "leaf redding": "Leaf Redding"
+  "leaf variegation": "Leaf Variegation"
+
+class_categories:
+  "Bacterial Blight": "Disease"
+  "Curl Virus": "Disease / Viral Condition"
+  "Healthy Leaf": "Healthy"
+  "Herbicide Growth Damage": "Chemical / Herbicide Damage"
+  "Leaf Hopper Jassids": "Pest"
+  "Leaf Redding": "Leaf Condition"
+  "Leaf Variegation": "Leaf Condition"
+
+class_display_names:
+  "Bacterial Blight": "Bacterial Blight"
+  "Curl Virus": "Curl Virus"
+  "Healthy Leaf": "Healthy Cotton Leaf"
+  "Herbicide Growth Damage": "Herbicide Growth Damage"
+  "Leaf Hopper Jassids": "Leaf Hopper / Jassids"
+  "Leaf Redding": "Leaf Redding"
+  "Leaf Variegation": "Leaf Variegation"
+
+model:
+  architecture: "mobilenet_v3_small"
+  pretrained: true
+  num_classes: 7
+  input_size: 224
+  dropout: 0.30
+  save_dir: "ml/models_cotton"
+
+training:
+  batch_size: 32
+  num_workers: 0  # Safe on Windows PyTorch CPU
+  warmup_epochs: 3
+  fine_tune_epochs: 5
+  warmup_lr: 0.001
+  fine_tune_lr: 0.0001
+  weight_decay: 0.0001
+  min_lr: 0.000005
+  device: "cpu"
+  use_class_weights: true
+  early_stopping_patience: 4
+
+inference:
+  confidence_threshold: 70.0
+  blur_threshold: 40.0
+  min_brightness: 20.0
+  max_brightness: 240.0
+  min_resolution: 64

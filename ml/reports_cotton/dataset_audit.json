@@ -1,0 +1,109 @@
+{
+  "dataset_name": "Cotton Leaf Disease & Pest Dataset (SAR-CLD-2024)",
+  "raw_dir": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset",
+  "total_discovered": 2137,
+  "total_valid": 2132,
+  "total_skipped": 5,
+  "corrupted_images": 0,
+  "duplicate_images": 5,
+  "small_images": 0,
+  "formats": {
+    "JPEG": 2137
+  },
+  "class_distribution": {
+    "Bacterial Blight": 250,
+    "Curl Virus": 431,
+    "Healthy Leaf": 252,
+    "Herbicide Growth Damage": 280,
+    "Leaf Hopper Jassids": 225,
+    "Leaf Redding": 578,
+    "Leaf Variegation": 116
+  },
+  "dimension_summary": {
+    "Bacterial Blight": {
+      "count": 250,
+      "min_w": 800,
+      "max_w": 800,
+      "avg_w": 800,
+      "min_h": 800,
+      "max_h": 800,
+      "avg_h": 800
+    },
+    "Curl Virus": {
+      "count": 431,
+      "min_w": 800,
+      "max_w": 800,
+      "avg_w": 800,
+      "min_h": 800,
+      "max_h": 800,
+      "avg_h": 800
+    },
+    "Healthy Leaf": {
+      "count": 252,
+      "min_w": 800,
+      "max_w": 800,
+      "avg_w": 800,
+      "min_h": 800,
+      "max_h": 800,
+      "avg_h": 800
+    },
+    "Herbicide Growth Damage": {
+      "count": 280,
+      "min_w": 800,
+      "max_w": 800,
+      "avg_w": 800,
+      "min_h": 800,
+      "max_h": 800,
+      "avg_h": 800
+    },
+    "Leaf Hopper Jassids": {
+      "count": 225,
+      "min_w": 800,
+      "max_w": 800,
+      "avg_w": 800,
+      "min_h": 800,
+      "max_h": 800,
+      "avg_h": 800
+    },
+    "Leaf Redding": {
+      "count": 578,
+      "min_w": 800,
+      "max_w": 800,
+      "avg_w": 800,
+      "min_h": 800,
+      "max_h": 800,
+      "avg_h": 800
+    },
+    "Leaf Variegation": {
+      "count": 116,
+      "min_w": 800,
+      "max_w": 800,
+      "avg_w": 800,
+      "min_h": 800,
+      "max_h": 800,
+      "avg_h": 800
+    }
+  },
+  "skipped_details": [
+    {
+      "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00085.jpg",
+      "reason": "Duplicate (MD5)"
+    },
+    {
+      "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00101.jpg",
+      "reason": "Duplicate (MD5)"
+    },
+    {
+      "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00102.jpg",
+      "reason": "Duplicate (MD5)"
+    },
+    {
+      "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00103.jpg",
+      "reason": "Duplicate (MD5)"
+    },
+    {
+      "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00104.jpg",
+      "reason": "Duplicate (MD5)"
+    }
+  ]
+}

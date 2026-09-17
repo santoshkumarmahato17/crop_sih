@@ -1,0 +1,66 @@
+# Orange Leaf Disease Classification Configuration
+# 5 Classes: Citrus Canker, Citrus Nutrient Yellow, Orange Leaf - Multiple Disease, Young Healthy Orange Leaf, Healthy
+
+dataset:
+  name: "Orange Leaf Disease Dataset"
+  raw_dir: "orange d-set"
+  splits_dir: "ml/data/splits_orange"
+  reports_dir: "ml/reports_orange"
+  train_split: 0.80  # 80% train
+  val_split: 0.10    # 10% validation
+  test_split: 0.10   # 10% test
+  random_seed: 42
+  image_extensions:
+    - ".jpg"
+    - ".jpeg"
+    - ".png"
+    - ".bmp"
+    - ".webp"
+
+classes:
+  - "Citrus Canker"
+  - "Citrus Nutrient Yellow"
+  - "Orange Leaf - Multiple Disease"
+  - "Young Healthy Orange Leaf"
+  - "Healthy"
+
+class_mapping:
+  "citrus_canker_diseases_leaf_orange": "Citrus Canker"
+  "citrus_nutrient_deficiency_yellow_leaf_orange": "Citrus Nutrient Yellow"
+  "healthy_leaf_orange": "Healthy"
+  "multiple_diseases_leaf_orange": "Orange Leaf - Multiple Disease"
+  "young_healthy_leaf_orange": "Young Healthy Orange Leaf"
+
+class_categories:
+  "Citrus Canker": "disease"
+  "Citrus Nutrient Yellow": "nutrient_deficiency"
+  "Orange Leaf - Multiple Disease": "disease"
+  "Young Healthy Orange Leaf": "healthy"
+  "Healthy": "healthy"
+
+model:
+  architecture: "mobilenet_v3_small"
+  pretrained: true
+  num_classes: 5
+  input_size: 224
+  dropout: 0.25
+  save_dir: "ml/models_orange"
+
+training:
+  batch_size: 32
+  num_workers: 0  # Safe on Windows PyTorch CPU
+  warmup_epochs: 1
+  fine_tune_epochs: 2
+  warmup_lr: 0.001
+  fine_tune_lr: 0.0002
+  weight_decay: 0.0001
+  min_lr: 0.00001
+  device: "cpu"
+  use_class_weights: true
+
+inference:
+  confidence_threshold: 70.0
+  blur_threshold: 40.0
+  min_brightness: 20.0
+  max_brightness: 240.0
+  min_resolution: 64
