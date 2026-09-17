@@ -181,6 +181,15 @@ class Settings(BaseSettings):
     DATASET_ROOT_DIR: str = r"c:\Users\krsan\Desktop\crop\Dataset for Crop Pest and Disease Detection"
     USE_SQLITE_FALLBACK: bool = True
 
+    # 8. SMTP & Email Delivery Settings
+    SMTP_TLS: bool = True
+    SMTP_PORT: Optional[int] = 587
+    SMTP_HOST: Optional[str] = None
+    SMTP_USER: Optional[str] = None
+    SMTP_PASSWORD: Optional[str] = None
+    EMAILS_FROM_EMAIL: Optional[str] = "noreply@agrishield.farm"
+    EMAILS_FROM_NAME: Optional[str] = "AGRI SHIELD Security"
+
 
 @lru_cache()
 def get_settings() -> Settings:

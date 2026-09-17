@@ -45,18 +45,18 @@ apiClient.interceptors.response.use(
             window.location.href = '/login';
           }, 100);
         }
-        return Promise.reject(new Error('AUTH_ERROR'));
+        return Promise.reject(error);
       }
       
       if (status === 403) {
-        return Promise.reject(new Error('RBAC_ERROR'));
+        return Promise.reject(error);
       }
       
       if (status >= 500) {
-        return Promise.reject(new Error(status === 503 ? 'SERVICE_UNAVAILABLE' : 'SERVER_ERROR'));
+        return Promise.reject(error);
       }
     } else if (error.request) {
-      return Promise.reject(new Error('NETWORK_ERROR'));
+      return Promise.reject(error);
     }
     
     return Promise.reject(error);

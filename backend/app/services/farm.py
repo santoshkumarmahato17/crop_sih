@@ -24,6 +24,16 @@ from app.spatial.geometry import (
 )
 
 
+def _get_user_role_str(user: User) -> str:
+    if not user or not user.role:
+        return "FARMER"
+    if hasattr(user.role, "name"):
+        return str(user.role.name).upper()
+    if hasattr(user.role, "value"):
+        return str(user.role.value).upper()
+    return str(user.role).upper()
+
+
 class FarmService:
     """Business logic for farm registration, spatial boundary management, and crop cycles."""
 
@@ -145,8 +155,8 @@ class FarmService:
         self, db: AsyncSession, current_user: User, skip: int = 0, limit: int = 50
     ) -> FarmListResponse:
         """Lists farms accessible to the current user."""
-        user_role = current_user.role.name.upper() if current_user.role else "FARMER"
-        is_admin = current_user.is_superuser or user_role in ["SYSTEM_ADMIN", "AGRICULTURE_ADMIN"]
+        user_role = _get_user_role_str(current_user)
+        is_admin = current_user.is_superuser or user_role in ["SYSTEM_ADMIN", "AGRICULTURE_ADMIN", "ADMIN"]
 
         farms = await self.repo.list_by_owner(
             db, owner_id=current_user.id, is_admin=is_admin, skip=skip, limit=limit
@@ -173,7 +183,7 @@ class FarmService:
             )
 
         # Ownership barrier
-        user_role = current_user.role.name.upper() if current_user.role else "FARMER"
+        user_role = _get_user_role_str(current_user)
         if not current_user.is_superuser and user_role not in ["SYSTEM_ADMIN", "AGRICULTURE_ADMIN"]:
             if farm.owner_id != current_user.id:
                 raise HTTPException(
@@ -199,7 +209,7 @@ class FarmService:
             )
 
         # Ownership barrier
-        user_role = current_user.role.name.upper() if current_user.role else "FARMER"
+        user_role = _get_user_role_str(current_user)
         if not current_user.is_superuser and user_role not in ["SYSTEM_ADMIN", "AGRICULTURE_ADMIN"]:
             if farm.owner_id != current_user.id:
                 raise HTTPException(
@@ -252,7 +262,7 @@ class FarmService:
             )
 
         # Ownership barrier
-        user_role = current_user.role.name.upper() if current_user.role else "FARMER"
+        user_role = _get_user_role_str(current_user)
         if not current_user.is_superuser and user_role not in ["SYSTEM_ADMIN"]:
             if farm.owner_id != current_user.id:
                 raise HTTPException(

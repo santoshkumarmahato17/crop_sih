@@ -77,7 +77,7 @@ export const LoginPage: React.FC = () => {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="user@agrishield.farm"
+              placeholder="Enter your registered email"
               className="w-full bg-agri-50/50 dark:bg-agri-900/40 border border-agri-200/60 dark:border-agri-700/30 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/60 dark:placeholder-agri-500/40 focus:outline-none focus:border-agri-500 focus:ring-1 focus:ring-agri-500/30 font-semibold transition-colors"
             />
           </div>
@@ -88,6 +88,12 @@ export const LoginPage: React.FC = () => {
             <label className="text-xs font-bold text-agri-800 dark:text-agri-200">
               Password *
             </label>
+            <Link
+              to="/forgot-password"
+              className="text-[11px] text-agri-600 dark:text-accent-lime font-extrabold hover:underline"
+            >
+              Forgot Password?
+            </Link>
           </div>
           <div className="relative">
             <Lock className="w-4 h-4 text-agri-400 dark:text-agri-500 absolute left-3.5 top-3" />
@@ -97,7 +103,7 @@ export const LoginPage: React.FC = () => {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
+              placeholder="Enter your password"
               className="w-full bg-agri-50/50 dark:bg-agri-900/40 border border-agri-200/60 dark:border-agri-700/30 rounded-xl pl-10 pr-10 py-2.5 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/60 dark:placeholder-agri-500/40 focus:outline-none focus:border-agri-500 focus:ring-1 focus:ring-agri-500/30 font-semibold transition-colors"
             />
             <button

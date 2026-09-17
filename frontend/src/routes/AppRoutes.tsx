@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { RoleProtectedRoute } from '@/components/auth/RoleProtectedRoute';
@@ -7,6 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 // Auth Pages
 import { LoginPage } from '@/features/auth/LoginPage';
 import { RegisterPage } from '@/features/auth/RegisterPage';
+import { ForgotPasswordPage } from '@/features/auth/ForgotPasswordPage';
 import { UnauthorizedPage } from '@/features/auth/UnauthorizedPage';
 import { OnboardingWizard } from '@/features/onboarding/OnboardingWizard';
 import { UserProfilePage } from '@/features/profile/UserProfilePage';
@@ -73,6 +74,7 @@ export const AppRoutes: React.FC = () => {
         {/* ── Public Auth & Error Routes ── */}
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
+        <Route path="forgot-password" element={<ForgotPasswordPage />} />
         <Route path="unauthorized" element={<UnauthorizedPage />} />
         <Route path="onboarding" element={<OnboardingWizard />} />
 

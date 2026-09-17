@@ -281,17 +281,19 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
       if (selectedCrop === 'yolo') {
         const endpoints = [
-          `http://${window.location.hostname}:8000/api/yolo/sample-images`,
-          `/api/yolo/sample-images`,
+          `/api/v1/ai/yolo/sample-images`,
+          `/api/v1/dataset/sample-images`,
           `http://${window.location.hostname}:8001/api/v1/ai/yolo/sample-images`,
+          `http://${window.location.hostname}:8000/api/yolo/sample-images`,
         ];
         for (const url of endpoints) {
           try {
             const resp = await fetch(url);
             if (resp.ok) {
               const data = await resp.json();
-              if (data.samples && data.samples.length > 0) {
-                setYoloSamples(data.samples);
+              const samples = Array.isArray(data) ? data : data.samples;
+              if (samples && samples.length > 0) {
+                setYoloSamples(samples);
                 break;
               }
             }
@@ -301,14 +303,11 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         }
       } else {
         const endpoints = [
-          `http://${window.location.hostname}:8000/api/yolo/sample-images`,
-          `http://${window.location.hostname}:8001/api/v1/ai/yolo/sample-images`,
-          `http://${window.location.hostname}:8000/api/unified/sample-images`,
-          `http://${window.location.hostname}:8001/api/v1/ai/unified/sample-images`,
-          `http://${window.location.hostname}:8000/api/cassava/sample-images`,
-          `http://${window.location.hostname}:8001/api/v1/ai/cassava/sample-images`,
-          `http://${window.location.hostname}:8000/api/sample-images`,
+          `/api/v1/ai/sample-images`,
+          `/api/v1/dataset/sample-images`,
           `http://${window.location.hostname}:8001/api/v1/ai/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/unified/sample-images`,
+          `http://${window.location.hostname}:8000/api/sample-images`,
         ];
 
         for (const url of endpoints) {
@@ -316,8 +315,9 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             const resp = await fetch(url);
             if (resp.ok) {
               const data = await resp.json();
-              if (data.samples && data.samples.length > 0) {
-                setSampleImages(data.samples);
+              const samples = Array.isArray(data) ? data : data.samples;
+              if (samples && samples.length > 0) {
+                setSampleImages(samples);
                 break;
               }
             }

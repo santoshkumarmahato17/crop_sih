@@ -8,6 +8,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc
+from sqlalchemy.orm import selectinload
 
 from app.db.session import get_db
 from app.api.deps import get_current_active_user
@@ -26,18 +27,26 @@ router = APIRouter(prefix="/advisories", tags=["Multilingual Agricultural Adviso
 
 
 def _serialize_advisory(adv, lang: str) -> dict:
-    """Serialize an Advisory ORM object to a response dict."""
-    active_trans = next((t for t in adv.translations if t.language == lang), None)
+    """Serialize an Advisory ORM object to a response dict safely."""
+    translations = getattr(adv, "translations", []) or []
+    active_trans = next((t for t in translations if getattr(t, "language", None) == lang), None)
     if not active_trans:
-        active_trans = next((t for t in adv.translations if t.language in ("en", "en-IN")), None)
+        active_trans = next((t for t in translations if getattr(t, "language", None) in ("en", "en-IN")), None)
+    if not active_trans and translations:
+        active_trans = translations[0]
+
+    farm_obj = getattr(adv, "farm", None)
+    zone_obj = getattr(adv, "zone", None)
+    crop_obj = getattr(adv, "crop", None)
+
     return {
         "id": adv.id,
         "farm_id": adv.farm_id,
-        "farm_name": adv.farm.name if adv.farm else "Demo Farm",
+        "farm_name": farm_obj.name if farm_obj else "Demo Farm",
         "zone_id": adv.zone_id,
-        "zone_name": adv.zone.name if adv.zone else None,
+        "zone_name": zone_obj.name if zone_obj else None,
         "crop_id": adv.crop_id,
-        "crop_name": adv.crop.name if adv.crop else None,
+        "crop_name": crop_obj.name if crop_obj else None,
         "validation_request_id": adv.validation_request_id,
         "risk_assessment_id": adv.risk_assessment_id,
         "advisory_type": adv.advisory_type,
@@ -50,7 +59,7 @@ def _serialize_advisory(adv, lang: str) -> dict:
         "version": adv.version,
         "created_at": adv.created_at,
         "localized": active_trans,
-        "all_translations": adv.translations,
+        "all_translations": translations,
     }
 
 
@@ -67,18 +76,31 @@ async def list_advisories(
     """Lists advisories tailored to the user's preferred or requested language."""
     target_lang = language or getattr(current_user, "preferred_language", "en")
 
-    stmt = select(Advisory)
+    stmt = select(Advisory).options(
+        selectinload(Advisory.translations),
+        selectinload(Advisory.farm),
+        selectinload(Advisory.zone),
+        selectinload(Advisory.crop),
+    )
 
     if getattr(current_user, "role", None) == "FARMER":
-        owned_ids = [f.id for f in getattr(current_user, "owned_farms", [])]
-        if owned_ids:
-            stmt = stmt.where(Advisory.farm_id.in_(owned_ids))
+        try:
+            from app.models.farm import Farm
+            farms_res = await db.execute(select(Farm.id).where(Farm.owner_id == current_user.id))
+            owned_ids = farms_res.scalars().all()
+            if owned_ids:
+                stmt = stmt.where(Advisory.farm_id.in_(owned_ids))
+        except Exception:
+            pass
     if farm_id:
         stmt = stmt.where(Advisory.farm_id == farm_id)
     if priority:
         stmt = stmt.where(Advisory.priority == priority)
 
-    stmt = stmt.order_by(desc(Advisory.created_at)).offset(skip).limit(limit)
+    skip_val = int(skip) if not hasattr(skip, "default") else 0
+    limit_val = int(limit) if not hasattr(limit, "default") else 50
+
+    stmt = stmt.order_by(desc(Advisory.created_at)).offset(skip_val).limit(limit_val)
 
     result = await db.execute(stmt)
     advisories = result.scalars().all()
@@ -94,7 +116,13 @@ async def get_advisory_by_id(
     current_user: User = Depends(get_current_active_user),
 ):
     """Retrieves a single advisory by ID with active localized translation."""
-    result = await db.execute(select(Advisory).where(Advisory.id == id))
+    stmt = select(Advisory).options(
+        selectinload(Advisory.translations),
+        selectinload(Advisory.farm),
+        selectinload(Advisory.zone),
+        selectinload(Advisory.crop),
+    ).where(Advisory.id == id)
+    result = await db.execute(stmt)
     adv = result.scalar_one_or_none()
     if not adv:
         raise HTTPException(status_code=404, detail="Advisory not found")

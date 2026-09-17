@@ -112,3 +112,48 @@ class LogoutResponse(BaseModel):
 
     success: bool = True
     message: str = "Logged out successfully."
+
+
+class ForgotPasswordRequest(BaseModel):
+    """Forgot Password request payload."""
+
+    email: EmailStr
+
+
+class ForgotPasswordResponse(BaseModel):
+    """Forgot Password response schema."""
+
+    success: bool = True
+    message: str
+    smtp_configured: bool = True
+
+
+class VerifyOTPRequest(BaseModel):
+    """OTP Verification request payload."""
+
+    email: EmailStr
+    otp: str = Field(min_length=6, max_length=6, description="6-digit numeric OTP code")
+
+
+class VerifyOTPResponse(BaseModel):
+    """OTP Verification response schema containing Reset Token."""
+
+    success: bool = True
+    message: str
+    reset_token: str
+
+
+class ResetPasswordWithTokenRequest(BaseModel):
+    """Reset Password request payload using verified Reset Token."""
+
+    email: EmailStr
+    reset_token: str
+    new_password: str = Field(min_length=8, description="New password (min 8 chars)")
+    confirm_password: str = Field(min_length=8, description="Password confirmation")
+
+    @model_validator(mode="after")
+    def validate_passwords_match(self) -> "ResetPasswordWithTokenRequest":
+        if self.new_password != self.confirm_password:
+            raise ValueError("New password and confirmation password do not match.")
+        return self
+

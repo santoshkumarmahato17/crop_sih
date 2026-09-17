@@ -54,8 +54,8 @@ class ExpertValidationRequest(Base, TimestampMixin):
     case_number: Mapped[str] = mapped_column(
         String(20), default=lambda: f"EV-{datetime.utcnow().strftime('%y%m')}-{uuid.uuid4().hex[:4].upper()}", unique=True, index=True
     )
-    diagnostic_case_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("diagnostic_cases.id", ondelete="CASCADE"), nullable=False, index=True
+    diagnostic_case_id: Mapped[Optional[str]] = mapped_column(
+        String(36), ForeignKey("diagnostic_cases.id", ondelete="CASCADE"), nullable=True, index=True
     )
     analysis_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True, index=True)
     farm_id: Mapped[str] = mapped_column(

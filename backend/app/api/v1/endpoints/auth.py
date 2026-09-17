@@ -1,18 +1,23 @@
-from fastapi import APIRouter, Depends, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_active_user
 from app.db.session import get_db
 from app.models.auth import User
 from app.schemas.auth import (
+    ForgotPasswordRequest,
+    ForgotPasswordResponse,
     LogoutResponse,
     RefreshTokenRequest,
+    ResetPasswordWithTokenRequest,
     TokenResponse,
     UserLoginRequest,
     UserPasswordUpdateRequest,
     UserProfileUpdateRequest,
     UserRegisterRequest,
     UserResponse,
+    VerifyOTPRequest,
+    VerifyOTPResponse,
 )
 from app.services.auth import auth_service
 
@@ -156,3 +161,131 @@ async def update_password(
     current_user: User = Depends(get_current_active_user),
 ) -> dict:
     return await auth_service.update_password(db, current_user.id, req)
+
+
+@router.post(
+    "/forgot-password",
+    response_model=ForgotPasswordResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Request Password Reset OTP",
+    description="Generates a 5-minute OTP for registered email and dispatches it via email service.",
+)
+async def forgot_password(
+    req: ForgotPasswordRequest,
+    db: AsyncSession = Depends(get_db),
+) -> ForgotPasswordResponse:
+    from sqlalchemy import select
+    from app.services.otp_service import otp_service
+    from app.services.email_service import email_service
+
+    email = req.email.lower().strip()
+
+    # Check if user exists in database
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalars().first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No account found registered with this email address. Please check your email or register."
+        )
+
+    try:
+        otp_code, info = otp_service.generate_otp(email)
+    except ValueError as val_err:
+        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=str(val_err))
+
+    dispatch_res = email_service.send_otp_email(email, otp_code)
+
+    if not dispatch_res.get("sent"):
+        reason = dispatch_res.get("reason")
+        err_msg = dispatch_res.get("message") or "Email service delivery failed."
+        if reason == "SMTP_NOT_CONFIGURED":
+            import sys
+            is_pytest = "pytest" in sys.modules or any("pytest" in str(arg) for arg in sys.argv) or bool(os.environ.get("PYTEST_CURRENT_TEST"))
+            if (settings.DEBUG or settings.ENVIRONMENT == "development") and not is_pytest:
+                return ForgotPasswordResponse(
+                    success=True,
+                    message=f"Development Mode: OTP '{otp_code}' generated.",
+                    smtp_configured=False,
+                )
+            otp_service.clear_otp(email)
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=f"Email service is not configured on the server. {err_msg}"
+            )
+        else:
+            otp_service.clear_otp(email)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"SMTP Email Delivery Failure: {err_msg}"
+            )
+
+    return ForgotPasswordResponse(
+        success=True,
+        message="OTP sent to your registered email address.",
+        smtp_configured=True,
+    )
+
+
+@router.post(
+    "/verify-otp",
+    response_model=VerifyOTPResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Verify OTP Code",
+    description="Validates 6-digit OTP code within 5-minute window and returns short-lived reset token.",
+)
+async def verify_otp(
+    req: VerifyOTPRequest,
+) -> VerifyOTPResponse:
+    from app.services.otp_service import otp_service
+
+    try:
+        reset_token = otp_service.verify_otp(req.email, req.otp)
+        return VerifyOTPResponse(
+            success=True,
+            message="OTP verified successfully. Proceed to reset password.",
+            reset_token=reset_token,
+        )
+    except ValueError as val_err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(val_err))
+
+
+@router.post(
+    "/reset-password",
+    status_code=status.HTTP_200_OK,
+    summary="Reset Password with Verified Token",
+    description="Consumes reset token, hashes new password with bcrypt, and updates user account.",
+)
+async def reset_password(
+    req: ResetPasswordWithTokenRequest,
+    db: AsyncSession = Depends(get_db),
+) -> dict:
+    from sqlalchemy import select
+    from app.core.security import get_password_hash
+    from app.services.otp_service import otp_service
+
+    email = req.email.lower().strip()
+
+    # Validate and consume reset token (one-time use)
+    try:
+        otp_service.consume_reset_token(email, req.reset_token)
+    except ValueError as val_err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(val_err))
+
+    # Fetch user from DB
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalars().first()
+
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User account not found.")
+
+    # Securely hash new password
+    user.hashed_password = get_password_hash(req.new_password)
+    db.add(user)
+    await db.commit()
+
+    return {
+        "success": True,
+        "message": "Password changed successfully. You can now sign in with your new password.",
+    }

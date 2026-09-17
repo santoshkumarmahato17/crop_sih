@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
   Mail,
@@ -8,6 +8,7 @@ import {
   Phone,
   ArrowRight,
   AlertCircle,
+  CheckCircle2,
   Eye,
   EyeOff,
   Building2,
@@ -31,21 +32,45 @@ export const RegisterPage: React.FC = () => {
   const [address, setAddress] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
+    setSuccessMsg(null);
 
+    // 1. Required fields check
+    if (!fullName.trim()) {
+      setErrorMsg('Full name is required.');
+      return;
+    }
+    if (!email.trim()) {
+      setErrorMsg('Email address is required.');
+      return;
+    }
+
+    // 2. Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setErrorMsg('Please enter a valid email address format (e.g. name@domain.com).');
+      return;
+    }
+
+    // 3. Password validations
+    if (!password) {
+      setErrorMsg('Password is required.');
+      return;
+    }
+    if (password.length < 8) {
+      setErrorMsg('Password must be at least 8 characters long.');
+      return;
+    }
     if (password !== confirmPassword) {
       setErrorMsg('Passwords do not match. Please re-enter your password.');
       return;
     }
 
-    if (password.length < 8) {
-      setErrorMsg('Password must be at least 8 characters long.');
-      return;
-    }
-
+    // 4. Role specific validations
     if (role === 'GOVERNMENT' && !organizationName.trim()) {
       setErrorMsg('Please specify your Government Organization or Ministry.');
       return;
@@ -53,30 +78,37 @@ export const RegisterPage: React.FC = () => {
 
     try {
       const assignedRole = await register({
-        full_name: fullName,
-        email,
-        phone_number: phone || undefined,
+        full_name: fullName.trim(),
+        email: email.trim(),
+        phone_number: phone.trim() || undefined,
         password,
         confirm_password: confirmPassword,
         role,
-        organization_name: role === 'GOVERNMENT' ? organizationName : undefined,
-        department: role === 'GOVERNMENT' ? department : undefined,
-        assigned_region: role === 'GOVERNMENT' ? assignedRegion : undefined,
-        address: address || undefined,
+        organization_name: role === 'GOVERNMENT' ? organizationName.trim() : undefined,
+        department: role === 'GOVERNMENT' ? department.trim() : undefined,
+        assigned_region: role === 'GOVERNMENT' ? assignedRegion.trim() : undefined,
+        address: address.trim() || undefined,
       });
 
-      if (assignedRole === 'FARMER') {
-        navigate('/onboarding', { replace: true });
-      } else {
-        const destination = getRoleDashboardPath(assignedRole);
-        navigate(destination, { replace: true });
-      }
+      setSuccessMsg('Account created successfully! Redirecting...');
+
+      setTimeout(() => {
+        if (assignedRole === 'FARMER') {
+          navigate('/onboarding', { replace: true });
+        } else {
+          const destination = getRoleDashboardPath(assignedRole);
+          navigate(destination, { replace: true });
+        }
+      }, 1000);
     } catch (err: any) {
-      setErrorMsg(
-        err?.response?.data?.message ||
-          err?.response?.data?.detail ||
-          'Registration failed. Please check your details and try again.'
-      );
+      const detail = err?.response?.data?.detail || err?.response?.data?.message;
+      if (typeof detail === 'string') {
+        setErrorMsg(detail);
+      } else if (Array.isArray(detail) && detail.length > 0) {
+        setErrorMsg(detail[0]?.msg || 'Registration failed. Please check your details.');
+      } else {
+        setErrorMsg('Registration failed. Please check your details and try again.');
+      }
     }
   };
 
@@ -195,6 +227,13 @@ export const RegisterPage: React.FC = () => {
         <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{errorMsg}</span>
+        </div>
+      )}
+
+      {successMsg && (
+        <div className="p-3.5 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 text-xs font-semibold flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+          <span>{successMsg}</span>
         </div>
       )}
 
