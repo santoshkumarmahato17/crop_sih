@@ -80,6 +80,7 @@ class Farm(Base, TimestampMixin):
     drone_missions: Mapped[List["DroneMission"]] = relationship("DroneMission", back_populates="farm", cascade="all, delete-orphan")
     health_observations: Mapped[List["HealthObservation"]] = relationship("HealthObservation", back_populates="farm", cascade="all, delete-orphan")
     weather_observations: Mapped[List["WeatherObservation"]] = relationship("WeatherObservation", back_populates="farm", cascade="all, delete-orphan")
+    weather_forecasts: Mapped[List["WeatherForecast"]] = relationship("WeatherForecast", back_populates="farm", cascade="all, delete-orphan")
     disease_events: Mapped[List["DiseaseEvent"]] = relationship("DiseaseEvent", back_populates="farm", cascade="all, delete-orphan")
     alerts: Mapped[List["Alert"]] = relationship("Alert", back_populates="farm", cascade="all, delete-orphan")
     recommendations: Mapped[List["Recommendation"]] = relationship("Recommendation", back_populates="farm", cascade="all, delete-orphan")

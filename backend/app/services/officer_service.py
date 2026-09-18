@@ -39,8 +39,23 @@ class OfficerService:
 
         if farms:
             for f in farms:
-                # Rank farm priority based on risk metrics
-                risk_score = 78 if f.id.endswith("1") else (55 if f.id.endswith("2") else 32)
+                # Rank farm priority based on risk metrics + real weather
+                weather_risk_score = 0
+                try:
+                    from app.weather.providers.service import get_current_weather
+                    from app.weather.providers.base import DataQuality
+                    lat, lon = 20.0, 73.78  # fallback
+                    cw = await get_current_weather(lat, lon)
+                    if cw and cw.data_quality in (DataQuality.GOOD, DataQuality.STALE):
+                        if cw.rainfall_mm and cw.rainfall_mm > 10:
+                            weather_risk_score += 20
+                        if cw.relative_humidity_percent and cw.relative_humidity_percent > 80:
+                            weather_risk_score += 10
+                except Exception:
+                    pass
+
+                base_risk = 78 if f.id.endswith("1") else (55 if f.id.endswith("2") else 32)
+                risk_score = min(100, base_risk + weather_risk_score)
                 prio = "CRITICAL" if risk_score >= 75 else ("HIGH" if risk_score >= 50 else ("MEDIUM" if risk_score >= 25 else "LOW"))
                 crit_zones = 2 if prio in ["CRITICAL", "HIGH"] else 0
                 alerts = 3 if prio == "CRITICAL" else 1

@@ -1,0 +1,80 @@
+{
+  "timestamp": "2026-09-09 08:18:40",
+  "total_tests": 12,
+  "all_passed": true,
+  "average_inference_ms": 22.48,
+  "min_inference_ms": 18.99,
+  "max_inference_ms": 25.81,
+  "api_health_status": "online",
+  "class_tests": [
+    {
+      "test_num": 1,
+      "test_type": "Class Image (Bacterial Blight)",
+      "true_class": "Bacterial Blight",
+      "predicted_class": "Bacterial Blight",
+      "confidence": 0.9671,
+      "success": true
+    },
+    {
+      "test_num": 2,
+      "test_type": "Class Image (Curl Virus)",
+      "true_class": "Curl Virus",
+      "predicted_class": "Curl Virus",
+      "confidence": 0.9752,
+      "success": true
+    },
+    {
+      "test_num": 3,
+      "test_type": "Class Image (Healthy Leaf)",
+      "true_class": "Healthy Leaf",
+      "predicted_class": "Healthy Cotton Leaf",
+      "confidence": 0.8278,
+      "success": true
+    },
+    {
+      "test_num": 4,
+      "test_type": "Class Image (Herbicide Growth Damage)",
+      "true_class": "Herbicide Growth Damage",
+      "predicted_class": "Herbicide Growth Damage",
+      "confidence": 0.9732,
+      "success": true
+    },
+    {
+      "test_num": 5,
+      "test_type": "Class Image (Leaf Hopper Jassids)",
+      "true_class": "Leaf Hopper Jassids",
+      "predicted_class": "Leaf Hopper / Jassids",
+      "confidence": 0.9385,
+      "success": true
+    },
+    {
+      "test_num": 6,
+      "test_type": "Class Image (Leaf Redding)",
+      "true_class": "Leaf Redding",
+      "predicted_class": "Leaf Redding",
+      "confidence": 0.9341,
+      "success": true
+    },
+    {
+      "test_num": 7,
+      "test_type": "Class Image (Leaf Variegation)",
+      "true_class": "Leaf Variegation",
+      "predicted_class": "Leaf Variegation",
+      "confidence": 0.9884,
+      "success": true
+    },
+    {
+      "test_num": 8,
+      "test_type": "Unseen Test Image (Bytes)",
+      "prediction": "Bacterial Blight",
+      "confidence": 0.9713,
+      "success": true
+    },
+    {
+      "test_num": 9,
+      "test_type": "Low-Quality/Dark Image",
+      "result": "Uncertain",
+      "confidence": 0.2101
+    }
+  ]
+}

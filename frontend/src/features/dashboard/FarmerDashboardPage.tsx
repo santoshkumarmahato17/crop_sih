@@ -25,7 +25,7 @@ import {
 import { dashboardService } from '@/services/dashboardService';
 import { farmService } from '@/services/farmService';
 import { zoneService } from '@/services/zoneService';
-import { weatherService, mockFarmWeatherRiskData, WeatherRiskDataWithMeta } from '@/services/weatherService';
+import { weatherService, mockFarmWeatherRiskData, WeatherRiskDataWithMeta, RealWeatherCurrentResponse, RealForecastResponse, SprayWindowResponse } from '@/services/weatherService';
 import { WeatherRiskForecastCard } from '@/features/weather/WeatherRiskForecastCard';
 import { ZoneTemporalAnalyticsModal } from '@/features/temporal/ZoneTemporalAnalyticsModal';
 import { LanguageSwitcher } from '@/features/advisories/LanguageSwitcher';
@@ -196,6 +196,10 @@ export const FarmerDashboardPage: React.FC = () => {
   const [weatherHorizon, setWeatherHorizon] = useState<number>(7);
   const [isWeatherLoading, setIsWeatherLoading] = useState<boolean>(false);
   const [advisories, setAdvisories] = useState<Advisory[]>([]);
+  // Real weather from IMD/Open-Meteo
+  const [realWeather, setRealWeather] = useState<RealWeatherCurrentResponse | null>(null);
+  const [realForecast, setRealForecast] = useState<RealForecastResponse | null>(null);
+  const [sprayWindow, setSprayWindow] = useState<SprayWindowResponse | null>(null);
 
   useEffect(() => {
     loadInitialData();
@@ -260,6 +264,21 @@ export const FarmerDashboardPage: React.FC = () => {
     }
   };
 
+  const loadRealWeather = async (farmId: string, lat?: number, lon?: number) => {
+    try {
+      const [cur, fc, sw] = await Promise.all([
+        weatherService.getRealCurrentWeather(farmId, lat, lon),
+        weatherService.getRealForecast(farmId, 7, lat, lon),
+        weatherService.getSprayWindow(farmId, lat, lon),
+      ]);
+      if (cur) setRealWeather(cur);
+      if (fc) setRealForecast(fc);
+      if (sw) setSprayWindow(sw);
+    } catch (e) {
+      console.warn('[Dashboard] Real weather load failed:', e);
+    }
+  };
+
   const loadInitialData = async () => {
     try {
       const [sumRes, farmsRes, advRes] = await Promise.all([
@@ -275,6 +294,7 @@ export const FarmerDashboardPage: React.FC = () => {
         setSelectedFarmId(firstFarmId);
         loadFarmZones(firstFarmId);
         loadWeatherRisk(firstFarmId, weatherHorizon);
+        loadRealWeather(firstFarmId);
       } else {
         loadWeatherRisk('farm-cbe-01', weatherHorizon);
       }
@@ -824,6 +844,119 @@ export const FarmerDashboardPage: React.FC = () => {
         }}
         onRefresh={() => loadWeatherRisk(selectedFarmId, weatherHorizon)}
       />
+
+      {/* ═══ Real Weather Widget (IMD / Open-Meteo) ═══ */}
+      {realWeather && (
+        <div className="p-5 rounded-3xl bg-gradient-to-br from-sky-50 to-blue-50 dark:from-slate-900 dark:to-slate-800/90 border border-sky-200 dark:border-sky-900/60 shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-sky-500/15 text-sky-700 dark:text-sky-300 font-mono font-bold text-[10px] uppercase tracking-wider border border-sky-400/30">
+                LIVE WEATHER
+              </span>
+              <span className="text-[11px] font-semibold text-sky-600 dark:text-sky-400">
+                {realWeather.source.provider}
+              </span>
+              <span
+                className={`text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${
+                  realWeather.source.data_quality === 'GOOD'
+                    ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-400/30'
+                    : realWeather.source.data_quality === 'STALE'
+                    ? 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-400/30'
+                    : 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-400/30'
+                }`}
+              >
+                {realWeather.source.data_quality}
+              </span>
+            </div>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400">
+              {realWeather.source.observed_at
+                ? new Date(realWeather.source.observed_at).toLocaleTimeString()
+                : 'Time unknown'}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {realWeather.current.temperature_c !== null && (
+              <div className="bg-white/70 dark:bg-slate-800/70 rounded-2xl p-3 text-center border border-slate-200 dark:border-slate-700">
+                <div className="text-2xl font-black text-slate-900 dark:text-slate-100">{realWeather.current.temperature_c?.toFixed(1)}°C</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Temperature</div>
+              </div>
+            )}
+            {realWeather.current.relative_humidity_percent !== null && (
+              <div className="bg-white/70 dark:bg-slate-800/70 rounded-2xl p-3 text-center border border-slate-200 dark:border-slate-700">
+                <div className="text-2xl font-black text-blue-700 dark:text-blue-300">{realWeather.current.relative_humidity_percent?.toFixed(0)}%</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Humidity</div>
+              </div>
+            )}
+            {realWeather.current.rainfall_mm !== null && (
+              <div className="bg-white/70 dark:bg-slate-800/70 rounded-2xl p-3 text-center border border-slate-200 dark:border-slate-700">
+                <div className="text-2xl font-black text-indigo-700 dark:text-indigo-300">{realWeather.current.rainfall_mm?.toFixed(1)} mm</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Rainfall</div>
+              </div>
+            )}
+            {realWeather.current.wind_speed_kmh !== null && (
+              <div className="bg-white/70 dark:bg-slate-800/70 rounded-2xl p-3 text-center border border-slate-200 dark:border-slate-700">
+                <div className="text-2xl font-black text-teal-700 dark:text-teal-300">{realWeather.current.wind_speed_kmh?.toFixed(1)} km/h</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">Wind</div>
+              </div>
+            )}
+          </div>
+
+          {realWeather.current.condition_text && (
+            <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+              ☁️ {realWeather.current.condition_text}
+              {realWeather.location.name && (
+                <span className="ml-2 text-slate-400">• {realWeather.location.name}</span>
+              )}
+            </p>
+          )}
+
+          {/* 7-day forecast strip */}
+          {realForecast && realForecast.forecast.length > 0 && (
+            <div className="border-t border-slate-200 dark:border-slate-700 pt-3">
+              <p className="text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500 tracking-wider mb-2">7-Day Forecast · {realForecast.source.provider}</p>
+              <div className="flex gap-2 overflow-x-auto pb-1">
+                {realForecast.forecast.slice(0, 7).map((day) => (
+                  <div key={day.date} className="min-w-[64px] bg-white/60 dark:bg-slate-800/60 rounded-xl p-2 text-center border border-slate-200 dark:border-slate-700 flex-shrink-0">
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                      {new Date(day.date).toLocaleDateString('en-IN', { weekday: 'short' })}
+                    </div>
+                    <div className="text-sm font-extrabold text-slate-900 dark:text-slate-100 mt-1">
+                      {day.max_temperature_c !== null ? `${day.max_temperature_c?.toFixed(0)}°` : '—'}
+                    </div>
+                    <div className="text-[10px] text-slate-400">
+                      {day.min_temperature_c !== null ? `${day.min_temperature_c?.toFixed(0)}°` : '—'}
+                    </div>
+                    {day.rainfall_mm !== null && day.rainfall_mm > 0 && (
+                      <div className="text-[10px] text-blue-500 font-bold mt-0.5">💧{day.rainfall_mm?.toFixed(0)}</div>
+                    )}
+                    {day.condition_text && (
+                      <div className="text-[9px] text-slate-400 mt-0.5 truncate" title={day.condition_text}>{day.condition_text.slice(0, 8)}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Spray Window */}
+          {sprayWindow && (
+            <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-semibold ${
+              sprayWindow.status === 'FAVORABLE'
+                ? 'bg-emerald-500/10 border-emerald-400/30 text-emerald-700 dark:text-emerald-300'
+                : sprayWindow.status === 'UNFAVORABLE'
+                ? 'bg-red-500/10 border-red-400/30 text-red-700 dark:text-red-300'
+                : sprayWindow.status === 'LIMITED'
+                ? 'bg-amber-500/10 border-amber-400/30 text-amber-700 dark:text-amber-300'
+                : 'bg-slate-500/10 border-slate-400/30 text-slate-600 dark:text-slate-400'
+            }`}>
+              <span>🌿 Spray Window:</span>
+              <span className="font-black">{sprayWindow.status}</span>
+              {sprayWindow.reason && <span className="font-normal opacity-70">— {sprayWindow.reason}</span>}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 3. Multi-Crop Precision Monitoring Grid (Box-wise view & Add Crop) */}
       <div className="p-6 rounded-3xl bg-white/85 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-sm dark:shadow-2xl space-y-6 backdrop-blur-xl transition-colors duration-200">

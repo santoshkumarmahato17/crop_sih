@@ -1,0 +1,22 @@
+{
+  "model_architecture": "mobilenet_v3_small",
+  "num_classes": 5,
+  "input_size": 224,
+  "idx_to_class": {
+    "0": "Citrus Canker",
+    "1": "Citrus Nutrient Yellow",
+    "2": "Orange Leaf - Multiple Disease",
+    "3": "Young Healthy Orange Leaf",
+    "4": "Healthy"
+  },
+  "class_categories": {
+    "Citrus Canker": "disease",
+    "Citrus Nutrient Yellow": "nutrient_deficiency",
+    "Orange Leaf - Multiple Disease": "disease",
+    "Young Healthy Orange Leaf": "healthy",
+    "Healthy": "healthy"
+  },
+  "best_val_loss": 0.0024943622863197647,
+  "final_val_acc": 99.92193598750976,
+  "final_val_f1": 99.91714035318199
+}

@@ -1,0 +1,48 @@
+{
+  "model_name": "Cotton Leaf Condition Classifier",
+  "model_architecture": "mobilenet_v3_small",
+  "input_size": 224,
+  "num_classes": 7,
+  "classes": [
+    "Bacterial Blight",
+    "Curl Virus",
+    "Healthy Leaf",
+    "Herbicide Growth Damage",
+    "Leaf Hopper Jassids",
+    "Leaf Redding",
+    "Leaf Variegation"
+  ],
+  "class_categories": {
+    "Bacterial Blight": "Disease",
+    "Curl Virus": "Disease / Viral Condition",
+    "Healthy Leaf": "Healthy",
+    "Herbicide Growth Damage": "Chemical / Herbicide Damage",
+    "Leaf Hopper Jassids": "Pest",
+    "Leaf Redding": "Leaf Condition",
+    "Leaf Variegation": "Leaf Condition"
+  },
+  "class_display_names": {
+    "Bacterial Blight": "Bacterial Blight",
+    "Curl Virus": "Curl Virus",
+    "Healthy Leaf": "Healthy Cotton Leaf",
+    "Herbicide Growth Damage": "Herbicide Growth Damage",
+    "Leaf Hopper Jassids": "Leaf Hopper / Jassids",
+    "Leaf Redding": "Leaf Redding",
+    "Leaf Variegation": "Leaf Variegation"
+  },
+  "idx_to_class": {
+    "0": "Bacterial Blight",
+    "1": "Curl Virus",
+    "2": "Healthy Leaf",
+    "3": "Herbicide Growth Damage",
+    "4": "Leaf Hopper Jassids",
+    "5": "Leaf Redding",
+    "6": "Leaf Variegation"
+  },
+  "best_val_loss": 0.18355,
+  "test_accuracy": 94.39,
+  "test_macro_f1": 94.39,
+  "mobile_model_size_mb": 6.21,
+  "training_time_seconds": 688.6,
+  "random_seed": 42
+}

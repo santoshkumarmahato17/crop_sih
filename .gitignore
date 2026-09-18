@@ -110,7 +110,6 @@ redis-data/
 *.sqlite*
 agrishield.db
 Dataset for Crop Pest and Disease Detection/
-orange d-set/
 soybean d-set/
 
 # IDE & OS
@@ -128,6 +127,12 @@ Thumbs.db
 sample_leaf.jpg
 test_chewed_leaf.jpg
 data/california_housing.csv
+
+# Large dataset archives (exceed GitHub 100MB limit — use Git LFS or external storage)
+cotton d-set/**/*.zip
+**/Augmented Dataset.zip
+**/Original Dataset.zip
+*.zip
 
 # PROJECT_DATA Managed Directories
 PROJECT_DATA/01_DATASETS/*

@@ -1,0 +1,1286 @@
+[
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00208.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00311.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00013.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00389.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00372.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00217.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00139.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00053.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00017.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00124.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00101.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00104.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00378.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00078.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00035.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00226.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00140.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00243.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00215.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00277.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00134.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00062.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00209.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00565.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00019.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00092.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00175.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00419.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00180.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00130.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00046.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00190.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00074.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00123.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00218.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00168.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00047.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00090.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00204.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00060.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00099.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00289.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00131.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00344.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00293.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00283.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00152.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00225.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00065.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00330.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00369.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00124.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00338.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00088.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00055.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00176.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00131.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00516.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00197.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00236.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00178.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00072.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00250.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00284.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00160.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00107.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00170.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00215.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00192.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00172.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00154.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00152.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00182.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00153.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00055.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00266.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00003.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00077.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00027.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00349.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00424.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00114.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00006.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00401.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00272.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00047.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00158.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00087.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00026.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00161.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00263.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00239.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00047.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00203.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00251.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00009.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00065.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00187.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00214.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00123.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00400.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00011.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00182.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00142.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00147.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00161.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00235.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00267.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00022.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00100.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00199.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00035.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00120.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00099.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00073.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00146.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00120.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00202.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00089.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00233.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00381.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00357.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00113.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00162.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00140.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00117.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00227.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00380.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00477.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00178.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00130.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00304.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00210.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00010.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00212.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00248.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00104.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00298.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00248.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00160.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00317.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00087.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00158.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00267.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00262.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00144.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00009.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00002.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00161.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00129.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00069.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00188.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00053.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00242.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00110.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00068.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00152.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00194.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00165.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00146.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00144.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00502.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00373.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00225.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00340.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00252.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00135.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00026.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00359.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00160.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00134.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00189.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00349.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00259.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00521.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00113.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00170.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00196.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00240.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00046.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00108.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00039.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00254.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Variegation\\LV00048.jpg",
+    "class_name": "Leaf Variegation",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00072.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00016.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00051.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00038.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00004.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00089.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00319.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00318.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Bacterial Blight\\BBC00131.jpg",
+    "class_name": "Bacterial Blight",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00218.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00324.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00004.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Healthy Leaf\\HL00151.jpg",
+    "class_name": "Healthy Leaf",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00340.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00402.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00417.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00450.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00497.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00376.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00415.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00233.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Hopper Jassids\\LHJ00097.jpg",
+    "class_name": "Leaf Hopper Jassids",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00095.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00261.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00397.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Curl Virus\\CV00054.jpg",
+    "class_name": "Curl Virus",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00364.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Herbicide Growth Damage\\HGD00062.jpg",
+    "class_name": "Herbicide Growth Damage",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00399.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  },
+  {
+    "filepath": "C:\\Users\\ELCOT\\OneDrive - ELCOT\\Desktop\\SIH_26\\cotton d-set/original/Original Dataset\\Leaf Redding\\LR00546.jpg",
+    "class_name": "Leaf Redding",
+    "width": 800,
+    "height": 800
+  }
+]

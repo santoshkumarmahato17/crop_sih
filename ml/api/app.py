@@ -24,7 +24,7 @@ from ml.src.predict_maize import get_maize_predictor
 from ml.src.utils import load_config, load_json
 
 # Orange Leaf Disease Predictor
-from ml.inference.predictor import OrangeLeafPredictor
+from ml.src.predict_orange import OrangeLeafPredictor
 from ml.inference.image_quality import check_image_quality
 
 # Unified EfficientNetB0 Predictor
@@ -39,6 +39,9 @@ def get_orange_predictor():
     if _ORANGE_PREDICTOR is None:
         _ORANGE_PREDICTOR = OrangeLeafPredictor()
     return _ORANGE_PREDICTOR
+
+# Cotton Leaf Disease & Pest Predictor
+from ml.src.predict_cotton import get_cotton_predictor
 
 app = FastAPI(
     title="Tomato Leaf Disease Inference API",
@@ -1211,6 +1214,85 @@ async def predict_orange_leaf(
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Orange Leaf Inference failed: {str(e)}")
+
+
+# ---------------------------------------------------------------------------
+# Cotton Leaf Disease & Pest Classification Endpoints
+# ---------------------------------------------------------------------------
+
+@app.get(
+    "/api/cotton/health",
+    tags=["Cotton Leaf Inference"],
+    summary="Cotton ML Service Health Check",
+    description="Returns the operational status of the Cotton Leaf classification model.",
+)
+async def cotton_health_check():
+    try:
+        predictor = get_cotton_predictor()
+        return {
+            "status": "online" if predictor.model_loaded else "model_not_ready",
+            "crop": "Cotton",
+            "num_classes": len(predictor.classes),
+            "classes": predictor.classes,
+            "device": str(predictor.device),
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+
+@app.get(
+    "/api/cotton/classes",
+    tags=["Cotton Leaf Inference"],
+    summary="List Cotton Leaf Classification Classes",
+    description="Returns all 7 supported Cotton leaf disease, pest, and condition classes.",
+)
+async def get_cotton_classes():
+    predictor = get_cotton_predictor()
+    return {
+        "crop": "Cotton",
+        "total_classes": len(predictor.classes),
+        "class_mapping": predictor.class_names,
+    }
+
+
+@app.post(
+    "/api/cotton/predict",
+    tags=["Cotton Leaf Inference"],
+    summary="Predict Cotton Leaf Disease & Pest (7 Classes)",
+    description="Accepts a photograph of a cotton leaf from a phone camera and predicts condition.",
+)
+async def predict_cotton_leaf(
+    image: UploadFile = File(..., description="Photograph of a cotton leaf (JPG/PNG)"),
+    confidence_threshold: Optional[float] = Form(70.0, description="Confidence threshold percentage (0-100)"),
+):
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
+    ext = os.path.splitext(image.filename)[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported format '{ext}'. Allowed: {valid_exts}")
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    # Image Quality Check
+    is_good, quality_msg = check_image_quality(contents)
+    if not is_good:
+        return JSONResponse(status_code=400, content={"success": False, "crop": "Cotton", "message": quality_msg})
+
+    try:
+        predictor = get_cotton_predictor()
+        result = predictor.predict(contents, confidence_threshold=confidence_threshold)
+        if not result.get("success"):
+            return JSONResponse(status_code=500, content=result)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Cotton Leaf Inference failed: {str(e)}")
 
 
 if __name__ == "__main__":

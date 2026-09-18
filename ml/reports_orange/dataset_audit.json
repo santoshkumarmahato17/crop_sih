@@ -1,0 +1,13 @@
+{
+  "total_discovered": 38432,
+  "total_valid": 38432,
+  "total_skipped": 0,
+  "skipped_details": [],
+  "class_distribution": {
+    "Citrus Canker": 11248,
+    "Citrus Nutrient Yellow": 12800,
+    "Healthy": 6384,
+    "Orange Leaf - Multiple Disease": 4800,
+    "Young Healthy Orange Leaf": 3200
+  }
+}

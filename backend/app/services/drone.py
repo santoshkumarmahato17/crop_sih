@@ -179,6 +179,21 @@ class DroneMissionService:
 
         postgis_flight_boundary = shapely_to_wkt_element(flight_shapely, srid=4326)
 
+        # Real weather priority boost
+        priority = req.priority.upper()
+        try:
+            from app.weather.providers.service import get_current_weather
+            from app.weather.providers.base import DataQuality
+            lat, lon = 20.0, 73.78  # fallback
+            cw = await get_current_weather(lat, lon)
+            if cw and cw.data_quality in (DataQuality.GOOD, DataQuality.STALE):
+                if cw.rainfall_mm and cw.rainfall_mm > 5.0:
+                    priority = "CRITICAL"  # Post-rain damage assessment
+                elif cw.wind_speed_kmh and cw.wind_speed_kmh > 20.0:
+                    priority = "HIGH"      # Needs attention when wind calms
+        except Exception:
+            pass
+
         mission = DroneMission(
             id=str(uuid.uuid4()),
             farm_id=farm.id,
@@ -190,7 +205,7 @@ class DroneMissionService:
             flight_speed_mps=req.flight_speed_mps,
             overlap_percentage=req.overlap_percentage,
             coverage_percentage=0.0,
-            priority=req.priority.upper(),
+            priority=priority,
             target_zones=req.target_zones or [],
             status=MissionStatus.SCHEDULED,
         )

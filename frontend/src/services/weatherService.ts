@@ -402,4 +402,172 @@ export const weatherService = {
   async recalculateRisk(farmId: string = 'farm-cbe-01') {
     return apiClient.post(`/risk/recalculate/${farmId}`);
   },
+
+  // ── Real Weather API Methods (new normalized endpoints) ──────────────────
+
+  /** Fetch real current weather from IMD or Open-Meteo provider */
+  async getRealCurrentWeather(
+    farmId: string,
+    lat?: number,
+    lon?: number,
+    forceRefresh = false,
+  ): Promise<RealWeatherCurrentResponse | null> {
+    try {
+      const params: Record<string, unknown> = { force_refresh: forceRefresh };
+      if (lat !== undefined) params.lat = lat;
+      if (lon !== undefined) params.lon = lon;
+      const res = await apiClient.get<RealWeatherCurrentResponse>(
+        `/weather/current/${farmId}`,
+        { params },
+      );
+      return res.data;
+    } catch (e) {
+      console.warn('[weatherService] Real current weather fetch failed:', e);
+      return null;
+    }
+  },
+
+  /** Fetch multi-day real weather forecast */
+  async getRealForecast(
+    farmId: string,
+    days = 7,
+    lat?: number,
+    lon?: number,
+  ): Promise<RealForecastResponse | null> {
+    try {
+      const params: Record<string, unknown> = { days };
+      if (lat !== undefined) params.lat = lat;
+      if (lon !== undefined) params.lon = lon;
+      const res = await apiClient.get<RealForecastResponse>(
+        `/weather/forecast/${farmId}`,
+        { params },
+      );
+      return res.data;
+    } catch (e) {
+      console.warn('[weatherService] Real forecast fetch failed:', e);
+      return null;
+    }
+  },
+
+  /** Fetch historical weather aggregates (24h/3d/7d/14d) */
+  async getRealWeatherSummary(
+    farmId: string,
+    lat?: number,
+    lon?: number,
+  ): Promise<RealSummaryResponse | null> {
+    try {
+      const params: Record<string, unknown> = {};
+      if (lat !== undefined) params.lat = lat;
+      if (lon !== undefined) params.lon = lon;
+      const res = await apiClient.get<RealSummaryResponse>(
+        `/weather/summary/${farmId}`,
+        { params },
+      );
+      return res.data;
+    } catch (e) {
+      console.warn('[weatherService] Real summary fetch failed:', e);
+      return null;
+    }
+  },
+
+  /** Evaluate pesticide spray window */
+  async getSprayWindow(
+    farmId: string,
+    lat?: number,
+    lon?: number,
+    windowHours = 6,
+  ): Promise<SprayWindowResponse | null> {
+    try {
+      const params: Record<string, unknown> = { window_hours: windowHours };
+      if (lat !== undefined) params.lat = lat;
+      if (lon !== undefined) params.lon = lon;
+      const res = await apiClient.get<SprayWindowResponse>(
+        `/weather/spray-window/${farmId}`,
+        { params },
+      );
+      return res.data;
+    } catch (e) {
+      console.warn('[weatherService] Spray window fetch failed:', e);
+      return null;
+    }
+  },
 };
+
+// ── TypeScript types for normalized weather responses ────────────────────────
+
+export interface WeatherSourceMeta {
+  provider: string;
+  model?: string;
+  observed_at?: string;
+  source_timestamp?: string;
+  data_quality: 'GOOD' | 'STALE' | 'PARTIAL' | 'UNAVAILABLE';
+}
+
+export interface RealWeatherCurrentResponse {
+  farm_id: string;
+  location: { latitude: number; longitude: number; name?: string };
+  current: {
+    temperature_c: number | null;
+    relative_humidity_percent: number | null;
+    rainfall_mm: number | null;
+    precipitation_probability_percent: number | null;
+    wind_speed_kmh: number | null;
+    wind_direction_deg: number | null;
+    dew_point_c: number | null;
+    soil_moisture_percent: number | null;
+    et0_mm: number | null;
+    vpd_kpa: number | null;
+    cloud_cover_percent: number | null;
+    solar_radiation_w_m2: number | null;
+    condition_text: string | null;
+  };
+  source: WeatherSourceMeta;
+}
+
+export interface RealForecastDay {
+  date: string;
+  temperature_c: number | null;
+  min_temperature_c: number | null;
+  max_temperature_c: number | null;
+  relative_humidity_percent: number | null;
+  rainfall_mm: number | null;
+  precipitation_probability_percent: number | null;
+  wind_speed_kmh: number | null;
+  wind_direction_deg: number | null;
+  condition_text: string | null;
+  et0_mm: number | null;
+  data_quality: string;
+}
+
+export interface RealForecastResponse {
+  farm_id: string;
+  location: { latitude: number; longitude: number; name?: string };
+  days_requested: number;
+  forecast: RealForecastDay[];
+  source: { provider: string; data_quality: string };
+}
+
+export interface RealSummaryResponse {
+  farm_id: string;
+  location: { latitude: number; longitude: number; name?: string };
+  summary: Record<string, {
+    rainfall_total_mm: number | null;
+    rainfall_days: number | null;
+    mean_temperature_c: number | null;
+    max_temperature_c: number | null;
+    min_temperature_c: number | null;
+    mean_humidity_percent: number | null;
+    mean_wind_speed_kmh: number | null;
+    soil_moisture_trend: string | null;
+    et0_total_mm: number | null;
+    record_count: number;
+  }>;
+  source: { provider: string; data_quality: string; computed_at: string };
+}
+
+export interface SprayWindowResponse {
+  status: 'FAVORABLE' | 'UNFAVORABLE' | 'LIMITED' | 'UNKNOWN';
+  reason: string | null;
+  evaluated_at: string;
+  forecast_horizon_hours: number;
+}
