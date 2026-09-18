@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "C:\Users\krsan\Desktop\crop\backend\app\main.py", line 117, in create_application
+    from ml.api.app import app as ml_app
+  File "C:\Users\krsan\Desktop\crop\ml\api\app.py", line 34, in <module>
+    from ml.src.predict_soybean import get_soybean_predictor
+  File "C:\Users\krsan\Desktop\crop\ml\src\predict_soybean.py", line 244
+    logger.info(
+    ^^^^^^
+SyntaxError: expected 'except' or 'finally' block

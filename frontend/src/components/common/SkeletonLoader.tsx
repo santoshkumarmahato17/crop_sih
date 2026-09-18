@@ -27,7 +27,7 @@ export const SkeletonLoader: React.FC<SkeletonProps> = ({
   return (
     <div
       style={style}
-      className={`animate-pulse bg-slate-800/80 border border-slate-700/50 ${variantStyles[variant]} ${className}`}
+      className={`animate-pulse bg-agri-100 dark:bg-agri-800/50 border border-agri-200/30 dark:border-agri-700/20 ${variantStyles[variant]} ${className}`}
     />
   );
 };

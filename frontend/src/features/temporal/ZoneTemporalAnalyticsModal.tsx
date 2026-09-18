@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import {
   TrendingDown,
   TrendingUp,
@@ -133,8 +133,8 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
         );
       case 'IMPROVING':
         return (
-          <span className="px-3 py-1 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-xs font-bold flex items-center gap-1.5">
-            <TrendingUp className="w-4 h-4 text-emerald-400" />
+          <span className="px-3 py-1 rounded-xl bg-agri-500/15 border border-agri-500/30 text-agri-400 text-xs font-bold flex items-center gap-1.5">
+            <TrendingUp className="w-4 h-4 text-agri-400" />
             <span>IMPROVING</span>
           </span>
         );
@@ -152,7 +152,7 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
   const renderChart = (points: { x: number; y: number; val: number; label: string }[], strokeColor: string) => {
     if (points.length < 2) {
       return (
-        <div className="h-44 flex items-center justify-center text-slate-500 text-xs font-mono">
+        <div className="h-44 flex items-center justify-center text-agri-500/70 text-xs font-mono">
           Insufficient scans for temporal trajectory curve. At least 2 monitoring flights required.
         </div>
       );
@@ -245,7 +245,7 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="max-w-3xl w-full p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+      <div className="max-w-3xl w-full p-6 rounded-2xl bg-agri-900 border border-slate-800 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2.5">
@@ -253,22 +253,22 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
               {zone.zone_code}
             </span>
             <div>
-              <h3 className="font-bold text-slate-100 text-base">
+              <h3 className="font-bold text-agri-100 text-base">
                 Temporal Crop Health & Multi-Scan Trajectory
               </h3>
-              <p className="text-xs text-slate-400">
-                Holding Zone: <span className="text-slate-200 font-semibold">{zone.name}</span> ({zone.area_hectares.toFixed(1)} ha)
+              <p className="text-xs text-agri-400/70">
+                Holding Zone: <span className="text-agri-200 font-semibold">{zone.name}</span> ({zone.area_hectares.toFixed(1)} ha)
               </p>
             </div>
           </div>
 
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-300 text-sm">
+          <button onClick={onClose} className="text-agri-500/70 hover:text-agri-300 text-sm">
             ✕
           </button>
         </div>
 
         {isLoading ? (
-          <div className="p-12 text-center text-slate-400 space-y-2">
+          <div className="p-12 text-center text-agri-400/70 space-y-2">
             <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
             <p className="text-xs">Computing multi-scan rate of change...</p>
           </div>
@@ -277,16 +277,16 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
             {/* Top Trajectory Summary Bar */}
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <span className="text-[11px] text-slate-400 block font-medium">Trajectory Classification:</span>
+                <span className="text-[11px] text-agri-400/70 block font-medium">Trajectory Classification:</span>
                 <div>{getClassificationBadge(trendData.classification)}</div>
               </div>
 
               <div className="flex items-center gap-6 text-xs font-mono">
                 <div>
-                  <span className="text-slate-500 block text-[10px]">Net Health Delta</span>
+                  <span className="text-agri-500/70 block text-[10px]">Net Health Delta</span>
                   <span
                     className={`text-base font-bold ${
-                      trendData.delta_total_percent < 0 ? 'text-rose-400' : 'text-emerald-400'
+                      trendData.delta_total_percent < 0 ? 'text-rose-400' : 'text-agri-400'
                     }`}
                   >
                     {trendData.delta_total_percent > 0 ? `+${trendData.delta_total_percent}` : trendData.delta_total_percent}%
@@ -294,10 +294,10 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
                 </div>
 
                 <div>
-                  <span className="text-slate-500 block text-[10px]">Velocity / Day</span>
+                  <span className="text-agri-500/70 block text-[10px]">Velocity / Day</span>
                   <span
                     className={`text-base font-bold ${
-                      trendData.velocity_per_day < 0 ? 'text-rose-400' : 'text-emerald-400'
+                      trendData.velocity_per_day < 0 ? 'text-rose-400' : 'text-agri-400'
                     }`}
                   >
                     {trendData.velocity_per_day > 0 ? `+${trendData.velocity_per_day}` : trendData.velocity_per_day}%/d
@@ -305,7 +305,7 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
                 </div>
 
                 <div>
-                  <span className="text-slate-500 block text-[10px]">Total Scans</span>
+                  <span className="text-agri-500/70 block text-[10px]">Total Scans</span>
                   <span className="text-base font-bold text-blue-400">{trendData.total_scans}</span>
                 </div>
               </div>
@@ -318,8 +318,8 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
                   onClick={() => setActiveTab('health')}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                     activeTab === 'health'
-                      ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/40'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-agri-500/20 text-agri-400 border border-agri-500/30'
+                      : 'text-agri-400/70 hover:text-agri-200'
                   }`}
                 >
                   <Activity className="w-3.5 h-3.5" />
@@ -331,7 +331,7 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                     activeTab === 'disease'
                       ? 'bg-rose-600/20 text-rose-400 border border-rose-500/40'
-                      : 'text-slate-400 hover:text-slate-200'
+                      : 'text-agri-400/70 hover:text-agri-200'
                   }`}
                 >
                   <ShieldAlert className="w-3.5 h-3.5" />
@@ -343,7 +343,7 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                     activeTab === 'pest'
                       ? 'bg-amber-600/20 text-amber-400 border border-amber-500/40'
-                      : 'text-slate-400 hover:text-slate-200'
+                      : 'text-agri-400/70 hover:text-agri-200'
                   }`}
                 >
                   <Bug className="w-3.5 h-3.5" />
@@ -355,7 +355,7 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                     activeTab === 'water'
                       ? 'bg-blue-600/20 text-blue-400 border border-blue-500/40'
-                      : 'text-slate-400 hover:text-slate-200'
+                      : 'text-agri-400/70 hover:text-agri-200'
                   }`}
                 >
                   <Droplets className="w-3.5 h-3.5" />
@@ -372,13 +372,13 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
 
             {/* Multi-Scan Comparison Table */}
             <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
-              <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+              <h4 className="text-xs font-bold text-agri-200 uppercase tracking-wider">
                 Multi-Scan Chronological Observation Table
               </h4>
 
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs text-slate-300">
-                  <thead className="border-b border-slate-800 text-slate-500 uppercase font-semibold text-[10px]">
+                <table className="w-full text-left text-xs text-agri-300">
+                  <thead className="border-b border-slate-800 text-agri-500/70 uppercase font-semibold text-[10px]">
                     <tr>
                       <th className="py-2 px-2.5">Scan</th>
                       <th className="py-2 px-2.5">Observation Date</th>
@@ -392,10 +392,10 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
                     {scans.map((s, idx) => (
                       <tr key={s.scan_id} className="hover:bg-slate-900/60">
                         <td className="py-2 px-2.5 font-bold text-blue-400">Scan {idx + 1}</td>
-                        <td className="py-2 px-2.5 text-slate-300">
+                        <td className="py-2 px-2.5 text-agri-300">
                           {new Date(s.observation_date).toLocaleDateString()}
                         </td>
-                        <td className="py-2 px-2.5 font-bold text-emerald-400">{s.health_score}%</td>
+                        <td className="py-2 px-2.5 font-bold text-agri-400">{s.health_score}%</td>
                         <td className="py-2 px-2.5 text-rose-400">{s.disease_probability}%</td>
                         <td className="py-2 px-2.5 text-amber-400">{s.pest_probability}%</td>
                         <td className="py-2 px-2.5 text-blue-400">{s.water_stress_cwsi.toFixed(2)}</td>
@@ -413,7 +413,7 @@ export const ZoneTemporalAnalyticsModal: React.FC<ZoneTemporalAnalyticsModalProp
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold"
+            className="px-5 py-2 rounded-xl bg-agri-800 hover:bg-slate-700 text-agri-200 text-xs font-semibold"
           >
             Close Trajectory
           </button>

@@ -180,91 +180,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const authData = await authService.login(email, password);
-      const cleanUser = normalizeUser(authData.user) || defaultFarmerUser;
+      const cleanUser = normalizeUser(authData.user);
+      if (!cleanUser) {
+        throw new Error('Invalid user account format returned by server.');
+      }
       setUser(cleanUser);
       setToken(authData.access_token);
       setIsOnboarded(true);
       localStorage.setItem('agrishield_onboarded', 'true');
       return cleanUser.role;
-    } catch (_loginErr) {
-      // ── Determine simulated role from email pattern ──────────────────────────
-      let simulatedRole: RoleType = 'FARMER';
-      let simulatedName = 'Farmer Ramanathan K.';
-      let permissions = [
-        'FARM_VIEW', 'FARM_CREATE', 'FARM_EDIT',
-        'CROP_VIEW', 'CROP_MANAGE',
-        'DRONE_VIEW', 'DISEASE_VIEW', 'DISEASE_ANALYZE',
-        'ALERT_VIEW', 'REPORT_VIEW', 'AI_ASSISTANT_USE',
-      ];
-
-      const em = email.toLowerCase().trim();
-      if (em.includes('admin') || em === 'admin@agrishield.com') {
-        simulatedRole = 'ADMIN';
-        simulatedName = 'System Administrator';
-        permissions = [
-          'ADMIN_DASHBOARD_ACCESS', 'USER_MANAGE', 'FARMER_MANAGE',
-          'GOVERNMENT_MANAGE', 'SYSTEM_MONITORING', 'AI_MODEL_MANAGE',
-          'DRONE_SYSTEM_MANAGE', 'AUDIT_LOGS_VIEW', 'SYSTEM_CONFIG_MANAGE',
-        ];
-      } else if (em.includes('gov') || em.includes('officer') || em === 'officer@gov.agrishield.in' || em === 'sundaram@gov.agrishield.in') {
-        simulatedRole = 'GOVERNMENT';
-        simulatedName = 'Dr. Sundaram (Regional Agriculture Officer)';
-        permissions = [
-          'REGIONAL_DASHBOARD_VIEW', 'REGIONAL_MONITORING_VIEW',
-          'DISEASE_HOTSPOTS_VIEW', 'PEST_HOTSPOTS_VIEW', 'WATER_STRESS_VIEW',
-          'SPREAD_RISK_VIEW', 'REGIONAL_ANALYTICS_VIEW', 'REGIONAL_REPORTS_VIEW',
-        ];
-      }
-
-      // ── Try to auto-provision account on backend for a real JWT ─────────────
-      // Only attempt for FARMER/GOVERNMENT (ADMIN registration is blocked server-side)
-      if (simulatedRole !== 'ADMIN') {
-        try {
-          // 1. Register the account (may fail if already exists — that's fine)
-          await authService.register({
-            email,
-            password,
-            full_name: simulatedName,
-            role: simulatedRole as 'FARMER' | 'GOVERNMENT',
-          });
-        } catch {
-          // Account may already exist — proceed to login
-        }
-        try {
-          // 2. Login to get a real signed JWT
-          const realAuth = await authService.login(email, password);
-          const cleanUser = normalizeUser(realAuth.user) || defaultFarmerUser;
-          setUser(cleanUser);
-          setToken(realAuth.access_token);
-          setIsOnboarded(true);
-          localStorage.setItem('agrishield_onboarded', 'true');
-          return cleanUser.role;
-        } catch {
-          // Backend completely unreachable — fall through to demo token
-        }
-      }
-
-      // ── Final fallback: demo-token (backend now accepts these) ───────────────
-      const mockUser: UserProfile = {
-        id: `usr-${Date.now()}`,
-        email,
-        full_name: simulatedName,
-        role: simulatedRole,
-        permissions,
-        organization_name: simulatedRole === 'GOVERNMENT' ? 'Dept of Agriculture, Tamil Nadu' : undefined,
-        department: simulatedRole === 'GOVERNMENT' ? 'Plant Pathology Division' : undefined,
-        assigned_region: simulatedRole === 'GOVERNMENT' ? 'Coimbatore Region' : undefined,
-        is_active: true,
-        is_verified: true,
-        created_at: new Date().toISOString(),
-      };
-
-      const cleanMock = normalizeUser(mockUser) || defaultFarmerUser;
-      setUser(cleanMock);
-      setToken(`demo-token-${simulatedRole.toLowerCase()}`);
-      setIsOnboarded(true);
-      localStorage.setItem('agrishield_onboarded', 'true');
-      return cleanMock.role;
     } finally {
       setIsLoading(false);
     }
@@ -274,36 +198,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const newUser = await authService.register(payload);
-      const cleanUser = normalizeUser(newUser) || defaultFarmerUser;
+      // Automatically log in newly registered account to acquire JWT session token
+      const authData = await authService.login(payload.email, payload.password);
+      const cleanUser = normalizeUser(authData.user) || normalizeUser(newUser);
+      if (!cleanUser) {
+        throw new Error('Registration completed, but profile could not be loaded.');
+      }
       setUser(cleanUser);
-      setToken(`demo-token-${cleanUser.role.toLowerCase()}`);
+      setToken(authData.access_token);
       setIsOnboarded(false);
       localStorage.setItem('agrishield_onboarded', 'false');
       return cleanUser.role;
-    } catch (err) {
-      const mockUser: UserProfile = {
-        id: `usr-${Date.now()}`,
-        email: payload.email,
-        full_name: payload.full_name,
-        phone_number: payload.phone_number,
-        role: normalizeRole(payload.role),
-        permissions:
-          payload.role === 'GOVERNMENT'
-            ? ['REGIONAL_DASHBOARD_VIEW', 'DISEASE_HOTSPOTS_VIEW', 'REGIONAL_ANALYTICS_VIEW']
-            : ['FARM_VIEW', 'CROP_VIEW', 'DISEASE_VIEW', 'ALERT_VIEW'],
-        organization_name: payload.organization_name,
-        department: payload.department,
-        assigned_region: payload.assigned_region,
-        is_active: true,
-        is_verified: false,
-        created_at: new Date().toISOString(),
-      };
-      const cleanMock = normalizeUser(mockUser) || defaultFarmerUser;
-      setUser(cleanMock);
-      setToken(`demo-token-${cleanMock.role.toLowerCase()}`);
-      setIsOnboarded(false);
-      localStorage.setItem('agrishield_onboarded', 'false');
-      return cleanMock.role;
     } finally {
       setIsLoading(false);
     }

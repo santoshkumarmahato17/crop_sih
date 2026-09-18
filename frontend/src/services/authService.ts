@@ -40,4 +40,30 @@ export const authService = {
       // Ignore network errors on logout
     }
   },
+
+  async forgotPassword(email: string): Promise<{ success: boolean; message: string; smtp_configured: boolean }> {
+    const response = await apiClient.post<{ success: boolean; message: string; smtp_configured: boolean }>(
+      '/auth/forgot-password',
+      { email }
+    );
+    return response.data;
+  },
+
+  async verifyOtp(email: string, otp: string): Promise<{ success: boolean; message: string; reset_token: string }> {
+    const response = await apiClient.post<{ success: boolean; message: string; reset_token: string }>(
+      '/auth/verify-otp',
+      { email, otp }
+    );
+    return response.data;
+  },
+
+  async resetPassword(payload: {
+    email: string;
+    reset_token: string;
+    new_password: string;
+    confirm_password: string;
+  }): Promise<{ success: boolean; message: string }> {
+    const response = await apiClient.post<{ success: boolean; message: string }>('/auth/reset-password', payload);
+    return response.data;
+  },
 };

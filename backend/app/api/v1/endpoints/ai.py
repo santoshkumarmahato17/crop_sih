@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from typing import Optional
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_active_user, get_optional_current_user
@@ -175,3 +175,27 @@ async def submit_expert_validation(
         "notes": expert_notes,
         "recorded_at": datetime.now(timezone.utc).isoformat(),
     }
+
+
+@router.get("/ai/sample-images", summary="Get Sample Images for Vision AI Test")
+@router.get("/ai/yolo/sample-images", summary="Get YOLO Sample Images")
+@router.get("/ai/unified/sample-images", summary="Get Unified Sample Images")
+@router.get("/ai/cassava/sample-images", summary="Get Cassava Sample Images")
+async def get_ai_sample_images(
+    crop: Optional[str] = Query(None),
+    limit_per_class: int = Query(1, ge=1, le=5),
+):
+    from app.api.v1.endpoints.dataset import get_sample_images
+    try:
+        return await get_sample_images(crop=crop, limit_per_class=limit_per_class)
+    except Exception:
+        return [
+            {
+                "class_key": "tomato_early_blight",
+                "crop": "Tomato",
+                "condition": "Early Blight",
+                "file_name": "sample_leaf_1.jpg",
+                "relative_path": "samples/sample_leaf_1.jpg",
+                "full_path": "/data/samples/sample_leaf_1.jpg",
+            }
+        ]

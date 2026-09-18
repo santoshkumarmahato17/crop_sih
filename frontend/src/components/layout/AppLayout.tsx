@@ -29,7 +29,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const shouldShowAuthenticatedChrome = !isAuthPage && isAuthenticated;
 
   return (
-    <div className="h-screen max-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-hidden">
+    <div className="h-screen max-h-screen bg-surface-light dark:bg-surface-darkBg text-agri-900 dark:text-agri-50 flex flex-col selection:bg-agri-500 selection:text-white transition-colors duration-300 overflow-hidden">
       {/* 1. Fixed Stationary Header Bar */}
       <div className="relative z-40 shrink-0 w-full">
         <Header
@@ -50,11 +50,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
           <div className="lg:hidden fixed inset-0 z-50 flex">
             {/* Backdrop Blur Overlay */}
             <div
-              className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm animate-in fade-in transition-opacity"
+              className="fixed inset-0 bg-agri-950/70 backdrop-blur-sm animate-fade-in transition-opacity"
               onClick={() => setIsMobileDrawerOpen(false)}
             />
             {/* Drawer */}
-            <div className="relative z-10 w-72 max-w-[85vw] h-full shadow-2xl animate-in slide-in-from-left duration-200">
+            <div className="relative z-10 w-72 max-w-[85vw] h-full shadow-2xl animate-slide-in-left">
               <Sidebar isMobileDrawer onClose={() => setIsMobileDrawerOpen(false)} />
             </div>
           </div>

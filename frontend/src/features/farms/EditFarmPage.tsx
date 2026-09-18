@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Save, MapPin, Layers, AlertCircle } from 'lucide-react';
 import { FarmMapDrawer } from '@/components/map/FarmMapDrawer';
@@ -99,7 +99,7 @@ export const EditFarmPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-12 text-center text-slate-400">Loading farm for editing...</div>;
+    return <div className="p-12 text-center text-agri-400/70">Loading farm for editing...</div>;
   }
 
   return (
@@ -108,13 +108,13 @@ export const EditFarmPage: React.FC = () => {
       <div className="flex items-center gap-3">
         <Link
           to={`/farms/${id}`}
-          className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition"
+          className="p-2 rounded-xl bg-agri-900 border border-slate-800 hover:bg-agri-800 text-agri-400/70 hover:text-agri-200 transition"
         >
           <ArrowLeft className="w-4 h-4" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Edit Farm Holding</h1>
-          <p className="text-xs text-slate-400">Update farm attributes or adjust boundary perimeter.</p>
+          <h1 className="text-2xl font-bold text-agri-100">Edit Farm Holding</h1>
+          <p className="text-xs text-agri-400/70">Update farm attributes or adjust boundary perimeter.</p>
         </div>
       </div>
 
@@ -129,13 +129,13 @@ export const EditFarmPage: React.FC = () => {
         {/* Spatial Boundary Modification */}
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-emerald-400" />
+            <h2 className="text-base font-semibold text-agri-100 flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-agri-400" />
               <span>Boundary Adjustment</span>
             </h2>
 
             {calculatedAreaHa > 0 && (
-              <span className="text-xs font-mono font-bold text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+              <span className="text-xs font-mono font-bold text-agri-400 px-3 py-1 rounded-full bg-agri-500/10 border border-agri-500/25">
                 Acreage: {calculatedAreaHa.toFixed(2)} ha
               </span>
             )}
@@ -149,50 +149,50 @@ export const EditFarmPage: React.FC = () => {
 
         {/* Identity & Soil */}
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <h2 className="text-base font-semibold text-slate-100 flex items-center gap-2">
-            <Layers className="w-4 h-4 text-emerald-400" />
+          <h2 className="text-base font-semibold text-agri-100 flex items-center gap-2">
+            <Layers className="w-4 h-4 text-agri-400" />
             <span>Farm Metadata</span>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Farm Name</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Farm Name</label>
               <input
                 type="text"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Address / Gat No.</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Address / Gat No.</label>
               <input
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">City</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">City</label>
               <input
                 type="text"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-300 mb-1">Region</label>
+              <label className="block text-xs font-medium text-agri-300 mb-1">Region</label>
               <input
                 type="text"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-slate-100 focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-sm text-agri-100 focus:outline-none focus:border-agri-500"
               />
             </div>
           </div>
@@ -202,7 +202,7 @@ export const EditFarmPage: React.FC = () => {
         <div className="flex items-center justify-end gap-3 pt-2">
           <Link
             to={`/farms/${id}`}
-            className="px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-300 font-medium text-sm transition"
+            className="px-5 py-2.5 rounded-xl bg-agri-900 border border-slate-800 hover:bg-agri-800 text-agri-300 font-medium text-sm transition"
           >
             Cancel
           </Link>
@@ -210,7 +210,7 @@ export const EditFarmPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-lg shadow-emerald-950/40 transition hover:scale-[1.02] flex items-center gap-2 disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-agri-500 hover:bg-agri-500 text-white font-semibold text-sm shadow-lg shadow-emerald-950/40 transition hover:scale-[1.02] flex items-center gap-2 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             <span>{isSubmitting ? 'Saving Changes...' : 'Save Farm Changes'}</span>

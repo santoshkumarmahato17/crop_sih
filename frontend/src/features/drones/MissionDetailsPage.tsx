@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -116,7 +116,7 @@ export const MissionDetailsPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-12 text-center text-slate-400">Loading flight telemetry...</div>;
+    return <div className="p-12 text-center text-agri-400/70">Loading flight telemetry...</div>;
   }
 
   if (!mission) {
@@ -130,21 +130,21 @@ export const MissionDetailsPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <Link
             to="/missions"
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition"
+            className="p-2 rounded-xl bg-agri-900 border border-slate-800 hover:bg-agri-800 text-agri-400/70 hover:text-agri-200 transition"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-slate-100">
+              <h1 className="text-2xl font-bold text-agri-100">
                 Flight Mission: {mission.farm_name || 'Autonomous Survey'}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold font-mono">
+              <span className="px-2.5 py-0.5 rounded-full bg-agri-500/10 border border-agri-500/20 text-agri-400 text-xs font-bold font-mono">
                 {mission.status}
               </span>
             </div>
-            <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-              <Cpu className="w-3.5 h-3.5 text-slate-500" />
+            <p className="text-xs text-agri-400/70 flex items-center gap-1 mt-0.5">
+              <Cpu className="w-3.5 h-3.5 text-agri-500/70" />
               <span>Assigned: {mission.drone_name || 'AgriFlyer Drone'}</span>
             </p>
           </div>
@@ -167,7 +167,7 @@ export const MissionDetailsPage: React.FC = () => {
             <button
               onClick={handleCompleteMission}
               disabled={isExecuting}
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-950/40 transition flex items-center gap-1.5 disabled:opacity-50"
+              className="px-4 py-2 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold shadow-lg shadow-emerald-950/40 transition flex items-center gap-1.5 disabled:opacity-50"
             >
               <CheckCircle className="w-3.5 h-3.5" />
               <span>{isExecuting ? 'Concluding...' : 'Simulate Landing & Complete'}</span>
@@ -178,8 +178,8 @@ export const MissionDetailsPage: React.FC = () => {
 
       {/* Flight Corridor Map */}
       <div className="space-y-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-          <Radio className="w-4 h-4 text-emerald-400" />
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-agri-400/70 flex items-center gap-2">
+          <Radio className="w-4 h-4 text-agri-400" />
           <span>Flight Boundary Corridor & Target Zones</span>
         </h2>
 
@@ -195,23 +195,23 @@ export const MissionDetailsPage: React.FC = () => {
       {/* Flight Telemetry Parameters */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
-          <span className="text-xs text-slate-400 block font-medium">Survey Altitude</span>
-          <p className="text-xl font-bold text-slate-100 font-mono mt-1">
-            {mission.altitude_meters} <span className="text-sm text-slate-400">m AGL</span>
+          <span className="text-xs text-agri-400/70 block font-medium">Survey Altitude</span>
+          <p className="text-xl font-bold text-agri-100 font-mono mt-1">
+            {mission.altitude_meters} <span className="text-sm text-agri-400/70">m AGL</span>
           </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Ground Resolution: ~2.4 cm/px</p>
+          <p className="text-[11px] text-agri-500/70 mt-0.5">Ground Resolution: ~2.4 cm/px</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
-          <span className="text-xs text-slate-400 block font-medium">Flight Speed</span>
-          <p className="text-xl font-bold text-slate-100 font-mono mt-1">
-            {mission.flight_speed_mps} <span className="text-sm text-slate-400">m/s</span>
+          <span className="text-xs text-agri-400/70 block font-medium">Flight Speed</span>
+          <p className="text-xl font-bold text-agri-100 font-mono mt-1">
+            {mission.flight_speed_mps} <span className="text-sm text-agri-400/70">m/s</span>
           </p>
-          <p className="text-[11px] text-slate-500 mt-0.5">Overlap: {mission.overlap_percentage}%</p>
+          <p className="text-[11px] text-agri-500/70 mt-0.5">Overlap: {mission.overlap_percentage}%</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
-          <span className="text-xs text-slate-400 block font-medium">Target Zones</span>
+          <span className="text-xs text-agri-400/70 block font-medium">Target Zones</span>
           <div className="flex flex-wrap gap-1 mt-2">
             {(mission.target_zones || []).map((z, idx) => (
               <span
@@ -222,17 +222,17 @@ export const MissionDetailsPage: React.FC = () => {
               </span>
             ))}
           </div>
-          <p className="text-[11px] text-slate-500 mt-1">Targeted Survey Area</p>
+          <p className="text-[11px] text-agri-500/70 mt-1">Targeted Survey Area</p>
         </div>
 
         <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
-          <span className="text-xs text-slate-400 block font-medium">Mission Progress</span>
-          <p className="text-xl font-bold text-emerald-400 font-mono mt-1">
+          <span className="text-xs text-agri-400/70 block font-medium">Mission Progress</span>
+          <p className="text-xl font-bold text-agri-400 font-mono mt-1">
             {mission.coverage_percentage.toFixed(0)}%
           </p>
-          <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-1.5">
+          <div className="w-full bg-agri-800 h-1.5 rounded-full overflow-hidden mt-1.5">
             <div
-              className="bg-emerald-500 h-full rounded-full transition-all"
+              className="bg-agri-500 h-full rounded-full transition-all"
               style={{ width: `${mission.coverage_percentage}%` }}
             />
           </div>
@@ -244,20 +244,20 @@ export const MissionDetailsPage: React.FC = () => {
 
       {/* Simulated Telemetry Log Console */}
       <div className="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 font-mono text-xs shadow-inner">
-        <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-slate-400">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-agri-400/70">
           <span className="flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-emerald-400" />
+            <Sparkles className="w-4 h-4 text-agri-400" />
             <span>Simulated Flight Telemetry Stream (Development Mode)</span>
           </span>
-          <span className="text-[10px] text-slate-500">Provider: MockDroneProvider</span>
+          <span className="text-[10px] text-agri-500/70">Provider: MockDroneProvider</span>
         </div>
 
-        <div className="space-y-1 text-slate-300 max-h-48 overflow-y-auto">
+        <div className="space-y-1 text-agri-300 max-h-48 overflow-y-auto">
           {simLog.length === 0 ? (
-            <p className="text-slate-600">Flight simulation ready. Press "Launch Mission" to execute.</p>
+            <p className="text-agri-600">Flight simulation ready. Press "Launch Mission" to execute.</p>
           ) : (
             simLog.map((log, idx) => (
-              <p key={idx} className="text-emerald-400/90">
+              <p key={idx} className="text-agri-400/90">
                 {log}
               </p>
             ))

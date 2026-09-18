@@ -25,6 +25,22 @@ class DiagnosisStatus(str, enum.Enum):
     EXPERT_REJECTED = "EXPERT_REJECTED"
     INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
     LOW_CONFIDENCE = "LOW_CONFIDENCE"
+    UNKNOWN = "UNKNOWN"
+    CROP_MISMATCH = "CROP_MISMATCH"
+
+
+class CropValidationStatus(str, enum.Enum):
+    CROP_MATCH = "CROP_MATCH"
+    CROP_MISMATCH = "CROP_MISMATCH"
+    CROP_UNKNOWN = "CROP_UNKNOWN"
+    CROP_LOW_CONFIDENCE = "CROP_LOW_CONFIDENCE"
+
+
+class ImageQualityStatus(str, enum.Enum):
+    PASS = "PASS"
+    LOW_QUALITY = "LOW_QUALITY"
+    INSUFFICIENT_EVIDENCE = "INSUFFICIENT_EVIDENCE"
+    INVALID_IMAGE = "INVALID_IMAGE"
 
 
 class SymptomSeverity(str, enum.Enum):
@@ -61,11 +77,14 @@ class DiagnosisAnalysis(Base, TimestampMixin):
     __table_args__ = (
         Index("ix_diagnosis_farm_zone", "farm_id", "zone_id"),
         Index("ix_diagnosis_user_created", "user_id", "created_at"),
-        Index("ix_diagnosis_crop_status", "crop_type", "status"),
+        Index("ix_diagnosis_crop_status", "farmer_selected_crop", "status"),
     )
 
     id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
+    )
+    diagnostic_case_id: Mapped[Optional[str]] = mapped_column(
+        String(36), ForeignKey("diagnostic_cases.id", ondelete="CASCADE"), nullable=True, index=True
     )
     user_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
@@ -81,10 +100,15 @@ class DiagnosisAnalysis(Base, TimestampMixin):
     )
 
     # Contextual Crop & Field Attributes
-    crop_type: Mapped[str] = mapped_column(String(100), nullable=False)
+    farmer_selected_crop: Mapped[str] = mapped_column(String(100), nullable=False)
+    ai_detected_crop: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    crop_validation_status: Mapped[CropValidationStatus] = mapped_column(Enum(CropValidationStatus), default=CropValidationStatus.CROP_UNKNOWN, nullable=False)
     growth_stage: Mapped[str] = mapped_column(String(100), nullable=False)
     plant_parts: Mapped[list] = mapped_column(JSON, default=list, nullable=False) # e.g. ["Leaf", "Stem"]
-    severity: Mapped[SymptomSeverity] = mapped_column(Enum(SymptomSeverity), default=SymptomSeverity.MEDIUM, nullable=False)
+    farmer_reported_severity: Mapped[SymptomSeverity] = mapped_column(Enum(SymptomSeverity), default=SymptomSeverity.MEDIUM, nullable=False)
+    ai_estimated_severity: Mapped[Optional[SymptomSeverity]] = mapped_column(Enum(SymptomSeverity), nullable=True)
+    expert_assessed_severity: Mapped[Optional[SymptomSeverity]] = mapped_column(Enum(SymptomSeverity), nullable=True)
+    affected_area_percentage: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     distribution: Mapped[str] = mapped_column(String(100), default="One section of the zone", nullable=False)
     symptom_start_date: Mapped[Optional[str]] = mapped_column(String(100), nullable=True) # e.g. "4-7 days ago" or ISO date
     farmer_notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
@@ -138,6 +162,9 @@ class DiagnosisAnalysis(Base, TimestampMixin):
     images: Mapped[List["DiagnosisImage"]] = relationship(
         "DiagnosisImage", back_populates="analysis", cascade="all, delete-orphan"
     )
+    diagnostic_case: Mapped[Optional["DiagnosticCase"]] = relationship(
+        "DiagnosticCase", back_populates="ai_analysis"
+    )
 
 
 class DiagnosisSymptom(Base, TimestampMixin):
@@ -175,6 +202,8 @@ class DiagnosisImage(Base, TimestampMixin):
     image_url: Mapped[str] = mapped_column(String(512), nullable=False)
     original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
     file_size_bytes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    quality_status: Mapped[ImageQualityStatus] = mapped_column(Enum(ImageQualityStatus), default=ImageQualityStatus.PASS, nullable=False)
+    quality_score: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     visual_abnormalities_detected: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     affected_regions: Mapped[Optional[dict]] = mapped_column(JSON, default=dict, nullable=True)
 

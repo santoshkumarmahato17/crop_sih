@@ -5,6 +5,7 @@ from typing import Dict, List, Set
 class RoleType(str, enum.Enum):
     """Primary user authorization roles for AGRI SHIELD."""
     FARMER = "FARMER"
+    EXTENSION_WORKER = "EXTENSION_WORKER"
     GOVERNMENT = "GOVERNMENT"
     ADMIN = "ADMIN"
 
@@ -25,6 +26,12 @@ class Permission(str, enum.Enum):
     ALERT_VIEW = "ALERT_VIEW"
     REPORT_VIEW = "REPORT_VIEW"
     AI_ASSISTANT_USE = "AI_ASSISTANT_USE"
+
+    # Extension Worker / Field Officer Domain Permissions
+    EXTENSION_DASHBOARD_VIEW = "EXTENSION_DASHBOARD_VIEW"
+    FIELD_VERIFICATION_VIEW = "FIELD_VERIFICATION_VIEW"
+    FIELD_VERIFICATION_MANAGE = "FIELD_VERIFICATION_MANAGE"
+    LAB_REFERRAL_CREATE = "LAB_REFERRAL_CREATE"
 
     # Government / Regional Authority Domain Permissions
     REGIONAL_DASHBOARD_VIEW = "REGIONAL_DASHBOARD_VIEW"
@@ -66,6 +73,17 @@ ROLE_PERMISSIONS: Dict[RoleType, Set[Permission]] = {
         Permission.ALERT_VIEW,
         Permission.REPORT_VIEW,
         Permission.AI_ASSISTANT_USE,
+    },
+    RoleType.EXTENSION_WORKER: {
+        Permission.EXTENSION_DASHBOARD_VIEW,
+        Permission.FIELD_VERIFICATION_VIEW,
+        Permission.FIELD_VERIFICATION_MANAGE,
+        Permission.LAB_REFERRAL_CREATE,
+        Permission.FARM_VIEW,
+        Permission.CROP_VIEW,
+        Permission.DISEASE_VIEW,
+        Permission.ALERT_VIEW,
+        Permission.REPORT_VIEW,
     },
     RoleType.GOVERNMENT: {
         Permission.REGIONAL_DASHBOARD_VIEW,

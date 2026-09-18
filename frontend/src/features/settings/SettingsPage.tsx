@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Settings,
@@ -47,24 +47,24 @@ export const SettingsPage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-20 transition-colors duration-200">
       {/* 1. Page Header */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-surface-darkCard/85 border border-agri-200/50/80 dark:border-agri-700/25 shadow-md backdrop-blur-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/20 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400">
+            <div className="p-2 rounded-2xl bg-agri-500/10 dark:bg-agri-500/15 border border-agri-500/25 text-agri-600 dark:text-agri-400">
               <Settings className="w-5 h-5" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-xl font-bold tracking-tight text-agri-900 dark:text-white">
               System Settings & Preferences
             </h1>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
             Configure display themes, language, telemetry frequency, alert rules, and account session controls.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+        <div className="flex items-center gap-2 text-xs font-semibold text-agri-600 dark:text-agri-400/70">
           <span>Active User:</span>
-          <span className="font-bold text-slate-900 dark:text-white font-mono bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-lg">
+          <span className="font-bold text-agri-900 dark:text-white font-mono bg-agri-50 dark:bg-agri-800/50 px-2 py-1 rounded-lg">
             {user?.full_name || 'Farmer Ramanathan'}
           </span>
         </div>
@@ -72,7 +72,7 @@ export const SettingsPage: React.FC = () => {
 
       {/* Save Toast Notification */}
       {toastMsg && (
-        <div className="p-3.5 rounded-2xl bg-emerald-600 text-white text-xs font-bold flex items-center gap-2 animate-in fade-in shadow-xl sticky top-20 z-30">
+        <div className="p-3.5 rounded-2xl bg-agri-500 text-white text-xs font-bold flex items-center gap-2 animate-in fade-in shadow-xl sticky top-20 z-30">
           <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
           <span>{toastMsg}</span>
         </div>
@@ -80,13 +80,13 @@ export const SettingsPage: React.FC = () => {
 
       <form onSubmit={handleSaveSettings} className="space-y-6">
         {/* 2. Appearance & Language */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-xl space-y-5">
-          <div className="space-y-1 border-b border-slate-200 dark:border-slate-800 pb-3">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Eye className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+        <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-surface-darkCard/85 border border-agri-200/50/80 dark:border-agri-700/25 shadow-md backdrop-blur-xl space-y-5">
+          <div className="space-y-1 border-b border-agri-200/50 dark:border-agri-700/25 pb-3">
+            <h2 className="text-sm font-bold text-agri-900 dark:text-white flex items-center gap-2">
+              <Eye className="w-4 h-4 text-agri-600 dark:text-agri-400" />
               <span>Appearance & Language</span>
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
               Customize visual contrast and preferred vernacular language.
             </p>
           </div>
@@ -94,7 +94,7 @@ export const SettingsPage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Theme Selector */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                 Display Theme
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -103,8 +103,8 @@ export const SettingsPage: React.FC = () => {
                   onClick={() => setTheme('light')}
                   className={`p-3 rounded-2xl border flex items-center justify-center gap-2 text-xs font-bold transition ${
                     theme === 'light'
-                      ? 'bg-emerald-50 border-emerald-500 text-emerald-800 shadow-sm'
-                      : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                      ? 'bg-emerald-50 border-emerald-500 text-agri-800 shadow-sm'
+                      : 'bg-surface-light dark:bg-surface-darkBg border-agri-200/50 dark:border-agri-700/25 text-agri-700 dark:text-agri-300'
                   }`}
                 >
                   <Sun className="w-4 h-4 text-amber-500" />
@@ -116,11 +116,11 @@ export const SettingsPage: React.FC = () => {
                   onClick={() => setTheme('dark')}
                   className={`p-3 rounded-2xl border flex items-center justify-center gap-2 text-xs font-bold transition ${
                     theme === 'dark'
-                      ? 'bg-emerald-950/40 border-emerald-500 text-emerald-300 shadow-sm'
-                      : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300'
+                      ? 'bg-emerald-950/40 border-emerald-500 text-agri-300 shadow-sm'
+                      : 'bg-surface-light dark:bg-surface-darkBg border-agri-200/50 dark:border-agri-700/25 text-agri-700 dark:text-agri-300'
                   }`}
                 >
-                  <Moon className="w-4 h-4 text-emerald-400" />
+                  <Moon className="w-4 h-4 text-agri-400" />
                   <span>Dark Mode</span>
                 </button>
               </div>
@@ -128,15 +128,15 @@ export const SettingsPage: React.FC = () => {
 
             {/* Language Selector */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                 System Language
               </label>
               <div className="relative">
-                <Globe className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                <Globe className="w-4 h-4 text-agri-400/70 absolute left-3.5 top-3" />
                 <select
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-semibold"
+                  className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-agri-500 font-semibold"
                 >
                   <option value="en">English (Default)</option>
                   <option value="hi">Hindi (हिन्दी)</option>
@@ -149,26 +149,26 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {/* 3. Telemetry & AI Vision Configuration */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-xl space-y-5">
-          <div className="space-y-1 border-b border-slate-200 dark:border-slate-800 pb-3">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+        <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-surface-darkCard/85 border border-agri-200/50/80 dark:border-agri-700/25 shadow-md backdrop-blur-xl space-y-5">
+          <div className="space-y-1 border-b border-agri-200/50 dark:border-agri-700/25 pb-3">
+            <h2 className="text-sm font-bold text-agri-900 dark:text-white flex items-center gap-2">
               <Sliders className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span>Telemetry & AI Diagnostics Engine</span>
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
               Control IoT sync rates, unit standards, and neural network detection sensitivity.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                 Telemetry Sync Rate
               </label>
               <select
                 value={syncInterval}
                 onChange={(e) => setSyncInterval(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-semibold"
+                className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-agri-500 font-semibold"
               >
                 <option value="5s">Every 5 Seconds (Ultra Real-Time)</option>
                 <option value="15s">Every 15 Seconds (Recommended)</option>
@@ -177,13 +177,13 @@ export const SettingsPage: React.FC = () => {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                 Measurement Units
               </label>
               <select
                 value={unitSystem}
                 onChange={(e) => setUnitSystem(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-emerald-500 font-semibold"
+                className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-agri-500 font-semibold"
               >
                 <option value="metric">Metric (°C, Hectares, mm)</option>
                 <option value="imperial">Imperial (°F, Acres, inches)</option>
@@ -192,10 +192,10 @@ export const SettingsPage: React.FC = () => {
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                   AI Confidence Threshold
                 </label>
-                <span className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                <span className="text-xs font-mono font-bold text-agri-600 dark:text-agri-400">
                   {aiConfidenceThreshold}%
                 </span>
               </div>
@@ -210,13 +210,13 @@ export const SettingsPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+          <div className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-light dark:bg-agri-950/60 border border-agri-200/50 dark:border-agri-700/25">
             <div className="space-y-0.5">
-              <span className="text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+              <span className="text-xs font-bold text-agri-900 dark:text-agri-100 flex items-center gap-1.5">
                 <Plane className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
                 <span>Auto-Recommend Drone Missions on Critical Risk</span>
               </span>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70">
                 Automatically generate targeted waypoint flight routes when consecutive observations deteriorate.
               </p>
             </div>
@@ -230,24 +230,24 @@ export const SettingsPage: React.FC = () => {
         </div>
 
         {/* 4. Alert & Notification Rules */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-xl space-y-4">
-          <div className="space-y-1 border-b border-slate-200 dark:border-slate-800 pb-3">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+        <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-surface-darkCard/85 border border-agri-200/50/80 dark:border-agri-700/25 shadow-md backdrop-blur-xl space-y-4">
+          <div className="space-y-1 border-b border-agri-200/50 dark:border-agri-700/25 pb-3">
+            <h2 className="text-sm font-bold text-agri-900 dark:text-white flex items-center gap-2">
               <Bell className="w-4 h-4 text-amber-500" />
               <span>Notification & Alert Channels</span>
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
               Manage how urgent disease outbreaks and irrigation alerts reach you.
             </p>
           </div>
 
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-light dark:bg-agri-950/60 border border-agri-200/50 dark:border-agri-700/25">
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                <p className="text-xs font-bold text-agri-900 dark:text-agri-100">
                   In-System Real-Time Notifications
                 </p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70">
                   Instant bell popup banners for disease detection and zone status updates.
                 </p>
               </div>
@@ -259,12 +259,12 @@ export const SettingsPage: React.FC = () => {
               />
             </div>
 
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-light dark:bg-agri-950/60 border border-agri-200/50 dark:border-agri-700/25">
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                <p className="text-xs font-bold text-agri-900 dark:text-agri-100">
                   Critical Outbreak SMS Alerts
                 </p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70">
                   Sends urgent SMS alerts to your phone if neighbor contagion risk exceeds 80%.
                 </p>
               </div>
@@ -276,12 +276,12 @@ export const SettingsPage: React.FC = () => {
               />
             </div>
 
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-surface-light dark:bg-agri-950/60 border border-agri-200/50 dark:border-agri-700/25">
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                <p className="text-xs font-bold text-agri-900 dark:text-agri-100">
                   Weekly Agronomic Crop Health Digest
                 </p>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70">
                   Summary email report of vegetative NDVI trajectories and water stress levels.
                 </p>
               </div>
@@ -297,7 +297,7 @@ export const SettingsPage: React.FC = () => {
           <div className="flex justify-end pt-2">
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-md shadow-emerald-600/20 active:scale-98"
+              className="px-6 py-2.5 rounded-2xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold transition shadow-md shadow-emerald-600/20 active:scale-98"
             >
               Save System Preferences
             </button>
@@ -308,45 +308,45 @@ export const SettingsPage: React.FC = () => {
 
 
       {/* 4. Weather Data Ingestion & Predictive Risk Engine Diagnostics */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-slate-900/85 border border-slate-200/80 dark:border-slate-800/80 shadow-md backdrop-blur-xl space-y-5">
-        <div className="space-y-1 border-b border-slate-200 dark:border-slate-800 pb-3">
+      <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-surface-darkCard/85 border border-agri-200/50/80 dark:border-agri-700/25 shadow-md backdrop-blur-xl space-y-5">
+        <div className="space-y-1 border-b border-agri-200/50 dark:border-agri-700/25 pb-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-sm font-bold text-agri-900 dark:text-white flex items-center gap-2">
               <Shield className="w-4 h-4 text-sky-500" />
               <span>Weather Data Ingestion & Predictive Risk Engine Diagnostics</span>
             </h2>
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono font-bold text-[10px]">
+            <span className="px-2.5 py-0.5 rounded-full bg-agri-500/15 text-agri-600 dark:text-agri-400 font-mono font-bold text-[10px]">
               SYSTEM HEALTHY
             </span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
             Real-time status of meteorological data providers, forecast data freshness, and epidemiological rule versions.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-1">
-            <span className="text-[10px] text-slate-500 block font-bold uppercase">Active Provider</span>
-            <p className="text-xs font-black text-slate-800 dark:text-slate-200">Open-Meteo & In-Situ Station</p>
-            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold block">● Online (Latency: 42ms)</span>
+          <div className="p-4 rounded-2xl bg-surface-light dark:bg-agri-950/70 border border-agri-200/50 dark:border-agri-700/25 space-y-1">
+            <span className="text-[10px] text-agri-500/70 block font-bold uppercase">Active Provider</span>
+            <p className="text-xs font-black text-agri-800 dark:text-agri-200">Open-Meteo & In-Situ Station</p>
+            <span className="text-[10px] text-agri-600 dark:text-agri-400 font-semibold block">● Online (Latency: 42ms)</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-1">
-            <span className="text-[10px] text-slate-500 block font-bold uppercase">Forecast Freshness</span>
-            <p className="text-xs font-black text-slate-800 dark:text-slate-200">7-Day Horizon Ensembles</p>
+          <div className="p-4 rounded-2xl bg-surface-light dark:bg-agri-950/70 border border-agri-200/50 dark:border-agri-700/25 space-y-1">
+            <span className="text-[10px] text-agri-500/70 block font-bold uppercase">Forecast Freshness</span>
+            <p className="text-xs font-black text-agri-800 dark:text-agri-200">7-Day Horizon Ensembles</p>
             <span className="text-[10px] text-sky-600 dark:text-sky-400 font-semibold block">Updated 4 mins ago</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-1">
-            <span className="text-[10px] text-slate-500 block font-bold uppercase">Risk Rule Version</span>
-            <p className="text-xs font-black font-mono text-slate-800 dark:text-slate-200">weather-risk-v1</p>
-            <span className="text-[10px] text-slate-400 font-semibold block">3-Vector Multi-Horizon Model</span>
+          <div className="p-4 rounded-2xl bg-surface-light dark:bg-agri-950/70 border border-agri-200/50 dark:border-agri-700/25 space-y-1">
+            <span className="text-[10px] text-agri-500/70 block font-bold uppercase">Risk Rule Version</span>
+            <p className="text-xs font-black font-mono text-agri-800 dark:text-agri-200">weather-risk-v1</p>
+            <span className="text-[10px] text-agri-400/70 font-semibold block">3-Vector Multi-Horizon Model</span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 space-y-1">
-            <span className="text-[10px] text-slate-500 block font-bold uppercase">Alert Deduplication</span>
-            <p className="text-xs font-black text-slate-800 dark:text-slate-200">24-Hour Stateful Filter</p>
-            <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold block">0 Processing Errors</span>
+          <div className="p-4 rounded-2xl bg-surface-light dark:bg-agri-950/70 border border-agri-200/50 dark:border-agri-700/25 space-y-1">
+            <span className="text-[10px] text-agri-500/70 block font-bold uppercase">Alert Deduplication</span>
+            <p className="text-xs font-black text-agri-800 dark:text-agri-200">24-Hour Stateful Filter</p>
+            <span className="text-[10px] text-agri-600 dark:text-agri-400 font-semibold block">0 Processing Errors</span>
           </div>
         </div>
       </div>
@@ -365,10 +365,10 @@ export const SettingsPage: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
-              Signed in as: <span className="text-emerald-700 dark:text-emerald-400">{user?.email || 'farmer@agrishield.farm'}</span>
+            <p className="text-xs font-bold text-agri-900 dark:text-agri-100">
+              Signed in as: <span className="text-agri-700 dark:text-agri-400">{user?.email || 'farmer@agrishield.farm'}</span>
             </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70">
               Role: <span className="font-mono font-semibold">{typeof user?.role === 'string' ? user.role : (user?.role as any)?.name || 'FARMER'}</span> • Device: Current Browser Session
             </p>
           </div>

@@ -43,22 +43,22 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-md p-8 sm:p-9 rounded-3xl bg-white/95 dark:bg-slate-900/90 border border-white/60 dark:border-slate-700/60 shadow-2xl shadow-emerald-950/20 backdrop-blur-2xl space-y-6">
+    <div className="w-full max-w-md p-8 sm:p-9 rounded-3xl bg-white/95 dark:bg-surface-darkCard/90 border border-agri-200/40 dark:border-agri-700/30 shadow-2xl shadow-agri-900/15 dark:shadow-black/30 backdrop-blur-2xl space-y-6 animate-scale-in">
       {/* Brand Header */}
       <div className="text-center space-y-2">
-        <div className="inline-flex p-2 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-md">
+        <div className="inline-flex p-2 rounded-2xl bg-white dark:bg-agri-900/60 border border-agri-200/50 dark:border-agri-700/30 shadow-md shadow-agri-500/10">
           <img src="/agri-logo.png" alt="AgriShield Logo" className="w-16 h-12 object-contain" />
         </div>
-        <h1 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
+        <h1 className="text-2xl font-black tracking-tight text-agri-900 dark:text-white font-display">
           Sign In to AGRI SHIELD
         </h1>
-        <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+        <p className="text-xs text-agri-600/70 dark:text-agri-400/60 font-medium">
           Precision Agricultural Security & Diagnostic System
         </p>
       </div>
 
       {errorMsg && (
-        <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/40 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2">
+        <div className="p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-semibold flex items-center gap-2 animate-fade-in">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{errorMsg}</span>
         </div>
@@ -66,45 +66,51 @@ export const LoginPage: React.FC = () => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+          <label className="text-xs font-bold text-agri-800 dark:text-agri-200">
             Email Address *
           </label>
           <div className="relative">
-            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Mail className="w-4 h-4 text-agri-400 dark:text-agri-500 absolute left-3.5 top-3" />
             <input
               type="email"
               required
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="user@agrishield.farm"
-              className="w-full bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-semibold"
+              placeholder="Enter your registered email"
+              className="w-full bg-agri-50/50 dark:bg-agri-900/40 border border-agri-200/60 dark:border-agri-700/30 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/60 dark:placeholder-agri-500/40 focus:outline-none focus:border-agri-500 focus:ring-1 focus:ring-agri-500/30 font-semibold transition-colors"
             />
           </div>
         </div>
 
         <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            <label className="text-xs font-bold text-agri-800 dark:text-agri-200">
               Password *
             </label>
+            <Link
+              to="/forgot-password"
+              className="text-[11px] text-agri-600 dark:text-accent-lime font-extrabold hover:underline"
+            >
+              Forgot Password?
+            </Link>
           </div>
           <div className="relative">
-            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Lock className="w-4 h-4 text-agri-400 dark:text-agri-500 absolute left-3.5 top-3" />
             <input
               type={showPassword ? 'text' : 'password'}
               required
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••••••"
-              className="w-full bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-xl pl-10 pr-10 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-emerald-500 font-semibold"
+              placeholder="Enter your password"
+              className="w-full bg-agri-50/50 dark:bg-agri-900/40 border border-agri-200/60 dark:border-agri-700/30 rounded-xl pl-10 pr-10 py-2.5 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/60 dark:placeholder-agri-500/40 focus:outline-none focus:border-agri-500 focus:ring-1 focus:ring-agri-500/30 font-semibold transition-colors"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              className="absolute right-3.5 top-3 text-agri-400 hover:text-agri-600 dark:hover:text-agri-200 transition-colors"
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
@@ -114,7 +120,7 @@ export const LoginPage: React.FC = () => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black text-xs transition shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 mt-2"
+          className="w-full py-3 rounded-2xl bg-gradient-to-r from-agri-500 to-agri-600 hover:from-agri-600 hover:to-agri-700 active:scale-95 text-white font-black text-xs transition-all duration-200 shadow-lg shadow-agri-500/25 hover:shadow-agri-500/35 flex items-center justify-center gap-2 mt-2"
         >
           {isLoading ? (
             <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
@@ -128,12 +134,12 @@ export const LoginPage: React.FC = () => {
       </form>
 
       {/* Footer Link to Register */}
-      <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800/80">
-        <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+      <div className="text-center pt-2 border-t border-agri-200/40 dark:border-agri-700/20">
+        <p className="text-xs text-agri-600/70 dark:text-agri-400/60 font-medium">
           Don't have an account?{' '}
           <Link
             to="/register"
-            className="text-emerald-600 dark:text-emerald-400 font-extrabold hover:underline"
+            className="text-agri-600 dark:text-accent-lime font-extrabold hover:underline"
           >
             Register here
           </Link>
@@ -142,4 +148,3 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
-

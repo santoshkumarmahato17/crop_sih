@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+﻿import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface Props {
@@ -31,15 +31,15 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-satellite-950 text-slate-100 flex items-center justify-center p-6">
-          <div className="max-w-md w-full p-8 rounded-2xl bg-slate-900 border border-rose-500/30 text-center space-y-6">
+        <div className="min-h-screen bg-satellite-950 text-agri-100 flex items-center justify-center p-6">
+          <div className="max-w-md w-full p-8 rounded-2xl bg-agri-900 border border-rose-500/30 text-center space-y-6">
             <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 mx-auto flex items-center justify-center">
               <AlertTriangle className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
               <h2 className="text-xl font-bold text-white">System Component Exception</h2>
-              <p className="text-sm text-slate-400">
+              <p className="text-sm text-agri-400/70">
                 An unexpected interface render failure occurred. The error has been isolated.
               </p>
             </div>
@@ -52,7 +52,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
             <button
               onClick={this.handleReset}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-agri-800 hover:bg-slate-700 text-white text-sm font-medium transition"
             >
               <RefreshCw className="w-4 h-4" />
               Reload System Interface
@@ -76,7 +76,7 @@ export const ErrorDisplay: React.FC<{ message: string; onRetry?: () => void }> =
         <AlertTriangle className="w-5 h-5 text-rose-400" />
         <span>Subsystem Error</span>
       </div>
-      <p className="text-xs text-slate-300">{message}</p>
+      <p className="text-xs text-agri-300">{message}</p>
       {onRetry && (
         <button
           onClick={onRetry}

@@ -25,6 +25,7 @@ class ValidationRequestStatus(str, enum.Enum):
     REJECTED = "REJECTED"
     UNCERTAIN = "UNCERTAIN"
     LAB_REFERRAL = "LAB_REFERRAL"
+    REQUEST_MORE_EVIDENCE = "REQUEST_MORE_EVIDENCE"
 
 
 class ValidationPriority(str, enum.Enum):
@@ -34,12 +35,7 @@ class ValidationPriority(str, enum.Enum):
     CRITICAL = "CRITICAL"
 
 
-class LabReferralStatus(str, enum.Enum):
-    REQUESTED = "REQUESTED"
-    SAMPLE_COLLECTED = "SAMPLE_COLLECTED"
-    IN_LAB = "IN_LAB"
-    RESULT_AVAILABLE = "RESULT_AVAILABLE"
-    CLOSED = "CLOSED"
+
 
 
 class ExpertValidationRequest(Base, TimestampMixin):
@@ -57,6 +53,9 @@ class ExpertValidationRequest(Base, TimestampMixin):
     )
     case_number: Mapped[str] = mapped_column(
         String(20), default=lambda: f"EV-{datetime.utcnow().strftime('%y%m')}-{uuid.uuid4().hex[:4].upper()}", unique=True, index=True
+    )
+    diagnostic_case_id: Mapped[Optional[str]] = mapped_column(
+        String(36), ForeignKey("diagnostic_cases.id", ondelete="CASCADE"), nullable=True, index=True
     )
     analysis_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True, index=True)
     farm_id: Mapped[str] = mapped_column(
@@ -109,8 +108,8 @@ class ExpertValidationRequest(Base, TimestampMixin):
     validation_decisions: Mapped[List["ExpertValidationRecord"]] = relationship(
         "ExpertValidationRecord", back_populates="validation_request", cascade="all, delete-orphan"
     )
-    lab_referrals: Mapped[List["LabReferral"]] = relationship(
-        "LabReferral", back_populates="validation_request", cascade="all, delete-orphan"
+    diagnostic_case: Mapped["DiagnosticCase"] = relationship(
+        "DiagnosticCase", back_populates="expert_requests"
     )
 
 
@@ -156,45 +155,4 @@ class ExpertValidationRecord(Base, TimestampMixin):
     expert_user: Mapped["User"] = relationship("User", foreign_keys=[expert_user_id])
 
 
-class LabReferral(Base, TimestampMixin):
-    """Laboratory testing order for pathogen/soil sample verification."""
 
-    __tablename__ = "lab_referrals"
-    __table_args__ = (
-        Index("ix_lab_ref_status", "status"),
-        Index("ix_lab_ref_farm", "farm_id"),
-    )
-
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
-    )
-    referral_code: Mapped[str] = mapped_column(
-        String(20), default=lambda: f"LAB-{datetime.utcnow().strftime('%y%m')}-{uuid.uuid4().hex[:4].upper()}", unique=True, index=True
-    )
-    validation_request_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("expert_validation_requests.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    farm_id: Mapped[str] = mapped_column(
-        String(36), ForeignKey("farms.id", ondelete="CASCADE"), nullable=False, index=True
-    )
-    zone_id: Mapped[Optional[str]] = mapped_column(
-        String(36), ForeignKey("farm_zones.id", ondelete="SET NULL"), nullable=True
-    )
-    
-    sample_type: Mapped[str] = mapped_column(String(100), default="Leaf Tissue Sample", nullable=False)
-    suspected_condition: Mapped[str] = mapped_column(String(150), nullable=False)
-    reason: Mapped[str] = mapped_column(Text, nullable=False)
-    
-    status: Mapped[LabReferralStatus] = mapped_column(
-        Enum(LabReferralStatus), default=LabReferralStatus.REQUESTED, nullable=False, index=True
-    )
-    
-    requested_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
-    result_summary: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    result_date: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-
-    # Relationships
-    validation_request: Mapped["ExpertValidationRequest"] = relationship(
-        "ExpertValidationRequest", back_populates="lab_referrals"
-    )
-    farm: Mapped["Farm"] = relationship("Farm", foreign_keys=[farm_id])

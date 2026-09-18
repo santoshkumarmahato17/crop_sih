@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   TrendingUp,
   Activity,
@@ -20,7 +20,7 @@ export const HealthTimeSeriesChart: React.FC<HealthTimeSeriesChartProps> = ({ tr
 
   if (points.length === 0) {
     return (
-      <div className="p-8 text-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs text-slate-400">
+      <div className="p-8 text-center rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 text-xs text-agri-400/70">
         No time-series observation data recorded for this zone yet.
       </div>
     );
@@ -98,27 +98,27 @@ export const HealthTimeSeriesChart: React.FC<HealthTimeSeriesChartProps> = ({ tr
   } L ${coords[0].x} ${paddingY + chartH} Z`;
 
   return (
-    <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+    <div className="p-6 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-xl space-y-4">
       {/* Header & Metric Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-agri-100 dark:border-agri-700/25 pb-4">
         <div>
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+          <span className="text-[10px] font-bold text-agri-500/70 uppercase tracking-wider block">
             {trendData.zone_name} • Historical Telemetry
           </span>
-          <h3 className="text-base font-black text-slate-900 dark:text-white">
+          <h3 className="text-base font-black text-agri-900 dark:text-white">
             {metric.title}
           </h3>
         </div>
 
         {/* Metric Switcher Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 dark:bg-slate-950 p-1 rounded-2xl border border-slate-200 dark:border-slate-800">
+        <div className="flex flex-wrap items-center gap-1.5 bg-agri-50 dark:bg-surface-darkBg p-1 rounded-2xl border border-agri-200/50 dark:border-agri-700/25">
           <button
             type="button"
             onClick={() => setActiveMetric('health')}
             className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1 ${
               activeMetric === 'health'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-agri-500 text-white shadow-sm'
+                : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
             }`}
           >
             <Activity className="w-3.5 h-3.5" />
@@ -130,7 +130,7 @@ export const HealthTimeSeriesChart: React.FC<HealthTimeSeriesChartProps> = ({ tr
             className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1 ${
               activeMetric === 'disease'
                 ? 'bg-rose-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
             }`}
           >
             <TrendingUp className="w-3.5 h-3.5" />
@@ -142,7 +142,7 @@ export const HealthTimeSeriesChart: React.FC<HealthTimeSeriesChartProps> = ({ tr
             className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1 ${
               activeMetric === 'water'
                 ? 'bg-sky-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
             }`}
           >
             <Droplets className="w-3.5 h-3.5" />
@@ -154,7 +154,7 @@ export const HealthTimeSeriesChart: React.FC<HealthTimeSeriesChartProps> = ({ tr
             className={`px-2.5 py-1 rounded-xl text-[11px] font-bold transition flex items-center gap-1 ${
               activeMetric === 'area'
                 ? 'bg-purple-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -180,7 +180,7 @@ export const HealthTimeSeriesChart: React.FC<HealthTimeSeriesChartProps> = ({ tr
                   x2={width - paddingX}
                   y2={y}
                   stroke="currentColor"
-                  className="text-slate-100 dark:text-slate-800"
+                  className="text-agri-100 dark:text-agri-800"
                   strokeDasharray="4 4"
                 />
                 <text

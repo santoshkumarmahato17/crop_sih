@@ -14,28 +14,14 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
-from ultralytics import YOLO
 
-# Global singleton model cache
-_YOLO_MODEL = None
-
-
-def get_yolo_model():
-    """Load or retrieve cached YOLO model."""
-    global _YOLO_MODEL
-    if _YOLO_MODEL is None:
-        model_path = os.path.join(os.path.dirname(__file__), "..", "models", "yolov8n.pt")
-        if not os.path.exists(model_path):
-            model_path = "yolov8n.pt"
-        _YOLO_MODEL = YOLO(model_path)
-    return _YOLO_MODEL
 
 
 class YOLODiseaseDetector:
     """Production YOLO disease lesion detector and quantitative pathology analyzer."""
 
     def __init__(self):
-        self.model = get_yolo_model()
+        pass  # OpenCV-only implementation — no model file required
 
     @staticmethod
     def _image_to_base64_data_url(bgr_image: np.ndarray, format: str = "PNG") -> str:

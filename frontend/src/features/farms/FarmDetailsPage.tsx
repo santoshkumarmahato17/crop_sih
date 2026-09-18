@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -256,7 +256,7 @@ export const FarmDetailsPage: React.FC = () => {
     switch (status.toLowerCase()) {
       case 'healthy':
         return (
-          <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold flex items-center gap-1">
+          <span className="px-2.5 py-0.5 rounded-full bg-agri-500/10 border border-agri-500/25 text-agri-400 text-xs font-semibold flex items-center gap-1">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
             <span>Healthy</span>
           </span>
@@ -288,14 +288,14 @@ export const FarmDetailsPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-12 text-center text-slate-400">Loading farm details...</div>;
+    return <div className="p-12 text-center text-agri-400/70">Loading farm details...</div>;
   }
 
   if (!farm) {
     return (
       <div className="p-12 text-center text-rose-400">
         <p>Farm holding not found.</p>
-        <Link to="/farms" className="text-emerald-400 underline mt-2 inline-block">
+        <Link to="/farms" className="text-agri-400 underline mt-2 inline-block">
           Return to farms list
         </Link>
       </div>
@@ -309,19 +309,19 @@ export const FarmDetailsPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <Link
             to="/farms"
-            className="p-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition"
+            className="p-2 rounded-xl bg-agri-900 border border-slate-800 hover:bg-agri-800 text-agri-400/70 hover:text-agri-200 transition"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-slate-100">{farm.name}</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+              <h1 className="text-2xl font-bold text-agri-100">{farm.name}</h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-agri-500/10 border border-agri-500/20 text-agri-400 text-xs font-semibold">
                 Active Estate
               </span>
             </div>
-            <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-              <MapPin className="w-3.5 h-3.5 text-slate-500" />
+            <p className="text-xs text-agri-400/70 flex items-center gap-1 mt-0.5">
+              <MapPin className="w-3.5 h-3.5 text-agri-500/70" />
               <span>{farm.address ? `${farm.address}, ` : ''}{farm.city}, {farm.region}, {farm.country}</span>
             </p>
           </div>
@@ -330,7 +330,7 @@ export const FarmDetailsPage: React.FC = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setIsZoningModalOpen(true)}
-            className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-lg shadow-emerald-950/40"
+            className="px-3.5 py-2 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-semibold flex items-center gap-1.5 transition shadow-lg shadow-emerald-950/40"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span>Generate Zones</span>
@@ -338,7 +338,7 @@ export const FarmDetailsPage: React.FC = () => {
 
           <Link
             to={`/farms/${farm.id}/edit`}
-            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
+            className="px-3.5 py-2 rounded-xl bg-agri-800 hover:bg-slate-700 text-agri-200 text-xs font-semibold flex items-center gap-1.5 transition"
           >
             <Edit className="w-3.5 h-3.5" />
             <span>Edit Farm</span>
@@ -356,7 +356,7 @@ export const FarmDetailsPage: React.FC = () => {
       </div>
 
       {zoningMessage && (
-        <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2">
+        <div className="p-3.5 rounded-xl bg-agri-500/10 border border-agri-500/25 text-agri-400 text-xs flex items-center gap-2">
           <CheckCircle className="w-4 h-4" />
           <span>{zoningMessage}</span>
         </div>
@@ -365,11 +365,11 @@ export const FarmDetailsPage: React.FC = () => {
       {/* Spatial Map Boundary & Zones Viewer */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-            <Globe className="w-4 h-4 text-emerald-400" />
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-agri-400/70 flex items-center gap-2">
+            <Globe className="w-4 h-4 text-agri-400" />
             <span>PostGIS Multi-Zone Topological Layout</span>
           </h2>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-agri-400/70">
             Click any zone on the canvas to inspect telemetry
           </span>
         </div>
@@ -388,11 +388,11 @@ export const FarmDetailsPage: React.FC = () => {
       {/* Zone Inspection & Summary Split */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Selected Zone Deep Dive Panel */}
-        <div className="lg:col-span-1 p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-lg">
+        <div className="lg:col-span-1 p-5 rounded-2xl bg-agri-900/60 border border-slate-800 space-y-4 shadow-lg">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div className="flex items-center gap-2">
               <Radio className="w-4 h-4 text-blue-400 animate-pulse" />
-              <h3 className="font-bold text-slate-100 text-sm">
+              <h3 className="font-bold text-agri-100 text-sm">
                 {selectedZone ? selectedZone.name : 'Select a Zone'}
               </h3>
             </div>
@@ -405,37 +405,37 @@ export const FarmDetailsPage: React.FC = () => {
 
           {selectedZone ? (
             <div className="space-y-3 text-xs">
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
-                <span className="text-slate-400">Health Vitality:</span>
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-agri-950/60 border border-slate-800/80">
+                <span className="text-agri-400/70">Health Vitality:</span>
                 {getHealthBadge(selectedZone.health_status)}
               </div>
 
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
-                <span className="text-slate-400">Pathology Risk Level:</span>
-                <span className="font-semibold text-slate-200 capitalize flex items-center gap-1">
-                  <Shield className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-agri-950/60 border border-slate-800/80">
+                <span className="text-agri-400/70">Pathology Risk Level:</span>
+                <span className="font-semibold text-agri-200 capitalize flex items-center gap-1">
+                  <Shield className="w-3.5 h-3.5 text-agri-400" />
                   <span>{selectedZone.risk_status} Risk</span>
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
-                <span className="text-slate-400">Zonal Surface Area:</span>
-                <span className="font-mono font-bold text-emerald-400">
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-agri-950/60 border border-slate-800/80">
+                <span className="text-agri-400/70">Zonal Surface Area:</span>
+                <span className="font-mono font-bold text-agri-400">
                   {selectedZone.area_hectares.toFixed(2)} ha (~{(selectedZone.area_hectares * 2.47105).toFixed(2)} ac)
                 </span>
               </div>
 
-              <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
-                <span className="text-slate-400">Monitoring Mode:</span>
-                <span className="font-semibold text-slate-300 capitalize">
+              <div className="flex items-center justify-between p-2.5 rounded-xl bg-agri-950/60 border border-slate-800/80">
+                <span className="text-agri-400/70">Monitoring Mode:</span>
+                <span className="font-semibold text-agri-300 capitalize">
                   {selectedZone.monitoring_status.replace('_', ' ')}
                 </span>
               </div>
 
               {selectedZone.centroid?.coordinates && (
-                <div className="p-2.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
-                  <span className="text-slate-400 block mb-1">Centroid Coordinates (SRID 4326):</span>
-                  <span className="font-mono text-[11px] text-slate-300">
+                <div className="p-2.5 rounded-xl bg-agri-950/60 border border-slate-800/80">
+                  <span className="text-agri-400/70 block mb-1">Centroid Coordinates (SRID 4326):</span>
+                  <span className="font-mono text-[11px] text-agri-300">
                     {selectedZone.centroid.coordinates[1].toFixed(5)}° N, {selectedZone.centroid.coordinates[0].toFixed(5)}° E
                   </span>
                 </div>
@@ -460,27 +460,27 @@ export const FarmDetailsPage: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="p-6 text-center text-slate-500 text-xs">
+            <div className="p-6 text-center text-agri-500/70 text-xs">
               Click any zone polygon on the map above or from the list below to inspect live telemetry.
             </div>
           )}
         </div>
 
         {/* Zones List Grid Table */}
-        <div className="lg:col-span-2 p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 shadow-lg">
+        <div className="lg:col-span-2 p-5 rounded-2xl bg-agri-900/60 border border-slate-800 space-y-3 shadow-lg">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-slate-100 text-sm flex items-center gap-2">
-              <Layers className="w-4 h-4 text-emerald-400" />
+            <h3 className="font-bold text-agri-100 text-sm flex items-center gap-2">
+              <Layers className="w-4 h-4 text-agri-400" />
               <span>Subdivided Monitoring Zones ({zones.length})</span>
             </h3>
-            <span className="text-xs text-slate-400 font-mono">
+            <span className="text-xs text-agri-400/70 font-mono">
               Total: {zones.reduce((acc, z) => acc + z.area_hectares, 0).toFixed(2)} ha
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="border-b border-slate-800 text-slate-500 uppercase tracking-wider font-semibold">
+            <table className="w-full text-left text-xs text-agri-300">
+              <thead className="border-b border-slate-800 text-agri-500/70 uppercase tracking-wider font-semibold">
                 <tr>
                   <th className="py-2.5 px-3">Zone ID</th>
                   <th className="py-2.5 px-3">Designation</th>
@@ -495,14 +495,14 @@ export const FarmDetailsPage: React.FC = () => {
                     key={z.id}
                     onClick={() => setSelectedZone(z)}
                     className={`cursor-pointer transition ${
-                      selectedZone?.id === z.id ? 'bg-slate-800/80' : 'hover:bg-slate-800/40'
+                      selectedZone?.id === z.id ? 'bg-agri-800/40' : 'hover:bg-slate-800/40'
                     }`}
                   >
                     <td className="py-2.5 px-3 font-mono font-bold text-blue-400">{z.zone_code}</td>
-                    <td className="py-2.5 px-3 text-slate-200">{z.name}</td>
-                    <td className="py-2.5 px-3 font-mono text-emerald-400">{z.area_hectares.toFixed(2)} ha</td>
+                    <td className="py-2.5 px-3 text-agri-200">{z.name}</td>
+                    <td className="py-2.5 px-3 font-mono text-agri-400">{z.area_hectares.toFixed(2)} ha</td>
                     <td className="py-2.5 px-3">{getHealthBadge(z.health_status)}</td>
-                    <td className="py-2.5 px-3 capitalize text-slate-400">{z.risk_status}</td>
+                    <td className="py-2.5 px-3 capitalize text-agri-400/70">{z.risk_status}</td>
                   </tr>
                 ))}
               </tbody>
@@ -512,46 +512,46 @@ export const FarmDetailsPage: React.FC = () => {
       </div>
 
       {/* Farm-Wide Temporal Health Timeline */}
-      <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4 shadow-lg">
+      <div className="p-5 rounded-2xl bg-agri-900/60 border border-slate-800 space-y-4 shadow-lg">
         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
           <div className="flex items-center gap-2">
-            <Radio className="w-4 h-4 text-emerald-400" />
-            <h3 className="font-bold text-slate-100 text-sm">
+            <Radio className="w-4 h-4 text-agri-400" />
+            <h3 className="font-bold text-agri-100 text-sm">
               Farm-Wide Multi-Flight Temporal Health Trajectory
             </h3>
           </div>
-          <span className="text-xs text-slate-400 font-mono">
+          <span className="text-xs text-agri-400/70 font-mono">
             Aggregate Temporal Analysis across {zones.length} Zones
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-            <span className="text-[11px] text-slate-400 block font-medium">Historical Flights Analyzed</span>
+            <span className="text-[11px] text-agri-400/70 block font-medium">Historical Flights Analyzed</span>
             <p className="text-xl font-bold font-mono text-blue-400">4 Surveillance Missions</p>
-            <span className="text-[10px] text-slate-500 block">Over Past 14 Days</span>
+            <span className="text-[10px] text-agri-500/70 block">Over Past 14 Days</span>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-            <span className="text-[11px] text-slate-400 block font-medium">Dominant Farm Trajectory</span>
-            <p className="text-xl font-bold text-emerald-400 flex items-center gap-1">
+            <span className="text-[11px] text-agri-400/70 block font-medium">Dominant Farm Trajectory</span>
+            <p className="text-xl font-bold text-agri-400 flex items-center gap-1">
               <span>STABLE / RECOVERING</span>
             </p>
-            <span className="text-[10px] text-slate-500 block">Mean Health: 84.5%</span>
+            <span className="text-[10px] text-agri-500/70 block">Mean Health: 84.5%</span>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-            <span className="text-[11px] text-slate-400 block font-medium">Zones Under Scrutiny</span>
+            <span className="text-[11px] text-agri-400/70 block font-medium">Zones Under Scrutiny</span>
             <p className="text-xl font-bold font-mono text-orange-400">
               {zones.filter((z) => z.risk_status !== 'low').length} Zones Flagged
             </p>
-            <span className="text-[10px] text-slate-500 block">Z03, Z04 Moderate Risk</span>
+            <span className="text-[10px] text-agri-500/70 block">Z03, Z04 Moderate Risk</span>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-            <span className="text-[11px] text-slate-400 block font-medium">Rapid Decline Warnings</span>
+            <span className="text-[11px] text-agri-400/70 block font-medium">Rapid Decline Warnings</span>
             <p className="text-xl font-bold font-mono text-rose-400">0 Critical Surges</p>
-            <span className="text-[10px] text-slate-500 block">Threshold: &gt;20% Drop</span>
+            <span className="text-[10px] text-agri-500/70 block">Threshold: &gt;20% Drop</span>
           </div>
         </div>
       </div>
@@ -567,27 +567,27 @@ export const FarmDetailsPage: React.FC = () => {
 
       {/* Modal: Generate Monitoring Zones Configuration */}
       {isZoningModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-md w-full p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 bg-agri-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="max-w-md w-full p-6 rounded-2xl bg-agri-900 border border-slate-800 shadow-2xl space-y-5">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-bold text-slate-100 text-base">Generate Monitoring Zones</h3>
+                <Sparkles className="w-5 h-5 text-agri-400" />
+                <h3 className="font-bold text-agri-100 text-base">Generate Monitoring Zones</h3>
               </div>
               <button
                 onClick={() => setIsZoningModalOpen(false)}
-                className="text-slate-500 hover:text-slate-300 transition"
+                className="text-agri-500/70 hover:text-agri-300 transition"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-agri-400/70">
               The algorithm will subdivide the farm boundary into equal geographic grid cells, clipping exactly to the boundary perimeter and eliminating microscopic slivers.
             </p>
 
             <div className="space-y-3">
-              <label className="block text-xs font-semibold text-slate-300">
+              <label className="block text-xs font-semibold text-agri-300">
                 Select Target Zone Count
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -598,8 +598,8 @@ export const FarmDetailsPage: React.FC = () => {
                     onClick={() => setTargetZoneCount(count)}
                     className={`py-2.5 rounded-xl border text-xs font-bold transition ${
                       targetZoneCount === count
-                        ? 'bg-emerald-600 border-emerald-500 text-white shadow-md'
-                        : 'bg-slate-950 border-slate-800 text-slate-300 hover:bg-slate-800'
+                        ? 'bg-agri-500 border-emerald-500 text-white shadow-md'
+                        : 'bg-slate-950 border-slate-800 text-agri-300 hover:bg-agri-800'
                     }`}
                   >
                     {count} Zones
@@ -612,7 +612,7 @@ export const FarmDetailsPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsZoningModalOpen(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+                className="px-4 py-2 rounded-xl bg-agri-800 hover:bg-slate-700 text-agri-300 text-xs font-semibold transition"
               >
                 Cancel
               </button>
@@ -620,7 +620,7 @@ export const FarmDetailsPage: React.FC = () => {
                 type="button"
                 onClick={handleGenerateZones}
                 disabled={isGeneratingZones}
-                className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-950/50 transition flex items-center gap-1.5 disabled:opacity-50"
+                className="px-5 py-2 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold shadow-lg shadow-emerald-950/50 transition flex items-center gap-1.5 disabled:opacity-50"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{isGeneratingZones ? 'Partitioning...' : 'Generate & Clip Zones'}</span>

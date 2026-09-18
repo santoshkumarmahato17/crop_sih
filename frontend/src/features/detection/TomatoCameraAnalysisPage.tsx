@@ -10,7 +10,6 @@ import {
   RotateCcw,
   Sparkles,
   FlaskConical,
-  Check,
   Bug,
   Activity,
   Crosshair,
@@ -191,7 +190,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
   // Diagnostic mode: Cassava, Maize (Corn), Tomato, or YOLO Lesion Detection
   const [selectedCrop, setSelectedCrop] = useState<DiagnosticMode>('cassava');
 
-  const [activeTab, setActiveTab] = useState<'camera' | 'upload' | 'samples'>('samples');
+  const [activeTab, setActiveTab] = useState<'camera' | 'upload'>('camera');
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -213,8 +212,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
   // Sample items
   const [selectedSample, setSelectedSample] = useState<SampleImageItem | null>(null);
   const [sampleImages, setSampleImages] = useState<SampleImageItem[]>([]);
-  const [yoloSamples, setYoloSamples] = useState<YOLOSampleItem[]>([]);
-  const [selectedYoloSample, setSelectedYoloSample] = useState<YOLOSampleItem | null>(null);
+  const [, setYoloSamples] = useState<YOLOSampleItem[]>([]);
+  const [, setSelectedYoloSample] = useState<YOLOSampleItem | null>(null);
 
   const activeClasses =
     selectedCrop === 'apple'
@@ -282,17 +281,19 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
       if (selectedCrop === 'yolo') {
         const endpoints = [
-          'http://localhost:8000/api/yolo/sample-images',
-          '/api/yolo/sample-images',
-          'http://localhost:8000/api/yolo/sample-images',
+          `/api/v1/ai/yolo/sample-images`,
+          `/api/v1/dataset/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/yolo/sample-images`,
+          `http://${window.location.hostname}:8000/api/yolo/sample-images`,
         ];
         for (const url of endpoints) {
           try {
             const resp = await fetch(url);
             if (resp.ok) {
               const data = await resp.json();
-              if (data.samples && data.samples.length > 0) {
-                setYoloSamples(data.samples);
+              const samples = Array.isArray(data) ? data : data.samples;
+              if (samples && samples.length > 0) {
+                setYoloSamples(samples);
                 break;
               }
             }
@@ -302,13 +303,11 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         }
       } else {
         const endpoints = [
-          'http://localhost:8000/api/unified/sample-images',
-          'http://localhost:8000/api/unified/sample-images',
-          '/api/unified/sample-images',
-          'http://localhost:8000/api/cassava/sample-images',
-          'http://localhost:8000/api/cassava/sample-images',
-          'http://localhost:8000/api/sample-images',
-          'http://localhost:8000/api/sample-images',
+          `/api/v1/ai/sample-images`,
+          `/api/v1/dataset/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/sample-images`,
+          `http://${window.location.hostname}:8001/api/v1/ai/unified/sample-images`,
+          `http://${window.location.hostname}:8000/api/sample-images`,
         ];
 
         for (const url of endpoints) {
@@ -316,8 +315,9 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             const resp = await fetch(url);
             if (resp.ok) {
               const data = await resp.json();
-              if (data.samples && data.samples.length > 0) {
-                setSampleImages(data.samples);
+              const samples = Array.isArray(data) ? data : data.samples;
+              if (samples && samples.length > 0) {
+                setSampleImages(samples);
                 break;
               }
             }
@@ -436,42 +436,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     }
   };
 
-  // Select sample image for YOLO mode
-  const handleSelectYoloSample = async (sample: YOLOSampleItem) => {
-    setSelectedYoloSample(sample);
-    setErrorMsg(null);
-    setIsAnalyzing(true);
-    setResult(null);
-    setYoloResult(null);
-    setDetectedCropInfo(null);
 
-    const relParam = encodeURIComponent(sample.relative_path);
-    const streamUrls = [
-      `/api/yolo/sample-image-file?rel_path=${relParam}`,
-    ];
-
-    let imageBlob: Blob | null = null;
-    for (const u of streamUrls) {
-      try {
-        const resp = await fetch(u);
-        if (resp.ok) {
-          imageBlob = await resp.blob();
-          break;
-        }
-      } catch {
-        // try next
-      }
-    }
-
-    if (imageBlob) {
-      setCapturedImage(URL.createObjectURL(imageBlob));
-      stopCamera();
-      analyzeImageBlob(imageBlob);
-    } else {
-      setIsAnalyzing(false);
-      setErrorMsg('Could not fetch sample image. Please try live camera or file upload.');
-    }
-  };
 
   // Submit to ML Inference API (Automatic Leaf Species & Pathology Detection)
   const analyzeImageBlob = async (blob: Blob, forceMode?: DiagnosticMode) => {
@@ -670,8 +635,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         return {
           type: 'Healthy',
           label: 'Optimal Foliage Health',
-          icon: <Leaf className="w-4 h-4 text-emerald-400" />,
-          badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+          icon: <Leaf className="w-4 h-4 text-agri-400" />,
+          badgeClass: 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25',
         };
       }
       return {
@@ -685,8 +650,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         return {
           type: 'Healthy',
           label: 'Optimal Foliage Health',
-          icon: <Leaf className="w-4 h-4 text-emerald-400" />,
-          badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+          icon: <Leaf className="w-4 h-4 text-agri-400" />,
+          badgeClass: 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25',
         };
       }
       if (CASHEW_PESTS.includes(predClass)) {
@@ -708,8 +673,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         return {
           type: 'Healthy',
           label: 'Optimal Foliage Health',
-          icon: <Leaf className="w-4 h-4 text-emerald-400" />,
-          badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+          icon: <Leaf className="w-4 h-4 text-agri-400" />,
+          badgeClass: 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25',
         };
       }
       if (CASSAVA_PESTS.includes(predClass)) {
@@ -731,8 +696,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         return {
           type: 'Healthy',
           label: 'Optimal Foliage Health',
-          icon: <Leaf className="w-4 h-4 text-emerald-400" />,
-          badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+          icon: <Leaf className="w-4 h-4 text-agri-400" />,
+          badgeClass: 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25',
         };
       }
       if (MAIZE_PESTS.includes(predClass)) {
@@ -754,8 +719,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         return {
           type: 'Healthy',
           label: 'Healthy Foliage',
-          icon: <Leaf className="w-4 h-4 text-emerald-400" />,
-          badgeClass: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30',
+          icon: <Leaf className="w-4 h-4 text-agri-400" />,
+          badgeClass: 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25',
         };
       }
       return {
@@ -773,13 +738,13 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       <canvas ref={canvasRef} className="hidden" />
 
       {/* Top Header Section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-agri-200/50 dark:border-agri-700/25">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-xs font-semibold tracking-wide mb-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-agri-500/10 border border-agri-500/20 text-agri-600 dark:text-agri-400 text-xs font-semibold tracking-wide mb-2">
             <Sparkles className="w-3.5 h-3.5" />
             AI Disease Analysis · Edge-Optimized Multi-Crop Diagnostic Suite
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-agri-900 dark:text-white flex items-center gap-2.5">
             {detectedCropInfo ? (
               <>
                 <span className="text-2xl">{detectedCropInfo.display.split(' ')[0]}</span>
@@ -792,45 +757,16 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               </>
             ) : (
               <>
-                <span className="text-emerald-500 text-2xl">🌿</span>
+                <span className="text-agri-500 text-2xl">🌿</span>
                 <span>AI Leaf Disease & Plant Pathology Analysis</span>
               </>
             )}
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
+          <p className="text-sm text-agri-500/70 dark:text-agri-400/70 mt-1 max-w-2xl">
             {detectedCropInfo
               ? `Auto-detected ${detectedCropInfo.display} (${detectedCropInfo.confidence.toFixed(1)}% match). Comprehensive foliar pathology diagnosis, risk percentage scoring, and IPM treatment suggestions active.`
               : 'Real-time deep learning diagnostic pipeline powered by MobileNetV3 with automatic leaf identification. Simply upload a photo, take a picture, or select a sample — our AI detects the crop and diagnoses health automatically.'}
           </p>
-        </div>
-
-        {/* Automatic Crop & Leaf Detection Badge */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-xs font-bold shadow-sm">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-            </span>
-            {detectedCropInfo ? (
-              <span className="flex items-center gap-1.5">
-                <span className="text-slate-500 dark:text-slate-400 font-normal">Auto-Detected:</span>
-                <span className="font-extrabold text-slate-900 dark:text-white">
-                  {detectedCropInfo.display}
-                </span>
-                <span className="text-[11px] px-2 py-0.5 rounded-md bg-emerald-500/20 font-mono text-emerald-600 dark:text-emerald-400 font-bold">
-                  {detectedCropInfo.confidence.toFixed(1)}% Match
-                </span>
-              </span>
-            ) : (
-              <span className="flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Auto-Leaf Detection Active</span>
-                <span className="hidden sm:inline text-slate-400 dark:text-slate-500 font-normal ml-1">
-                  (🍎 Apple · 🌰 Cashew · 🍃 Cassava · 🌽 Maize · 🍅 Tomato)
-                </span>
-              </span>
-            )}
-          </div>
         </div>
       </div>
 
@@ -838,10 +774,10 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* ── Left Side: Viewport / Camera / Upload / Samples (7 Cols) ── */}
         <div className="lg:col-span-7 flex flex-col gap-4">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col gap-4">
+          <div className="bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col gap-4">
             {/* View Mode Tabs */}
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/90 p-1 rounded-xl">
+            <div className="flex items-center justify-between border-b border-agri-100 dark:border-agri-700/25 pb-3">
+              <div className="flex items-center gap-1.5 bg-agri-50 dark:bg-slate-800/90 p-1 rounded-xl">
                 <button
                   onClick={() => {
                     if (selectedCrop === 'yolo') {
@@ -858,8 +794,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                         ? 'bg-rose-500 text-white shadow-sm'
                         : selectedCrop === 'maize' || selectedCrop === 'cashew'
                         ? 'bg-amber-500 text-slate-950 shadow-sm'
-                        : 'bg-emerald-500 text-slate-950 shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                        : 'bg-agri-500 text-slate-950 shadow-sm'
+                      : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
                   }`}
                 >
                   <Camera className="w-3.5 h-3.5" />
@@ -879,33 +815,12 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                         ? 'bg-rose-500 text-white shadow-sm'
                         : selectedCrop === 'maize' || selectedCrop === 'cashew'
                         ? 'bg-amber-500 text-slate-950 shadow-sm'
-                        : 'bg-emerald-500 text-slate-950 shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                        : 'bg-agri-500 text-slate-950 shadow-sm'
+                      : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
                   }`}
                 >
                   <UploadCloud className="w-3.5 h-3.5" />
                   Upload Photo
-                </button>
-                <button
-                  onClick={() => {
-                    if (selectedCrop === 'yolo') {
-                      setSelectedCrop('cassava');
-                    }
-                    setActiveTab('samples');
-                    stopCamera();
-                  }}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
-                    activeTab === 'samples' && selectedCrop !== 'yolo'
-                      ? selectedCrop === 'apple'
-                        ? 'bg-rose-500 text-white shadow-sm'
-                        : selectedCrop === 'maize' || selectedCrop === 'cashew'
-                        ? 'bg-amber-500 text-slate-950 shadow-sm'
-                        : 'bg-emerald-500 text-slate-950 shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                >
-                  <FlaskConical className="w-3.5 h-3.5" />
-                  Dataset Samples ({selectedCrop === 'yolo' ? yoloSamples.length : activeClasses.length})
                 </button>
                 <button
                   onClick={async () => {
@@ -922,43 +837,28 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                         const blob = await res.blob();
                         analyzeImageBlob(blob, 'yolo');
                       } catch (e) {
-                        setActiveTab('samples');
+                        setActiveTab('upload');
                       }
                     } else {
-                      setActiveTab('samples');
-                      setErrorMsg('Please select a dataset sample or upload an image first.');
+                      setActiveTab('upload');
+                      setErrorMsg('Please upload an image or take a photo first.');
                     }
                   }}
                   className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
                     selectedCrop === 'yolo'
                       ? 'bg-rose-500 text-white shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
                   }`}
                 >
                   <Crosshair className="w-3.5 h-3.5" />
                   YOLO Lesions
-                </button>
-                <button
-                  onClick={() => {
-                    handleCropChange('soybean');
-                    setActiveTab('upload');
-                  }}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-bold transition ${
-                    selectedCrop === 'soybean'
-                      ? 'bg-emerald-600 text-white shadow-sm'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                  }`}
-                  title="Soybean 10-Class MobileNetV2 Disease Classifier"
-                >
-                  <Leaf className="w-3.5 h-3.5 text-emerald-400" />
-                  Soybean AI
                 </button>
               </div>
 
               {capturedImage && (
                 <button
                   onClick={handleRetake}
-                  className="flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition"
+                  className="flex items-center gap-1 text-xs font-semibold text-agri-500/70 hover:text-agri-600 dark:hover:text-agri-400 transition"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   Reset
@@ -969,7 +869,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             {/* YOLO Visual Layer Switcher Bar (Available when YOLO result is ready) */}
             {selectedCrop === 'yolo' && yoloResult && (
               <div className="flex flex-wrap items-center justify-between gap-2 p-2 rounded-xl bg-slate-950 border border-slate-800">
-                <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5 pl-1">
+                <span className="text-[11px] font-bold text-agri-400/70 flex items-center gap-1.5 pl-1">
                   <Layers className="w-3.5 h-3.5 text-rose-400" />
                   Visual Analysis Layer:
                 </span>
@@ -979,7 +879,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                       selectedLayer === 'yolo_bbox'
                         ? 'bg-rose-500 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-white bg-slate-900'
+                        : 'text-agri-400/70 hover:text-white bg-agri-900'
                     }`}
                     title="Figure 3: YOLO red bounding boxes on lesions"
                   >
@@ -990,8 +890,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     onClick={() => setSelectedLayer('segmentation')}
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                       selectedLayer === 'segmentation'
-                        ? 'bg-emerald-500 text-slate-950 shadow-sm'
-                        : 'text-slate-400 hover:text-white bg-slate-900'
+                        ? 'bg-agri-500 text-slate-950 shadow-sm'
+                        : 'text-agri-400/70 hover:text-white bg-agri-900'
                     }`}
                     title="Figure 2: Multi-region color-coded semantic segmentation"
                   >
@@ -1003,7 +903,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                       selectedLayer === 'spectral_heatmap'
                         ? 'bg-amber-500 text-slate-950 shadow-sm'
-                        : 'text-slate-400 hover:text-white bg-slate-900'
+                        : 'text-agri-400/70 hover:text-white bg-agri-900'
                     }`}
                     title="Figure 1: Spectral pseudo-color thermal heatmap"
                   >
@@ -1015,7 +915,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                       selectedLayer === 'original'
                         ? 'bg-blue-500 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-white bg-slate-900'
+                        : 'text-agri-400/70 hover:text-white bg-agri-900'
                     }`}
                     title="Original untouched leaf image"
                   >
@@ -1043,21 +943,21 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="flex flex-col items-center justify-center p-6 text-center text-slate-400">
-                    <Camera className="w-14 h-14 mb-3 text-slate-600 animate-pulse" />
-                    <p className="text-sm font-medium text-slate-300">
+                  <div className="flex flex-col items-center justify-center p-6 text-center text-agri-400/70">
+                    <Camera className="w-14 h-14 mb-3 text-agri-600 animate-pulse" />
+                    <p className="text-sm font-medium text-agri-300">
                       {cameraError || 'Initializing Camera Feed...'}
                     </p>
                     <button
                       onClick={() => startCamera()}
                       className={`mt-4 px-4 py-2 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5 transition ${
                         selectedCrop === 'cassava'
-                          ? 'bg-emerald-600 hover:bg-emerald-500'
+                          ? 'bg-agri-500 hover:bg-agri-500'
                           : selectedCrop === 'yolo'
                           ? 'bg-rose-600 hover:bg-rose-500'
                           : selectedCrop === 'maize'
                           ? 'bg-amber-600 hover:bg-amber-500'
-                          : 'bg-emerald-600 hover:bg-emerald-500'
+                          : 'bg-agri-500 hover:bg-agri-500'
                       }`}
                     >
                       <RefreshCw className="w-4 h-4" /> Start Camera
@@ -1069,21 +969,21 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                   onClick={() => fileInputRef.current?.click()}
                   className="w-full h-full flex flex-col items-center justify-center p-6 border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-2xl cursor-pointer transition bg-slate-900/40 hover:bg-slate-900/60"
                 >
-                  <UploadCloud className="w-14 h-14 text-emerald-400 mb-3" />
-                  <p className="text-sm font-bold text-slate-200">
+                  <UploadCloud className="w-14 h-14 text-agri-400 mb-3" />
+                  <p className="text-sm font-bold text-agri-200">
                     Click to browse or drop any plant leaf photograph
                   </p>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-agri-400/70 mt-1">
                     Auto-detects Apple, Cashew, Cassava, Maize, or Tomato foliage (JPG, PNG, WEBP)
                   </p>
                 </div>
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-slate-400">
-                  <FlaskConical className="w-12 h-12 text-emerald-400/80 mb-2" />
-                  <p className="text-sm font-bold text-slate-200">
+                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-agri-400/70">
+                  <FlaskConical className="w-12 h-12 text-agri-400/80 mb-2" />
+                  <p className="text-sm font-bold text-agri-200">
                     Pick Any Verified Foliage Sample Below
                   </p>
-                  <p className="text-xs text-slate-400 mt-1 max-w-sm">
+                  <p className="text-xs text-agri-400/70 mt-1 max-w-sm">
                     Select any real foliage sample across all supported crops to trigger automatic leaf detection & neural pathology diagnosis.
                   </p>
                 </div>
@@ -1115,12 +1015,12 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
               {/* Analyzing Overlay */}
               {isAnalyzing && (
-                <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center text-emerald-400 z-20">
-                  <RefreshCw className="w-10 h-10 animate-spin mb-3 text-emerald-400" />
+                <div className="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center text-agri-400 z-20">
+                  <RefreshCw className="w-10 h-10 animate-spin mb-3 text-agri-400" />
                   <p className="text-sm font-bold tracking-wide">
                     Running {selectedCrop.toUpperCase()} Neural Diagnostics...
                   </p>
-                  <p className="text-xs text-slate-400 mt-1">
+                  <p className="text-xs text-agri-400/70 mt-1">
                     Analyzing leaf across {activeClasses.length} distinct classes
                   </p>
                 </div>
@@ -1130,8 +1030,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             {/* Segmentation Color Legend (Shown when segmentation layer is active) */}
             {selectedCrop === 'yolo' && yoloResult && selectedLayer === 'segmentation' && (
               <div className="flex flex-wrap items-center justify-center gap-4 py-2 px-3 bg-slate-950 border border-slate-800 rounded-xl text-xs font-semibold">
-                <span className="text-slate-400 text-[11px] font-mono uppercase">Legend:</span>
-                <span className="flex items-center gap-1.5 text-emerald-400">
+                <span className="text-agri-400/70 text-[11px] font-mono uppercase">Legend:</span>
+                <span className="flex items-center gap-1.5 text-agri-400">
                   <span className="w-3 h-3 rounded-full bg-[#22a038] inline-block border border-white/20"></span>
                   Healthy Lamina
                 </span>
@@ -1143,7 +1043,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                   <span className="w-3 h-3 rounded-full bg-[#b42828] inline-block border border-white/20"></span>
                   Necrotic Core
                 </span>
-                <span className="flex items-center gap-1.5 text-slate-400">
+                <span className="flex items-center gap-1.5 text-agri-400/70">
                   <span className="w-3 h-3 rounded-full bg-[#201c1c] inline-block border border-white/20"></span>
                   Background
                 </span>
@@ -1156,12 +1056,12 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                 <button
                   onClick={capturePhoto}
                   disabled={!cameraActive || isAnalyzing}
-                  className={`flex-1 py-3 px-6 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-[0.98] disabled:bg-slate-800 disabled:text-slate-600 ${
+                  className={`flex-1 py-3 px-6 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg transition active:scale-[0.98] disabled:bg-agri-800 disabled:text-agri-600 ${
                     selectedCrop === 'yolo'
                       ? 'bg-rose-500 hover:bg-rose-400 text-white shadow-rose-500/20'
                       : selectedCrop === 'maize'
                       ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/20'
-                      : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/20'
+                      : 'bg-agri-500 hover:bg-agri-400 text-slate-950 shadow-agri-500/15'
                   }`}
                 >
                   <Camera className="w-4 h-4" />
@@ -1170,7 +1070,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               ) : capturedImage ? (
                 <button
                   onClick={handleRetake}
-                  className="flex-1 py-3 px-6 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-sm flex items-center justify-center gap-2 transition"
+                  className="flex-1 py-3 px-6 rounded-xl bg-agri-50 hover:bg-agri-100 dark:bg-agri-800/50 dark:hover:bg-agri-700/40 text-agri-800 dark:text-agri-200 font-bold text-sm flex items-center justify-center gap-2 transition"
                 >
                   <RefreshCw className="w-4 h-4" />
                   Retake / New Photo
@@ -1179,7 +1079,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-semibold flex items-center gap-2 transition"
+                className="py-3 px-4 rounded-xl bg-agri-50 hover:bg-agri-100 dark:bg-agri-800/50 dark:hover:bg-agri-700/40 text-agri-700 dark:text-agri-300 text-sm font-semibold flex items-center gap-2 transition"
                 title="Browse Image File"
               >
                 <UploadCloud className="w-4 h-4" />
@@ -1196,144 +1096,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Quick Dataset Samples Drawer */}
-          {activeTab === 'samples' && (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-                  Verified Foliage Samples (Click any sample to Auto-Detect)
-                </span>
-                <span className="text-xs font-bold text-emerald-500">
-                  {selectedCrop === 'yolo' ? yoloSamples.length : sampleImages.length || activeClasses.length} Available
-                </span>
-              </div>
 
-              {selectedCrop === 'yolo' ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                  {yoloSamples.map((s) => {
-                    const isSelected = selectedYoloSample?.filename === s.filename;
-                    return (
-                      <button
-                        key={s.filename}
-                        onClick={() => handleSelectYoloSample(s)}
-                        className={`p-3 rounded-xl border text-left transition flex flex-col gap-1.5 ${
-                          isSelected
-                            ? 'border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-400'
-                            : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/50'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <Crosshair className="w-3.5 h-3.5 text-rose-500" />
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono">
-                            {s.category}
-                          </span>
-                        </div>
-                        <div className="font-bold text-xs leading-tight text-slate-900 dark:text-slate-100">
-                          {s.title}
-                        </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
-                          {s.description}
-                        </p>
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : sampleImages.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 max-h-72 overflow-y-auto pr-1">
-                  {sampleImages.map((sample) => {
-                    const isSelected =
-                      selectedSample?.relative_path === sample.relative_path ||
-                      selectedSample?.class_name === sample.class_name;
-                    const cropEmoji =
-                      sample.crop === 'Apple'
-                        ? '🍎'
-                        : sample.crop === 'Cashew'
-                        ? '🌰'
-                        : sample.crop === 'Cassava'
-                        ? '🍃'
-                        : sample.crop === 'Maize'
-                        ? '🌽'
-                        : '🍅';
-
-                    const isHealthy = sample.class_name.toLowerCase().includes('healthy');
-                    const isPest = ['mite', 'worm', 'hopper', 'beetle', 'miner'].some((p) =>
-                      sample.class_name.toLowerCase().includes(p)
-                    );
-
-                    return (
-                      <button
-                        key={sample.relative_path || `${sample.crop}_${sample.class_name}`}
-                        onClick={() => handleSelectSample(sample)}
-                        className={`p-2.5 rounded-xl border text-left transition flex flex-col gap-1.5 ${
-                          isSelected
-                            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-sm'
-                            : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/50'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold flex items-center gap-1">
-                            <span>{cropEmoji}</span>
-                            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold">
-                              {sample.crop || 'Foliage'}
-                            </span>
-                          </span>
-                          {isSelected ? (
-                            <Check className="w-3.5 h-3.5 text-emerald-500" />
-                          ) : isHealthy ? (
-                            <Leaf className="w-3.5 h-3.5 text-emerald-500" />
-                          ) : isPest ? (
-                            <Bug className="w-3.5 h-3.5 text-amber-500" />
-                          ) : (
-                            <Activity className="w-3.5 h-3.5 text-rose-500" />
-                          )}
-                        </div>
-                        <div className="font-bold text-xs leading-tight text-slate-800 dark:text-slate-200">
-                          {sample.class_name}
-                        </div>
-                        <span className="text-[10px] text-slate-400 font-mono">
-                          {isHealthy ? 'Healthy Foliage' : isPest ? 'Foliar Pest' : 'Leaf Disease'}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
-                  {activeClasses.map((clsName) => {
-                    const sample = {
-                      class_name: clsName,
-                      filename: 'sample.jpg',
-                      relative_path: `${clsName.toLowerCase()}/sample.jpg`,
-                    };
-                    const isSelected = selectedSample?.class_name === sample.class_name;
-                    return (
-                      <button
-                        key={clsName}
-                        onClick={() => handleSelectSample(sample)}
-                        className={`p-2.5 rounded-xl border text-left transition flex flex-col gap-1.5 ${
-                          isSelected
-                            ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-                            : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-slate-50 dark:bg-slate-800/50'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <Leaf className="w-3.5 h-3.5 text-emerald-500" />
-                          {isSelected && <Check className="w-3.5 h-3.5 text-emerald-500" />}
-                        </div>
-                        <div className="font-bold text-xs leading-tight text-slate-800 dark:text-slate-200">
-                          {clsName}
-                        </div>
-                        <span className="text-[10px] text-slate-400 font-mono">
-                          Dataset Sample
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
         {/* ── Right Side: Diagnostic Verdict & Agronomic Guidance (5 Cols) ── */}
@@ -1350,22 +1113,22 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
           {/* YOLO Mode Result Card */}
           {selectedCrop === 'yolo' && yoloResult ? (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
+            <div className="bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
               {/* Verdict Header */}
-              <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div className="border-b border-agri-100 dark:border-agri-700/25 pb-4">
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="flex flex-col">
-                    <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
+                    <span className="text-xs uppercase font-bold tracking-wider text-agri-400/70">
                       YOLO Foliar Pathology Diagnosis
                     </span>
-                    <span className="text-[10px] text-slate-500 font-mono mt-0.5">
+                    <span className="text-[10px] text-agri-500/70 font-mono mt-0.5">
                       Analysis Source: {selectedSample ? 'Dataset Sample' : activeTab === 'camera' ? 'Phone Camera' : 'Uploaded Image'}
                     </span>
                   </div>
                   <span
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold border ${
                       yoloResult.severity_percentage < 5.0
-                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                        ? 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25'
                         : yoloResult.severity_percentage < 20.0
                         ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
                         : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30'
@@ -1376,14 +1139,14 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                <div className="text-2xl sm:text-3xl font-black text-agri-900 dark:text-white tracking-tight">
                   {yoloResult.severity_level}
                 </div>
 
                 {/* Quantitative Severity Bar */}
                 <div className="mt-4 space-y-1.5">
                   <div className="flex justify-between text-xs font-bold">
-                    <span className="text-slate-500 dark:text-slate-400">Canopy Tissue Damage Ratio:</span>
+                    <span className="text-agri-500/70 dark:text-agri-400/70">Canopy Tissue Damage Ratio:</span>
                     <span
                       className={
                         yoloResult.severity_percentage > 20
@@ -1394,11 +1157,11 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                       {yoloResult.severity_percentage}% Infected
                     </span>
                   </div>
-                  <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 overflow-hidden">
+                  <div className="w-full bg-agri-50 dark:bg-agri-800/50 rounded-full h-3 overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all duration-700 ${
                         yoloResult.severity_percentage < 5.0
-                          ? 'bg-emerald-500'
+                          ? 'bg-agri-500'
                           : yoloResult.severity_percentage < 20.0
                           ? 'bg-amber-500'
                           : 'bg-rose-500'
@@ -1406,7 +1169,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                       style={{ width: `${Math.min(100, Math.max(3, yoloResult.severity_percentage))}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-[10px] text-slate-400 font-mono">
+                  <div className="flex justify-between text-[10px] text-agri-400/70 font-mono">
                     <span>0% (Healthy)</span>
                     <span>5% (Mild)</span>
                     <span>20% (Moderate)</span>
@@ -1416,20 +1179,20 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
                 {/* Pathology Stats Grid */}
                 <div className="grid grid-cols-3 gap-2 mt-4">
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-center">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase">Lesions</span>
+                  <div className="p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-100 dark:border-agri-700/25 text-center">
+                    <span className="text-[10px] font-semibold text-agri-400/70 uppercase">Lesions</span>
                     <div className="text-lg font-black text-rose-500 mt-0.5">
                       {yoloResult.lesion_count}
                     </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-center">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase">Healthy Leaf</span>
-                    <div className="text-lg font-black text-emerald-500 mt-0.5">
+                  <div className="p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-100 dark:border-agri-700/25 text-center">
+                    <span className="text-[10px] font-semibold text-agri-400/70 uppercase">Healthy Leaf</span>
+                    <div className="text-lg font-black text-agri-500 mt-0.5">
                       {yoloResult.healthy_area_pct}%
                     </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-center">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase">Urgency</span>
+                  <div className="p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-100 dark:border-agri-700/25 text-center">
+                    <span className="text-[10px] font-semibold text-agri-400/70 uppercase">Urgency</span>
                     <div className="text-lg font-black text-amber-500 mt-0.5">
                       {yoloResult.urgency}
                     </div>
@@ -1439,35 +1202,35 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
               {/* Detected Lesion Instances List */}
               <div>
-                <h3 className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mb-2 flex items-center justify-between">
+                <h3 className="text-xs uppercase tracking-wider text-agri-500/70 dark:text-agri-400/70 font-bold mb-2 flex items-center justify-between">
                   <span>Detected Lesion Bounding Boxes ({yoloResult.detections.length})</span>
-                  <span className="text-[10px] text-slate-400 font-normal">Figure 3 YOLO Instances</span>
+                  <span className="text-[10px] text-agri-400/70 font-normal">Figure 3 YOLO Instances</span>
                 </h3>
                 <div className="max-h-48 overflow-y-auto space-y-1.5 pr-1 text-xs">
                   {yoloResult.detections.length === 0 ? (
-                    <div className="p-4 text-center text-slate-500 italic">No lesion detected with sufficient confidence.</div>
+                    <div className="p-4 text-center text-agri-500/70 italic">No lesion detected with sufficient confidence.</div>
                   ) : (
                     yoloResult.detections.slice(0, 10).map((det) => (
                     <div
                       key={det.id}
-                      className="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 flex items-center justify-between"
+                      className="p-2 rounded-lg bg-surface-light dark:bg-slate-800/50 border border-agri-100 dark:border-agri-700/25 flex items-center justify-between"
                     >
                       <div className="flex items-center gap-2">
                         <span className="w-5 h-5 rounded-md bg-rose-500/10 border border-rose-500/30 text-rose-500 font-black text-[10px] flex items-center justify-center">
                           #{det.id}
                         </span>
-                        <span className="font-semibold text-slate-800 dark:text-slate-200">
+                        <span className="font-semibold text-agri-800 dark:text-agri-200">
                           {det.label}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-[11px] font-mono">
-                        <span className="text-emerald-500 font-bold">{det.confidence}%</span>
-                        <span className="text-slate-400">({det.area_px} px²)</span>
+                        <span className="text-agri-500 font-bold">{det.confidence}%</span>
+                        <span className="text-agri-400/70">({det.area_px} px²)</span>
                       </div>
                     </div>
                   )))}
                   {yoloResult.detections.length > 10 && (
-                    <p className="text-[10px] text-center text-slate-400 pt-1">
+                    <p className="text-[10px] text-center text-agri-400/70 pt-1">
                       + {yoloResult.detections.length - 10} additional smaller lesion clusters detected
                     </p>
                   )}
@@ -1475,8 +1238,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               </div>
 
               {/* Agronomic IPM Action Protocol */}
-              <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
-                <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 mb-1.5 text-sm">
+              <div className="p-4 rounded-xl bg-surface-light dark:bg-slate-800/70 border border-agri-200/50 dark:border-slate-700/80 text-xs leading-relaxed text-agri-700 dark:text-agri-300">
+                <div className="flex items-center gap-1.5 font-bold text-agri-900 dark:text-agri-100 mb-1.5 text-sm">
                   <Info className="w-4 h-4 text-rose-500 shrink-0" />
                   Targeted Agronomic IPM Treatment Plan
                 </div>
@@ -1486,7 +1249,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               {/* Quick Retake Action */}
               <button
                 onClick={handleRetake}
-                className="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-xl border border-agri-200/50 dark:border-agri-700/30 text-xs font-bold text-agri-700 dark:text-agri-300 hover:bg-agri-50 dark:hover:bg-agri-800/60 transition flex items-center justify-center gap-2"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Analyze Another Leaf Sample
@@ -1494,22 +1257,22 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             </div>
           ) : result ? (
             /* Cassava / Maize / Tomato Classification Result Card */
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
+            <div className="bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
               {/* Verdict Header */}
-              <div className="border-b border-slate-100 dark:border-slate-800 pb-4">
+              <div className="border-b border-agri-100 dark:border-agri-700/25 pb-4">
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <div className="flex flex-col">
-                    <span className="text-xs uppercase font-bold tracking-wider text-slate-400">
+                    <span className="text-xs uppercase font-bold tracking-wider text-agri-400/70">
                       {selectedCrop.toUpperCase()} Pathology & Agronomic Verdict
                     </span>
-                    <span className="text-[10px] text-slate-500 font-mono mt-0.5">
+                    <span className="text-[10px] text-agri-500/70 font-mono mt-0.5">
                       Analysis Source: {selectedSample ? 'Dataset Sample' : activeTab === 'camera' ? 'Phone Camera' : 'Uploaded Image'}
                     </span>
                   </div>
                   <span
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-extrabold border ${
                       result.status === 'High Confidence'
-                        ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                        ? 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25'
                         : 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
                     }`}
                   >
@@ -1537,18 +1300,18 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                   );
                 })()}
 
-                <div className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                <div className="text-2xl sm:text-3xl font-black text-agri-900 dark:text-white tracking-tight">
                   {result.prediction}
                 </div>
 
-                <div className="flex items-center justify-between mt-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <div className="flex items-center justify-between mt-3 p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-100 dark:border-agri-700/25">
+                  <span className="text-xs font-semibold text-agri-500/70 dark:text-agri-400/70">
                     Confidence Level:
                   </span>
                   <span
                     className={`text-lg font-black ${
                       result.confidence >= 70
-                        ? 'text-emerald-600 dark:text-emerald-400'
+                        ? 'text-agri-600 dark:text-agri-400'
                         : 'text-amber-600 dark:text-amber-400'
                     }`}
                   >
@@ -1559,9 +1322,9 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
               {/* Class Probability Distribution */}
               <div>
-                <h3 className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-bold mb-3 flex items-center justify-between">
+                <h3 className="text-xs uppercase tracking-wider text-agri-500/70 dark:text-agri-400/70 font-bold mb-3 flex items-center justify-between">
                   <span>Class Probability Breakdown ({activeClasses.length} Classes)</span>
-                  <span className="text-[10px] text-slate-400 font-normal">Softmax Distribution</span>
+                  <span className="text-[10px] text-agri-400/70 font-normal">Softmax Distribution</span>
                 </h3>
                 <div className="flex flex-col gap-2.5">
                   {activeClasses.map((cls) => {
@@ -1590,7 +1353,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                         ? 'bg-amber-500'
                         : isDisease
                         ? 'bg-rose-500'
-                        : 'bg-emerald-500'
+                        : 'bg-agri-500'
                       : 'bg-slate-400 dark:bg-slate-600';
 
                     return (
@@ -1599,8 +1362,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                           <span
                             className={
                               isTop
-                                ? 'text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1.5'
-                                : 'text-slate-700 dark:text-slate-300 flex items-center gap-1.5'
+                                ? 'text-agri-600 dark:text-agri-400 font-bold flex items-center gap-1.5'
+                                : 'text-agri-700 dark:text-agri-300 flex items-center gap-1.5'
                             }
                           >
                             <span className="text-[10px] opacity-70">
@@ -1611,14 +1374,14 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                           <span
                             className={
                               isTop
-                                ? 'text-emerald-600 dark:text-emerald-400 font-bold'
-                                : 'text-slate-500 dark:text-slate-400'
+                                ? 'text-agri-600 dark:text-agri-400 font-bold'
+                                : 'text-agri-500/70 dark:text-agri-400/70'
                             }
                           >
                             {pct.toFixed(1)}%
                           </span>
                         </div>
-                        <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                        <div className="w-full bg-agri-50 dark:bg-agri-800/50 rounded-full h-2.5 overflow-hidden">
                           <div
                             className={`h-full rounded-full transition-all duration-500 ${barColor}`}
                             style={{ width: `${Math.min(100, Math.max(3, pct))}%` }}
@@ -1632,9 +1395,9 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
               {/* Agronomic Advisory */}
               {result.explanation && (
-                <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
-                  <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 mb-1.5 text-sm">
-                    <Info className="w-4 h-4 text-emerald-500 shrink-0" />
+                <div className="p-4 rounded-xl bg-surface-light dark:bg-slate-800/70 border border-agri-200/50 dark:border-slate-700/80 text-xs leading-relaxed text-agri-700 dark:text-agri-300">
+                  <div className="flex items-center gap-1.5 font-bold text-agri-900 dark:text-agri-100 mb-1.5 text-sm">
+                    <Info className="w-4 h-4 text-agri-500 shrink-0" />
                     Integrated Pest & Disease Management (IPM) Advisory
                   </div>
                   <p>{result.explanation}</p>
@@ -1655,7 +1418,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               {/* Quick Retake Action */}
               <button
                 onClick={handleRetake}
-                className="w-full py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center justify-center gap-2"
+                className="w-full py-2.5 rounded-xl border border-agri-200/50 dark:border-agri-700/30 text-xs font-bold text-agri-700 dark:text-agri-300 hover:bg-agri-50 dark:hover:bg-agri-800/60 transition flex items-center justify-center gap-2"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Scan Another Leaf
@@ -1663,28 +1426,28 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
             </div>
           ) : (
             /* Awaiting Scan Placeholder */
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-sm">
-              <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4 text-emerald-500">
-                <Sparkles className="w-8 h-8 text-emerald-500" />
+            <div className="bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-agri-500/10 border border-agri-500/20 flex items-center justify-center mb-4 text-agri-500">
+                <Sparkles className="w-8 h-8 text-agri-500" />
               </div>
-              <h2 className="text-base font-bold text-slate-900 dark:text-white mb-1">
+              <h2 className="text-base font-bold text-agri-900 dark:text-white mb-1">
                 Awaiting Foliage Scan (Auto-Detect Active)
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
+              <p className="text-xs text-agri-500/70 dark:text-agri-400/70 max-w-xs leading-relaxed">
                 Aim phone camera directly at the affected leaf, upload a photo, or choose any sample. Our AI model will automatically detect the leaf species and diagnose condition.
               </p>
-              <div className="mt-3.5 flex flex-wrap justify-center gap-1.5 text-[11px] font-semibold text-slate-600 dark:text-slate-400">
-                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🍎 Apple</span>
-                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🌰 Cashew</span>
-                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🍃 Cassava</span>
-                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🌽 Maize</span>
-                <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">🍅 Tomato</span>
+              <div className="mt-3.5 flex flex-wrap justify-center gap-1.5 text-[11px] font-semibold text-agri-600 dark:text-agri-400/70">
+                <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🍎 Apple</span>
+                <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🌰 Cashew</span>
+                <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🍃 Cassava</span>
+                <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🌽 Maize</span>
+                <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🍅 Tomato</span>
               </div>
             </div>
           )}
 
           {/* Dedicated Agronomic Risk Intelligence, Red Risk Percentage, Recommendations & Suggestions Panel */}
-          <Suspense fallback={<div className="min-h-[500px] w-full rounded-2xl bg-slate-100 dark:bg-slate-800/50 animate-pulse border border-slate-200 dark:border-slate-700/80 shadow-sm flex items-center justify-center"><span className="text-slate-400 font-medium">Loading Risk Advisory Engine...</span></div>}>
+          <Suspense fallback={<div className="min-h-[500px] w-full rounded-2xl bg-agri-50 dark:bg-slate-800/50 animate-pulse border border-agri-200/50 dark:border-slate-700/80 shadow-sm flex items-center justify-center"><span className="text-agri-400/70 font-medium">Loading Risk Advisory Engine...</span></div>}>
             <CropRiskAdvisoryPanel
               selectedCrop={selectedCrop}
               prediction={result?.prediction}

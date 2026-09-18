@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import {
   Plane,
   AlertTriangle,
@@ -112,7 +112,7 @@ export const AdaptiveMonitoringPanel: React.FC<AdaptiveMonitoringPanelProps> = (
         );
       default:
         return (
-          <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-bold flex items-center gap-1">
+          <span className="px-3 py-1 rounded-full bg-agri-500/15 border border-agri-500/30 text-agri-400 text-xs font-bold flex items-center gap-1">
             <Clock className="w-3.5 h-3.5" />
             <span>ROUTINE SURVEILLANCE (7-Day Cycle)</span>
           </span>
@@ -121,28 +121,28 @@ export const AdaptiveMonitoringPanel: React.FC<AdaptiveMonitoringPanelProps> = (
   };
 
   return (
-    <div className="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-5 shadow-xl">
+    <div className="p-5 rounded-2xl bg-agri-900/60 border border-slate-800 space-y-5 shadow-xl">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
         <div>
-          <h3 className="font-bold text-slate-100 text-sm flex items-center gap-2">
-            <Plane className="w-4 h-4 text-emerald-400" />
+          <h3 className="font-bold text-agri-100 text-sm flex items-center gap-2">
+            <Plane className="w-4 h-4 text-agri-400" />
             <span>Risk-Adaptive Drone Surveillance Scheduler</span>
           </h3>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-agri-400/70 mt-0.5">
             Dynamic flight frequency adjusting automatically to multi-factor crop health threats and spread vectors.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-2.5 py-1 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-slate-300 font-mono">
+          <span className="px-2.5 py-1 rounded-xl bg-slate-950 border border-slate-800 text-[11px] text-agri-300 font-mono">
             Policy: Low 7d • Med 4d • High 2d • Crit &le;24h
           </span>
         </div>
       </div>
 
       {isLoading ? (
-        <div className="p-8 text-center text-slate-400 space-y-2">
+        <div className="p-8 text-center text-agri-400/70 space-y-2">
           <div className="w-7 h-7 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-xs">Computing risk-adaptive flight schedule...</p>
         </div>
@@ -152,11 +152,11 @@ export const AdaptiveMonitoringPanel: React.FC<AdaptiveMonitoringPanelProps> = (
           <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
               <div className="space-y-0.5">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">
+                <span className="text-[10px] text-agri-400/70 font-bold uppercase tracking-wider block">
                   Current Threat Level
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-black text-slate-100">Farm Threat:</span>
+                  <span className="text-lg font-black text-agri-100">Farm Threat:</span>
                   <span className="text-lg font-black text-rose-400 font-mono">
                     {rec.overall_risk_level} ({rec.overall_risk_score}/100)
                   </span>
@@ -169,8 +169,8 @@ export const AdaptiveMonitoringPanel: React.FC<AdaptiveMonitoringPanelProps> = (
             {/* Target Zones & Flight Parameters */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
               <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-1">
-                <span className="text-slate-400 text-[11px] flex items-center gap-1">
-                  <Layers className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-agri-400/70 text-[11px] flex items-center gap-1">
+                  <Layers className="w-3.5 h-3.5 text-agri-400" />
                   <span>Target Surveillance Zones:</span>
                 </span>
                 <div className="flex items-center gap-1.5 flex-wrap pt-1">
@@ -186,41 +186,41 @@ export const AdaptiveMonitoringPanel: React.FC<AdaptiveMonitoringPanelProps> = (
               </div>
 
               <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-1">
-                <span className="text-slate-400 text-[11px] flex items-center gap-1">
+                <span className="text-agri-400/70 text-[11px] flex items-center gap-1">
                   <Camera className="w-3.5 h-3.5 text-blue-400" />
                   <span>Sensor Payload:</span>
                 </span>
-                <p className="font-semibold text-slate-200 text-xs pt-1">
+                <p className="font-semibold text-agri-200 text-xs pt-1">
                   {rec.recommended_sensor_payload.join(' + ')}
                 </p>
               </div>
 
               <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 space-y-1">
-                <span className="text-slate-400 text-[11px]">Recommended Flight Altitude:</span>
-                <p className="font-mono font-bold text-emerald-400 text-base pt-0.5">
+                <span className="text-agri-400/70 text-[11px]">Recommended Flight Altitude:</span>
+                <p className="font-mono font-bold text-agri-400 text-base pt-0.5">
                   {rec.recommended_flight_altitude_m.toFixed(0)}m (High-Res Ground Sampling)
                 </p>
               </div>
             </div>
 
             {/* Agronomic Reasoning */}
-            <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800/90 text-xs space-y-1">
+            <div className="p-3 rounded-xl bg-agri-900/60 border border-slate-800/90 text-xs space-y-1">
               <span className="text-[11px] font-semibold text-amber-400 flex items-center gap-1">
                 <Info className="w-3.5 h-3.5" />
                 <span>Reason for Increased Surveillance Frequency:</span>
               </span>
-              <p className="text-slate-300 leading-relaxed text-[11px]">
+              <p className="text-agri-300 leading-relaxed text-[11px]">
                 {rec.reason_for_monitoring}
               </p>
             </div>
 
             {/* Scheduled Confirmation Box */}
             {scheduledResult && (
-              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono space-y-1">
+              <div className="p-3 rounded-xl bg-agri-500/10 border border-agri-500/25 text-agri-400 text-xs font-mono space-y-1">
                 <p className="font-bold">
                   ✓ Mission Scheduled: {scheduledResult.mission_code} ({scheduledResult.status})
                 </p>
-                <p className="text-[11px] text-emerald-300">
+                <p className="text-[11px] text-agri-300">
                   Targeted Zones: {scheduledResult.target_zones.join(', ')} • {scheduledResult.message}
                 </p>
               </div>
@@ -232,7 +232,7 @@ export const AdaptiveMonitoringPanel: React.FC<AdaptiveMonitoringPanelProps> = (
                 type="button"
                 disabled={isScheduling}
                 onClick={handleApproveSchedule}
-                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 disabled:opacity-50"
+                className="w-full py-3 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40 disabled:opacity-50"
               >
                 <Sparkles className="w-4 h-4" />
                 <span>

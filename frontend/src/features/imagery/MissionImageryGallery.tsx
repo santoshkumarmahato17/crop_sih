@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+﻿import React, { useEffect, useState, useRef } from 'react';
 import {
   Upload,
   Image as ImageIcon,
@@ -161,7 +161,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
     switch (status) {
       case 'COMPLETED':
         return (
-          <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold flex items-center gap-1">
+          <span className="px-2 py-0.5 rounded-full bg-agri-500/10 border border-agri-500/25 text-agri-400 text-[10px] font-bold flex items-center gap-1">
             <CheckCircle className="w-3 h-3" />
             <span>Ready</span>
           </span>
@@ -189,7 +189,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
         );
       default:
         return (
-          <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 text-[10px]">
+          <span className="px-2 py-0.5 rounded-full bg-agri-800 text-agri-400/70 text-[10px]">
             {status}
           </span>
         );
@@ -209,11 +209,11 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
       <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 className="font-bold text-slate-100 text-sm flex items-center gap-2">
-              <Upload className="w-4 h-4 text-emerald-400" />
+            <h3 className="font-bold text-agri-100 text-sm flex items-center gap-2">
+              <Upload className="w-4 h-4 text-agri-400" />
               <span>Drone Imagery Ingestion Pipeline</span>
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-agri-400/70 mt-0.5">
               Supports JPEG, PNG, and GeoTIFF multispectral raster frames up to 2048 MB.
             </p>
           </div>
@@ -223,7 +223,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
             <select
               value={sensorType}
               onChange={(e) => setSensorType(e.target.value)}
-              className="px-2.5 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-semibold"
+              className="px-2.5 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-agri-200 focus:outline-none focus:border-agri-500 font-semibold"
             >
               <option value="RGB">RGB Standard</option>
               <option value="MULTISPECTRAL">Multispectral (NDVI/RedEdge)</option>
@@ -234,7 +234,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
               <select
                 value={selectedZoneId}
                 onChange={(e) => setSelectedZoneId(e.target.value)}
-                className="px-2.5 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-mono"
+                className="px-2.5 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-agri-200 focus:outline-none focus:border-agri-500 font-mono"
               >
                 <option value="">Auto-Detect Zone (GPS)</option>
                 {zones.map((z) => (
@@ -248,7 +248,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploading}
-              className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-950/40 transition flex items-center gap-1.5 disabled:opacity-50"
+              className="px-4 py-1.5 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold shadow-md shadow-emerald-950/40 transition flex items-center gap-1.5 disabled:opacity-50"
             >
               <Upload className="w-3.5 h-3.5" />
               <span>{isUploading ? 'Streaming to MinIO...' : 'Upload Image Frame'}</span>
@@ -265,7 +265,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
         </div>
 
         {uploadMessage && (
-          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-agri-500/10 border border-agri-500/25 text-agri-400 text-xs flex items-center gap-2">
             <CheckCircle className="w-4 h-4 flex-shrink-0" />
             <span>{uploadMessage}</span>
           </div>
@@ -282,19 +282,19 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
       {/* Captured Imagery Gallery */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-agri-400/70 flex items-center gap-2">
             <Camera className="w-3.5 h-3.5 text-blue-400" />
             <span>Ingested Mission Imagery Frames ({images.length})</span>
           </h4>
-          <span className="text-[11px] text-slate-500 font-mono">
+          <span className="text-[11px] text-agri-500/70 font-mono">
             Storage: MinIO S3 Object Storage
           </span>
         </div>
 
         {isLoading ? (
-          <div className="p-8 text-center text-slate-400 text-xs">Loading image records...</div>
+          <div className="p-8 text-center text-agri-400/70 text-xs">Loading image records...</div>
         ) : images.length === 0 ? (
-          <div className="p-8 text-center text-slate-500 text-xs rounded-2xl bg-slate-900/40 border border-slate-800">
+          <div className="p-8 text-center text-agri-500/70 text-xs rounded-2xl bg-slate-900/40 border border-slate-800">
             No drone imagery uploaded yet. Select an image frame above to ingest.
           </div>
         ) : (
@@ -303,19 +303,19 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
               <div
                 key={img.id}
                 onClick={() => setSelectedImage(img)}
-                className="p-4 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3 hover:border-slate-700 cursor-pointer transition shadow-md flex flex-col justify-between"
+                className="p-4 rounded-2xl bg-agri-900/60 border border-slate-800 space-y-3 hover:border-slate-700 cursor-pointer transition shadow-md flex flex-col justify-between"
               >
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 text-emerald-400">
+                      <div className="p-2 rounded-xl bg-slate-950 border border-slate-800 text-agri-400">
                         <ImageIcon className="w-4 h-4" />
                       </div>
                       <div className="truncate max-w-[160px]">
-                        <p className="font-bold text-slate-100 text-xs truncate" title={img.filename}>
+                        <p className="font-bold text-agri-100 text-xs truncate" title={img.filename}>
                           {img.filename}
                         </p>
-                        <p className="text-[10px] text-slate-400 font-mono">
+                        <p className="text-[10px] text-agri-400/70 font-mono">
                           {formatFileSize(img.file_size_bytes)}
                         </p>
                       </div>
@@ -324,21 +324,21 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
                     {getStatusBadge(img.processing_status)}
                   </div>
 
-                  <div className="p-2 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1 text-[11px]">
-                    <div className="flex items-center justify-between text-slate-400">
+                  <div className="p-2 rounded-xl bg-agri-950/60 border border-slate-800/80 space-y-1 text-[11px]">
+                    <div className="flex items-center justify-between text-agri-400/70">
                       <span>Sensor Band:</span>
-                      <span className="px-1.5 py-0.2 rounded bg-slate-800 text-slate-200 font-mono text-[10px] font-bold">
+                      <span className="px-1.5 py-0.2 rounded bg-agri-800 text-agri-200 font-mono text-[10px] font-bold">
                         {img.sensor_type}
                       </span>
                     </div>
 
                     {img.location?.coordinates && (
-                      <div className="flex items-center justify-between text-slate-400">
+                      <div className="flex items-center justify-between text-agri-400/70">
                         <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-emerald-400" />
+                          <MapPin className="w-3 h-3 text-agri-400" />
                           <span>GPS Location:</span>
                         </span>
-                        <span className="font-mono text-slate-300 text-[10px]">
+                        <span className="font-mono text-agri-300 text-[10px]">
                           {img.location.coordinates[1].toFixed(4)}°, {img.location.coordinates[0].toFixed(4)}°
                         </span>
                       </div>
@@ -350,13 +350,13 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
                   <button
                     type="button"
                     onClick={(e) => handleTriggerAI(img, e)}
-                    className="px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 font-bold transition flex items-center gap-1"
+                    className="px-2.5 py-1 rounded-lg bg-agri-500/20 hover:bg-agri-500/30 text-agri-400 border border-agri-500/25 font-bold transition flex items-center gap-1"
                   >
                     <Sparkles className="w-3 h-3" />
                     <span>Run AI Analysis</span>
                   </button>
 
-                  <span className="text-slate-500 hover:text-slate-300">Inspect →</span>
+                  <span className="text-agri-500/70 hover:text-agri-300">Inspect →</span>
                 </div>
               </div>
             ))}
@@ -366,16 +366,16 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
 
       {/* Modal: Full Image Metadata Inspection */}
       {selectedImage && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-lg w-full p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl space-y-5">
+        <div className="fixed inset-0 z-50 bg-agri-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="max-w-lg w-full p-6 rounded-2xl bg-agri-900 border border-slate-800 shadow-2xl space-y-5">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-emerald-400" />
-                <h3 className="font-bold text-slate-100 text-sm">Image Telemetry & Metadata</h3>
+                <FileText className="w-5 h-5 text-agri-400" />
+                <h3 className="font-bold text-agri-100 text-sm">Image Telemetry & Metadata</h3>
               </div>
               <button
                 onClick={() => setSelectedImage(null)}
-                className="text-slate-500 hover:text-slate-300"
+                className="text-agri-500/70 hover:text-agri-300"
               >
                 ✕
               </button>
@@ -384,35 +384,35 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
             <div className="space-y-3 text-xs">
               <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2 font-mono">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Image ID:</span>
-                  <span className="text-slate-300">{selectedImage.id}</span>
+                  <span className="text-agri-500/70">Image ID:</span>
+                  <span className="text-agri-300">{selectedImage.id}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Filename:</span>
-                  <span className="text-slate-300">{selectedImage.filename}</span>
+                  <span className="text-agri-500/70">Filename:</span>
+                  <span className="text-agri-300">{selectedImage.filename}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">File Type & Size:</span>
-                  <span className="text-slate-300">{selectedImage.file_type} ({formatFileSize(selectedImage.file_size_bytes)})</span>
+                  <span className="text-agri-500/70">File Type & Size:</span>
+                  <span className="text-agri-300">{selectedImage.file_type} ({formatFileSize(selectedImage.file_size_bytes)})</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Sensor Payload:</span>
-                  <span className="text-emerald-400 font-bold">{selectedImage.sensor_type}</span>
+                  <span className="text-agri-500/70">Sensor Payload:</span>
+                  <span className="text-agri-400 font-bold">{selectedImage.sensor_type}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Altitude AGL:</span>
-                  <span className="text-slate-300">{selectedImage.altitude_agl_meters} meters</span>
+                  <span className="text-agri-500/70">Altitude AGL:</span>
+                  <span className="text-agri-300">{selectedImage.altitude_agl_meters} meters</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Processing State:</span>
-                  <span className="text-emerald-400">{selectedImage.processing_status}</span>
+                  <span className="text-agri-500/70">Processing State:</span>
+                  <span className="text-agri-400">{selectedImage.processing_status}</span>
                 </div>
               </div>
 
               {selectedImage.location?.coordinates && (
                 <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
-                  <span className="text-slate-400 block font-medium">GPS Coordinates (WGS84 SRID 4326):</span>
-                  <span className="font-mono text-slate-200">
+                  <span className="text-agri-400/70 block font-medium">GPS Coordinates (WGS84 SRID 4326):</span>
+                  <span className="font-mono text-agri-200">
                     Latitude: {selectedImage.location.coordinates[1]}° N, Longitude: {selectedImage.location.coordinates[0]}° E
                   </span>
                 </div>
@@ -427,7 +427,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
                   setSelectedImage(null);
                   handleTriggerAI(target);
                 }}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold transition flex items-center gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Analyze with AI Vision</span>
@@ -436,7 +436,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedImage(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-agri-800 text-agri-300 text-xs font-semibold"
               >
                 Close
               </button>

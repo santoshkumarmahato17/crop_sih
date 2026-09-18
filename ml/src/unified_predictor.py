@@ -29,15 +29,21 @@ from ml.src.predict_cassava import get_cassava_predictor
 from ml.src.predict_maize import get_maize_predictor
 from ml.src.predict import get_tomato_predictor
 from ml.src.predict_apple import get_apple_predictor
+from ml.src.predict_rice import get_rice_predictor
+from ml.src.predict_soybean import get_soybean_predictor
 from ml.src.yolo_disease_detector import YOLODiseaseDetector
 
-CROPS = ["Apple", "Cashew", "Cassava", "Maize", "Tomato"]
+CROPS = ["Apple", "Cashew", "Cassava", "Cotton", "Maize", "Onion", "Rice", "Soybean", "Tomato"]
 
 CROP_EMOJIS = {
     "Apple": "🍎",
     "Cashew": "🌰",
     "Cassava": "🍃",
+    "Cotton": "☁️",
     "Maize": "🌽",
+    "Onion": "🧅",
+    "Rice": "🌾",
+    "Soybean": "🫘",
     "Tomato": "🍅",
 }
 
@@ -45,7 +51,11 @@ CROP_DESCRIPTIONS = {
     "Apple": "Apple (Malus domestica) orchard foliage",
     "Cashew": "Cashew (Anacardium occidentale) foliar canopy",
     "Cassava": "Cassava (Manihot esculenta) palmate foliage",
+    "Cotton": "Cotton (Gossypium hirsutum) foliar canopy",
     "Maize": "Maize / Corn (Zea mays) foliar blade",
+    "Onion": "Onion (Allium cepa) foliar canopy",
+    "Rice": "Rice (Oryza sativa) foliar canopy",
+    "Soybean": "Soybean (Glycine max) foliar canopy",
     "Tomato": "Tomato (Solanum lycopersicum) compound foliage",
 }
 
@@ -103,6 +113,9 @@ class UnifiedPlantDiagnosticEngine:
         self.cassava_predictor = get_cassava_predictor()
         self.maize_predictor = get_maize_predictor()
         self.tomato_predictor = get_tomato_predictor()
+        self.rice_predictor = get_rice_predictor()
+        self.soybean_predictor = get_soybean_predictor()
+        # Cotton and Onion don't have dedicated predictors yet; fallback will handle them
 
         # 3. YOLO Lesion Detector
         self.yolo_detector = YOLODiseaseDetector()

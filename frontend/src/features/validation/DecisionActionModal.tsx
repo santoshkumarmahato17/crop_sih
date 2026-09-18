@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   X,
   CheckCircle2,
@@ -64,16 +64,16 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto animate-in fade-in">
-      <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-agri-950/80 backdrop-blur-md overflow-y-auto animate-in fade-in">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-3xl shadow-2xl overflow-hidden my-8">
         {/* Header */}
-        <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-slate-900 to-emerald-950 text-white flex items-center justify-between">
+        <div className="p-6 border-b border-agri-100 dark:border-agri-700/25 bg-gradient-to-r from-slate-900 to-emerald-950 text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            <div className="p-2.5 rounded-2xl bg-agri-500/15 text-agri-400 border border-agri-500/25">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <span className="text-[10px] text-emerald-300 font-mono font-bold uppercase tracking-wider block">
+              <span className="text-[10px] text-agri-300 font-mono font-bold uppercase tracking-wider block">
                 Official Agronomic Review
               </span>
               <h2 className="text-xl font-black">
@@ -84,7 +84,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition"
+            className="p-2 rounded-xl text-agri-400/70 hover:text-white hover:bg-white/10 transition"
           >
             <X className="w-5 h-5" />
           </button>
@@ -101,7 +101,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
 
           {/* Decision Type Buttons */}
           <div className="space-y-1.5">
-            <label className="text-xs font-black uppercase text-slate-500 tracking-wider">
+            <label className="text-xs font-black uppercase text-agri-500/70 tracking-wider">
               Validation Verdict
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -110,8 +110,8 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
                 onClick={() => setDecision('CONFIRMED')}
                 className={`p-3 rounded-2xl border text-xs font-bold transition flex flex-col items-center gap-1.5 ${
                   decision === 'CONFIRMED'
-                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-md'
-                    : 'bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+                    ? 'bg-agri-500 text-white border-emerald-600 shadow-md'
+                    : 'bg-surface-light dark:bg-surface-darkBg text-agri-700 dark:text-agri-300 border-agri-200/50 dark:border-agri-700/25'
                 }`}
               >
                 <CheckCircle2 className="w-4 h-4" />
@@ -124,7 +124,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
                 className={`p-3 rounded-2xl border text-xs font-bold transition flex flex-col items-center gap-1.5 ${
                   decision === 'REJECTED'
                     ? 'bg-rose-600 text-white border-rose-600 shadow-md'
-                    : 'bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+                    : 'bg-surface-light dark:bg-surface-darkBg text-agri-700 dark:text-agri-300 border-agri-200/50 dark:border-agri-700/25'
                 }`}
               >
                 <XCircle className="w-4 h-4" />
@@ -137,7 +137,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
                 className={`p-3 rounded-2xl border text-xs font-bold transition flex flex-col items-center gap-1.5 ${
                   decision === 'UNCERTAIN'
                     ? 'bg-amber-600 text-white border-amber-600 shadow-md'
-                    : 'bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+                    : 'bg-surface-light dark:bg-surface-darkBg text-agri-700 dark:text-agri-300 border-agri-200/50 dark:border-agri-700/25'
                 }`}
               >
                 <HelpCircle className="w-4 h-4" />
@@ -150,7 +150,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
                 className={`p-3 rounded-2xl border text-xs font-bold transition flex flex-col items-center gap-1.5 ${
                   decision === 'LAB_REFERRAL'
                     ? 'bg-sky-600 text-white border-sky-600 shadow-md'
-                    : 'bg-slate-50 dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+                    : 'bg-surface-light dark:bg-surface-darkBg text-agri-700 dark:text-agri-300 border-agri-200/50 dark:border-agri-700/25'
                 }`}
               >
                 <FlaskConical className="w-4 h-4" />
@@ -163,20 +163,20 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
           {decision === 'CONFIRMED' && (
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300 block mb-1">
                   Confirmed Pathogen / Disease Name
                 </label>
                 <input
                   type="text"
                   value={confirmedCondition}
                   onChange={(e) => setConfirmedCondition(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-agri-500"
                   required
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300 block mb-1">
                   Actionable Guidance for Farmer (Plain Language)
                 </label>
                 <textarea
@@ -184,7 +184,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
                   value={farmerGuidance}
                   onChange={(e) => setFarmerGuidance(e.target.value)}
                   placeholder="e.g. Prune affected lower leaves, apply certified bio-fungicide, avoid evening overhead sprinkling..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs focus:outline-none focus:ring-2 focus:ring-agri-500"
                   required
                 />
               </div>
@@ -193,7 +193,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
 
           {decision === 'REJECTED' && (
             <div>
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300 block mb-1">
                 Reason for Rejection
               </label>
               <textarea
@@ -201,7 +201,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 placeholder="Explain why the AI prediction was invalid (e.g. Non-pathogenic leaf scorch / mechanical fertilizer burn)..."
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-rose-500"
+                className="w-full px-4 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs focus:outline-none focus:ring-2 focus:ring-rose-500"
                 required
               />
             </div>
@@ -209,7 +209,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
 
           {decision === 'UNCERTAIN' && (
             <div>
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300 block mb-1">
                 Recommendations for Resubmission
               </label>
               <textarea
@@ -217,7 +217,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
                 value={uncertainRec}
                 onChange={(e) => setUncertainRec(e.target.value)}
                 placeholder="Specify what additional field observation or higher-zoom photo is required..."
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="w-full px-4 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
                 required
               />
             </div>
@@ -226,13 +226,13 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
           {decision === 'LAB_REFERRAL' && (
             <div className="space-y-4">
               <div>
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300 block mb-1">
                   Sample Type for Lab Testing
                 </label>
                 <select
                   value={sampleType}
                   onChange={(e) => setSampleType(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-sky-500"
                 >
                   <option value="Leaf Tissue Sample">Leaf Tissue Sample (PCR / Fungal Culture)</option>
                   <option value="Soil Core Sample">Soil Core Sample (Nematode & Nutrient Analysis)</option>
@@ -245,7 +245,7 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
 
           {/* Internal Expert Notes */}
           <div>
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block mb-1">
+            <label className="text-xs font-bold text-agri-700 dark:text-agri-300 block mb-1">
               Internal Notes (Government / Extension Archive Only)
             </label>
             <textarea
@@ -253,23 +253,23 @@ export const DecisionActionModal: React.FC<DecisionActionModalProps> = ({
               value={expertNotes}
               onChange={(e) => setExpertNotes(e.target.value)}
               placeholder="Internal technical assessment, pathogen classification notes..."
-              className="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs focus:outline-none focus:ring-2 focus:ring-slate-500"
+              className="w-full px-4 py-2 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs focus:outline-none focus:ring-2 focus:ring-slate-500"
             />
           </div>
 
           {/* Action Buttons */}
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
+          <div className="pt-3 border-t border-agri-100 dark:border-agri-700/25 flex items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              className="px-4 py-2.5 rounded-xl text-xs font-bold text-agri-600 dark:text-agri-300 hover:bg-agri-50 dark:hover:bg-agri-800/60 transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition flex items-center gap-2 shadow-lg shadow-emerald-900/20 active:scale-95 disabled:opacity-50"
+              className="px-6 py-2.5 rounded-xl bg-agri-500 hover:bg-emerald-700 text-white text-xs font-black transition flex items-center gap-2 shadow-lg shadow-emerald-900/20 active:scale-95 disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
               <span>{isSubmitting ? 'Submitting...' : 'Submit Official Verdict'}</span>

@@ -27,6 +27,22 @@ class StorageService:
 
     def _init_minio_client(self):
         """Initializes MinIO S3 SDK client if available."""
+        import socket
+        try:
+            host_port = settings.MINIO_ENDPOINT.split(":")
+            host = host_port[0]
+            port = int(host_port[1]) if len(host_port) > 1 else 9000
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(0.2)
+            res = sock.connect_ex((host, port))
+            sock.close()
+            if res != 0:
+                self._minio_client = None
+                return
+        except Exception:
+            self._minio_client = None
+            return
+
         try:
             from minio import Minio
             self._minio_client = Minio(

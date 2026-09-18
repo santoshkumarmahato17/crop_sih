@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   ShieldAlert,
   ShieldCheck,
@@ -73,10 +73,10 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
     switch (trustLevel) {
       case 3:
         return {
-          icon: <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />,
+          icon: <ShieldCheck className="w-4 h-4 text-agri-600 dark:text-agri-400" />,
           label: t('trustLevels.level3'),
-          badgeClass: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
-          borderClass: 'border-emerald-300 dark:border-emerald-800/80',
+          badgeClass: 'bg-agri-500/15 text-agri-700 dark:text-agri-300 border-agri-500/25',
+          borderClass: 'border-emerald-300 dark:border-agri-700/30',
           glowClass: 'shadow-emerald-950/10',
         };
       case 4:
@@ -100,7 +100,7 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
           icon: <Bot className="w-4 h-4 text-amber-500" />,
           label: t('trustLevels.level1'),
           badgeClass: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20',
-          borderClass: 'border-slate-200 dark:border-slate-800',
+          borderClass: 'border-agri-200/50 dark:border-agri-700/25',
           glowClass: '',
         };
     }
@@ -124,10 +124,10 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
 
   return (
     <div
-      className={`rounded-3xl bg-white dark:bg-slate-900 border ${trustBadge.borderClass} shadow-xl ${trustBadge.glowClass} overflow-hidden transition-all duration-200`}
+      className={`rounded-3xl bg-white dark:bg-surface-darkCard border ${trustBadge.borderClass} shadow-xl ${trustBadge.glowClass} overflow-hidden transition-all duration-200`}
     >
       {/* ── Top Header Banner ── */}
-      <div className="p-5 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-5 border-b border-agri-100 dark:border-agri-700/25 bg-surface-light/50 dark:bg-slate-950/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
             {/* Trust Level Badge (Level 1–4) */}
@@ -146,15 +146,15 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
             </span>
 
             {/* Farm & Zone Scope */}
-            <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium">
-              <MapPin className="w-3.5 h-3.5 text-slate-400" />
+            <div className="flex items-center gap-1.5 text-xs text-agri-500/70 dark:text-agri-400/70 font-medium">
+              <MapPin className="w-3.5 h-3.5 text-agri-400/70" />
               <span>
                 {advisory.farm_name || 'Farm'} {advisory.zone_name ? `• ${advisory.zone_name}` : ''}
               </span>
             </div>
           </div>
 
-          <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight">
+          <h3 className="text-base sm:text-lg font-black text-agri-900 dark:text-white tracking-tight">
             {loc?.title || advisory.condition_name}
           </h3>
         </div>
@@ -168,25 +168,25 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
             className={`p-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
               isPlayingAudio
                 ? 'bg-rose-500/15 text-rose-600 border-rose-500/30 animate-pulse'
-                : 'bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700 shadow-sm'
+                : 'bg-white dark:bg-agri-800/50 hover:bg-agri-50 dark:hover:bg-agri-700/40 text-agri-700 dark:text-agri-200 border-agri-200/50 dark:border-agri-700/30 shadow-sm'
             }`}
             title={isPlayingAudio ? t('advisories.stopAudio') : t('advisories.listenAudio')}
           >
-            {isPlayingAudio ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />}
+            {isPlayingAudio ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4 text-agri-600 dark:text-agri-400" />}
             <span className="hidden sm:inline">
               {isPlayingAudio ? t('advisories.stopAudio') : t('advisories.listenAudio')}
             </span>
           </button>
 
           {/* Farmer vs Technical View Switcher */}
-          <div className="flex items-center bg-slate-200 dark:bg-slate-800 p-0.5 rounded-xl border border-slate-300 dark:border-slate-700 text-[11px] font-bold">
+          <div className="flex items-center bg-slate-200 dark:bg-agri-800/50 p-0.5 rounded-xl border border-slate-300 dark:border-agri-700/30 text-[11px] font-bold">
             <button
               type="button"
               onClick={() => setViewMode('farmer')}
               className={`px-2 py-1 rounded-lg transition ${
                 viewMode === 'farmer'
-                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400'
+                  ? 'bg-white dark:bg-surface-darkCard text-agri-900 dark:text-white shadow-sm'
+                  : 'text-agri-600 dark:text-agri-400/70'
               }`}
             >
               {t('advisories.farmerView')}
@@ -196,8 +196,8 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
               onClick={() => setViewMode('technical')}
               className={`px-2 py-1 rounded-lg transition ${
                 viewMode === 'technical'
-                  ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400'
+                  ? 'bg-white dark:bg-surface-darkCard text-agri-900 dark:text-white shadow-sm'
+                  : 'text-agri-600 dark:text-agri-400/70'
               }`}
             >
               {t('advisories.technicalView')}
@@ -207,7 +207,7 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
           <button
             type="button"
             onClick={() => setIsExpanded((prev) => !prev)}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+            className="p-2 rounded-xl text-agri-400/70 hover:text-agri-600 hover:bg-agri-50 dark:hover:bg-agri-800/60 transition"
           >
             {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           </button>
@@ -219,10 +219,10 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
         <div className="p-5 sm:p-6 space-y-5">
           {/* Summary & Why this matters */}
           <div className="space-y-2">
-            <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 leading-relaxed">
+            <p className="text-sm font-semibold text-agri-800 dark:text-agri-200 leading-relaxed">
               {loc?.summary}
             </p>
-            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-slate-700 dark:text-slate-300 space-y-1">
+            <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-xs text-agri-700 dark:text-agri-300 space-y-1">
               <span className="font-extrabold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
                 <AlertTriangle className="w-4 h-4" />
                 <span>Why this matters / हे का महत्त्वाचे आहे:</span>
@@ -234,15 +234,15 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
           {/* Structured IPM Action Matrix */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* 1. What to do now */}
-            <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 space-y-2.5">
-              <h4 className="text-xs font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <div className="p-4 rounded-2xl bg-emerald-500/5 border border-agri-500/20 space-y-2.5">
+              <h4 className="text-xs font-black uppercase tracking-wider text-agri-700 dark:text-agri-400 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-agri-600" />
                 <span>{t('advisories.whatToDoNow')}</span>
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+              <ul className="space-y-1.5 text-xs text-agri-700 dark:text-agri-300">
                 {loc?.what_to_do_now.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2">
-                    <span className="text-emerald-600 font-black mt-0.5">•</span>
+                    <span className="text-agri-600 font-black mt-0.5">•</span>
                     <span>{item}</span>
                   </li>
                 ))}
@@ -255,7 +255,7 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
                 <Eye className="w-4 h-4 text-sky-600" />
                 <span>{t('advisories.whatToMonitor')}</span>
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+              <ul className="space-y-1.5 text-xs text-agri-700 dark:text-agri-300">
                 {loc?.what_to_monitor.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <span className="text-sky-600 font-black mt-0.5">•</span>
@@ -271,7 +271,7 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
                 <Ban className="w-4 h-4 text-rose-600" />
                 <span>{t('advisories.whatToAvoid')}</span>
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-700 dark:text-slate-300">
+              <ul className="space-y-1.5 text-xs text-agri-700 dark:text-agri-300">
                 {loc?.what_to_avoid.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2">
                     <span className="text-rose-600 font-black mt-0.5">•</span>
@@ -288,7 +288,7 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
                   <HelpCircle className="w-4 h-4 text-purple-600" />
                   <span>{t('advisories.whenToSeekHelp')}</span>
                 </h4>
-                <p className="text-xs text-slate-700 dark:text-slate-300">
+                <p className="text-xs text-agri-700 dark:text-agri-300">
                   {loc?.when_to_seek_expert_help}
                 </p>
               </div>
@@ -309,25 +309,25 @@ export const AdvisoryCard: React.FC<AdvisoryCardProps> = ({
 
           {/* Technical Diagnostics View (When toggled) */}
           {viewMode === 'technical' && loc?.technical_breakdown && (
-            <div className="p-4 rounded-2xl bg-slate-950 text-emerald-400 font-mono text-xs border border-slate-800 space-y-1">
-              <span className="text-slate-400 font-bold block">⚙️ Technical Metadata & Telemetry Breakdown:</span>
+            <div className="p-4 rounded-2xl bg-slate-950 text-agri-400 font-mono text-xs border border-slate-800 space-y-1">
+              <span className="text-agri-400/70 font-bold block">⚙️ Technical Metadata & Telemetry Breakdown:</span>
               <p>{loc.technical_breakdown}</p>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-agri-500/70">
                 Advisory ID: {advisory.id} • Version: {advisory.version} • Source: {advisory.source} • Trust Level: {trustLevel}/4
               </p>
             </div>
           )}
 
           {/* Safety Warnings & Follow-Up Date */}
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-              <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <div className="pt-3 border-t border-agri-100 dark:border-agri-700/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2 text-agri-500/70 dark:text-agri-400/70">
+              <Shield className="w-4 h-4 text-agri-600 dark:text-agri-400" />
               <span>
                 <strong>IPM Protection:</strong> {loc?.safety_warnings[0] || 'Strictly follow authorized organic guidelines.'}
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-slate-500 font-mono text-[11px] whitespace-nowrap">
+            <div className="flex items-center gap-1.5 text-agri-500/70 font-mono text-[11px] whitespace-nowrap">
               <Clock className="w-3.5 h-3.5 text-amber-500" />
               <span>{t('advisories.nextCheck')}: {advisory.follow_up_date ? new Date(advisory.follow_up_date).toLocaleDateString() : 'Within 48h'}</span>
             </div>

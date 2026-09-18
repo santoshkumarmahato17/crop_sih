@@ -227,8 +227,8 @@ async def verify_farm_ownership_or_access(
     if current_user.is_superuser or current_user.role == RoleType.ADMIN:
         return farm
 
-    # Government users have regional visibility scope
-    if current_user.role == RoleType.GOVERNMENT:
+    # Government and Extension workers have regional visibility scope
+    if current_user.role in [RoleType.GOVERNMENT, RoleType.EXTENSION_WORKER]:
         return farm
 
     # Farmers must be the registered owner of the farm

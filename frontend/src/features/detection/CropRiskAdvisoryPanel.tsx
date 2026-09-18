@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   AlertOctagon,
   AlertTriangle,
@@ -927,18 +927,18 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
     const threatList = Object.entries(cropData).filter(([key]) => key !== 'Healthy').slice(0, 3);
 
     return (
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
+      <div className="bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-2xl p-5 shadow-sm flex flex-col gap-4">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="flex items-center justify-between border-b border-agri-100 dark:border-agri-700/25 pb-3">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-600 dark:text-rose-400">
               <ShieldAlert className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
+              <h3 className="text-xs font-black uppercase tracking-wider text-agri-900 dark:text-white">
                 {selectedCrop.toUpperCase()} Pathogen Threat Watchlist
               </h3>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400">
+              <p className="text-[10px] text-agri-500/70 dark:text-agri-400/70">
                 Baseline epidemiological risk tiers for current foliage
               </p>
             </div>
@@ -954,15 +954,15 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
             <div
               key={name}
               onClick={() => onQuickSampleClick && onQuickSampleClick(name)}
-              className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between hover:border-rose-500/40 hover:bg-rose-50/30 dark:hover:bg-rose-950/10 transition cursor-pointer group"
+              className="p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-200/50/80 dark:border-agri-700/25 flex items-center justify-between hover:border-rose-500/40 hover:bg-rose-50/30 dark:hover:bg-rose-950/10 transition cursor-pointer group"
             >
               <div className="flex items-center gap-2.5">
                 <div className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
                 <div>
-                  <div className="text-xs font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition">
+                  <div className="text-xs font-bold text-agri-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition">
                     {name}
                   </div>
-                  <div className="text-[10px] text-slate-500 dark:text-slate-400 italic">
+                  <div className="text-[10px] text-agri-500/70 dark:text-agri-400/70 italic">
                     {data.scientificName}
                   </div>
                 </div>
@@ -971,19 +971,19 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
                 <span className="text-xs font-black text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded-md bg-rose-500/10 border border-rose-500/20">
                   {data.riskPercentage}% Risk
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-500 transition" />
+                <ArrowRight className="w-3.5 h-3.5 text-agri-400/70 group-hover:text-rose-500 transition" />
               </div>
             </div>
           ))}
         </div>
 
         {/* Readiness Checklist */}
-        <div className="p-3.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs">
+        <div className="p-3.5 rounded-xl bg-emerald-50/70 dark:bg-emerald-950/20 border border-agri-500/25 text-agri-800 dark:text-agri-300 text-xs">
           <div className="flex items-center gap-1.5 font-bold mb-1 text-[11px] uppercase tracking-wider">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <ShieldCheck className="w-3.5 h-3.5 text-agri-600 dark:text-agri-400" />
             Diagnostics Readiness
           </div>
-          <p className="text-[11px] text-emerald-700 dark:text-emerald-400/90 leading-relaxed">
+          <p className="text-[11px] text-agri-700 dark:text-agri-400/90 leading-relaxed">
             Aim camera directly at symptomatic foliage lesions or click any dataset sample above. The neural engine will immediately compute the <strong>Red Risk Percentage</strong>, <strong>Chemical Dosage Recommendations</strong>, and <strong>Agronomic Suggestions</strong>.
           </p>
         </div>
@@ -997,12 +997,12 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
   const profile = activeProfile || Object.values(cropData)[0];
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
+    <div className="bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-2xl p-5 shadow-sm flex flex-col gap-5">
       {/* ── 1. PROMINENT RED RISK PERCENTAGE BANNER ── */}
       <div
         className={`p-4 rounded-2xl border ${
           isHealthy
-            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-900 dark:text-emerald-200'
+            ? 'bg-agri-500/10 border-agri-500/25 text-emerald-900 dark:text-emerald-200'
             : 'bg-rose-500/10 border-rose-500/40 text-rose-950 dark:text-rose-100'
         }`}
       >
@@ -1011,20 +1011,20 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
             <div
               className={`w-9 h-9 rounded-xl flex items-center justify-center ${
                 isHealthy
-                  ? 'bg-emerald-500 text-white'
+                  ? 'bg-agri-500 text-white'
                   : 'bg-rose-600 text-white shadow-md shadow-rose-600/30 animate-pulse'
               }`}
             >
               {isHealthy ? <CheckCircle2 className="w-5 h-5" /> : <AlertOctagon className="w-5 h-5" />}
             </div>
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-agri-500/70 dark:text-agri-400/70">
                 Pathological Severity & Threat Assessment
               </span>
-              <div className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-1.5 flex-wrap">
+              <div className="text-sm font-black text-agri-900 dark:text-white flex items-center gap-1.5 flex-wrap">
                 <span>{prediction || 'Foliar Lesion Analysis'}</span>
                 {confidence !== undefined && (
-                  <span className="text-[10px] text-slate-400 font-normal">({confidence}% conf)</span>
+                  <span className="text-[10px] text-agri-400/70 font-normal">({confidence}% conf)</span>
                 )}
                 {!isHealthy && (
                   <span className="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-rose-600 text-white">
@@ -1040,7 +1040,7 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
             <div
               className={`text-3xl font-black tracking-tight ${
                 isHealthy
-                  ? 'text-emerald-600 dark:text-emerald-400'
+                  ? 'text-agri-600 dark:text-agri-400'
                   : 'text-rose-600 dark:text-rose-500 drop-shadow-sm'
               }`}
             >
@@ -1049,7 +1049,7 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
             <span
               className={`text-[10px] font-bold uppercase tracking-wider ${
                 isHealthy
-                  ? 'text-emerald-600 dark:text-emerald-400'
+                  ? 'text-agri-600 dark:text-agri-400'
                   : 'text-rose-600 dark:text-rose-400'
               }`}
             >
@@ -1059,11 +1059,11 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
         </div>
 
         {/* Dynamic Risk Meter */}
-        <div className="w-full bg-slate-200 dark:bg-slate-800 rounded-full h-3 overflow-hidden mt-3 shadow-inner">
+        <div className="w-full bg-slate-200 dark:bg-agri-800/50 rounded-full h-3 overflow-hidden mt-3 shadow-inner">
           <div
             className={`h-full rounded-full transition-all duration-700 ${
               isHealthy
-                ? 'bg-emerald-500'
+                ? 'bg-agri-500'
                 : 'bg-gradient-to-r from-amber-500 via-rose-500 to-red-600'
             }`}
             style={{ width: `${Math.min(100, Math.max(5, dynamicRiskPct))}%` }}
@@ -1072,31 +1072,31 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
 
         {/* 3 Metric Badges */}
         <div className="grid grid-cols-3 gap-2 mt-3 text-center">
-          <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800">
-            <span className="text-[9px] uppercase font-bold text-slate-400 block">Yield Impact</span>
+          <div className="p-2 rounded-xl bg-white/70 dark:bg-surface-darkCard/60 border border-agri-200/50/60 dark:border-agri-700/25">
+            <span className="text-[9px] uppercase font-bold text-agri-400/70 block">Yield Impact</span>
             <span
               className={`text-xs font-black ${
-                isHealthy ? 'text-emerald-600' : 'text-rose-600 dark:text-rose-400'
+                isHealthy ? 'text-agri-600' : 'text-rose-600 dark:text-rose-400'
               }`}
             >
               {profile.yieldLossRisk.split(' ')[0]} Loss
             </span>
           </div>
-          <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800">
-            <span className="text-[9px] uppercase font-bold text-slate-400 block">Spread Risk</span>
+          <div className="p-2 rounded-xl bg-white/70 dark:bg-surface-darkCard/60 border border-agri-200/50/60 dark:border-agri-700/25">
+            <span className="text-[9px] uppercase font-bold text-agri-400/70 block">Spread Risk</span>
             <span
               className={`text-xs font-black ${
-                isHealthy ? 'text-emerald-600' : 'text-rose-600 dark:text-rose-400'
+                isHealthy ? 'text-agri-600' : 'text-rose-600 dark:text-rose-400'
               }`}
             >
               {profile.contagionRate.split(' ')[0]}
             </span>
           </div>
-          <div className="p-2 rounded-xl bg-white/70 dark:bg-slate-900/60 border border-slate-200/60 dark:border-slate-800">
-            <span className="text-[9px] uppercase font-bold text-slate-400 block">Action Window</span>
+          <div className="p-2 rounded-xl bg-white/70 dark:bg-surface-darkCard/60 border border-agri-200/50/60 dark:border-agri-700/25">
+            <span className="text-[9px] uppercase font-bold text-agri-400/70 block">Action Window</span>
             <span
               className={`text-xs font-black ${
-                isHealthy ? 'text-emerald-600' : 'text-rose-600 dark:text-rose-400'
+                isHealthy ? 'text-agri-600' : 'text-rose-600 dark:text-rose-400'
               }`}
             >
               {profile.interventionUrgency.split(' ')[0]}
@@ -1107,13 +1107,13 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
 
       {/* ── 2. TAB CONTROLS FOR RECOMMENDATIONS & SUGGESTIONS ── */}
       <div>
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mb-3">
+        <div className="flex items-center gap-1.5 p-1 bg-agri-50 dark:bg-agri-800/50 rounded-xl mb-3">
           <button
             onClick={() => setActiveTab('recoment')}
             className={`flex-1 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
               activeTab === 'recoment'
                 ? 'bg-rose-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
             }`}
           >
             <Pill className="w-3.5 h-3.5" />
@@ -1123,8 +1123,8 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
             onClick={() => setActiveTab('suggesention')}
             className={`flex-1 py-2 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 ${
               activeTab === 'suggesention'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-agri-500 text-white shadow-sm'
+                : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
             }`}
           >
             <Sprout className="w-3.5 h-3.5" />
@@ -1135,31 +1135,31 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
         {/* ── TAB CONTENT: RECOMMENDATIONS ("recoment") ── */}
         {activeTab === 'recoment' && (
           <div className="space-y-3">
-            <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center justify-between">
+            <div className="text-xs font-bold text-agri-900 dark:text-white flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Pill className="w-4 h-4 text-rose-500" />
                 Targeted Chemical & Bio-Fungicide Recommendations
               </span>
-              <span className="text-[10px] text-slate-400 font-normal">Exact Field Dosages</span>
+              <span className="text-[10px] text-agri-400/70 font-normal">Exact Field Dosages</span>
             </div>
 
             {profile.recommendations.chemical.map((chem, idx) => (
               <div
                 key={idx}
-                className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 flex flex-col gap-1.5 text-xs"
+                className="p-3.5 rounded-xl bg-surface-light dark:bg-slate-800/70 border border-agri-200/50 dark:border-slate-700/80 flex flex-col gap-1.5 text-xs"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-extrabold text-slate-900 dark:text-slate-100 text-xs">
+                  <span className="font-extrabold text-agri-900 dark:text-agri-100 text-xs">
                     {chem.name}
                   </span>
                   <span className="px-2 py-0.5 rounded-md font-bold text-[10px] bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20">
                     {chem.dosage}
                   </span>
                 </div>
-                <div className="text-[11px] text-slate-600 dark:text-slate-300">
+                <div className="text-[11px] text-agri-600 dark:text-agri-300">
                   <strong>Frequency:</strong> {chem.frequency}
                 </div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400 italic">
+                <div className="text-[11px] text-agri-500/70 dark:text-agri-400/70 italic">
                   Note: {chem.notes}
                 </div>
               </div>
@@ -1185,49 +1185,49 @@ export const CropRiskAdvisoryPanel: React.FC<Props> = ({
         {/* ── TAB CONTENT: SUGGESTIONS ("suggesention") ── */}
         {activeTab === 'suggesention' && (
           <div className="space-y-2.5 text-xs">
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-start gap-2.5">
+            <div className="p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-200/50 dark:border-slate-700/80 flex items-start gap-2.5">
               <Droplets className="w-4 h-4 text-sky-500 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-900 dark:text-slate-100 block text-[11px] uppercase">
+                <strong className="text-agri-900 dark:text-agri-100 block text-[11px] uppercase">
                   Irrigation Protocol:
                 </strong>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                <p className="text-[11px] text-agri-600 dark:text-agri-300 mt-0.5">
                   {profile.suggestions.irrigation}
                 </p>
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-start gap-2.5">
-              <Sprout className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+            <div className="p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-200/50 dark:border-slate-700/80 flex items-start gap-2.5">
+              <Sprout className="w-4 h-4 text-agri-500 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-900 dark:text-slate-100 block text-[11px] uppercase">
+                <strong className="text-agri-900 dark:text-agri-100 block text-[11px] uppercase">
                   Recommended Resistant Cultivars:
                 </strong>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                <p className="text-[11px] text-agri-600 dark:text-agri-300 mt-0.5">
                   {profile.suggestions.resistantCultivars}
                 </p>
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-start gap-2.5">
+            <div className="p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-200/50 dark:border-slate-700/80 flex items-start gap-2.5">
               <Clock className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-900 dark:text-slate-100 block text-[11px] uppercase">
+                <strong className="text-agri-900 dark:text-agri-100 block text-[11px] uppercase">
                   Field Scouting Interval:
                 </strong>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                <p className="text-[11px] text-agri-600 dark:text-agri-300 mt-0.5">
                   {profile.suggestions.scoutingInterval}
                 </p>
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 flex items-start gap-2.5">
+            <div className="p-3 rounded-xl bg-surface-light dark:bg-agri-800/30 border border-agri-200/50 dark:border-slate-700/80 flex items-start gap-2.5">
               <Thermometer className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
               <div>
-                <strong className="text-slate-900 dark:text-slate-100 block text-[11px] uppercase">
+                <strong className="text-agri-900 dark:text-agri-100 block text-[11px] uppercase">
                   Microclimate Caution:
                 </strong>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                <p className="text-[11px] text-agri-600 dark:text-agri-300 mt-0.5">
                   {profile.suggestions.environmentalCaution}
                 </p>
               </div>

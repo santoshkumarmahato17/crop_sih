@@ -416,15 +416,157 @@ class AccuWeatherProvider(WeatherDataProvider):
         return await MockWeatherProvider().get_historical_weather(latitude, longitude, days_back)
 
 
+class OpenWeatherMapWeatherProvider(WeatherDataProvider):
+    """OpenWeatherMap API integration for live telemetry and forecasts."""
+
+    def __init__(self):
+        self.api_key = os.environ.get("OPENWEATHERMAP_API_KEY", "b5dcf8489e7cafbd3dee7fbefcd265db")
+        self.current_base_url = "https://api.openweathermap.org/data/2.5/weather"
+        self.forecast_base_url = "https://api.openweathermap.org/data/2.5/forecast"
+
+    async def get_current_weather(self, latitude: float, longitude: float) -> WeatherDataPoint:
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                params = {
+                    "lat": latitude,
+                    "lon": longitude,
+                    "appid": self.api_key,
+                    "units": "metric"
+                }
+                res = await client.get(self.current_base_url, params=params)
+                if res.status_code == 200:
+                    data = res.json()
+                    main_data = data.get("main", {})
+                    wind_data = data.get("wind", {})
+                    clouds = data.get("clouds", {}).get("all", 40.0)
+                    weather_list = data.get("weather", [])
+                    condition = weather_list[0].get("main", "Clear") if weather_list else "Clear"
+                    
+                    # Convert condition
+                    if condition.lower() == "clouds":
+                        condition = "Cloudy"
+                        
+                    rain_data = data.get("rain", {})
+                    rainfall = rain_data.get("1h", 0.0)
+
+                    return WeatherDataPoint(
+                        timestamp=datetime.now(timezone.utc),
+                        temperature_c=float(main_data.get("temp", 28.0)),
+                        min_temperature_c=float(main_data.get("temp_min", 20.0)),
+                        max_temperature_c=float(main_data.get("temp_max", 30.0)),
+                        relative_humidity_percent=float(main_data.get("humidity", 75.0)),
+                        rainfall_mm=float(rainfall),
+                        wind_speed_mps=float(wind_data.get("speed", 3.0)),
+                        wind_direction_deg=float(wind_data.get("deg", 180.0)),
+                        cloud_cover_percent=float(clouds),
+                        condition_text=condition,
+                        source="openweathermap_live",
+                        is_forecast=False,
+                        location_name=data.get("name", "Unknown"),
+                        latitude=latitude,
+                        longitude=longitude,
+                        metadata={"owm_code": weather_list[0].get("id", 800) if weather_list else 800}
+                    )
+        except Exception as e:
+            print(f"OpenWeatherMap current error: {e}")
+
+        # Fallback
+        return await MockWeatherProvider().get_current_weather(latitude, longitude)
+
+    async def get_forecast(self, latitude: float, longitude: float, days: int = 7) -> List[WeatherDataPoint]:
+        try:
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                params = {
+                    "lat": latitude,
+                    "lon": longitude,
+                    "appid": self.api_key,
+                    "units": "metric"
+                }
+                res = await client.get(self.forecast_base_url, params=params)
+                if res.status_code == 200:
+                    data = res.json()
+                    list_data = data.get("list", [])
+                    
+                    # Group by day
+                    daily_data = {}
+                    for item in list_data:
+                        dt = datetime.fromtimestamp(item.get("dt")).replace(tzinfo=timezone.utc)
+                        day_str = dt.strftime("%Y-%m-%d")
+                        if day_str not in daily_data:
+                            daily_data[day_str] = []
+                        daily_data[day_str].append(item)
+                    
+                    forecasts = []
+                    for idx, (day_str, items) in enumerate(daily_data.items()):
+                        if idx >= days:
+                            break
+                            
+                        # Aggregate
+                        dt = datetime.strptime(day_str, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+                        temps = [i.get("main", {}).get("temp", 25.0) for i in items]
+                        min_t = min(temps)
+                        max_t = max(temps)
+                        mean_t = sum(temps) / len(temps)
+                        hums = [i.get("main", {}).get("humidity", 60.0) for i in items]
+                        mean_hum = sum(hums) / len(hums)
+                        winds = [i.get("wind", {}).get("speed", 3.0) for i in items]
+                        mean_wind = sum(winds) / len(winds)
+                        
+                        rains = [i.get("rain", {}).get("3h", 0.0) for i in items]
+                        total_rain = sum(rains)
+                        
+                        probs = [i.get("pop", 0.0) * 100 for i in items]
+                        max_prob = max(probs) if probs else 0.0
+                        
+                        # Use middle of the day condition
+                        mid_item = items[len(items)//2]
+                        weather_list = mid_item.get("weather", [])
+                        condition = weather_list[0].get("main", "Clear") if weather_list else "Clear"
+                        if condition.lower() == "clouds":
+                            condition = "Cloudy"
+
+                        forecasts.append(
+                            WeatherDataPoint(
+                                timestamp=dt,
+                                temperature_c=mean_t,
+                                min_temperature_c=min_t,
+                                max_temperature_c=max_t,
+                                relative_humidity_percent=mean_hum,
+                                rainfall_mm=total_rain,
+                                rainfall_probability_percent=max_prob,
+                                wind_speed_mps=mean_wind,
+                                condition_text=condition,
+                                source="openweathermap_forecast",
+                                is_forecast=True,
+                                location_name=data.get("city", {}).get("name", "Unknown"),
+                                latitude=latitude,
+                                longitude=longitude,
+                            )
+                        )
+                        
+                    if forecasts:
+                        return forecasts
+        except Exception as e:
+            print(f"OpenWeatherMap forecast error: {e}")
+
+        # Fallback
+        return await MockWeatherProvider().get_forecast(latitude, longitude, days)
+
+    async def get_historical_weather(self, latitude: float, longitude: float, days_back: int = 7) -> List[WeatherDataPoint]:
+        return await MockWeatherProvider().get_historical_weather(latitude, longitude, days_back)
+
+
 def get_weather_provider() -> WeatherDataProvider:
     """Factory creating appropriate weather provider based on runtime environment."""
-    provider_type = os.environ.get("AGRISHIELD_WEATHER_PROVIDER", "open_meteo").lower()
-    if provider_type == "accuweather":
+    provider_type = os.environ.get("AGRISHIELD_WEATHER_PROVIDER", "openweathermap").lower()
+    if provider_type == "openweathermap":
+        return OpenWeatherMapWeatherProvider()
+    elif provider_type == "accuweather":
         return AccuWeatherProvider()
     elif provider_type == "open_meteo":
         return OpenMeteoWeatherProvider()
     elif provider_type == "mock":
         return MockWeatherProvider()
     else:
-        # Default: OpenMeteo
-        return OpenMeteoWeatherProvider()
+        # Default: OpenWeatherMap
+        return OpenWeatherMapWeatherProvider()

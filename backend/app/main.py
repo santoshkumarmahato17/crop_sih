@@ -62,10 +62,11 @@ def create_application() -> FastAPI:
         "http://127.0.0.1:5175",
         "http://localhost:5176",
         "http://127.0.0.1:5176",
-        "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
+        "http://10.0.30.9:5173",
+        "http://10.0.30.9:3000",
     ]
     if settings.ALLOWED_CORS_ORIGINS:
         for orig in settings.ALLOWED_CORS_ORIGINS:
@@ -74,7 +75,7 @@ def create_application() -> FastAPI:
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"] if settings.DEBUG else origins,
+        allow_origins=origins,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],

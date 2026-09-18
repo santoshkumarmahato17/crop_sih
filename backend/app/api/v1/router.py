@@ -12,6 +12,9 @@ from app.api.v1.endpoints import (
     dashboard,
     dataset,
     diagnosis,
+    cases,
+    laboratory,
+    extension,
     drones,
     farms,
     government,
@@ -61,6 +64,9 @@ api_router.include_router(weather_real.router)
 api_router.include_router(validation.router)
 api_router.include_router(predict.router)
 api_router.include_router(advisories.router)
+api_router.include_router(cases.router, prefix="/diagnostic-cases", tags=["diagnostic-cases"])
+api_router.include_router(laboratory.router, prefix="/laboratory", tags=["laboratory"])
+api_router.include_router(extension.router, prefix="/extension", tags=["extension"])
 api_router.include_router(monitoring.router)
 api_router.include_router(sensors.router, prefix="/sensors", tags=["sensors"])
 

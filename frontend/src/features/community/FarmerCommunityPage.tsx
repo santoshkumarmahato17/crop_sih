@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search,
@@ -240,20 +240,20 @@ export const FarmerCommunityPage: React.FC = () => {
   return (
     <div className="w-full max-w-[1440px] mx-auto space-y-6 pb-24 transition-colors duration-200">
       {/* 1. Full-Width Vibrant Hero Banner */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white shadow-xl border border-emerald-500/30 backdrop-blur-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 text-white shadow-xl border border-agri-500/25 backdrop-blur-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="space-y-2 z-10">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-lime-400 text-slate-950 font-black text-xs tracking-wider uppercase font-mono shadow-md">
+            <span className="px-3 py-1 rounded-full bg-accent-lime text-slate-950 font-black text-xs tracking-wider uppercase font-mono shadow-md">
               COMMUNITY FORUM
             </span>
-            <span className="text-xs text-emerald-300 font-semibold flex items-center gap-1">
+            <span className="text-xs text-agri-300 font-semibold flex items-center gap-1">
               <Users className="w-3.5 h-3.5" /> 52,000+ Active Farmers & Agronomists
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
             Agricultural Knowledge & Disease Solutions Exchange
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-agri-300 max-w-2xl leading-relaxed">
             Ask symptoms, share leaf photo diagnostics in Hindi, Tamil, or English, and get instant verified solutions from certified regional agronomists.
           </p>
         </div>
@@ -262,7 +262,7 @@ export const FarmerCommunityPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsComposerOpen(true)}
-            className="px-5 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-slate-950 font-extrabold text-xs transition flex items-center gap-2 shadow-lg shadow-lime-400/20 active:scale-95"
+            className="px-5 py-3 rounded-2xl bg-accent-lime hover:bg-accent-limeHover text-slate-950 font-extrabold text-xs transition flex items-center gap-2 shadow-lg shadow-accent-lime/15 active:scale-95"
           >
             <Camera className="w-4 h-4" />
             <span>Ask Community / Post Photo</span>
@@ -273,13 +273,13 @@ export const FarmerCommunityPage: React.FC = () => {
             onClick={() => navigate('/analysis')}
             className="px-4 py-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition flex items-center gap-1.5 backdrop-blur-md"
           >
-            <Sparkles className="w-3.5 h-3.5 text-lime-300" />
+            <Sparkles className="w-3.5 h-3.5 text-accent-lime" />
             <span>AI Scanner</span>
           </button>
         </div>
 
         {/* Decorative background glow circle */}
-        <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -right-16 -bottom-16 w-64 h-64 bg-agri-500/15 rounded-full blur-3xl pointer-events-none" />
       </div>
 
       {/* Share Toast */}
@@ -297,9 +297,9 @@ export const FarmerCommunityPage: React.FC = () => {
         {/* ========================================================================= */}
         <div className="lg:col-span-3 space-y-5">
           {/* Crop Filter Selector */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+          <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm space-y-3">
+            <div className="flex items-center justify-between border-b border-agri-100 dark:border-agri-700/25 pb-2.5">
+              <span className="text-xs font-bold uppercase tracking-wider text-agri-700 dark:text-agri-300">
                 Filter by Crop
               </span>
               <span className="text-[11px] text-blue-600 dark:text-blue-400 font-bold cursor-pointer" onClick={() => setSelectedCrop('Popular')}>
@@ -317,8 +317,8 @@ export const FarmerCommunityPage: React.FC = () => {
                     onClick={() => setSelectedCrop(crop.id)}
                     className={`w-full p-2.5 rounded-2xl text-xs font-bold transition flex items-center justify-between ${
                       isSelected
-                        ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
-                        : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                        ? 'bg-agri-900 dark:bg-white text-white dark:text-agri-900 shadow-sm'
+                        : 'hover:bg-agri-50 dark:hover:bg-agri-800/60 text-agri-700 dark:text-agri-300'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -328,8 +328,8 @@ export const FarmerCommunityPage: React.FC = () => {
                     <span
                       className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md ${
                         isSelected
-                          ? 'bg-white/20 dark:bg-slate-900/20 text-white dark:text-slate-900'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
+                          ? 'bg-white/20 dark:bg-slate-900/20 text-white dark:text-agri-900'
+                          : 'bg-agri-50 dark:bg-agri-800/50 text-agri-500/70 dark:text-agri-400/70'
                       }`}
                     >
                       {crop.count}
@@ -341,8 +341,8 @@ export const FarmerCommunityPage: React.FC = () => {
           </div>
 
           {/* Disease Category Filter */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block border-b border-slate-100 dark:border-slate-800 pb-2.5">
+          <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-agri-700 dark:text-agri-300 block border-b border-agri-100 dark:border-agri-700/25 pb-2.5">
               Issue Category
             </span>
             <div className="space-y-1">
@@ -355,8 +355,8 @@ export const FarmerCommunityPage: React.FC = () => {
                     onClick={() => setSelectedCategory(cat.id)}
                     className={`w-full p-2.5 rounded-2xl text-xs font-bold transition flex items-center justify-between ${
                       isSelected
-                        ? 'bg-emerald-600 text-white shadow-sm'
-                        : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300'
+                        ? 'bg-agri-500 text-white shadow-sm'
+                        : 'hover:bg-agri-50 dark:hover:bg-agri-800/60 text-agri-700 dark:text-agri-300'
                     }`}
                   >
                     <span>{cat.label}</span>
@@ -368,8 +368,8 @@ export const FarmerCommunityPage: React.FC = () => {
           </div>
 
           {/* Top Verified Extension Agronomists */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm space-y-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 block border-b border-slate-100 dark:border-slate-800 pb-2.5">
+          <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm space-y-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-agri-700 dark:text-agri-300 block border-b border-agri-100 dark:border-agri-700/25 pb-2.5">
               Verified Plant Advisors
             </span>
             <div className="space-y-3 text-xs">
@@ -379,10 +379,10 @@ export const FarmerCommunityPage: React.FC = () => {
                     {exp.name.charAt(0)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-bold text-slate-900 dark:text-white truncate">{exp.name}</p>
-                    <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{exp.role}</p>
+                    <p className="font-bold text-agri-900 dark:text-white truncate">{exp.name}</p>
+                    <p className="text-[10px] text-agri-500/70 dark:text-agri-400/70 truncate">{exp.role}</p>
                   </div>
-                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-mono font-bold">{exp.rating}</span>
+                  <span className="text-[10px] text-agri-600 dark:text-agri-400 font-mono font-bold">{exp.rating}</span>
                 </div>
               ))}
             </div>
@@ -394,24 +394,24 @@ export const FarmerCommunityPage: React.FC = () => {
         {/* ========================================================================= */}
         <div className="lg:col-span-6 space-y-5">
           {/* Top Plantix-Style Search Bar & Pill Filter Row */}
-          <div className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm space-y-3">
+          <div className="p-4 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm space-y-3">
             {/* Search Input matching screenshot */}
             <div className="flex items-center gap-3">
               <div className="relative flex-1">
-                <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3" />
+                <Search className="w-4 h-4 text-agri-400/70 absolute left-4 top-3" />
                 <input
                   type="text"
                   placeholder="Search in Community (symptoms, pests, crops)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-full pl-11 pr-4 py-2.5 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-blue-500 font-medium transition"
+                  className="w-full bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-slate-700/80 rounded-full pl-11 pr-4 py-2.5 text-xs sm:text-sm text-agri-900 dark:text-agri-100 placeholder-agri-400/50 focus:outline-none focus:border-blue-500 font-medium transition"
                 />
               </div>
 
               <button
                 type="button"
                 onClick={() => navigate('/alerts')}
-                className="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition"
+                className="p-2.5 rounded-full hover:bg-agri-50 dark:hover:bg-agri-800/60 text-agri-600 dark:text-agri-300 transition"
                 title="Notifications"
               >
                 <Bell className="w-5 h-5" />
@@ -419,7 +419,7 @@ export const FarmerCommunityPage: React.FC = () => {
 
               <button
                 type="button"
-                className="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition"
+                className="p-2.5 rounded-full hover:bg-agri-50 dark:hover:bg-agri-800/60 text-agri-600 dark:text-agri-300 transition"
                 title="More"
               >
                 <MoreVertical className="w-5 h-5" />
@@ -428,7 +428,7 @@ export const FarmerCommunityPage: React.FC = () => {
 
             {/* Filter by Horizontal Pills matching screenshot */}
             <div className="flex items-center justify-between pt-1">
-              <span className="text-xs font-bold text-slate-900 dark:text-white">Filter by</span>
+              <span className="text-xs font-bold text-agri-900 dark:text-white">Filter by</span>
               <span className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer" onClick={() => setSelectedCrop('Popular')}>
                 Change
               </span>
@@ -444,8 +444,8 @@ export const FarmerCommunityPage: React.FC = () => {
                     onClick={() => setSelectedCrop(crop.id)}
                     className={`px-4 py-2 rounded-full font-bold transition flex items-center gap-1.5 flex-shrink-0 border ${
                       isSelected
-                        ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm'
-                        : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:border-slate-400'
+                        ? 'bg-agri-900 dark:bg-white text-white dark:text-agri-900 border-slate-900 dark:border-white shadow-sm'
+                        : 'bg-white dark:bg-surface-darkCard border-agri-200/50 dark:border-agri-700/30 text-agri-800 dark:text-agri-200 hover:border-slate-400'
                     }`}
                   >
                     <span>{crop.icon}</span>
@@ -459,13 +459,13 @@ export const FarmerCommunityPage: React.FC = () => {
           {/* Quick "Ask Question / Share Leaf Photo" Action Bar */}
           <div
             onClick={() => setIsComposerOpen(true)}
-            className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center gap-3 cursor-pointer hover:border-blue-500 transition group"
+            className="p-4 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm flex items-center gap-3 cursor-pointer hover:border-blue-500 transition group"
           >
             <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center flex-shrink-0">
               <PenLine className="w-5 h-5" />
             </div>
             <div className="flex-1">
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium group-hover:text-slate-700 dark:group-hover:text-slate-200 transition">
+              <p className="text-xs text-agri-500/70 dark:text-agri-400/70 font-medium group-hover:text-agri-700 dark:group-hover:text-agri-200 transition">
                 Have a crop problem? Post symptoms, upload photo & ask community...
               </p>
             </div>
@@ -480,11 +480,11 @@ export const FarmerCommunityPage: React.FC = () => {
           {/* Community Post Cards Stream */}
           <div className="space-y-4">
             {filteredPosts.length === 0 ? (
-              <div className="p-12 text-center rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-3 shadow-sm">
-                <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+              <div className="p-12 text-center rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 space-y-3 shadow-sm">
+                <p className="text-sm font-bold text-agri-700 dark:text-agri-300">
                   No questions found for {selectedCrop}.
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                   Be the first to ask about your crop problems!
                 </p>
                 <button
@@ -504,7 +504,7 @@ export const FarmerCommunityPage: React.FC = () => {
                   <div
                     key={post.id}
                     id={post.id}
-                    className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md"
+                    className="rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md"
                   >
                     {/* Optional Crop Leaf Image on Top (matching screenshot 2) */}
                     {post.image_url && (
@@ -531,11 +531,11 @@ export const FarmerCommunityPage: React.FC = () => {
                             <span className="font-bold text-xs text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
                               {post.author_name}
                             </span>
-                            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                            <span className="text-[11px] text-agri-500/70 dark:text-agri-400/70 font-medium">
                               • {post.author_location || 'India'}
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400 pt-0.5 font-medium">
+                          <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70 pt-0.5 font-medium">
                             {post.created_at} • {post.crop_type === 'Banana' ? '🍌' : post.crop_type === 'Wheat' ? '🌾' : post.crop_type === 'Rice' ? '🍚' : post.crop_type === 'Broad Bean' ? '🫘' : '🌱'} {post.crop_type}
                           </p>
                         </div>
@@ -543,10 +543,10 @@ export const FarmerCommunityPage: React.FC = () => {
 
                       {/* Post Title & Content */}
                       <div className="space-y-1.5">
-                        <h3 className="font-bold text-slate-900 dark:text-white text-base leading-snug">
+                        <h3 className="font-bold text-agri-900 dark:text-white text-base leading-snug">
                           {post.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-normal">
+                        <p className="text-xs sm:text-sm text-agri-700 dark:text-agri-300 leading-relaxed font-normal">
                           {isTranslated && post.translation ? post.translation : post.content}
                         </p>
                       </div>
@@ -556,7 +556,7 @@ export const FarmerCommunityPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => toggleTranslate(post.id)}
-                          className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-semibold flex items-center gap-1.5 transition"
+                          className="text-agri-600 dark:text-agri-400/70 hover:text-blue-600 dark:hover:text-blue-400 font-semibold flex items-center gap-1.5 transition"
                         >
                           <Languages className="w-3.5 h-3.5" />
                           <span>{isTranslated ? 'Show Original' : 'Translate'}</span>
@@ -565,19 +565,19 @@ export const FarmerCommunityPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => toggleAnswers(post.id)}
-                          className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-semibold transition"
+                          className="text-agri-500/70 dark:text-agri-400/70 hover:text-blue-600 dark:hover:text-blue-400 font-semibold transition"
                         >
                           {post.comments_count} answers
                         </button>
                       </div>
 
                       {/* Bottom Action Bar: Upvote 👍, Downvote 👎, Share ↗️ */}
-                      <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800/80 text-xs">
+                      <div className="flex items-center justify-between pt-3 border-t border-agri-100 dark:border-agri-700/25 text-xs">
                         <div className="flex items-center gap-4">
                           <button
                             type="button"
                             onClick={() => handleUpvote(post.id)}
-                            className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-bold transition"
+                            className="flex items-center gap-1.5 text-agri-700 dark:text-agri-300 hover:text-blue-600 dark:hover:text-blue-400 font-bold transition"
                           >
                             <ThumbsUp className="w-4 h-4" />
                             <span>{post.likes_count}</span>
@@ -586,7 +586,7 @@ export const FarmerCommunityPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleDownvote(post.id)}
-                            className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 hover:text-rose-600 dark:hover:text-rose-400 font-bold transition"
+                            className="flex items-center gap-1.5 text-agri-700 dark:text-agri-300 hover:text-rose-600 dark:hover:text-rose-400 font-bold transition"
                           >
                             <ThumbsDown className="w-4 h-4" />
                             <span>{post.downvotes_count || 0}</span>
@@ -596,7 +596,7 @@ export const FarmerCommunityPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleShare(post)}
-                          className="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                          className="text-agri-600 dark:text-agri-400/70 hover:text-blue-600 dark:hover:text-blue-400 transition"
                           title="Share Discussion"
                         >
                           <Share2 className="w-4 h-4" />
@@ -605,8 +605,8 @@ export const FarmerCommunityPage: React.FC = () => {
 
                       {/* Expandable Answers Thread */}
                       {areAnswersOpen && (
-                        <div className="pt-3 space-y-3 border-t border-slate-100 dark:border-slate-800">
-                          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">
+                        <div className="pt-3 space-y-3 border-t border-agri-100 dark:border-agri-700/25">
+                          <span className="text-[11px] font-bold text-agri-500/70 uppercase tracking-wider block">
                             Community & Expert Answers ({post.comments.length})
                           </span>
 
@@ -614,20 +614,20 @@ export const FarmerCommunityPage: React.FC = () => {
                             {post.comments.map((comm) => (
                               <div
                                 key={comm.id}
-                                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 space-y-1.5 text-xs"
+                                className="p-3.5 rounded-2xl bg-surface-light dark:bg-agri-800/30 border border-agri-200/50/80 dark:border-slate-700/80 space-y-1.5 text-xs"
                               >
                                 <div className="flex items-center justify-between">
                                   <div className="flex items-center gap-2">
                                     <span className="font-bold text-blue-600 dark:text-blue-400">
                                       {comm.author_name}
                                     </span>
-                                    <span className="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 text-[9px] font-bold">
+                                    <span className="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-agri-800 dark:text-agri-300 text-[9px] font-bold">
                                       {comm.author_role}
                                     </span>
                                   </div>
-                                  <span className="text-[10px] text-slate-400 font-mono">{comm.created_at}</span>
+                                  <span className="text-[10px] text-agri-400/70 font-mono">{comm.created_at}</span>
                                 </div>
-                                <p className="text-slate-700 dark:text-slate-200 leading-relaxed">
+                                <p className="text-agri-700 dark:text-agri-200 leading-relaxed">
                                   {comm.content}
                                 </p>
                               </div>
@@ -646,7 +646,7 @@ export const FarmerCommunityPage: React.FC = () => {
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleAddAnswer(post.id);
                               }}
-                              className="flex-1 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-full px-4 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-blue-500"
+                              className="flex-1 bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-full px-4 py-2 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/50 focus:outline-none focus:border-blue-500"
                             />
                             <button
                               type="button"
@@ -672,9 +672,9 @@ export const FarmerCommunityPage: React.FC = () => {
         {/* ========================================================================= */}
         <div className="lg:col-span-3 space-y-5">
           {/* Trending Regional Outbreaks */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
-              <h3 className="font-bold text-slate-900 dark:text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
+          <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-agri-100 dark:border-agri-700/25 pb-2.5">
+              <h3 className="font-bold text-agri-900 dark:text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
                 <TrendingUp className="w-4 h-4 text-rose-500" />
                 <span>Regional Outbreak Radar</span>
               </h3>
@@ -686,14 +686,14 @@ export const FarmerCommunityPage: React.FC = () => {
                 { disease: 'Bacterial Blight on Paddy', area: 'Thanjavur Delta • 12 reports', alert: 'MODERATE' },
                 { disease: 'Fall Armyworm on Maize', area: 'Dindigul Highland • 9 reports', alert: 'HIGH' },
               ].map((item, idx) => (
-                <div key={idx} className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 space-y-1">
+                <div key={idx} className="p-3 rounded-2xl bg-surface-light dark:bg-agri-950/60 border border-agri-200/50 dark:border-agri-700/25 space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-slate-900 dark:text-slate-200">{item.disease}</span>
+                    <span className="font-bold text-agri-900 dark:text-agri-200">{item.disease}</span>
                     <span className="px-2 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 font-mono font-bold text-[9px]">
                       {item.alert}
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">{item.area}</p>
+                  <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70">{item.area}</p>
                 </div>
               ))}
             </div>
@@ -702,7 +702,7 @@ export const FarmerCommunityPage: React.FC = () => {
           {/* Precision AI Scanner Quick Card */}
           <div className="p-6 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-900 text-white shadow-xl space-y-3.5">
             <div className="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white">
-              <Sparkles className="w-5 h-5 text-lime-300" />
+              <Sparkles className="w-5 h-5 text-accent-lime" />
             </div>
             <h3 className="font-extrabold text-sm">Need Instant AI Pathology Diagnosis?</h3>
             <p className="text-xs text-blue-100 leading-relaxed">
@@ -711,7 +711,7 @@ export const FarmerCommunityPage: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate('/analysis')}
-              className="w-full py-2.5 rounded-xl bg-white text-slate-900 hover:bg-blue-50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md"
+              className="w-full py-2.5 rounded-xl bg-white text-agri-900 hover:bg-blue-50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md"
             >
               <span>Instant AI Disease Diagnosis</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -719,18 +719,18 @@ export const FarmerCommunityPage: React.FC = () => {
           </div>
 
           {/* Expert Extension Ground Visit Request */}
-          <div className="p-5 rounded-3xl bg-emerald-50/80 dark:bg-emerald-950/25 border border-emerald-200 dark:border-emerald-500/30 space-y-3">
-            <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 text-xs font-bold">
+          <div className="p-5 rounded-3xl bg-emerald-50/80 dark:bg-emerald-950/25 border border-agri-200 dark:border-agri-500/25 space-y-3">
+            <div className="flex items-center gap-2 text-agri-800 dark:text-agri-300 text-xs font-bold">
               <ShieldCheck className="w-4 h-4" />
               <span>Certified Extension Support</span>
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs text-agri-600 dark:text-agri-400/70 leading-relaxed">
               Facing persistent disease contagion? Request an on-site inspection by your regional Extension Division officer.
             </p>
             <button
               type="button"
               onClick={() => navigate('/officer')}
-              className="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-sm"
+              className="w-full py-2 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold transition shadow-sm"
             >
               Request Field Visit
             </button>
@@ -740,22 +740,22 @@ export const FarmerCommunityPage: React.FC = () => {
 
       {/* 3. Create Question Modal */}
       {isComposerOpen && (
-        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in">
-          <div className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div className="fixed inset-0 bg-agri-950/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in">
+          <div className="w-full max-w-lg bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-3xl p-6 sm:p-8 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-agri-200/50 dark:border-agri-700/25 pb-3">
               <div className="space-y-0.5">
-                <h3 className="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                <h3 className="font-bold text-base text-agri-900 dark:text-white flex items-center gap-2">
                   <PenLine className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   <span>Ask Community / Share Problem</span>
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                   Ask fellow farmers and agricultural experts for pest & disease advice.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setIsComposerOpen(false)}
-                className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-white transition"
+                className="p-2 rounded-xl hover:bg-agri-50 dark:hover:bg-agri-800/60 text-agri-400/70 hover:text-agri-600 dark:hover:text-white transition"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -764,7 +764,7 @@ export const FarmerCommunityPage: React.FC = () => {
             <form onSubmit={handleCreatePost} className="space-y-4">
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                     Your Name
                   </label>
                   <input
@@ -772,12 +772,12 @@ export const FarmerCommunityPage: React.FC = () => {
                     required
                     value={authorName}
                     onChange={(e) => setAuthorName(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                     Location
                   </label>
                   <input
@@ -785,18 +785,18 @@ export const FarmerCommunityPage: React.FC = () => {
                     required
                     value={authorLocation}
                     onChange={(e) => setAuthorLocation(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                     Crop *
                   </label>
                   <select
                     value={newCrop}
                     onChange={(e) => setNewCrop(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500 font-semibold"
+                    className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500 font-semibold"
                   >
                     <option value="Banana">🍌 Banana</option>
                     <option value="Broad Bean">🫘 Broad Bean</option>
@@ -809,7 +809,7 @@ export const FarmerCommunityPage: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                   Suspected Issue / Tag (Optional)
                 </label>
                 <input
@@ -817,12 +817,12 @@ export const FarmerCommunityPage: React.FC = () => {
                   placeholder="e.g. Leaf Spot, Panama Wilt, Rust Pustules"
                   value={newDiseaseTag}
                   onChange={(e) => setNewDiseaseTag(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500 font-semibold"
+                  className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500 font-semibold"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                   Question Title *
                 </label>
                 <input
@@ -831,12 +831,12 @@ export const FarmerCommunityPage: React.FC = () => {
                   placeholder="e.g. केले के अंदर छोटे-छोटे फल आते हैं वह बड़े नहीं ..."
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500 font-semibold"
+                  className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500 font-semibold"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                   Description & Symptoms *
                 </label>
                 <textarea
@@ -845,12 +845,12 @@ export const FarmerCommunityPage: React.FC = () => {
                   placeholder="Describe what you see on the leaves or fruit (e.g. छोटी कीड़ा जैसे है)..."
                   value={newContent}
                   onChange={(e) => setNewContent(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500"
+                  className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300">
                   Photo URL (Optional)
                 </label>
                 <input
@@ -858,15 +858,15 @@ export const FarmerCommunityPage: React.FC = () => {
                   placeholder="https://images.unsplash.com/..."
                   value={newImageUrl}
                   onChange={(e) => setNewImageUrl(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-blue-500 font-mono text-[11px]"
+                  className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500 font-mono text-[11px]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-agri-200/50 dark:border-agri-700/25">
                 <button
                   type="button"
                   onClick={() => setIsComposerOpen(false)}
-                  className="px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition"
+                  className="px-4 py-2 rounded-full bg-agri-50 hover:bg-agri-100 dark:bg-agri-800/50 dark:hover:bg-agri-700/40 text-agri-700 dark:text-agri-300 text-xs font-semibold transition"
                 >
                   Cancel
                 </button>

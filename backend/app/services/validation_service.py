@@ -7,15 +7,17 @@ evidence aggregation, decision processing, and audit logging.
 import uuid
 from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
-from sqlalchemy.orm import Session
-from sqlalchemy import desc, func
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, desc, func
 
 from app.models.validation import (
     ExpertValidationRequest,
     ExpertValidationRecord as ValidationRecord,
-    LabReferral,
     ValidationRequestStatus,
     ValidationPriority,
+)
+from app.models.laboratory import (
+    LabReferral,
     LabReferralStatus,
 )
 from app.models.auth import User
@@ -33,14 +35,13 @@ class ValidationService:
     """Expert ground-truth validation orchestrator."""
 
     @classmethod
-    def create_request(
+    async def create_request(
         cls,
-        db: Session,
+        db: AsyncSession,
         req_in: ValidationRequestCreate,
         current_user: User,
     ) -> ExpertValidationRequest:
         """Creates a new expert validation request case."""
-        # Evaluate policy if reason not given or for priority escalation
         policy_eval = ValidationPolicyEngine.evaluate_validation_requirement(
             ai_confidence=req_in.ai_confidence,
             condition_name=req_in.suspected_condition,
@@ -74,7 +75,6 @@ class ValidationService:
 
         db.add(val_request)
 
-        # Audit Event
         audit = AuditLog(
             id=str(uuid.uuid4()),
             user_id=current_user.id,
@@ -88,18 +88,19 @@ class ValidationService:
             },
         )
         db.add(audit)
-        db.commit()
-        db.refresh(val_request)
+        await db.commit()
+        await db.refresh(val_request)
         return val_request
 
     @classmethod
-    def get_request_by_id(cls, db: Session, request_id: str) -> Optional[ExpertValidationRequest]:
-        return db.query(ExpertValidationRequest).filter(ExpertValidationRequest.id == request_id).first()
+    async def get_request_by_id(cls, db: AsyncSession, request_id: str) -> Optional[ExpertValidationRequest]:
+        result = await db.execute(select(ExpertValidationRequest).where(ExpertValidationRequest.id == request_id))
+        return result.scalar_one_or_none()
 
     @classmethod
-    def list_requests(
+    async def list_requests(
         cls,
-        db: Session,
+        db: AsyncSession,
         current_user: User,
         status: Optional[str] = None,
         priority: Optional[str] = None,
@@ -108,42 +109,50 @@ class ValidationService:
         limit: int = 50,
     ) -> List[ExpertValidationRequest]:
         """Lists requests filtered by user role and query parameters."""
-        query = db.query(ExpertValidationRequest)
+        stmt = select(ExpertValidationRequest)
 
-        # Role Scoping
         if current_user.role == "FARMER":
-            # Farmers see only their own requested cases or their owned farms
-            query = query.filter(
-                (ExpertValidationRequest.requested_by == current_user.id)
-                | (ExpertValidationRequest.farm_id.in_([f.id for f in current_user.owned_farms]))
-            )
-        elif current_user.role == "GOVERNMENT":
-            # Government / Extension specialists see all regional cases
-            pass
+            try:
+                farms_res = await db.execute(select(Farm.id).where(Farm.owner_id == current_user.id))
+                owned_ids = farms_res.scalars().all()
+            except Exception:
+                owned_ids = []
+
+            if owned_ids:
+                stmt = stmt.where(
+                    (ExpertValidationRequest.requested_by == current_user.id)
+                    | (ExpertValidationRequest.farm_id.in_(owned_ids))
+                )
+            else:
+                stmt = stmt.where(ExpertValidationRequest.requested_by == current_user.id)
 
         if status:
-            query = query.filter(ExpertValidationRequest.status == status)
+            stmt = stmt.where(ExpertValidationRequest.status == status)
         if priority:
-            query = query.filter(ExpertValidationRequest.priority == priority)
+            stmt = stmt.where(ExpertValidationRequest.priority == priority)
         if farm_id:
-            query = query.filter(ExpertValidationRequest.farm_id == farm_id)
+            stmt = stmt.where(ExpertValidationRequest.farm_id == farm_id)
 
-        return query.order_by(desc(ExpertValidationRequest.created_at)).offset(skip).limit(limit).all()
+        skip_val = int(skip) if not hasattr(skip, "default") else 0
+        limit_val = int(limit) if not hasattr(limit, "default") else 50
+
+        stmt = stmt.order_by(desc(ExpertValidationRequest.created_at)).offset(skip_val).limit(limit_val)
+        result = await db.execute(stmt)
+        return result.scalars().all()
 
     @classmethod
-    def submit_decision(
+    async def submit_decision(
         cls,
-        db: Session,
+        db: AsyncSession,
         request_id: str,
         decision_in: ValidationDecisionSubmit,
         expert_user: User,
     ) -> ExpertValidationRequest:
         """Processes an expert ground-truth validation decision."""
-        req = cls.get_request_by_id(db, request_id)
+        req = await cls.get_request_by_id(db, request_id)
         if not req:
             raise ValueError("Validation request not found")
 
-        # Save Decision Record
         record = ValidationRecord(
             id=str(uuid.uuid4()),
             validation_request_id=req.id,
@@ -158,17 +167,16 @@ class ValidationService:
         )
         db.add(record)
 
-        # Update Request Status
         req.status = decision_in.decision
         req.completed_at = datetime.now(timezone.utc)
         req.assigned_expert_id = expert_user.id
 
-        # Audit Event Mapping
         audit_type_map = {
             ValidationRequestStatus.CONFIRMED: AuditEventType.VALIDATION_CONFIRMED,
             ValidationRequestStatus.REJECTED: AuditEventType.VALIDATION_REJECTED,
             ValidationRequestStatus.UNCERTAIN: AuditEventType.VALIDATION_UNCERTAIN,
             ValidationRequestStatus.LAB_REFERRAL: AuditEventType.LAB_REFERRAL_CREATED,
+            ValidationRequestStatus.REQUEST_MORE_EVIDENCE: AuditEventType.VALIDATION_UNCERTAIN,
         }
         audit_event = audit_type_map.get(decision_in.decision, AuditEventType.VALIDATION_CONFIRMED)
 
@@ -184,20 +192,20 @@ class ValidationService:
             },
         )
         db.add(audit)
-        db.commit()
-        db.refresh(req)
+        await db.commit()
+        await db.refresh(req)
         return req
 
     @classmethod
-    def create_lab_referral(
+    async def create_lab_referral(
         cls,
-        db: Session,
+        db: AsyncSession,
         request_id: str,
         referral_in: LabReferralCreate,
         expert_user: User,
     ) -> LabReferral:
         """Creates a laboratory referral testing order."""
-        req = cls.get_request_by_id(db, request_id)
+        req = await cls.get_request_by_id(db, request_id)
         if not req:
             raise ValueError("Validation request not found")
 
@@ -214,31 +222,48 @@ class ValidationService:
         db.add(lab_ref)
 
         req.status = ValidationRequestStatus.LAB_REFERRAL
-        db.commit()
-        db.refresh(lab_ref)
+        await db.commit()
+        await db.refresh(lab_ref)
         return lab_ref
 
     @classmethod
-    def get_statistics(cls, db: Session, current_user: User) -> Dict[str, int]:
+    async def get_statistics(cls, db: AsyncSession, current_user: User) -> Dict[str, int]:
         """Calculates queue metrics for dashboard."""
-        base_query = db.query(ExpertValidationRequest)
+        base_stmt = select(func.count(ExpertValidationRequest.id))
         if current_user.role == "FARMER":
-            base_query = base_query.filter(ExpertValidationRequest.requested_by == current_user.id)
+            base_stmt = base_stmt.where(ExpertValidationRequest.requested_by == current_user.id)
 
-        total_pending = base_query.filter(ExpertValidationRequest.status == ValidationRequestStatus.PENDING).count()
-        high_priority = base_query.filter(
-            ExpertValidationRequest.priority == ValidationPriority.HIGH,
-            ExpertValidationRequest.status.in_([ValidationRequestStatus.PENDING, ValidationRequestStatus.UNDER_REVIEW]),
-        ).count()
-        critical = base_query.filter(
-            ExpertValidationRequest.priority == ValidationPriority.CRITICAL,
-            ExpertValidationRequest.status.in_([ValidationRequestStatus.PENDING, ValidationRequestStatus.UNDER_REVIEW]),
-        ).count()
-        my_assigned = base_query.filter(ExpertValidationRequest.assigned_expert_id == current_user.id).count()
-        recently_validated = base_query.filter(
-            ExpertValidationRequest.status.in_([ValidationRequestStatus.CONFIRMED, ValidationRequestStatus.REJECTED])
-        ).count()
-        lab_referrals = db.query(LabReferral).count()
+        res_pending = await db.execute(base_stmt.where(ExpertValidationRequest.status == ValidationRequestStatus.PENDING))
+        total_pending = res_pending.scalar() or 0
+
+        res_high = await db.execute(
+            base_stmt.where(
+                ExpertValidationRequest.priority == ValidationPriority.HIGH,
+                ExpertValidationRequest.status.in_([ValidationRequestStatus.PENDING, ValidationRequestStatus.UNDER_REVIEW]),
+            )
+        )
+        high_priority = res_high.scalar() or 0
+
+        res_critical = await db.execute(
+            base_stmt.where(
+                ExpertValidationRequest.priority == ValidationPriority.CRITICAL,
+                ExpertValidationRequest.status.in_([ValidationRequestStatus.PENDING, ValidationRequestStatus.UNDER_REVIEW]),
+            )
+        )
+        critical = res_critical.scalar() or 0
+
+        res_my = await db.execute(base_stmt.where(ExpertValidationRequest.assigned_expert_id == current_user.id))
+        my_assigned = res_my.scalar() or 0
+
+        res_recent = await db.execute(
+            base_stmt.where(
+                ExpertValidationRequest.status.in_([ValidationRequestStatus.CONFIRMED, ValidationRequestStatus.REJECTED])
+            )
+        )
+        recently_validated = res_recent.scalar() or 0
+
+        res_lab = await db.execute(select(func.count(LabReferral.id)))
+        lab_referrals = res_lab.scalar() or 0
 
         return {
             "total_pending": total_pending,

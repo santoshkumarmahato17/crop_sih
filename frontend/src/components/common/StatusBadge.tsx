@@ -10,15 +10,15 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'sm' })
     switch (status.toLowerCase()) {
       case 'healthy':
       case 'operational':
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+        return 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25';
       case 'degraded':
       case 'configured':
-        return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+        return 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/25';
       case 'unhealthy':
       case 'unavailable':
-        return 'bg-rose-500/10 text-rose-400 border-rose-500/30';
+        return 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/25';
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/30';
+        return 'bg-agri-100 dark:bg-agri-800/40 text-agri-500 dark:text-agri-400 border-agri-200/50 dark:border-agri-700/30';
     }
   };
 
@@ -26,15 +26,15 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'sm' })
     switch (status.toLowerCase()) {
       case 'healthy':
       case 'operational':
-        return 'bg-emerald-400';
+        return 'bg-agri-500';
       case 'degraded':
       case 'configured':
-        return 'bg-amber-400';
+        return 'bg-amber-500';
       case 'unhealthy':
       case 'unavailable':
-        return 'bg-rose-400';
+        return 'bg-rose-500';
       default:
-        return 'bg-slate-400';
+        return 'bg-agri-400';
     }
   };
 

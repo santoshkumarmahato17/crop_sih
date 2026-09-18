@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
+﻿import React, { useState, useRef, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loadGoogleMaps } from '@/services/googleMapsLoader';
 import {
@@ -571,11 +571,11 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
   return (
     <div className="max-w-[1500px] mx-auto space-y-6 pb-20 animate-in fade-in duration-200">
       {/* ── Top EOS Header Ribbon ── */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-950 via-emerald-950 to-teal-950 text-white shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-emerald-500/20">
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-950 via-emerald-950 to-teal-950 text-white shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 border border-agri-500/20">
         <div className="space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
-              <Radio className="w-3 h-3 text-emerald-400 animate-pulse" />
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/25 border border-emerald-400/40 text-agri-300 font-mono text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1">
+              <Radio className="w-3 h-3 text-agri-400 animate-pulse" />
               <span>Sentinel-2 & Landsat-9 Satellite Pipeline</span>
             </span>
             <span className="px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-mono text-[10px] font-bold">
@@ -583,7 +583,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2.5">
-            <Pentagon className="w-7 h-7 text-emerald-400" />
+            <Pentagon className="w-7 h-7 text-agri-400" />
             <span>Create & Draw Field Boundary (शेताची सीमा आखा)</span>
           </h1>
           <p className="text-xs sm:text-sm text-emerald-200/80 max-w-3xl">
@@ -603,7 +603,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
       {/* Success Toast */}
       {successToast && (
-        <div className="p-4 rounded-2xl bg-emerald-600 text-white text-xs font-black flex items-center gap-2 shadow-2xl sticky top-20 z-50 animate-in slide-in-from-top-4">
+        <div className="p-4 rounded-2xl bg-agri-500 text-white text-xs font-black flex items-center gap-2 shadow-2xl sticky top-20 z-50 animate-in slide-in-from-top-4">
           <CheckCircle2 className="w-5 h-5" />
           <span>{successToast}</span>
         </div>
@@ -616,34 +616,34 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
         {/* ========================================================================= */}
         <div className="lg:col-span-8 space-y-4">
           {/* Top Search & Drawing Tools Toolbar */}
-          <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="p-3.5 rounded-2xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
             {/* Search Location on Satellite */}
             <form onSubmit={handleSearchLocation} className="relative w-full sm:w-80 flex items-center">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-agri-400/70 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search district, village or GPS coords..."
-                className="w-full pl-10 pr-16 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full pl-10 pr-16 py-2 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-agri-500"
               />
               <button
                 type="submit"
-                className="absolute right-1.5 px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition shadow-sm"
+                className="absolute right-1.5 px-2.5 py-1 rounded-lg bg-agri-500 hover:bg-agri-500 text-white text-[11px] font-bold transition shadow-sm"
               >
                 Find
               </button>
             </form>
 
             {/* Geometry Drawing & Pan Mode Selector */}
-            <div className="flex items-center gap-1.5 p-1 bg-slate-100 dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-xs font-bold w-full sm:w-auto justify-center">
+            <div className="flex items-center gap-1.5 p-1 bg-agri-50 dark:bg-surface-darkBg rounded-xl border border-agri-200/50 dark:border-agri-700/25 text-xs font-bold w-full sm:w-auto justify-center">
               <button
                 type="button"
                 onClick={() => setToolMode('pan')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
                   toolMode === 'pan'
-                    ? 'bg-emerald-600 text-white shadow-sm font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-agri-500 text-white shadow-sm font-bold'
+                    : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
                 }`}
                 title="Pan / Move / Swap map in any direction"
               >
@@ -656,8 +656,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                 onClick={() => setToolMode('polygon')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
                   toolMode === 'polygon'
-                    ? 'bg-emerald-600 text-white shadow-sm font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-agri-500 text-white shadow-sm font-bold'
+                    : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
                 }`}
                 title="Click point-by-point to draw custom polygon boundary"
               >
@@ -670,8 +670,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                 onClick={() => setToolMode('rectangle')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
                   toolMode === 'rectangle'
-                    ? 'bg-emerald-600 text-white shadow-sm font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-agri-500 text-white shadow-sm font-bold'
+                    : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
                 }`}
                 title="Click to drop rectangular boundary box"
               >
@@ -684,8 +684,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                 onClick={() => setShowImportModal(true)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
                   toolMode === 'upload'
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-agri-500 text-white shadow-sm'
+                    : 'text-agri-600 dark:text-agri-400/70 hover:text-agri-900 dark:hover:text-white'
                 }`}
                 title="Import Shapefile, KML, or GeoJSON"
               >
@@ -697,8 +697,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
           {/* Agricultural Region Quick Selector Bar */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs">
-            <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1 shrink-0">
-              <MapPin className="w-3.5 h-3.5 text-emerald-500" />
+            <span className="text-[11px] font-bold text-agri-500/70 flex items-center gap-1 shrink-0">
+              <MapPin className="w-3.5 h-3.5 text-agri-500" />
               <span>Satellite Scene:</span>
             </span>
             {REGION_PRESETS.map((preset) => (
@@ -708,13 +708,13 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                 onClick={() => handleSelectRegion(preset)}
                 className={`px-3 py-1.5 rounded-xl border text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${
                   activeRegion.id === preset.id
-                    ? 'bg-emerald-500/10 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-bold'
-                    : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-emerald-500/50'
+                    ? 'bg-agri-500/10 border-emerald-500 text-agri-600 dark:text-agri-400 font-bold'
+                    : 'bg-white dark:bg-surface-darkCard border-agri-200/50 dark:border-agri-700/25 text-agri-600 dark:text-agri-400/70 hover:border-emerald-500/50'
                 }`}
               >
-                {activeRegion.id === preset.id && <Check className="w-3 h-3 text-emerald-500" />}
+                {activeRegion.id === preset.id && <Check className="w-3 h-3 text-agri-500" />}
                 <span>{preset.name}</span>
-                <span className="text-[10px] text-slate-400 font-mono">({preset.state})</span>
+                <span className="text-[10px] text-agri-400/70 font-mono">({preset.state})</span>
               </button>
             ))}
           </div>
@@ -726,7 +726,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             onMouseDown={handleContainerMouseDown}
             onMouseMove={handleContainerMouseMove}
             onMouseUp={handleContainerMouseUp}
-            className={`relative w-full h-[580px] sm:h-[660px] rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-950 shadow-2xl group select-none ${
+            className={`relative w-full h-[580px] sm:h-[660px] rounded-3xl overflow-hidden border border-agri-200/50 dark:border-agri-700/25 bg-slate-950 shadow-2xl group select-none ${
               toolMode === 'pan'
                 ? isDraggingFallback
                   ? 'cursor-grabbing'
@@ -788,24 +788,24 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             />
 
             {/* Satellite Metadata HUD Strip at Top */}
-            <div className="absolute top-16 left-4 z-10 hidden sm:flex items-center gap-3.5 py-1.5 px-3.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-emerald-500/25 text-[10px] font-mono text-emerald-300 pointer-events-none shadow-xl">
+            <div className="absolute top-16 left-4 z-10 hidden sm:flex items-center gap-3.5 py-1.5 px-3.5 rounded-xl bg-slate-950/85 backdrop-blur-md border border-emerald-500/25 text-[10px] font-mono text-agri-300 pointer-events-none shadow-xl">
               <span className="flex items-center gap-1.5 font-bold">
-                <Crosshair className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                <Crosshair className="w-3.5 h-3.5 text-agri-400 animate-pulse" />
                 <span>GPS: {currentCenter.lat.toFixed(4)}°N, {currentCenter.lng.toFixed(4)}°E</span>
               </span>
-              <span className="text-slate-600">|</span>
-              <span className="text-emerald-400 font-bold">Zoom: {currentMapZoom}x</span>
-              <span className="text-slate-600">|</span>
+              <span className="text-agri-600">|</span>
+              <span className="text-agri-400 font-bold">Zoom: {currentMapZoom}x</span>
+              <span className="text-agri-600">|</span>
               <span>GSD: {(0.5 * Math.pow(2, Math.max(0, 17 - currentMapZoom))).toFixed(2)}m/px</span>
-              <span className="text-slate-600">|</span>
+              <span className="text-agri-600">|</span>
               <span>Cloud: 0.0%</span>
-              <span className="text-slate-600">|</span>
+              <span className="text-agri-600">|</span>
               <span className="text-sky-300">Sentinel-2 & Google High-Res</span>
             </div>
 
             {/* On-Canvas Mode Quick-Switcher Pill */}
             <div
-              className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 p-1 bg-slate-950/90 backdrop-blur-xl border border-emerald-500/30 rounded-2xl shadow-2xl"
+              className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 p-1 bg-agri-950/90 backdrop-blur-xl border border-agri-500/25 rounded-2xl shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <button
@@ -813,8 +813,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                 onClick={() => setToolMode('pan')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                   toolMode === 'pan'
-                    ? 'bg-emerald-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-agri-500 text-white shadow-md'
+                    : 'text-agri-400/70 hover:text-white'
                 }`}
                 title="Drag map anywhere to swap left, right, up, down"
               >
@@ -826,8 +826,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                 onClick={() => setToolMode('polygon')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                   toolMode === 'polygon'
-                    ? 'bg-emerald-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'bg-agri-500 text-white shadow-md'
+                    : 'text-agri-400/70 hover:text-white'
                 }`}
                 title="Click on map to drop boundary points"
               >
@@ -934,7 +934,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
             {/* Top Left Layer Switcher Pill matching screenshot */}
             <div
-              className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-1 p-1 bg-slate-950/90 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl"
+              className="absolute top-4 left-4 z-20 flex flex-wrap items-center gap-1 p-1 bg-agri-950/90 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {[
@@ -952,8 +952,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   onClick={() => setSatelliteLayer(id as any)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
                     satelliteLayer === id
-                      ? 'bg-emerald-600 text-white shadow-md'
-                      : 'text-slate-400 hover:text-white'
+                      ? 'bg-agri-500 text-white shadow-md'
+                      : 'text-agri-400/70 hover:text-white'
                   }`}
                 >
                   <span>{label}</span>
@@ -963,24 +963,24 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
             {/* Top Right Zoom & Fullscreen Controls matching screenshot */}
             <div
-              className="absolute top-4 right-4 z-20 flex items-center gap-1.5 p-1 bg-slate-950/90 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl"
+              className="absolute top-4 right-4 z-20 flex items-center gap-1.5 p-1 bg-agri-950/90 backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 type="button"
                 onClick={handleZoomIn}
-                className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                className="p-2 rounded-xl text-agri-300 hover:text-white hover:bg-agri-800 transition"
                 title="Zoom In (+)"
               >
                 <ZoomIn className="w-4 h-4" />
               </button>
-              <span className="text-[10px] font-mono font-bold text-emerald-400 px-1">
+              <span className="text-[10px] font-mono font-bold text-agri-400 px-1">
                 {currentMapZoom}x
               </span>
               <button
                 type="button"
                 onClick={handleZoomOut}
-                className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                className="p-2 rounded-xl text-agri-300 hover:text-white hover:bg-agri-800 transition"
                 title="Zoom Out (−)"
               >
                 <ZoomOut className="w-4 h-4" />
@@ -988,7 +988,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
               <button
                 type="button"
                 onClick={toggleFullscreen}
-                className="p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 transition"
+                className="p-2 rounded-xl text-agri-300 hover:text-white hover:bg-agri-800 transition"
                 title="Toggle Fullscreen"
               >
                 {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -997,13 +997,13 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
             {/* Directional Pan (Swap) D-Pad & Zoom Widget */}
             <div
-              className="absolute bottom-20 right-4 z-20 flex flex-col items-center gap-2 p-2.5 rounded-2xl bg-slate-950/90 backdrop-blur-xl border border-emerald-500/30 shadow-2xl"
+              className="absolute bottom-20 right-4 z-20 flex flex-col items-center gap-2 p-2.5 rounded-2xl bg-agri-950/90 backdrop-blur-xl border border-agri-500/25 shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* D-Pad Header */}
               <div className="flex items-center justify-between w-full px-1">
-                <span className="text-[9px] font-mono font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                  <Compass className="w-3 h-3 text-emerald-400" />
+                <span className="text-[9px] font-mono font-bold text-agri-400 uppercase tracking-wider flex items-center gap-1">
+                  <Compass className="w-3 h-3 text-agri-400" />
                   <span>Swap / Pan</span>
                 </span>
                 <span className="text-[9px] font-mono font-bold text-sky-400">
@@ -1019,7 +1019,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   type="button"
                   onClick={handlePanUp}
                   title="Swap Up (वर सरकवा)"
-                  className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
+                  className="w-8 h-8 rounded-xl bg-agri-900 hover:bg-agri-500 text-agri-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
                 >
                   <ChevronUp className="w-4 h-4" />
                 </button>
@@ -1030,7 +1030,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   type="button"
                   onClick={handlePanLeft}
                   title="Swap Left (डावीकडे सरकवा)"
-                  className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
+                  className="w-8 h-8 rounded-xl bg-agri-900 hover:bg-agri-500 text-agri-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -1040,7 +1040,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   type="button"
                   onClick={handleRecenter}
                   title="Recenter to Farm (मध्यभागी आणा)"
-                  className="w-8 h-8 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-slate-950 flex items-center justify-center transition active:scale-90 border border-emerald-500/40 shadow font-bold"
+                  className="w-8 h-8 rounded-xl bg-agri-500/15 hover:bg-agri-500 text-agri-300 hover:text-slate-950 flex items-center justify-center transition active:scale-90 border border-agri-500/30 shadow font-bold"
                 >
                   <LocateFixed className="w-3.5 h-3.5" />
                 </button>
@@ -1050,7 +1050,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   type="button"
                   onClick={handlePanRight}
                   title="Swap Right (उजवीकडे सरकवा)"
-                  className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
+                  className="w-8 h-8 rounded-xl bg-agri-900 hover:bg-agri-500 text-agri-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -1061,7 +1061,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   type="button"
                   onClick={handlePanDown}
                   title="Swap Down (खाली सरकवा)"
-                  className="w-8 h-8 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
+                  className="w-8 h-8 rounded-xl bg-agri-900 hover:bg-agri-500 text-agri-300 hover:text-white flex items-center justify-center transition active:scale-90 border border-slate-700/60 shadow"
                 >
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -1069,7 +1069,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
               </div>
 
               {/* Divider */}
-              <div className="w-full h-px bg-slate-800 my-0.5" />
+              <div className="w-full h-px bg-agri-800 my-0.5" />
 
               {/* Zoom Controls (+ and -) */}
               <div className="flex items-center gap-1.5 w-full">
@@ -1077,7 +1077,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   type="button"
                   onClick={handleZoomIn}
                   title="Zoom In (+) विस्तृत करा"
-                  className="flex-1 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-200 hover:text-white flex items-center justify-center transition font-black text-sm border border-slate-700/60 shadow active:scale-95"
+                  className="flex-1 py-1.5 rounded-xl bg-agri-900 hover:bg-agri-500 text-agri-200 hover:text-white flex items-center justify-center transition font-black text-sm border border-slate-700/60 shadow active:scale-95"
                 >
                   +
                 </button>
@@ -1085,7 +1085,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   type="button"
                   onClick={handleZoomOut}
                   title="Zoom Out (−) संक्षिप्त करा"
-                  className="flex-1 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-200 hover:text-white flex items-center justify-center transition font-black text-sm border border-slate-700/60 shadow active:scale-95"
+                  className="flex-1 py-1.5 rounded-xl bg-agri-900 hover:bg-agri-500 text-agri-200 hover:text-white flex items-center justify-center transition font-black text-sm border border-slate-700/60 shadow active:scale-95"
                 >
                   −
                 </button>
@@ -1098,8 +1098,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   onClick={() => handleSetZoomLevel(15)}
                   className={`py-1 rounded-lg border text-center transition ${
                     currentMapZoom === 15
-                      ? 'bg-emerald-600 text-white border-emerald-500'
-                      : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white'
+                      ? 'bg-agri-500 text-white border-emerald-500'
+                      : 'bg-agri-900/60 text-agri-400/70 border-slate-800 hover:text-white'
                   }`}
                   title="District view (15x)"
                 >
@@ -1110,8 +1110,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   onClick={() => handleSetZoomLevel(17)}
                   className={`py-1 rounded-lg border text-center transition ${
                     currentMapZoom === 17
-                      ? 'bg-emerald-600 text-white border-emerald-500'
-                      : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white'
+                      ? 'bg-agri-500 text-white border-emerald-500'
+                      : 'bg-agri-900/60 text-agri-400/70 border-slate-800 hover:text-white'
                   }`}
                   title="Farm parcel view (17x)"
                 >
@@ -1122,8 +1122,8 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   onClick={() => handleSetZoomLevel(19)}
                   className={`py-1 rounded-lg border text-center transition ${
                     currentMapZoom === 19
-                      ? 'bg-emerald-600 text-white border-emerald-500'
-                      : 'bg-slate-900/80 text-slate-400 border-slate-800 hover:text-white'
+                      ? 'bg-agri-500 text-white border-emerald-500'
+                      : 'bg-agri-900/60 text-agri-400/70 border-slate-800 hover:text-white'
                   }`}
                   title="Crop canopy view (19x)"
                 >
@@ -1134,11 +1134,11 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
             {/* Drawing Help Overlay / Vertex Controls at Bottom Left matching screenshot */}
             <div
-              className="absolute bottom-4 left-4 z-20 p-3 rounded-2xl bg-slate-950/90 backdrop-blur-2xl border border-emerald-500/30 text-white shadow-2xl space-y-2 max-w-sm"
+              className="absolute bottom-4 left-4 z-20 p-3 rounded-2xl bg-agri-950/90 backdrop-blur-2xl border border-agri-500/25 text-white shadow-2xl space-y-2 max-w-sm"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between gap-3">
-                <span className="text-xs font-black text-emerald-400 flex items-center gap-1.5">
+                <span className="text-xs font-black text-agri-400 flex items-center gap-1.5">
                   {toolMode === 'pan' ? (
                     <>
                       <Hand className="w-4 h-4" />
@@ -1151,13 +1151,13 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                     </>
                   )}
                 </span>
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-agri-500/15 text-agri-300 border border-agri-500/25">
                   {vertices.length} Points
                 </span>
               </div>
 
-              <p className="text-[10px] text-slate-400 flex items-center gap-1">
-                <Move className="w-3 h-3 text-emerald-400" />
+              <p className="text-[10px] text-agri-400/70 flex items-center gap-1">
+                <Move className="w-3 h-3 text-agri-400" />
                 <span>Drag any P pin to fine-tune parcel boundary coordinates</span>
               </p>
 
@@ -1166,7 +1166,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   type="button"
                   onClick={handleUndoVertex}
                   disabled={vertices.length === 0}
-                  className="px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 disabled:opacity-40 text-xs font-bold transition flex items-center gap-1"
+                  className="px-2.5 py-1 rounded-xl bg-agri-900 hover:bg-agri-800 text-agri-300 disabled:opacity-40 text-xs font-bold transition flex items-center gap-1"
                 >
                   <Undo2 className="w-3.5 h-3.5" />
                   <span>Undo</span>
@@ -1185,7 +1185,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleSnapToCentralParcel}
-                  className="px-2.5 py-1 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-xs font-bold transition flex items-center gap-1 ml-auto"
+                  className="px-2.5 py-1 rounded-xl bg-agri-500/10 hover:bg-agri-500/15 text-agri-300 text-xs font-bold transition flex items-center gap-1 ml-auto"
                   title="Snap boundary to central high-yield crop parcel"
                 >
                   <Crosshair className="w-3.5 h-3.5" />
@@ -1195,21 +1195,21 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
             </div>
 
             {/* Live Area Calculation Floating Pill at Bottom Right matching screenshot */}
-            <div className="absolute bottom-4 right-4 z-20 flex items-center gap-3 p-3 rounded-2xl bg-slate-950/90 backdrop-blur-2xl border border-emerald-500/30 text-white shadow-2xl font-mono text-xs">
+            <div className="absolute bottom-4 right-4 z-20 flex items-center gap-3 p-3 rounded-2xl bg-agri-950/90 backdrop-blur-2xl border border-agri-500/25 text-white shadow-2xl font-mono text-xs">
               <div className="text-right">
-                <span className="text-[9px] text-slate-400 block uppercase">Calculated Area</span>
-                <strong className="text-emerald-400 text-sm font-black">
-                  {areaHa} ha <span className="text-slate-400 text-xs font-normal">({areaAcres} ac)</span>
+                <span className="text-[9px] text-agri-400/70 block uppercase">Calculated Area</span>
+                <strong className="text-agri-400 text-sm font-black">
+                  {areaHa} ha <span className="text-agri-400/70 text-xs font-normal">({areaAcres} ac)</span>
                 </strong>
-                <span className="text-[9px] text-emerald-300/80 block font-sans">
+                <span className="text-[9px] text-agri-300/80 block font-sans">
                   ~{areaGunthas} Gunthas / Bigha
                 </span>
               </div>
-              <div className="w-px h-8 bg-slate-800" />
+              <div className="w-px h-8 bg-agri-800" />
               <div>
-                <span className="text-[9px] text-slate-400 block uppercase">Perimeter</span>
+                <span className="text-[9px] text-agri-400/70 block uppercase">Perimeter</span>
                 <strong className="text-sky-300 font-bold">{perimeterMeters} m</strong>
-                <span className="text-[9px] text-slate-500 block font-sans">
+                <span className="text-[9px] text-agri-500/70 block font-sans">
                   ~{(perimeterMeters * 3.28084).toFixed(0)} ft
                 </span>
               </div>
@@ -1221,55 +1221,55 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
         {/* RIGHT 4 COLS: EOSDA Agronomic Configuration Drawer (Field Parameters)      */}
         {/* ========================================================================= */}
         <div className="lg:col-span-4 space-y-5">
-          <div className="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div className="p-6 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-agri-100 dark:border-agri-700/25 pb-3">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <div className="p-2 rounded-xl bg-agri-500/10 text-agri-600 dark:text-agri-400">
                   <Sprout className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-slate-900 dark:text-white text-sm">
+                  <h3 className="font-extrabold text-agri-900 dark:text-white text-sm">
                     Field Parameters
                   </h3>
-                  <p className="text-[11px] text-slate-500">Agro-climatic specification</p>
+                  <p className="text-[11px] text-agri-500/70">Agro-climatic specification</p>
                 </div>
               </div>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-700 dark:text-emerald-300">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-agri-500/15 text-agri-700 dark:text-agri-300">
                 Step 1 of 1
               </span>
             </div>
 
             {/* Field Name Input */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Field Name</label>
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">Field Name</label>
               <input
                 type="text"
                 value={fieldName}
                 onChange={(e) => setFieldName(e.target.value)}
                 placeholder="e.g. North Plot Bt-Cotton"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-agri-500"
               />
             </div>
 
             {/* Farm / Estate Holding */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Farm / Holding</label>
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">Farm / Holding</label>
               <input
                 type="text"
                 value={farmGroup}
                 onChange={(e) => setFarmGroup(e.target.value)}
                 placeholder="e.g. Nashik Agricultural Estate"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-agri-500"
               />
             </div>
 
             {/* Crop Selection */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Active Crop</label>
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">Active Crop</label>
               <select
                 value={cropType}
                 onChange={(e) => setCropType(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-bold text-emerald-600 dark:text-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-bold text-agri-600 dark:text-agri-400 focus:outline-none focus:ring-2 focus:ring-agri-500"
               >
                 <option value="Bt Cotton (Bollgard II)">Bt Cotton (Bollgard II)</option>
                 <option value="Sugarcane (Co-86032)">Sugarcane (Co-86032)</option>
@@ -1285,46 +1285,46 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
             {/* Variety / Hybrid */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Seed Variety / Hybrid</label>
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">Seed Variety / Hybrid</label>
               <input
                 type="text"
                 value={cropVariety}
                 onChange={(e) => setCropVariety(e.target.value)}
                 placeholder="e.g. RCH-659 BG II"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-agri-500"
               />
             </div>
 
             {/* Sowing & Harvest Date Pickers */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-[11px] font-bold text-slate-500">Sowing Date</label>
+                <label className="text-[11px] font-bold text-agri-500/70">Sowing Date</label>
                 <input
                   type="date"
                   value={sowingDate}
                   onChange={(e) => setSowingDate(e.target.value)}
-                  className="w-full px-2.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold"
+                  className="w-full px-2.5 py-2 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-mono font-bold"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-[11px] font-bold text-slate-500">Target Harvest</label>
+                <label className="text-[11px] font-bold text-agri-500/70">Target Harvest</label>
                 <input
                   type="date"
                   value={harvestDate}
                   onChange={(e) => setHarvestDate(e.target.value)}
-                  className="w-full px-2.5 py-2 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-mono font-bold"
+                  className="w-full px-2.5 py-2 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-mono font-bold"
                 />
               </div>
             </div>
 
             {/* Soil Type */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Soil Classification</label>
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">Soil Classification</label>
               <select
                 value={soilType}
                 onChange={(e) => setSoilType(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-agri-500"
               >
                 <option value="Black Cotton Regur Clay">Black Cotton Regur Clay</option>
                 <option value="Laterite Soil">Laterite Soil</option>
@@ -1336,11 +1336,11 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
             {/* Irrigation Type */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Irrigation Setup</label>
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">Irrigation Setup</label>
               <select
                 value={irrigationType}
                 onChange={(e) => setIrrigationType(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-agri-500"
               >
                 <option value="Drip Irrigation with Fertigation">Drip Irrigation with Fertigation</option>
                 <option value="Micro-Sprinkler Overhead">Micro-Sprinkler Overhead</option>
@@ -1351,13 +1351,13 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
 
             {/* Previous Season Crop (Rotation) */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Previous Season Crop (Rotation)</label>
+              <label className="text-xs font-bold text-agri-700 dark:text-agri-300">Previous Season Crop (Rotation)</label>
               <input
                 type="text"
                 value={previousCrop}
                 onChange={(e) => setPreviousCrop(e.target.value)}
                 placeholder="e.g. Soybean (JS-335)"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-agri-500"
               />
             </div>
 
@@ -1366,7 +1366,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
               type="button"
               onClick={handleSaveField}
               disabled={isSaving || vertices.length < 3}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs transition shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs transition shadow-lg shadow-agri-500/25 flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50"
             >
               {isSaving ? (
                 <span>Syncing with Sentinel-2 Satellite...</span>
@@ -1384,36 +1384,36 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
       {/* Import Modal */}
       {showImportModal && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl text-white animate-in zoom-in-95">
+          <div className="bg-agri-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl text-white animate-in zoom-in-95">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="font-extrabold text-sm flex items-center gap-2">
-                <UploadCloud className="w-4 h-4 text-emerald-400" />
+                <UploadCloud className="w-4 h-4 text-agri-400" />
                 <span>Import Boundary File</span>
               </h3>
               <button
                 type="button"
                 onClick={() => setShowImportModal(false)}
-                className="text-slate-400 hover:text-white text-xs font-bold"
+                className="text-agri-400/70 hover:text-white text-xs font-bold"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-agri-300">
               Upload existing GIS vector files (.GeoJSON, .KML, or Shapefile zip) to automatically map field boundaries.
             </p>
 
             <div className="border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-2xl p-6 text-center space-y-2 cursor-pointer transition">
-              <UploadCloud className="w-8 h-8 text-emerald-400 mx-auto" />
-              <p className="text-xs font-bold text-slate-200">Drag & drop your GIS boundary file here</p>
-              <p className="text-[10px] text-slate-400">Supports GeoJSON, KML, SHP (Max 10MB)</p>
+              <UploadCloud className="w-8 h-8 text-agri-400 mx-auto" />
+              <p className="text-xs font-bold text-agri-200">Drag & drop your GIS boundary file here</p>
+              <p className="text-[10px] text-agri-400/70">Supports GeoJSON, KML, SHP (Max 10MB)</p>
             </div>
 
             <div className="flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowImportModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-300 hover:bg-slate-700"
+                className="px-4 py-2 rounded-xl bg-agri-800 text-xs font-bold text-agri-300 hover:bg-slate-700"
               >
                 Cancel
               </button>
@@ -1423,7 +1423,7 @@ export const EOSCreateFieldOnboarding: React.FC = () => {
                   handleSnapToCentralParcel({ stopPropagation: () => {} } as any);
                   setShowImportModal(false);
                 }}
-                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold"
+                className="px-4 py-2 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold"
               >
                 Load Sample GeoJSON
               </button>

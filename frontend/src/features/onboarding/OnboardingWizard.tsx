@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Globe,
@@ -248,7 +248,7 @@ export const MAHARASHTRA_SOILS: SoilOption[] = [
     name: 'Black Cotton Soil (Regur Clay)',
     marathiName: 'Black Cotton Soil',
     vernacular: 'Deccan Trap Basalt • Deep Black Clay',
-    colorClass: 'bg-slate-950 text-slate-100',
+    colorClass: 'bg-slate-950 text-agri-100',
     borderClass: 'border-slate-700',
     description: 'High montmorillonite clay content with deep self-ploughing cracks and extraordinary moisture retention.',
     bestFor: 'Cotton, Soybean, Sugarcane, Sorghum & Sunflower',
@@ -509,7 +509,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md overflow-y-auto animate-in fade-in">
-      <div className="relative w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden my-8 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-4xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 rounded-3xl shadow-2xl overflow-hidden my-8 flex flex-col max-h-[90vh]">
         {/* ── Top Header Banner with Maharashtra Logo & Stepper ── */}
         <div className="p-6 bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-950 text-white flex-shrink-0">
           <div className="flex items-center justify-between gap-4">
@@ -560,7 +560,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               return (
                 <div key={step.num} className="space-y-1">
                   <div className="flex items-center justify-between text-[11px] font-bold">
-                    <span className={isCurrent ? 'text-amber-300 font-black' : isDone ? 'text-emerald-300' : 'text-slate-400'}>
+                    <span className={isCurrent ? 'text-amber-300 font-black' : isDone ? 'text-agri-300' : 'text-agri-400/70'}>
                       {step.num}. {step.label}
                     </span>
                   </div>
@@ -579,7 +579,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
 
         {/* Feedback Alert Toast */}
         {permFeedback && (
-          <div className="p-3 bg-emerald-600 text-white text-xs font-bold text-center flex items-center justify-center gap-2 animate-in fade-in flex-shrink-0">
+          <div className="p-3 bg-agri-500 text-white text-xs font-bold text-center flex items-center justify-center gap-2 animate-in fade-in flex-shrink-0">
             <Sparkles className="w-4 h-4" />
             <span>{permFeedback}</span>
           </div>
@@ -592,25 +592,25 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 1 && (
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-agri-100 dark:border-agri-700/25 pb-3">
                 <div>
-                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                    <Globe className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  <h2 className="text-base font-extrabold text-agri-900 dark:text-white flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-agri-600 dark:text-agri-400" />
                     <span>Select Preferred Language</span>
                   </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                     Choose your language. System diagnostics, advisory voice alerts, and UI adapt automatically.
                   </p>
                 </div>
 
                 <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <Search className="w-4 h-4 text-agri-400/70 absolute left-3 top-2.5" />
                   <input
                     type="text"
                     placeholder="Search language..."
                     value={langSearch}
                     onChange={(e) => setLangSearch(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl pl-9 pr-3 py-2 text-xs text-agri-900 dark:text-white focus:outline-none focus:border-agri-500"
                   />
                 </div>
               </div>
@@ -625,27 +625,27 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                       onClick={() => setSelectedLanguage(lang.id)}
                       className={`p-4 rounded-2xl border transition cursor-pointer flex flex-col justify-between gap-3 ${
                         isSelected
-                          ? 'bg-emerald-500/10 border-emerald-500 dark:border-emerald-500 shadow-md ring-2 ring-emerald-500/30'
-                          : 'bg-white dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                          ? 'bg-agri-500/10 border-emerald-500 dark:border-emerald-500 shadow-md ring-2 ring-agri-500/30'
+                          : 'bg-white dark:bg-agri-950/60 border-agri-200/50 dark:border-agri-700/25 hover:border-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-base font-black text-slate-900 dark:text-white">
+                            <span className="text-base font-black text-agri-900 dark:text-white">
                               {lang.name}
                             </span>
                             {lang.id === 'en' ? (
-                              <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black border border-emerald-500/30">
+                              <span className="px-2 py-0.5 rounded-full bg-agri-500/15 text-agri-600 dark:text-agri-400 text-[10px] font-black border border-agri-500/25">
                                 Default
                               </span>
                             ) : (
-                              <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10px] font-bold border border-slate-200 dark:border-slate-700">
+                              <span className="px-2 py-0.5 rounded-full bg-agri-50 dark:bg-agri-800/50 text-agri-600 dark:text-agri-300 text-[10px] font-bold border border-agri-200/50 dark:border-agri-700/30">
                                 {lang.nativeName}
                               </span>
                             )}
                           </div>
-                          <span className="text-xs text-slate-500 dark:text-slate-400 block mt-0.5">
+                          <span className="text-xs text-agri-500/70 dark:text-agri-400/70 block mt-0.5">
                             {lang.region}
                           </span>
                         </div>
@@ -653,8 +653,8 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                         <div
                           className={`w-5 h-5 rounded-full flex items-center justify-center border transition flex-shrink-0 ${
                             isSelected
-                              ? 'bg-emerald-600 text-white border-emerald-600'
-                              : 'border-slate-300 dark:border-slate-700'
+                              ? 'bg-agri-500 text-white border-emerald-600'
+                              : 'border-slate-300 dark:border-agri-700/30'
                           }`}
                         >
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -662,8 +662,8 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                       </div>
 
                       {/* Sample phrase & Audio speaker button */}
-                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                        <p className="text-[11px] text-slate-600 dark:text-slate-300 italic line-clamp-1">
+                      <div className="flex items-center justify-between gap-2 pt-2 border-t border-agri-100 dark:border-agri-700/25">
+                        <p className="text-[11px] text-agri-600 dark:text-agri-300 italic line-clamp-1">
                           "{lang.samplePhrase}"
                         </p>
                         <button
@@ -673,10 +673,10 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                             setSelectedLanguage(lang.id);
                             handlePlayAudioSample(lang);
                           }}
-                          className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 transition flex items-center gap-1 text-[10px] font-bold flex-shrink-0"
+                          className="p-1.5 rounded-xl bg-agri-50 hover:bg-agri-100 dark:bg-agri-800/50 dark:hover:bg-agri-700/40 text-agri-700 dark:text-agri-300 transition flex items-center gap-1 text-[10px] font-bold flex-shrink-0"
                           title="Play native audio preview"
                         >
-                          <Volume2 className={`w-3.5 h-3.5 ${isPlayingAudio && isSelected ? 'text-emerald-500 animate-bounce' : ''}`} />
+                          <Volume2 className={`w-3.5 h-3.5 ${isPlayingAudio && isSelected ? 'text-agri-500 animate-bounce' : ''}`} />
                           <span>Listen</span>
                         </button>
                       </div>
@@ -692,25 +692,25 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 2 && (
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-agri-100 dark:border-agri-700/25 pb-3">
                 <div>
-                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                    <Sprout className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                  <h2 className="text-base font-extrabold text-agri-900 dark:text-white flex items-center gap-2">
+                    <Sprout className="w-5 h-5 text-agri-600 dark:text-agri-400" />
                     <span>Choose Active Farm Crops</span>
                   </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                     Select your active crops. Pathogen models and disease thresholds will be calibrated specifically.
                   </p>
                 </div>
 
                 <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <Search className="w-4 h-4 text-agri-400/70 absolute left-3 top-2.5" />
                   <input
                     type="text"
                     placeholder="Search crop..."
                     value={cropSearch}
                     onChange={(e) => setCropSearch(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl pl-9 pr-3 py-2 text-xs text-agri-900 dark:text-white focus:outline-none focus:border-agri-500"
                   />
                 </div>
               </div>
@@ -725,8 +725,8 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                       onClick={() => toggleCrop(crop.id)}
                       className={`relative rounded-2xl border overflow-hidden transition cursor-pointer flex flex-col justify-between group ${
                         isSelected
-                          ? 'bg-emerald-500/10 border-emerald-500 shadow-md ring-2 ring-emerald-500/30'
-                          : 'bg-white dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                          ? 'bg-agri-500/10 border-emerald-500 shadow-md ring-2 ring-agri-500/30'
+                          : 'bg-white dark:bg-agri-950/60 border-agri-200/50 dark:border-agri-700/25 hover:border-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
                       {/* Crop Image Header */}
@@ -742,7 +742,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                           <div
                             className={`w-6 h-6 rounded-full flex items-center justify-center border shadow-md transition ${
                               isSelected
-                                ? 'bg-emerald-600 text-white border-emerald-600'
+                                ? 'bg-agri-500 text-white border-emerald-600'
                                 : 'bg-slate-900/60 text-transparent border-white/50'
                             }`}
                           >
@@ -754,7 +754,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                           <h3 className="text-sm font-black text-white drop-shadow">
                             {crop.name}
                           </h3>
-                          <span className="text-[11px] text-emerald-300 font-semibold block drop-shadow-sm">
+                          <span className="text-[11px] text-agri-300 font-semibold block drop-shadow-sm">
                             {crop.vernacular}
                           </span>
                         </div>
@@ -762,13 +762,13 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
 
                       {/* Details Strip */}
                       <div className="p-3 space-y-1.5 text-xs">
-                        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                        <div className="flex items-center justify-between text-[11px] text-agri-500/70 dark:text-agri-400/70 font-medium">
                           <span>{crop.category}</span>
-                          <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{crop.duration}</span>
+                          <span className="font-mono font-bold text-agri-700 dark:text-agri-300">{crop.duration}</span>
                         </div>
 
-                        <div className="p-2 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 text-[10px] text-slate-600 dark:text-slate-300 font-medium">
-                          📍 <strong className="text-slate-800 dark:text-slate-200">Region:</strong> {crop.maharashtraRegion}
+                        <div className="p-2 rounded-xl bg-surface-light dark:bg-surface-darkCard border border-agri-200/50/80 dark:border-agri-700/25 text-[10px] text-agri-600 dark:text-agri-300 font-medium">
+                          📍 <strong className="text-agri-800 dark:text-agri-200">Region:</strong> {crop.maharashtraRegion}
                         </div>
                       </div>
                     </div>
@@ -783,25 +783,25 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 3 && (
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-agri-100 dark:border-agri-700/25 pb-3">
                 <div>
-                  <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                  <h2 className="text-base font-extrabold text-agri-900 dark:text-white flex items-center gap-2">
                     <Layers className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                     <span>Choose Soil Profile (Black Cotton, Laterite, Alluvial, etc.)</span>
                   </h2>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                     Select soil texture for accurate irrigation scheduling, root water-stress index, and fertilization tuning.
                   </p>
                 </div>
 
                 <div className="relative w-full sm:w-64">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                  <Search className="w-4 h-4 text-agri-400/70 absolute left-3 top-2.5" />
                   <input
                     type="text"
                     placeholder="Search soil profile..."
                     value={soilSearch}
                     onChange={(e) => setSoilSearch(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-emerald-500"
+                    className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl pl-9 pr-3 py-2 text-xs text-agri-900 dark:text-white focus:outline-none focus:border-agri-500"
                   />
                 </div>
               </div>
@@ -817,16 +817,16 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                       className={`p-4 rounded-2xl border transition cursor-pointer flex flex-col justify-between gap-3 ${
                         isSelected
                           ? 'bg-amber-500/10 border-amber-500 shadow-md ring-2 ring-amber-500/30'
-                          : 'bg-white dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                          : 'bg-white dark:bg-agri-950/60 border-agri-200/50 dark:border-agri-700/25 hover:border-slate-300 dark:hover:border-slate-700'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-300 dark:border-slate-700 flex-shrink-0 shadow-sm">
+                          <div className="w-14 h-14 rounded-2xl overflow-hidden border border-slate-300 dark:border-agri-700/30 flex-shrink-0 shadow-sm">
                             <img src={soil.soilTextureUrl} alt={soil.name} className="w-full h-full object-cover" />
                           </div>
                           <div>
-                            <h3 className="text-sm font-black text-slate-900 dark:text-white">
+                            <h3 className="text-sm font-black text-agri-900 dark:text-white">
                               {soil.name}
                             </h3>
                             <span className="text-[10px] text-amber-600 dark:text-amber-400 font-mono font-bold block mt-0.5">
@@ -839,22 +839,22 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                           className={`w-5 h-5 rounded-full flex items-center justify-center border transition flex-shrink-0 ${
                             isSelected
                               ? 'bg-amber-600 text-white border-amber-600'
-                              : 'border-slate-300 dark:border-slate-700'
+                              : 'border-slate-300 dark:border-agri-700/30'
                           }`}
                         >
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                         </div>
                       </div>
 
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      <p className="text-xs text-agri-600 dark:text-agri-300 leading-relaxed">
                         {soil.description}
                       </p>
 
-                      <div className="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800 text-[11px]">
-                        <p className="text-slate-700 dark:text-slate-200">
-                          <strong className="text-slate-900 dark:text-white">Best Crops:</strong> {soil.bestFor}
+                      <div className="space-y-1 pt-2 border-t border-agri-100 dark:border-agri-700/25 text-[11px]">
+                        <p className="text-agri-700 dark:text-agri-200">
+                          <strong className="text-agri-900 dark:text-white">Best Crops:</strong> {soil.bestFor}
                         </p>
-                        <p className="text-slate-500 dark:text-slate-400 font-mono text-[10px]">
+                        <p className="text-agri-500/70 dark:text-agri-400/70 font-mono text-[10px]">
                           Geological Belt: {soil.maharashtraGeology}
                         </p>
                       </div>
@@ -870,12 +870,12 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 4 && (
             <div className="space-y-5">
-              <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
-                <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <div className="border-b border-agri-100 dark:border-agri-700/25 pb-3">
+                <h2 className="text-base font-extrabold text-agri-900 dark:text-white flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                   <span>Exact Location & District Selection</span>
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                   Allow live GPS or select your district for localized microclimate and disease contagion telemetry.
                 </p>
               </div>
@@ -887,8 +887,8 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                     <Navigation className="w-4 h-4" />
                     <span>Automatic Live GPS Geolocation</span>
                   </span>
-                  <p className="text-xs text-slate-700 dark:text-slate-300 font-medium">
-                    Current Coordinates: <strong className="font-mono text-slate-900 dark:text-white">{detectedCoords}</strong>
+                  <p className="text-xs text-agri-700 dark:text-agri-300 font-medium">
+                    Current Coordinates: <strong className="font-mono text-agri-900 dark:text-white">{detectedCoords}</strong>
                   </p>
                 </div>
 
@@ -905,7 +905,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
 
               {/* Districts Grid Selector */}
               <div className="space-y-2">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 block">
+                <label className="text-xs font-bold text-agri-700 dark:text-agri-300 block">
                   Select Region / District:
                 </label>
 
@@ -923,13 +923,13 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                         className={`p-3 rounded-2xl border text-left transition flex flex-col justify-between gap-1 ${
                           isSelected
                             ? 'bg-sky-500/15 border-sky-500 shadow-md ring-2 ring-sky-500/30'
-                            : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                            : 'bg-surface-light dark:bg-agri-950/60 border-agri-200/50 dark:border-agri-700/25 hover:border-slate-300 dark:hover:border-slate-700'
                         }`}
                       >
-                        <span className="text-xs font-black text-slate-900 dark:text-white">
+                        <span className="text-xs font-black text-agri-900 dark:text-white">
                           {dist.name}
                         </span>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">
+                        <span className="text-[10px] text-agri-500/70 dark:text-agri-400/70 font-medium">
                           {dist.region.split(' ')[0]}
                         </span>
                         <span className="text-[9px] text-sky-600 dark:text-sky-400 font-mono truncate">
@@ -942,14 +942,14 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               </div>
 
               {/* Selected District Agro-Climatic Intelligence Box */}
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5 text-xs">
-                <span className="font-bold text-slate-900 dark:text-white">
+              <div className="p-4 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-1.5 text-xs">
+                <span className="font-bold text-agri-900 dark:text-white">
                   📍 Selected Agro-Climatic Zone ({currentDistrictObj.name}):
                 </span>
-                <p className="text-slate-600 dark:text-slate-300">
+                <p className="text-agri-600 dark:text-agri-300">
                   Climate Zone: <strong>{currentDistrictObj.agroZone}</strong> • Region: <strong>{currentDistrictObj.region}</strong>
                 </p>
-                <p className="text-[11px] text-slate-400 font-mono">
+                <p className="text-[11px] text-agri-400/70 font-mono">
                   GPS Coordinates: {currentDistrictObj.coordinates}
                 </p>
               </div>
@@ -961,37 +961,37 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           {/* ══════════════════════════════════════════════════════════ */}
           {currentStep === 5 && (
             <div className="space-y-5">
-              <div className="border-b border-slate-100 dark:border-slate-800 pb-3">
-                <h2 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <div className="border-b border-agri-100 dark:border-agri-700/25 pb-3">
+                <h2 className="text-base font-extrabold text-agri-900 dark:text-white flex items-center gap-2">
+                  <ShieldCheck className="w-5 h-5 text-agri-600 dark:text-agri-400" />
                   <span>Hardware & Media Permissions</span>
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-agri-500/70 dark:text-agri-400/70">
                   Enable device permissions for AI leaf disease detection and multispectral drone scan uploads.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* 1. Camera Permission Card */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm flex flex-col justify-between">
+                <div className="p-5 rounded-2xl bg-white dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-4 shadow-sm flex flex-col justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                        <div className="p-2.5 rounded-xl bg-agri-500/10 text-agri-600 dark:text-agri-400">
                           <Camera className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                          <h3 className="text-sm font-bold text-agri-900 dark:text-white">
                             Camera Access
                           </h3>
-                          <span className="text-[11px] text-slate-400">Crop Leaf Pathology Scanner</span>
+                          <span className="text-[11px] text-agri-400/70">Crop Leaf Pathology Scanner</span>
                         </div>
                       </div>
 
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border ${
                           permissions.camera
-                            ? 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30'
+                            ? 'bg-agri-500/15 text-agri-600 border-agri-500/25'
                             : 'bg-amber-500/15 text-amber-600 border-amber-500/30'
                         }`}
                       >
@@ -999,7 +999,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs text-agri-600 dark:text-agri-300 leading-relaxed">
                       Instant leaf disease identification, pest egg cluster detection, and yellow rust spot optical analysis.
                     </p>
                   </div>
@@ -1009,8 +1009,8 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                     onClick={handleRequestCamera}
                     className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm ${
                       permissions.camera
-                        ? 'bg-emerald-600 text-white shadow-emerald-600/20'
-                        : 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-slate-700'
+                        ? 'bg-agri-500 text-white shadow-emerald-600/20'
+                        : 'bg-agri-900 hover:bg-agri-800 text-white dark:bg-agri-800/50 dark:hover:bg-agri-700/40'
                     }`}
                   >
                     <Camera className="w-4 h-4" />
@@ -1019,7 +1019,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                 </div>
 
                 {/* 2. Gallery & Storage Permission Card */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm flex flex-col justify-between">
+                <div className="p-5 rounded-2xl bg-white dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 space-y-4 shadow-sm flex flex-col justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -1027,17 +1027,17 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                           <FolderOpen className="w-5 h-5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                          <h3 className="text-sm font-bold text-agri-900 dark:text-white">
                             Gallery & Files Access
                           </h3>
-                          <span className="text-[11px] text-slate-400">Drone GeoTIFF & Soil Reports</span>
+                          <span className="text-[11px] text-agri-400/70">Drone GeoTIFF & Soil Reports</span>
                         </div>
                       </div>
 
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border ${
                           permissions.gallery
-                            ? 'bg-emerald-500/15 text-emerald-600 border-emerald-500/30'
+                            ? 'bg-agri-500/15 text-agri-600 border-agri-500/25'
                             : 'bg-amber-500/15 text-amber-600 border-amber-500/30'
                         }`}
                       >
@@ -1045,7 +1045,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                       </span>
                     </div>
 
-                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-xs text-agri-600 dark:text-agri-300 leading-relaxed">
                       Upload high-resolution drone multispectral imagery, soil lab PDF cards, and field boundary GeoJSON maps.
                     </p>
                   </div>
@@ -1055,8 +1055,8 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                     onClick={handleRequestGallery}
                     className={`w-full py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm ${
                       permissions.gallery
-                        ? 'bg-emerald-600 text-white shadow-emerald-600/20'
-                        : 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-slate-700'
+                        ? 'bg-agri-500 text-white shadow-emerald-600/20'
+                        : 'bg-agri-900 hover:bg-agri-800 text-white dark:bg-agri-800/50 dark:hover:bg-agri-700/40'
                     }`}
                   >
                     <FolderOpen className="w-4 h-4" />
@@ -1066,35 +1066,35 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
               </div>
 
               {/* Summary of Configuration */}
-              <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-2">
+              <div className="p-4 rounded-2xl bg-agri-500/10 border border-agri-500/25 space-y-2">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                  <span className="text-xs font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-wider">
+                  <Sparkles className="w-4 h-4 text-agri-600 dark:text-agri-400" />
+                  <span className="text-xs font-black text-agri-700 dark:text-agri-400 uppercase tracking-wider">
                     Setup Summary
                   </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-medium">
                   <div>
-                    <span className="text-[10px] text-slate-400 block">Language</span>
-                    <strong className="text-slate-800 dark:text-slate-200">
+                    <span className="text-[10px] text-agri-400/70 block">Language</span>
+                    <strong className="text-agri-800 dark:text-agri-200">
                       {INDIAN_LANGUAGES.find((l) => l.id === selectedLanguage)?.name || 'English'}
                     </strong>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block">Active Crops</span>
-                    <strong className="text-slate-800 dark:text-slate-200">
+                    <span className="text-[10px] text-agri-400/70 block">Active Crops</span>
+                    <strong className="text-agri-800 dark:text-agri-200">
                       {selectedCrops.length} Crops Selected
                     </strong>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block">Soil Profile</span>
-                    <strong className="text-slate-800 dark:text-slate-200">
+                    <span className="text-[10px] text-agri-400/70 block">Soil Profile</span>
+                    <strong className="text-agri-800 dark:text-agri-200">
                       {MAHARASHTRA_SOILS.find((s) => s.id === selectedSoil)?.name.split(' ')[0]}
                     </strong>
                   </div>
                   <div>
-                    <span className="text-[10px] text-slate-400 block">District</span>
-                    <strong className="text-slate-800 dark:text-slate-200">
+                    <span className="text-[10px] text-agri-400/70 block">District</span>
+                    <strong className="text-agri-800 dark:text-agri-200">
                       {currentDistrictObj.name}
                     </strong>
                   </div>
@@ -1105,12 +1105,12 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
         </div>
 
         {/* ── Bottom Action Navigation Bar ── */}
-        <div className="p-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between flex-shrink-0">
+        <div className="p-4 bg-surface-light dark:bg-surface-darkBg border-t border-agri-200/50 dark:border-agri-700/25 flex items-center justify-between flex-shrink-0">
           {currentStep > 1 ? (
             <button
               type="button"
               onClick={() => setCurrentStep((prev) => prev - 1)}
-              className="px-5 py-2.5 rounded-2xl bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-200 transition flex items-center gap-1.5"
+              className="px-5 py-2.5 rounded-2xl bg-white hover:bg-agri-50 dark:bg-surface-darkCard dark:hover:bg-agri-800/60 border border-agri-200/50 dark:border-agri-700/30 text-xs font-bold text-agri-700 dark:text-agri-200 transition flex items-center gap-1.5"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
@@ -1123,7 +1123,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
             <button
               type="button"
               onClick={() => setCurrentStep((prev) => prev + 1)}
-              className="px-6 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black transition flex items-center gap-2 shadow-lg shadow-emerald-600/25 active:scale-95"
+              className="px-6 py-2.5 rounded-2xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-black transition flex items-center gap-2 shadow-lg shadow-agri-500/20 active:scale-95"
             >
               <span>Next Step</span>
               <ArrowRight className="w-4 h-4" />
@@ -1132,7 +1132,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
             <button
               type="button"
               onClick={handleFinishOnboarding}
-              className="px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black transition flex items-center gap-2 shadow-xl shadow-emerald-600/30 active:scale-95 animate-pulse"
+              className="px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black transition flex items-center gap-2 shadow-xl shadow-agri-500/25 active:scale-95 animate-pulse"
             >
               <Sparkles className="w-4 h-4" />
               <span>Complete Setup & Launch Dashboard</span>

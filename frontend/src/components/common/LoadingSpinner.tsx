@@ -17,7 +17,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 
   return (
     <div
-      className={`inline-block animate-spin rounded-full border-slate-700 border-t-emerald-500 ${sizeClasses} ${className}`}
+      className={`inline-block animate-spin rounded-full border-agri-200 dark:border-agri-800 border-t-agri-500 dark:border-t-accent-lime ${sizeClasses} ${className}`}
       role="status"
       aria-label="loading"
     >
@@ -32,7 +32,7 @@ export const LoadingState: React.FC<{ message?: string }> = ({
   return (
     <div className="flex flex-col items-center justify-center p-12 space-y-4 min-h-[300px]">
       <LoadingSpinner size="lg" />
-      <p className="text-sm text-slate-400 font-medium animate-pulse">{message}</p>
+      <p className="text-sm text-agri-500/70 dark:text-agri-400/60 font-medium animate-pulse">{message}</p>
     </div>
   );
 };

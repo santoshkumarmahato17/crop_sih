@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Globe, Check } from 'lucide-react';
 import { useTranslation, SupportedLanguage } from '@/i18n';
 import { advisoryService } from '@/services/advisoryService';
@@ -21,7 +21,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   if (variant === 'minimal') {
     return (
-      <div className={`flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 ${className}`}>
+      <div className={`flex items-center gap-1 bg-agri-50 dark:bg-agri-800/50 p-1 rounded-xl border border-agri-200/50 dark:border-agri-700/30 ${className}`}>
         {supportedLanguages.map((lang) => {
           const isActive = currentLanguage === lang.code;
           return (
@@ -31,8 +31,8 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
               onClick={() => handleSelectLanguage(lang.code)}
               className={`px-2 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
                 isActive
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-emerald-600 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  ? 'bg-agri-500 text-white shadow-sm'
+                  : 'text-agri-600 dark:text-agri-300 hover:text-agri-600 hover:bg-agri-100 dark:hover:bg-agri-700/40'
               }`}
             >
               <span>{lang.nativeName}</span>
@@ -44,9 +44,9 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
   }
 
   return (
-    <div className={`flex items-center gap-1.5 p-1 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-sm backdrop-blur-md ${className}`}>
-      <div className="pl-2 pr-1 text-slate-400">
-        <Globe className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+    <div className={`flex items-center gap-1.5 p-1 rounded-2xl bg-white/90 dark:bg-surface-darkCard/90 border border-agri-200/50 dark:border-agri-700/25 shadow-sm backdrop-blur-md ${className}`}>
+      <div className="pl-2 pr-1 text-agri-400/70">
+        <Globe className="w-4 h-4 text-agri-600 dark:text-agri-400" />
       </div>
       <div className="flex items-center gap-1 overflow-x-auto no-scrollbar">
         {supportedLanguages.map((lang) => {
@@ -59,12 +59,12 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
               className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 whitespace-nowrap active:scale-95 ${
                 isActive
                   ? 'bg-gradient-to-r from-emerald-700 to-teal-700 text-white shadow-md shadow-emerald-900/20'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  : 'text-agri-700 dark:text-agri-300 hover:bg-agri-50 dark:hover:bg-agri-800/60'
               }`}
             >
               <span>{lang.nativeName}</span>
               <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono font-extrabold ${
-                isActive ? 'bg-white/20 text-emerald-100' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
+                isActive ? 'bg-white/20 text-emerald-100' : 'bg-slate-200 dark:bg-agri-800/50 text-agri-500/70'
               }`}>
                 {lang.badge}
               </span>
