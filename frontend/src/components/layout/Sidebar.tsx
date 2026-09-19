@@ -37,10 +37,14 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = false }) => {
   const { user } = useAuth();
   const rawRole = user?.role;
-  const role: RoleType =
+  let role: RoleType =
     typeof rawRole === 'string'
       ? (rawRole as RoleType)
       : ((rawRole as any)?.name as RoleType) || 'FARMER';
+
+  if (role === 'GOVERNMENT' && user?.department === 'EXTENSION_WORKER') {
+    role = 'EXTENSION_WORKER';
+  }
 
   // 1. Farmer Specific Navigation
   const farmerNavItems: NavItem[] = [

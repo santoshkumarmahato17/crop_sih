@@ -31,14 +31,16 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   return (
     <div className="h-screen max-h-screen bg-surface-light dark:bg-surface-darkBg text-agri-900 dark:text-agri-50 flex flex-col selection:bg-agri-500 selection:text-white transition-colors duration-300 overflow-hidden">
       {/* 1. Fixed Stationary Header Bar */}
-      <div className="relative z-40 shrink-0 w-full">
-        <Header
-          systemStatus={systemStatus}
-          version={version}
-          isMinimal={!shouldShowAuthenticatedChrome}
-          onToggleSidebar={() => setIsMobileDrawerOpen((prev) => !prev)}
-        />
-      </div>
+      {!isAuthPage && (
+        <div className="relative z-40 shrink-0 w-full">
+          <Header
+            systemStatus={systemStatus}
+            version={version}
+            isMinimal={!shouldShowAuthenticatedChrome}
+            onToggleSidebar={() => setIsMobileDrawerOpen((prev) => !prev)}
+          />
+        </div>
+      )}
 
       {/* 2. Main Body Container with Stationary Sidebar & Independently Scrolling Main Area */}
       <div className="flex flex-1 min-h-0 relative z-10 min-w-0 overflow-hidden">

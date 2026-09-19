@@ -49,8 +49,12 @@ export const LoginPage: React.FC = () => {
       if (res.auth_url) {
         window.location.href = res.auth_url;
       }
-    } catch {
-      navigate('/auth/google/callback');
+    } catch (err: any) {
+      setErrorMsg(
+        err?.response?.data?.detail ||
+        err?.response?.data?.message ||
+        'Unable to connect to the authentication server. Please check if the backend is running.'
+      );
     }
   };
 
@@ -135,11 +139,8 @@ export const LoginPage: React.FC = () => {
           <img src="/agri-logo.png" alt="AgriShield Logo" className="w-16 h-12 object-contain" />
         </div>
         <h1 className="text-2xl font-black tracking-tight text-agri-900 dark:text-white font-display">
-          Sign In to AGRI SHIELD
+          Sign in
         </h1>
-        <p className="text-xs text-agri-600/70 dark:text-agri-400/60 font-medium">
-          Precision Agricultural Security & Diagnostic System
-        </p>
       </div>
 
       {errorMsg && (

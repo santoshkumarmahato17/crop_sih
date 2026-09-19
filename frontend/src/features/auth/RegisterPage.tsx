@@ -120,11 +120,8 @@ export const RegisterPage: React.FC = () => {
           <img src="/agri-logo.png" alt="AgriShield Logo" className="w-16 h-12 object-contain" />
         </div>
         <h1 className="text-2xl font-black tracking-tight text-agri-900 dark:text-white">
-          Create AGRI SHIELD Account
+          Create your account
         </h1>
-        <p className="text-xs text-agri-600 dark:text-agri-300 font-medium">
-          Register your verified account for precision agricultural monitoring
-        </p>
       </div>
 
       {/* Account Type / Role Selection Cards */}
@@ -336,15 +333,19 @@ export const RegisterPage: React.FC = () => {
 
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-agri-800 dark:text-agri-200">
-                  Department / Division
+                  Government Role / Designation *
                 </label>
-                <input
-                  type="text"
+                <select
+                  required
                   value={department}
                   onChange={(e) => setDepartment(e.target.value)}
-                  placeholder="e.g. Plant Pathology Div"
-                  className="w-full bg-white dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3 py-2 text-xs font-semibold"
-                />
+                  className="w-full bg-white dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300"
+                >
+                  <option value="" disabled>Select Designation...</option>
+                  <option value="AGRICULTURAL_OFFICER">Agricultural Officer</option>
+                  <option value="EXTENSION_WORKER">Extension Worker</option>
+                  <option value="AUTHORITY">Authority</option>
+                </select>
               </div>
 
               <div className="space-y-1 sm:col-span-2">

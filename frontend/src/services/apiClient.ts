@@ -69,3 +69,19 @@ export const systemService = {
     return response.data;
   },
 };
+
+export const satelliteService = {
+  getFarmImagery: async (farmId: string, layer: string = 'true_color', date?: string) => {
+    const params = new URLSearchParams();
+    params.append('layer', layer);
+    if (date) params.append('date', date);
+    
+    const response = await apiClient.get(`/satellite/farm/${farmId}/image?${params.toString()}`);
+    return response.data;
+  },
+  
+  getFarmStats: async (farmId: string, days: number = 30) => {
+    const response = await apiClient.get(`/satellite/farm/${farmId}/stats?days=${days}`);
+    return response.data;
+  }
+};

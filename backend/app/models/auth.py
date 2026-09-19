@@ -85,4 +85,6 @@ class User(Base, TimestampMixin):
     @property
     def permissions(self) -> List[str]:
         """Calculated permissions based on current assigned role."""
+        if self.role == RoleType.GOVERNMENT and self.department == "EXTENSION_WORKER":
+            return get_permissions_for_role(RoleType.EXTENSION_WORKER)
         return get_permissions_for_role(self.role)

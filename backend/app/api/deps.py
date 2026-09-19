@@ -167,11 +167,23 @@ def require_role(*allowed_roles: Union[RoleType, str]) -> Callable:
                     detail="Access denied: Admin credentials revoked or not authorized on this environment.",
                 )
 
-        if user_role not in normalized_roles:
+        effective_roles = {user_role}
+        if user_role == RoleType.GOVERNMENT and current_user.department == "EXTENSION_WORKER":
+            effective_roles.add(RoleType.EXTENSION_WORKER)
+
+        if not any(r in normalized_roles for r in effective_roles):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Access denied. Required role(s): {[r.value for r in normalized_roles]}. Your role: {user_role.value}",
             )
+            
+        # Government verification check
+        if user_role in [RoleType.GOVERNMENT, RoleType.EXTENSION_WORKER] and not current_user.is_verified:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Your government account is awaiting verification. Access to this resource is denied until approved.",
+            )
+
         return current_user
 
     return role_checker
