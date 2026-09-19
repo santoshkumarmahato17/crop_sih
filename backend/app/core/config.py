@@ -180,6 +180,9 @@ class Settings(BaseSettings):
     GEMINI_MODEL: str = "gemini-3.5-flash-lite"
     DATASET_ROOT_DIR: str = r"c:\Users\krsan\Desktop\crop\Dataset for Crop Pest and Disease Detection"
     USE_SQLITE_FALLBACK: bool = True
+    SENTINEL_HUB_CLIENT_ID: Optional[str] = None
+    SENTINEL_HUB_CLIENT_SECRET: Optional[str] = None
+
 
     # 8. SMTP & Email Delivery Settings
     SMTP_TLS: bool = True

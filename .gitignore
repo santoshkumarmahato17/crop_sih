@@ -141,3 +141,6 @@ PROJECT_DATA/02_MODELS/*
 !PROJECT_DATA/02_MODELS/**/class_names.json
 !PROJECT_DATA/02_MODELS/**/model_metadata.json
 !PROJECT_DATA/02_MODELS/SOYBEAN/soybean_model.weights.h5
+
+# Local Netlify folder
+.netlify
