@@ -49,13 +49,16 @@ async def test_forgot_password_complete_flow(async_client: AsyncClient):
     assert reg_res.status_code == 201
 
     # 3. Unconfigured SMTP check
-    unconfig_res = await async_client.post(
-        "/api/v1/auth/forgot-password",
-        json={"email": test_email}
-    )
-    assert unconfig_res.status_code == 503
-    unconfig_msg = unconfig_res.json().get("message") or unconfig_res.json().get("detail")
-    assert "Email service is not configured" in str(unconfig_msg)
+    from app.core.config import get_settings
+    settings = get_settings()
+    with patch.object(settings, "SMTP_HOST", ""):
+        unconfig_res = await async_client.post(
+            "/api/v1/auth/forgot-password",
+            json={"email": test_email}
+        )
+        assert unconfig_res.status_code == 503
+        unconfig_msg = unconfig_res.json().get("message") or unconfig_res.json().get("detail")
+        assert "Email service is not configured" in str(unconfig_msg)
 
     # 4. Mock successful email delivery for testing full verification & reset pipeline
     mock_dispatch = {"sent": True, "message": "Dispatched for test"}

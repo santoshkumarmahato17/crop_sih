@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Stethoscope, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { DiagnosisWizardProvider } from './DiagnosisWizardContext';
 import { Step1Location } from './Step1Location';
 import { Step2Crop } from './Step2Crop';
@@ -28,19 +28,6 @@ const WizardInner: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="bg-white rounded-xl shadow-sm border border-emerald-100 p-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
-            <Stethoscope className="w-8 h-8 text-emerald-600" />
-            AI Symptom & Disease Diagnosis
-          </h1>
-          <p className="text-slate-500 mt-1">
-            Production-Ready Crop Health Diagnosis Workflow
-          </p>
-        </div>
-      </div>
-
       {/* Stepper Header */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
         <div className="flex items-center justify-between">

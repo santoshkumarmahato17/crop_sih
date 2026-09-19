@@ -118,6 +118,7 @@ soybean d-set/
 .vscode/
 .claude/
 agent/
+scratch/
 *.swp
 *.swo
 *~

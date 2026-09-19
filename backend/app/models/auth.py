@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 from typing import List, Optional
-from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, String, Text, JSON
+from sqlalchemy import Boolean, DateTime, Enum, Float, ForeignKey, String, Text, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.permissions import RoleType, get_permissions_for_role
@@ -33,10 +33,16 @@ class User(Base, TimestampMixin):
         String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
     )
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
-    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
+    hashed_password: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     full_name: Mapped[str] = mapped_column(String(150), nullable=False)
     phone_number: Mapped[Optional[str]] = mapped_column(String(30), nullable=True)
     address: Mapped[Optional[str]] = mapped_column(String(500), nullable=True)
+
+    # OAuth & Geolocation attributes
+    google_sub: Mapped[Optional[str]] = mapped_column(String(255), unique=True, nullable=True, index=True)
+    auth_provider: Mapped[Optional[str]] = mapped_column(String(50), default="email", nullable=True)
+    latitude: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    longitude: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     
     # Primary Role Enum (Source of Truth)
     role: Mapped[RoleType] = mapped_column(
