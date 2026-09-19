@@ -31,14 +31,33 @@ ga_sqlite.before_create = lambda *args, **kwargs: None
 from urllib.parse import urlparse
 
 def is_postgres_available(host: str, port: int, timeout_seconds: float = 1.0) -> bool:
-    """Performs a TCP socket probe to verify PostgreSQL daemon reachability."""
+    """Performs a check to verify PostgreSQL daemon reachability and credential validity."""
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(timeout_seconds)
         result = sock.connect_ex((host, port))
         sock.close()
-        return result == 0
+        if result != 0:
+            return False
     except Exception:
+        return False
+
+    # Also test authentication so invalid local credentials seamlessly fall back to resilient SQLite
+    try:
+        import asyncio
+        import asyncpg
+
+        async def _test_conn():
+            url = settings.async_database_url
+            if url.startswith("postgresql+asyncpg://"):
+                url = "postgresql://" + url[len("postgresql+asyncpg://"):]
+            conn = await asyncio.wait_for(asyncpg.connect(url), timeout=timeout_seconds)
+            await conn.close()
+            return True
+
+        return asyncio.run(_test_conn())
+    except Exception as auth_err:
+        logger.warning(f"[Database] PostgreSQL port reachable, but authentication failed or timed out: {auth_err}")
         return False
 
 

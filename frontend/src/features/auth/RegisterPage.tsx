@@ -116,14 +116,14 @@ export const RegisterPage: React.FC = () => {
     <div className="w-full max-w-lg p-8 sm:p-9 rounded-3xl bg-white/95 dark:bg-surface-darkCard/90 border border-white/60 dark:border-slate-700/60 shadow-2xl shadow-agri-900/15 backdrop-blur-2xl space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div className="inline-flex p-2 rounded-2xl bg-white dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 shadow-md">
-          <img src="/agri-logo.png" alt="AgriShield Logo" className="w-16 h-12 object-contain" />
+        <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 shadow-md overflow-hidden">
+          <img src="/kisan-sathi-logo.png" alt="Kisan Sathi Logo" className="w-20 h-16 object-cover object-center rounded-xl" />
         </div>
         <h1 className="text-2xl font-black tracking-tight text-agri-900 dark:text-white">
-          Create AGRI SHIELD Account
+          Create KISAN SATHI Account
         </h1>
         <p className="text-xs text-agri-600 dark:text-agri-300 font-medium">
-          Register your verified account for precision agricultural monitoring
+          We stand with you, for every crop and every season.
         </p>
       </div>
 

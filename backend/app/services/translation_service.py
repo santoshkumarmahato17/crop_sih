@@ -10,13 +10,13 @@ from typing import Dict, Any, List, Optional
 class TranslationService:
     """Localized agricultural translation provider with strict agronomic safety guards."""
 
-    SUPPORTED_LANGUAGES = ["mr-IN", "hi-IN", "en-IN"]
-    DEFAULT_LANGUAGE = "mr-IN"
+    SUPPORTED_LANGUAGES = ["en", "ta", "hi", "mr", "en-IN", "ta-IN", "hi-IN", "mr-IN"]
+    DEFAULT_LANGUAGE = "en"
 
     # Static Curated Dictionaries for Agronomic Conditions & Advisories
     TEMPLATES: Dict[str, Dict[str, Any]] = {
         "early_blight": {
-            "en-IN": {
+            "en": {
                 "title": "Early Blight Risk Advisory",
                 "summary": "AI signals and microclimate indicators suggest potential Alternaria solani (Early Blight) foliar stress.",
                 "why_this_matters": "High relative humidity and wet leaf duration accelerate spore germination, leading to concentric leaf spot lesions and defoliation.",
@@ -41,7 +41,7 @@ class TranslationService:
                 "audio_text": "Early Blight advisory active. Inspect lower leaves for dark spots, avoid wetting crop canopy, and consult local extension expert if lesions spread.",
             },
 
-            "hi-IN": {
+            "hi": {
                 "title": "अगेती झुलसा रोग परामर्श (Early Blight)",
                 "summary": "मौसम और एआई संकेतकों के अनुसार फसल में अगेती झुलसा (अल्टरनेरिया) का जोखिम बढ़ रहा है।",
                 "why_this_matters": "अधिक आर्द्रता और पत्तों पर नमी रहने से फफूंद तेजी से फैलती है जिससे पत्तियों पर गोल भूरे धब्बे बनते हैं।",
@@ -65,9 +65,10 @@ class TranslationService:
                 ],
                 "audio_text": "अगेती झुलसा रोग चेतावनी। निचली पत्तियों की जाँच करें, पत्तों पर पानी न ठहरने दें और कृषि विशेषज्ञ से सलाह लें।",
             },
-            "mr-IN": {
+
+            "mr": {
                 "title": "करपा रोग सल्ला व दक्षता (Early Blight / Alternaria)",
-                "summary": "हवामान घटक आणि एआय तपासणीनुसार पिकावर करपा रोगाचा संभाव्य धोका दिसून येत आहे.",
+                "summary": "हवामान घटक आणि एआई तपासणीनुसार पिकावर करपा रोगाचा संभाव्य धोका दिसून येत आहे.",
                 "why_this_matters": "हवेतील जादा दमटपणा व पानांवरील ओलावा यामुळे करप्याच्या बुरशीचा प्रादुर्भाव वाढून पानांवर गोल काळे डाग पडतात.",
                 "what_to_do_now": [
                     "झाडाच्या खालच्या व जुन्या पानांवर काळे-तपकिरी गोलाकार डाग आहेत का ते तपासा.",
@@ -89,9 +90,34 @@ class TranslationService:
                 ],
                 "audio_text": "करपा रोग दक्षता सल्ला. झाडांची खालची पाने तपासा, पानावरील ओलावा टाळा आणि कृषी तज्ञांचा सल्ला घ्या.",
             },
+
+            "ta": {
+                "title": "முன்கூட்டிய இலைக்கருகல் நோய் மேலாண்மை (Early Blight)",
+                "summary": "வானிலை காரணிகள் மற்றும் செயற்கை நுண்ணறிவு பகுப்பாய்வின்படி இலைக்கருகல் நோய் ஆபத்து உள்ளது.",
+                "why_this_matters": "அதிக ஈரப்பதம் மற்றும் இலைகளில் ஈரத்தன்மை நீடிப்பதால் பூஞ்சை வித்திகள் வேகமாகப் பரவி கரும்பழுப்பு புள்ளிகளை உண்டாக்குகின்றன.",
+                "what_to_do_now": [
+                    "செடியின் அடிப்பகுதி மற்றும் முதிர்ந்த இலைகளில் வட்ட வடிவ புள்ளிகள் உள்ளதா என கண்காணிக்கவும்.",
+                    "பாதிக்கப்பட்ட இலைகளை அகற்றி வயலுக்கு வெளியே பாதுகாப்பாக அப்புறப்படுத்தவும்.",
+                    "சொட்டு நீர் பாசன முறையைப் பயன்படுத்தி இலைகளின் மீது நீர் தெளிப்பதைத் தவிர்க்கவும்.",
+                ],
+                "what_to_monitor": [
+                    "அடுத்த 48 மணி நேரத்தில் அருகிலுள்ள வரிசைகளையும் கண்காணிக்கவும்.",
+                    "இரவு நேரத்தில் ஈரப்பதத்தின் கால அளவை கண்காணிக்கவும்.",
+                ],
+                "what_to_avoid": [
+                    "மாலை வேளைகளில் தெளிப்பு நீர் பாசனம் செய்வதைத் தவிர்க்கவும்.",
+                    "அதிகப்படியான ரசாயன தழைச்சத்து (யுரியா) இடுவதைத் தவிர்க்கவும்.",
+                ],
+                "when_to_seek_expert_help": "புள்ளிகள் மேல் இலைகள் அல்லது காய்களுக்குப் பரவினால் உடனடியாக வேளாண் அதிகாரியை அணுகவும்.",
+                "safety_warnings": [
+                    "வேளாண் பல்கலைக்கழக அங்கீகரிக்கப்பட்ட இயற்கை முறைகளைப் பின்பற்றவும்.",
+                    "அனுமதியின்றி ரசாயன மருந்துகளை தெளிக்க வேண்டாம்.",
+                ],
+                "audio_text": "இலைக்கருகல் நோய் மேலாண்மை அறிவுரை. இலைகளை ஆய்வு செய்யவும், நீர் தேங்குவதைத் தவிர்க்கவும்.",
+            },
         },
         "general_disease": {
-            "en-IN": {
+            "en": {
                 "title": "Crop Health & Pathogen Advisory",
                 "summary": "Elevated agronomic risk detected in zone. Immediate scouting recommended.",
                 "why_this_matters": "Environmental stress indicators match favorable disease sporulation conditions.",
@@ -107,7 +133,7 @@ class TranslationService:
                 "audio_text": "Crop health advisory active. Inspect affected zone and submit photos for expert validation.",
             },
 
-            "hi-IN": {
+            "hi": {
                 "title": "फसल स्वास्थ्य एवं सुरक्षा परामर्श",
                 "summary": "खेत के इस क्षेत्र में रोग जोखिम देखा गया है। तत्काल निरीक्षण की आवश्यकता है।",
                 "why_this_matters": "मौसम के मौजूदा आंकड़े फसल पर कीट व रोग के अनुकूल परिस्थिति दर्शा रहे हैं।",
@@ -122,7 +148,7 @@ class TranslationService:
                 "safety_warnings": ["हमेशा एकीकृत कीट प्रबंधन (IPM) तकनीकों का पालन करें।"],
                 "audio_text": "फसल सुरक्षा परामर्श। खेत की जाँच करें और विशेषज्ञ सत्यापन के लिए फोटो अपलोड करें।",
             },
-            "mr-IN": {
+            "mr": {
                 "title": "पीक आरोग्य व कीड-रोग दक्षता सल्ला",
                 "summary": "या पट्ट्यात पीक आरोग्यास धोका निर्माण होण्याची शक्यता आहे. त्वरित पाहणी करा.",
                 "why_this_matters": "सध्याचे हवामान घटक पिकावर रोग निर्माण करणाऱ्या घटकांना पोषक आहेत.",
@@ -137,34 +163,69 @@ class TranslationService:
                 "safety_warnings": ["नेहमी एकात्मिक कीड व्यवस्थापन (IPM) पद्धतींचा अवलंब करा."],
                 "audio_text": "पीक आरोग्य सल्ला. शेतात जाऊन पाहणी करा आणि तज्ञ पडताळणीसाठी फोटो पाठवा.",
             },
+            "ta": {
+                "title": "பயிர் பாதுகாப்பு மற்றும் நோய் தடுப்பு மேலாண்மை",
+                "summary": "பயிரில் நோய் தாக்கும் அபாயம் உள்ளது. உடனடி கள ஆய்வு தேவை.",
+                "why_this_matters": "தற்போதைய வானிலை பயிர்களில் நோய் பரவுவதற்கு சாதகமாக உள்ளது.",
+                "what_to_do_now": [
+                    "பாதிக்கப்பட்ட பகுதிகளில் விரிவான கள ஆய்வு மேற்கொள்ளவும்.",
+                    "சந்தேகத்திற்குரிய அறிகுறிகளை புகைப்படம் எடுத்து வேளாண் வல்லுநருக்கு அனுப்பவும்.",
+                    "வேளாண் கருவிகளை சுத்தமாக வைத்திருக்கவும்.",
+                ],
+                "what_to_monitor": ["பயிரின் வளர்ச்சி மற்றும் பசுமையை தொடர்ந்து கண்காணிக்கவும்."],
+                "what_to_avoid": ["நோயுற்ற செடிகளை தொட்டபின் உடனடியாக நல்ல செடிகளை தொடுவதை தவிர்க்கவும்."],
+                "when_to_seek_expert_help": "அறிகுறிகள் 3 நாட்களுக்கு மேல் நீடித்தால் வேளாண் அலுவலரை தொடர்பு கொள்ளவும்.",
+                "safety_warnings": ["ஒருங்கிணைந்த பயிர் பாதுகாப்பு (IPM) முறைகளைக் கடைப்பிடிக்கவும்."],
+                "audio_text": "பயிர் பாதுகாப்பு அறிவுரை. பாதிக்கப்பட்ட செடிகளை கண்காணிக்கவும்.",
+            },
         },
     }
+
+    @classmethod
+    def normalize_lang_code(cls, lang: str) -> str:
+        """Normalizes language codes such as 'en-IN' or 'en_US' down to base 2-letter codes."""
+        if not lang:
+            return cls.DEFAULT_LANGUAGE
+        cleaned = lang.lower().split("-")[0].split("_")[0]
+        if cleaned in ["en", "hi", "mr", "ta"]:
+            return cleaned
+        return cls.DEFAULT_LANGUAGE
 
     @classmethod
     def get_localized_content(
         cls,
         condition_key: str,
-        target_language: str = "mr-IN",
+        target_language: str = "en",
         custom_replacements: Optional[Dict[str, str]] = None,
     ) -> Dict[str, Any]:
         """
         Retrieves localized advisory text with fallback to English if target language is missing.
         """
-        lang = target_language if target_language in cls.SUPPORTED_LANGUAGES else cls.DEFAULT_LANGUAGE
-        
+        raw_lang = (target_language or "").lower()
+        if raw_lang in ["en", "hi", "mr", "ta"]:
+            lang = raw_lang
+            is_valid_lang = True
+        elif raw_lang in ["en-in", "hi-in", "mr-in", "ta-in"]:
+            lang = raw_lang.split("-")[0]
+            is_valid_lang = True
+        else:
+            lang = cls.DEFAULT_LANGUAGE
+            is_valid_lang = False
+
         # Match key or default to general_disease
         template_group = cls.TEMPLATES.get(condition_key.lower().replace(" ", "_"), cls.TEMPLATES["general_disease"])
         
         is_fallback = False
-        if lang not in template_group:
-            content = template_group.get(cls.DEFAULT_LANGUAGE, cls.TEMPLATES["general_disease"]["mr-IN"])
+        if not is_valid_lang or lang not in template_group:
+            content = template_group.get(cls.DEFAULT_LANGUAGE, cls.TEMPLATES["general_disease"]["en"])
             is_fallback = True
+            lang = cls.DEFAULT_LANGUAGE
         else:
             content = template_group[lang]
 
         result = dict(content)
         result["is_fallback"] = is_fallback
-        result["language"] = lang if not is_fallback else cls.DEFAULT_LANGUAGE
+        result["language"] = lang
 
         # Apply safety checks: sanitize any unsupported dosage recipes
         result["what_to_do_now"] = [cls.sanitize_agronomic_action(a) for a in result.get("what_to_do_now", [])]

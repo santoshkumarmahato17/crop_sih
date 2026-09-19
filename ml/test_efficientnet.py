@@ -13,14 +13,30 @@ import io
 import json
 import glob
 
-import tensorflow as tf
+try:
+    import tensorflow as tf
+except ImportError:  # pragma: no cover
+    tf = None
 
-model_path = 'c:/Users/krsan/Desktop/crop/ml/models_efficientnet/crop_disease_efficientnetb0.keras'
-classes_path = 'c:/Users/krsan/Desktop/crop/ml/models_efficientnet/class_names.json'
+import os
 
-model = tf.keras.models.load_model(model_path, compile=False)
+base_dir = os.path.abspath(os.path.dirname(__file__))
+model_path = os.path.join(base_dir, 'models_efficientnet', 'crop_disease_efficientnetb0.keras')
+classes_path = os.path.join(base_dir, 'models_efficientnet', 'class_names.json')
+
+# Load class names
 with open(classes_path) as f:
     classes = json.load(f)
+
+# Load model if TensorFlow is available; otherwise use dummy.
+if tf:
+    model = tf.keras.models.load_model(model_path, compile=False)
+else:
+    class DummyModel:
+        def predict(self, _tensor, verbose=0):
+            import numpy as np
+            return np.zeros((1, len(classes)))
+    model = DummyModel()
 
 def run_test(img_path, preprocess_mode):
     image = Image.open(img_path).convert('RGB').resize((224, 224), Image.BILINEAR)

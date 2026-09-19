@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Bot,
   Send,
@@ -478,6 +478,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
             transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
             touchAction: 'none',
           }}
+          data-assistant-toggle="true"
           className="fixed top-0 left-0 z-40 w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 text-white shadow-2xl shadow-emerald-950/70 border-2 border-white/40 flex items-center justify-center group cursor-grab active:cursor-grabbing hover:scale-110 active:scale-95 transition-[transform,shadow] select-none"
         >
           <div className="relative flex items-center justify-center pointer-events-none">
@@ -571,7 +572,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
               </div>
               <div>
                 <h3 className="font-extrabold text-agri-900 dark:text-white text-xs flex items-center gap-1.5">
-                  <span className="tracking-tight">AGRI SHIELD Assistant</span>
+                  <span className="tracking-tight">KISAN SATHI Assistant</span>
                   <span className="px-2 py-0.5 rounded-full bg-gradient-to-r from-emerald-500/20 to-teal-500/20 dark:from-emerald-500/25 dark:to-teal-500/25 border border-emerald-400/40 text-[9px] text-agri-700 dark:text-agri-300 font-mono font-black">
                     ✨ Gemini 1.5
                   </span>

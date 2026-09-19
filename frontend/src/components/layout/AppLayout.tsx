@@ -29,7 +29,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const shouldShowAuthenticatedChrome = !isAuthPage && isAuthenticated;
 
   return (
-    <div className="h-screen max-h-screen bg-surface-light dark:bg-surface-darkBg text-agri-900 dark:text-agri-50 flex flex-col selection:bg-agri-500 selection:text-white transition-colors duration-300 overflow-hidden">
+    <div className="h-screen max-h-screen bg-[#121011] text-[#d8cbcf] flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-hidden">
       {/* 1. Fixed Stationary Header Bar */}
       <div className="relative z-40 shrink-0 w-full">
         <Header
@@ -40,22 +40,19 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         />
       </div>
 
-      {/* 2. Main Body Container with Stationary Sidebar & Independently Scrolling Main Area */}
+      {/* 2. Main Body Container with Slide-Over Farmer Menu & Independently Scrolling Main Area */}
       <div className="flex flex-1 min-h-0 relative z-10 min-w-0 overflow-hidden">
-        {/* Desktop Fixed Sidebar (Stationary barrier on the left) */}
-        {shouldShowAuthenticatedChrome && <Sidebar />}
-
-        {/* Mobile Slide-Over Drawer with Backdrop (On screens < lg) */}
+        {/* Slide-Over Farmer Menu Drawer with Backdrop (Sliding Design on MENU click) */}
         {shouldShowAuthenticatedChrome && isMobileDrawerOpen && (
-          <div className="lg:hidden fixed inset-0 z-50 flex">
+          <div className="fixed inset-0 z-50 flex animate-fade-in">
             {/* Backdrop Blur Overlay */}
             <div
-              className="fixed inset-0 bg-agri-950/70 backdrop-blur-sm animate-fade-in transition-opacity"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
               onClick={() => setIsMobileDrawerOpen(false)}
             />
-            {/* Drawer */}
+            {/* Sliding Drawer Container */}
             <div className="relative z-10 w-72 max-w-[85vw] h-full shadow-2xl animate-slide-in-left">
-              <Sidebar isMobileDrawer onClose={() => setIsMobileDrawerOpen(false)} />
+              <Sidebar onClose={() => setIsMobileDrawerOpen(false)} />
             </div>
           </div>
         )}
@@ -64,7 +61,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
         <main
           className={`flex-1 max-w-full min-w-0 h-full overflow-y-auto ${
             isAuthPage
-              ? 'p-0 flex items-center justify-center'
+              ? 'p-0'
               : 'p-2.5 sm:p-6 md:p-8 pb-24 sm:pb-28 lg:pb-8'
           }`}
         >

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Globe, Check } from 'lucide-react';
 import { useTranslation, SupportedLanguage } from '@/i18n';
 import { advisoryService } from '@/services/advisoryService';
@@ -21,7 +21,7 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
 
   if (variant === 'minimal') {
     return (
-      <div className={`flex items-center gap-1 bg-agri-50 dark:bg-agri-800/50 p-1 rounded-xl border border-agri-200/50 dark:border-agri-700/30 ${className}`}>
+      <div className={`flex items-center gap-1.5 bg-transparent p-0.5 rounded-full ${className}`}>
         {supportedLanguages.map((lang) => {
           const isActive = currentLanguage === lang.code;
           return (
@@ -29,10 +29,10 @@ export const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
               key={lang.code}
               type="button"
               onClick={() => handleSelectLanguage(lang.code)}
-              className={`px-2 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                 isActive
-                  ? 'bg-agri-500 text-white shadow-sm'
-                  : 'text-agri-600 dark:text-agri-300 hover:text-agri-600 hover:bg-agri-100 dark:hover:bg-agri-700/40'
+                  ? 'bg-[#3f6e33] border border-[#569147] text-white font-semibold shadow-sm'
+                  : 'text-[#8d7e84] hover:text-white hover:bg-[#241c20]'
               }`}
             >
               <span>{lang.nativeName}</span>

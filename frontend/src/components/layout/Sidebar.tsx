@@ -1,23 +1,26 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
+  Home,
+  Heart,
+  Plus,
+  ClipboardList,
+  TrendingUp,
+  Sprout,
+  Mic,
+  Bug,
+  Users,
+  Plane,
+  User,
+  Settings,
   LayoutDashboard,
   BrainCircuit,
-  Stethoscope,
-  MessageSquare,
-  Map,
   Shield,
-  Plane,
-  Settings,
   Activity,
-  User,
-  Users,
   KeyRound,
   FileText,
-  ShieldAlert,
-  Sprout,
   ShieldCheck,
-  Pentagon,
+  ShieldAlert,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { RoleType } from '@/types';
@@ -26,6 +29,7 @@ interface NavItem {
   to: string;
   label: string;
   icon: React.ElementType;
+  iconColor?: string;
   badge?: string;
 }
 
@@ -42,61 +46,61 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
       ? (rawRole as RoleType)
       : ((rawRole as any)?.name as RoleType) || 'FARMER';
 
-  // 1. Farmer Specific Navigation
+  // 1. Farmer Specific Navigation matching uploaded design exactly
   const farmerNavItems: NavItem[] = [
-    { to: '/farmer/dashboard', label: 'Farmer Dashboard', icon: LayoutDashboard },
-    { to: '/analysis', label: 'AI Disease Analysis', icon: BrainCircuit },
-    { to: '/onboarding/create-field', label: 'Draw Satellite Field', icon: Pentagon, badge: 'EOS' },
-    { to: '/field-map', label: 'Precision Field Map', icon: Map },
-    { to: '/monitoring', label: 'Follow-Up Tracking', icon: Activity, badge: 'Loop' },
-    { to: '/advisories', label: 'Crop Advisories', icon: Sprout, badge: 'IPM' },
-    { to: '/validation', label: 'Expert Validation', icon: ShieldCheck },
-    { to: '/diagnosis', label: 'Symptom Disease ID', icon: Stethoscope, badge: 'AI' },
-    { to: '/community', label: 'Community Hub', icon: MessageSquare },
-    { to: '/drones', label: 'Drone Fleet & Missions', icon: Plane },
-    { to: '/profile', label: 'Account Profile', icon: User },
-    { to: '/settings', label: 'System Settings', icon: Settings },
+    { to: '/farmer/dashboard', label: 'Home', icon: Home, iconColor: 'text-[#f97316]' },
+    { to: '/analysis', label: 'Crop Health Check', icon: Heart, iconColor: 'text-[#ec4899]' },
+    { to: '/onboarding/create-field', label: 'Add Farm', icon: Plus, iconColor: 'text-[#a855f7]' },
+    { to: '/field-map', label: 'My Farm', icon: ClipboardList, iconColor: 'text-[#eab308]' },
+    { to: '/monitoring', label: 'Crop Progress', icon: TrendingUp, iconColor: 'text-[#38bdf8]' },
+    { to: '/advisories', label: 'Crop Advice', icon: Sprout, iconColor: 'text-[#84cc16]' },
+    { to: '/validation', label: 'Ask an Expert', icon: Mic, iconColor: 'text-[#60a5fa]' },
+    { to: '/diagnosis', label: 'Disease Check', icon: Bug, iconColor: 'text-[#22c55e]' },
+    { to: '/community', label: 'Farmer Community', icon: Users, iconColor: 'text-[#c084fc]' },
+    { to: '/drones', label: 'Drone Services', icon: Plane, iconColor: 'text-[#f43f5e]' },
+    { to: '/profile', label: 'My Profile', icon: User, iconColor: 'text-[#a855f7]' },
+    { to: '/settings', label: 'Settings', icon: Settings, iconColor: 'text-[#9ca3af]' },
   ];
 
   // 2. Government Officer Navigation
   const governmentNavItems: NavItem[] = [
-    { to: '/government/dashboard', label: 'Regional Command', icon: LayoutDashboard },
-    { to: '/monitoring', label: 'Follow-Up Monitoring', icon: Activity, badge: 'Active' },
-    { to: '/validation', label: 'Expert Validation', icon: ShieldCheck, badge: 'Cases' },
-    { to: '/advisories', label: 'Regional Advisories', icon: Sprout },
-    { to: '/officer', label: 'Extension Console', icon: Shield, badge: 'Official' },
-    { to: '/field-map', label: 'Jurisdiction Map', icon: Map },
-    { to: '/spread', label: 'Spread Risk Analysis', icon: Activity },
-    { to: '/community', label: 'Farmer Advisory Hub', icon: MessageSquare },
-    { to: '/analysis', label: 'Diagnostic Verification', icon: BrainCircuit },
-    { to: '/profile', label: 'Official Profile', icon: User },
-    { to: '/settings', label: 'Regional Settings', icon: Settings },
+    { to: '/government/dashboard', label: 'Regional Command', icon: LayoutDashboard, iconColor: 'text-[#38bdf8]' },
+    { to: '/monitoring', label: 'Follow-Up Monitoring', icon: Activity, badge: 'Active', iconColor: 'text-[#4ade80]' },
+    { to: '/validation', label: 'Expert Validation', icon: ShieldCheck, badge: 'Cases', iconColor: 'text-[#f59e0b]' },
+    { to: '/advisories', label: 'Regional Advisories', icon: Sprout, iconColor: 'text-[#84cc16]' },
+    { to: '/officer', label: 'Extension Console', icon: Shield, badge: 'Official', iconColor: 'text-[#a855f7]' },
+    { to: '/field-map', label: 'Jurisdiction Map', icon: ClipboardList, iconColor: 'text-[#eab308]' },
+    { to: '/spread', label: 'Spread Risk Analysis', icon: Activity, iconColor: 'text-[#ec4899]' },
+    { to: '/community', label: 'Farmer Advisory Hub', icon: Users, iconColor: 'text-[#c084fc]' },
+    { to: '/analysis', label: 'Diagnostic Verification', icon: BrainCircuit, iconColor: 'text-[#f43f5e]' },
+    { to: '/profile', label: 'Official Profile', icon: User, iconColor: 'text-[#a855f7]' },
+    { to: '/settings', label: 'Regional Settings', icon: Settings, iconColor: 'text-[#9ca3af]' },
   ];
 
   // 3. Extension Worker Navigation
   const extensionNavItems: NavItem[] = [
-    { to: '/extension/dashboard', label: 'Field Operations', icon: LayoutDashboard, badge: 'Queue' },
-    { to: '/field-map', label: 'Jurisdiction Map', icon: Map },
-    { to: '/validation', label: 'Expert Validation', icon: ShieldCheck },
-    { to: '/advisories', label: 'Regional Advisories', icon: Sprout },
-    { to: '/monitoring', label: 'Follow-Up Monitoring', icon: Activity },
-    { to: '/profile', label: 'Worker Profile', icon: User },
-    { to: '/settings', label: 'Settings', icon: Settings },
+    { to: '/extension/dashboard', label: 'Field Operations', icon: LayoutDashboard, badge: 'Queue', iconColor: 'text-[#38bdf8]' },
+    { to: '/field-map', label: 'Jurisdiction Map', icon: ClipboardList, iconColor: 'text-[#eab308]' },
+    { to: '/validation', label: 'Expert Validation', icon: ShieldCheck, iconColor: 'text-[#f59e0b]' },
+    { to: '/advisories', label: 'Regional Advisories', icon: Sprout, iconColor: 'text-[#84cc16]' },
+    { to: '/monitoring', label: 'Follow-Up Monitoring', icon: Activity, iconColor: 'text-[#4ade80]' },
+    { to: '/profile', label: 'Worker Profile', icon: User, iconColor: 'text-[#a855f7]' },
+    { to: '/settings', label: 'Settings', icon: Settings, iconColor: 'text-[#9ca3af]' },
   ];
 
   // 4. System Administrator Navigation
   const adminNavItems: NavItem[] = [
-    { to: '/admin/dashboard', label: 'Admin Console', icon: KeyRound, badge: 'Root' },
-    { to: '/monitoring', label: 'Monitoring Engine', icon: Activity },
-    { to: '/validation', label: 'Validation System', icon: ShieldCheck },
-    { to: '/advisories', label: 'Advisory Engine', icon: Sprout },
-    { to: '/admin/users', label: 'User & RBAC Security', icon: Users },
-    { to: '/admin/audit-logs', label: 'Security & Audit Logs', icon: FileText },
-    { to: '/field-map', label: 'Global Field Grid', icon: Map },
-    { to: '/drones', label: 'Drone Infrastructure', icon: Plane },
-    { to: '/community', label: 'Global Moderation', icon: MessageSquare },
-    { to: '/profile', label: 'Admin Profile', icon: User },
-    { to: '/settings', label: 'System Config', icon: Settings },
+    { to: '/admin/dashboard', label: 'Admin Console', icon: KeyRound, badge: 'Root', iconColor: 'text-[#a855f7]' },
+    { to: '/monitoring', label: 'Monitoring Engine', icon: Activity, iconColor: 'text-[#4ade80]' },
+    { to: '/validation', label: 'Validation System', icon: ShieldCheck, iconColor: 'text-[#f59e0b]' },
+    { to: '/advisories', label: 'Advisory Engine', icon: Sprout, iconColor: 'text-[#84cc16]' },
+    { to: '/admin/users', label: 'User & RBAC Security', icon: Users, iconColor: 'text-[#38bdf8]' },
+    { to: '/admin/audit-logs', label: 'Security & Audit Logs', icon: FileText, iconColor: 'text-[#eab308]' },
+    { to: '/field-map', label: 'Global Field Grid', icon: ClipboardList, iconColor: 'text-[#eab308]' },
+    { to: '/drones', label: 'Drone Infrastructure', icon: Plane, iconColor: 'text-[#f43f5e]' },
+    { to: '/community', label: 'Global Moderation', icon: Users, iconColor: 'text-[#c084fc]' },
+    { to: '/profile', label: 'Admin Profile', icon: User, iconColor: 'text-[#a855f7]' },
+    { to: '/settings', label: 'System Config', icon: Settings, iconColor: 'text-[#9ca3af]' },
   ];
 
   const currentNavItems =
@@ -110,107 +114,103 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
 
   const roleLabel =
     role === 'ADMIN'
-      ? 'Administrator Controls'
+      ? 'ADMIN MENU'
       : role === 'GOVERNMENT'
-      ? 'Government Operations'
+      ? 'OFFICER MENU'
       : role === 'EXTENSION_WORKER'
-      ? 'Field Officer Operations'
-      : 'Farmer Operations';
+      ? 'EXTENSION MENU'
+      : 'FARMER MENU';
 
   return (
     <aside
-      className={`w-64 border-r border-agri-200/60 dark:border-agri-800/40 bg-white/95 dark:bg-surface-darkCard/95 backdrop-blur-2xl transition-colors duration-300 flex flex-col justify-between p-3.5 overflow-y-auto shrink-0 shadow-sidebar dark:shadow-none ${
-        isMobileDrawer ? 'h-full' : 'h-full hidden lg:flex'
-      }`}
+      className="w-72 max-w-full border-r border-[#382b30] bg-[#1e191b] text-[#d8cbcf] flex flex-col justify-between p-4 overflow-y-auto shrink-0 shadow-2xl transition-colors duration-200 h-full"
     >
       <div className="space-y-3">
-        <div>
-          {/* Mobile Drawer Top Header with close button */}
-          {isMobileDrawer && (
-            <div className="flex items-center justify-between pb-3 mb-2 border-b border-agri-200/60 dark:border-agri-800/40">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-agri-500/10 p-0.5 border border-agri-500/20">
-                  <img src="/agri-logo.png" alt="AgriShield" className="w-full h-full object-contain" />
-                </div>
-                <span className="text-sm font-extrabold text-agri-900 dark:text-white font-display">AGRI SHIELD</span>
+        {/* Brand Header: Logo + KISAN SATHI (Single straight line) + v0.1.0 + Close Button */}
+        <div className="flex items-center justify-between px-1 pt-0.5 pb-2.5 border-b border-[#35282d]/80">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-[#291f24] border border-[#3e2e34] p-1 flex items-center justify-center shadow-md shrink-0">
+              <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-[#3b82f6] to-[#f97316] flex items-center justify-center text-white text-[10px] font-black">
+                🛡️
               </div>
-              {onClose && (
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="p-2 rounded-xl bg-agri-100 hover:bg-agri-200 dark:bg-agri-800/60 dark:hover:bg-agri-800 text-agri-600 dark:text-agri-300 transition"
-                  aria-label="Close menu"
-                >
-                  ✕
-                </button>
-              )}
             </div>
-          )}
-
-          <div className="flex items-center justify-between px-3 py-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-agri-500/70 dark:text-agri-400/60">
-              {roleLabel}
-            </span>
-            <span
-              className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md border ${
-                role === 'ADMIN'
-                  ? 'bg-purple-500/10 text-purple-500 border-purple-500/30'
-                  : role === 'GOVERNMENT'
-                  ? 'bg-sky-500/10 text-sky-500 border-sky-500/30'
-                  : 'bg-agri-500/10 text-agri-500 border-agri-500/30'
-              }`}
-            >
-              {role}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-black tracking-tight text-white font-display whitespace-nowrap">
+                KISAN SATHI
+              </span>
+              <span className="text-[10px] bg-[#291f24] text-[#8d7e84] font-mono px-1.5 py-0.5 rounded-md border border-[#3e2e34] font-semibold">
+                v0.1.0
+              </span>
+            </div>
           </div>
 
-          <nav className="mt-1.5 space-y-0.5">
-            {currentNavItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => {
-                    if (onClose) onClose();
-                  }}
-                  className={({ isActive }) =>
-                    `flex items-center justify-between px-3 py-2.5 rounded-xl text-[12.5px] font-semibold transition-all duration-200 group ${
-                      isActive
-                        ? role === 'ADMIN'
-                          ? 'bg-purple-600 text-white shadow-md shadow-purple-600/25'
-                          : role === 'GOVERNMENT'
-                          ? 'bg-sky-600 text-white shadow-md shadow-sky-600/25'
-                          : 'bg-gradient-to-r from-agri-500 to-agri-600 text-white shadow-md shadow-agri-500/25'
-                        : 'text-agri-700 dark:text-agri-300/80 hover:bg-agri-50 dark:hover:bg-agri-800/40 hover:text-agri-900 dark:hover:text-white'
-                    }`
-                  }
-                >
-                  <div className="flex items-center gap-2.5">
-                    <Icon className="w-4 h-4 flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-black/15 text-white/90">
-                      {item.badge}
-                    </span>
-                  )}
-                </NavLink>
-              );
-            })}
-          </nav>
+          {onClose && (
+            <button
+              type="button"
+              onClick={onClose}
+              className="p-1.5 rounded-xl bg-[#291f24] hover:bg-[#382a30] text-[#d8cbcf] hover:text-white border border-[#3e2e34] transition"
+              aria-label="Close menu"
+              title="Close Farmer Menu"
+            >
+              ✕
+            </button>
+          )}
         </div>
-      </div>
 
-      {/* Role Footer Card */}
-      <div className="p-3 rounded-2xl bg-agri-50 dark:bg-agri-900/40 border border-agri-200/60 dark:border-agri-700/30 text-[11px] space-y-1 mt-4">
-        <div className="flex items-center gap-1.5 font-bold text-agri-800 dark:text-agri-200">
-          <ShieldAlert className="w-3.5 h-3.5 text-agri-500" />
-          <span>RBAC Protected</span>
+        {/* Menu Header Section */}
+        <div className="flex items-center justify-between px-2 pt-1 pb-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-[#8d7e84]">
+            {roleLabel}
+          </span>
+          <span
+            className={`text-[9px] font-mono font-bold px-2 py-0.5 rounded-full border ${
+              role === 'ADMIN'
+                ? 'bg-purple-500/15 text-purple-400 border-purple-500/30'
+                : role === 'GOVERNMENT'
+                ? 'bg-sky-500/15 text-sky-400 border-sky-500/30'
+                : 'bg-[#38201b] text-[#df6845] border-[#5e2f23]'
+            }`}
+          >
+            {role.replace('_', ' ')}
+          </span>
         </div>
-        <p className="text-[10px] text-agri-600/70 dark:text-agri-400/60 leading-tight">
-          Session verified under role <span className="font-mono font-bold text-agri-700 dark:text-agri-300">{role}</span>.
-        </p>
+
+        {/* Navigation List */}
+        <nav className="space-y-1">
+          {currentNavItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={() => {
+                  if (onClose) onClose();
+                }}
+                className={({ isActive }) =>
+                  `flex items-center justify-between px-3 py-2.5 rounded-xl text-[12.5px] font-medium transition-all duration-150 group ${
+                    isActive
+                      ? 'bg-[#2b1715] border border-[#d65b38]/50 text-[#f56f48] font-semibold shadow-sm'
+                      : 'text-[#d8cbcf] hover:bg-[#221a1d] hover:text-white border border-transparent'
+                  }`
+                }
+              >
+                <div className="flex items-center gap-3">
+                  <Icon
+                    className={`w-[17px] h-[17px] flex-shrink-0 transition-transform duration-150 group-hover:scale-110 ${
+                      item.iconColor || 'text-[#8d7e84]'
+                    }`}
+                  />
+                  <span>{item.label}</span>
+                </div>
+                {item.badge && (
+                  <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-md bg-black/40 text-white/90">
+                    {item.badge}
+                  </span>
+                )}
+              </NavLink>
+            );
+          })}
+        </nav>
       </div>
     </aside>
   );
