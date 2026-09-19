@@ -33,8 +33,26 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     )
     # Initialize database tables and initial dataset
     await init_db()
+
+    # Log backend configuration validation status
+    google_status = "CONFIGURED" if (settings.GOOGLE_CLIENT_ID and settings.GOOGLE_CLIENT_SECRET) else "MISSING"
+    weather_status = "CONFIGURED" if (settings.WEATHER_API_KEY or settings.OPENWEATHERMAP_API_KEY) else "CONFIGURED (Open-Meteo Fallback)"
+    sms_configured = bool(
+        (settings.TWILIO_ACCOUNT_SID and settings.TWILIO_AUTH_TOKEN)
+        or settings.FAST2SMS_API_KEY
+        or (settings.MSG91_AUTH_KEY and settings.MSG91_TEMPLATE_ID)
+    )
+    sms_status = "CONFIGURED" if sms_configured else "DEVELOPMENT MODE"
+
+    logger.info("=== AGRI SHIELD BACKEND CONFIGURATION VALIDATION ===")
+    logger.info(f"  Google OAuth 2.0 : {google_status}")
+    logger.info(f"  Weather Service  : {weather_status}")
+    logger.info(f"  SMS OTP Provider : {sms_status}")
+    logger.info("====================================================")
+
     yield
     logger.info(f"Shutting down {settings.PROJECT_NAME} gracefully.")
+
 
 
 def create_application() -> FastAPI:
@@ -76,10 +94,12 @@ def create_application() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
+        allow_origin_regex=r"http://(localhost|127\.0\.0\.1|10\.\d+\.\d+\.\d+)(:\d+)?",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
 
     # Centralized Error Handlers
     register_error_handlers(app, debug=settings.DEBUG)

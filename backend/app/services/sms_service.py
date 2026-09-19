@@ -95,7 +95,7 @@ class SMSService:
                 logger.error(f"Twilio connection exception: {twilio_err}")
 
         # 2. Try Fast2SMS if credentials configured
-        if self.settings.FAST2SMS_API_KEY:
+        if getattr(self.settings, "FAST2SMS_API_KEY", None):
             try:
                 fast2sms_url = "https://www.fast2sms.com/dev/bulkV2"
                 headers = {
@@ -126,25 +126,46 @@ class SMSService:
             except Exception as f2s_err:
                 logger.error(f"Fast2SMS connection exception: {f2s_err}")
 
-        # 3. Handle unconfigured or failed SMS providers
+        # 3. Try MSG91 if credentials configured
+        msg91_auth = getattr(self.settings, "MSG91_AUTH_KEY", None)
+        msg91_template = getattr(self.settings, "MSG91_TEMPLATE_ID", None)
+        if msg91_auth and msg91_template:
+            try:
+                msg91_url = f"https://control.msg91.com/api/v5/otp?template_id={msg91_template}&mobile=91{phone_10_digits}&authkey={msg91_auth}"
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    resp = await client.post(msg91_url, json={"otp": otp_code})
+                    if resp.status_code == 200:
+                        logger.info(f"SMS OTP successfully sent via MSG91 to {normalized_phone[:6]}****")
+                        return {
+                            "sent": True,
+                            "provider": "msg91",
+                            "message": "SMS OTP code sent to your mobile phone.",
+                            "normalized_phone": normalized_phone,
+                        }
+            except Exception as msg91_err:
+                logger.error(f"MSG91 connection exception: {msg91_err}")
+
+        # 4. Handle unconfigured or failed SMS providers
         has_credentials = bool(
             (self.settings.TWILIO_ACCOUNT_SID and self.settings.TWILIO_AUTH_TOKEN)
-            or self.settings.FAST2SMS_API_KEY
+            or getattr(self.settings, "FAST2SMS_API_KEY", None)
+            or (getattr(self.settings, "MSG91_AUTH_KEY", None) and getattr(self.settings, "MSG91_TEMPLATE_ID", None))
         )
 
         if not has_credentials:
-            logger.warning("No SMS provider credentials found in configuration.")
+            logger.info(f"[DEVELOPMENT MODE] Generated Phone OTP for {normalized_phone}: {otp_code}")
             return {
                 "sent": False,
                 "reason": "PROVIDER_NOT_CONFIGURED",
-                "message": "SMS provider is not configured on the server. Please configure TWILIO or FAST2SMS API keys in environment settings.",
+                "message": "SMS provider is not configured on the server. Please configure TWILIO, FAST2SMS, or MSG91 API keys in backend/.env.",
                 "normalized_phone": normalized_phone,
             }
+
 
         return {
             "sent": False,
             "reason": "SMS_DELIVERY_FAILED",
-            "message": "Failed to deliver SMS message via the SMS gateway service. Please try again later.",
+            "message": "Failed to deliver SMS message via the SMS gateway service. Please check provider credentials and account balance.",
             "normalized_phone": normalized_phone,
         }
 

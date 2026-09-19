@@ -194,7 +194,7 @@ async def forgot_password(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No account found registered with this email address. Please check your email or register."
+            detail="No AGRI SHIELD account was found for this email."
         )
 
     try:
@@ -207,34 +207,18 @@ async def forgot_password(
     if not dispatch_res.get("sent"):
         reason = dispatch_res.get("reason")
         err_msg = dispatch_res.get("message") or "Email service delivery failed."
-        if reason == "SMTP_NOT_CONFIGURED":
-            import sys
-            from app.core.config import get_settings
-            settings = get_settings()
-            is_pytest = "pytest" in sys.modules or any("pytest" in str(arg) for arg in sys.argv) or bool(os.environ.get("PYTEST_CURRENT_TEST"))
-            if (settings.DEBUG or settings.ENVIRONMENT == "development") and not is_pytest:
-                return ForgotPasswordResponse(
-                    success=True,
-                    message=f"Development Mode: OTP '{otp_code}' generated.",
-                    smtp_configured=False,
-                )
-            otp_service.clear_otp(email)
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"Email service is not configured on the server. {err_msg}"
-            )
-        else:
-            otp_service.clear_otp(email)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"SMTP Email Delivery Failure: {err_msg}"
-            )
+        otp_service.clear_otp(email)
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE if reason == "SMTP_NOT_CONFIGURED" else status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Unable to send password reset OTP email: {err_msg}. Please configure SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in backend/.env."
+        )
 
     return ForgotPasswordResponse(
         success=True,
         message="OTP sent to your registered email address.",
         smtp_configured=True,
     )
+
 
 
 @router.post(
@@ -313,8 +297,16 @@ async def get_google_auth_url() -> dict:
 
     settings = get_settings()
     state = secrets.token_urlsafe(16)
-    client_id = settings.GOOGLE_CLIENT_ID or "AGRI_SHIELD_GOOGLE_CLIENT_ID"
-    redirect_uri = settings.GOOGLE_REDIRECT_URI
+    client_id = settings.GOOGLE_CLIENT_ID
+    redirect_uri = settings.GOOGLE_CALLBACK_URL or settings.GOOGLE_REDIRECT_URI
+
+    if not client_id:
+        return {
+            "auth_url": "",
+            "state": state,
+            "client_id_configured": False,
+            "message": "Google OAuth Client ID is not configured on the server. Please configure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in backend/.env.",
+        }
 
     auth_url = (
         f"https://accounts.google.com/o/oauth2/v2/auth?"
@@ -329,8 +321,10 @@ async def get_google_auth_url() -> dict:
     return {
         "auth_url": auth_url,
         "state": state,
-        "client_id_configured": bool(settings.GOOGLE_CLIENT_ID),
+        "client_id_configured": True,
     }
+
+
 
 
 @router.post(

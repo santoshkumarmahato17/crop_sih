@@ -97,8 +97,9 @@ class EmailService:
             logger.info(f"[EmailService] Successfully sent OTP email to '{to_email}' via SMTP.")
             return {"sent": True, "message": f"OTP email successfully dispatched to {to_email}."}
         except Exception as e:
-            logger.error(f"[EmailService] Failed to send email to '{to_email}' via SMTP: {e}")
-            return {"sent": False, "reason": "SMTP_ERROR", "message": f"Failed to deliver email: {str(e)}"}
+            err_msg = str(e)
+            logger.error(f"[EmailService] Failed to send email to '{to_email}' via SMTP ({settings.SMTP_HOST}:{port}): {err_msg}")
+            return {"sent": False, "reason": "SMTP_ERROR", "message": f"Failed to deliver email via SMTP: {err_msg}"}
 
 
 email_service = EmailService()

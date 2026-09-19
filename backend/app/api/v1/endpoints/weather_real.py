@@ -62,7 +62,10 @@ async def _resolve_farm_coords(
     raise HTTPException(
         status_code=422,
         detail=f"Farm '{farm_id}' has no center_point. Provide lat/lon query params.",
+    )
+
 @router.get("/weather/coords", summary="Get Live Weather by Latitude and Longitude Coordinates")
+
 async def get_weather_by_coords(
     lat: float = Query(..., ge=-90.0, le=90.0, description="Latitude"),
     lon: float = Query(..., ge=-180.0, le=180.0, description="Longitude"),

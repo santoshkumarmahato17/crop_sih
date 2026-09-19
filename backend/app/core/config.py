@@ -197,9 +197,11 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: Optional[str] = None
     GOOGLE_CLIENT_SECRET: Optional[str] = None
     GOOGLE_REDIRECT_URI: str = "http://localhost:5173/auth/google/callback"
+    GOOGLE_CALLBACK_URL: str = "http://localhost:5173/auth/google/callback"
 
     # 10. External Weather API Settings
     WEATHER_API_KEY: Optional[str] = None
+    OPENWEATHERMAP_API_KEY: Optional[str] = None
     WEATHER_API_URL: str = "https://api.openweathermap.org/data/2.5"
 
     # 11. SMS OTP Provider Settings
@@ -207,7 +209,10 @@ class Settings(BaseSettings):
     TWILIO_AUTH_TOKEN: Optional[str] = None
     TWILIO_PHONE_NUMBER: Optional[str] = None
     FAST2SMS_API_KEY: Optional[str] = None
+    MSG91_AUTH_KEY: Optional[str] = None
+    MSG91_TEMPLATE_ID: Optional[str] = None
     SMS_PROVIDER: str = "twilio"
+
 
 
 @lru_cache()

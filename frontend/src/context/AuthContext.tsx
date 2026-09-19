@@ -39,9 +39,9 @@ export const normalizeUser = (user: any): UserProfile | null => {
   const role = normalizeRole(user.role);
   return {
     ...user,
-    id: user.id || 'usr-default',
-    email: user.email || 'farmer@agrishield.farm',
-    full_name: user.full_name || 'Agricultural Operator',
+    id: user.id || '',
+    email: user.email || '',
+    full_name: user.full_name || '',
     role,
     permissions: Array.isArray(user.permissions)
       ? user.permissions
@@ -62,59 +62,6 @@ export const normalizeUser = (user: any): UserProfile | null => {
     is_verified: user.is_verified !== undefined ? user.is_verified : true,
     created_at: user.created_at || new Date().toISOString(),
   };
-};
-
-interface AuthContextType {
-  user: UserProfile | null;
-  token: string | null;
-  role: RoleType | null;
-  permissions: string[];
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  isOnboarded: boolean;
-  onboardingData: OnboardingData | null;
-  userLocation: { latitude: number; longitude: number } | null;
-  showLocationModal: boolean;
-  setShowLocationModal: (show: boolean) => void;
-  login: (email: string, password: string) => Promise<RoleType>;
-  loginWithGoogle: (payload: { code?: string; id_token?: string; code_verifier?: string; redirect_uri?: string; state?: string }) => Promise<RoleType>;
-  sendPhoneOtp: (phone_number: string) => Promise<{ success: boolean; message: string; sms_provider_configured: boolean }>;
-  verifyPhoneOtp: (phone_number: string, otp: string) => Promise<RoleType>;
-  register: (payload: UserRegisterPayload) => Promise<RoleType>;
-  updateProfile: (payload: UserProfileUpdatePayload) => Promise<UserProfile>;
-  updatePassword: (payload: UserPasswordUpdatePayload) => Promise<void>;
-  updateUserLocation: (latitude: number, longitude: number) => Promise<void>;
-  completeOnboarding: (data: OnboardingData) => void;
-  logout: () => void;
-  hasRole: (roles: RoleType | RoleType[]) => boolean;
-  hasPermission: (permission: string) => boolean;
-  getRoleDashboardPath: (role?: any) => string;
-}
-
-
-const defaultFarmerUser: UserProfile = {
-  id: 'usr-farmer-01',
-  email: 'ramanathan@agrishield.farm',
-  full_name: 'Farmer Ramanathan K.',
-  phone_number: '+91 98421 78901',
-  address: 'Plot 14, West Valley Agro Sector, Coimbatore District, Tamil Nadu',
-  role: 'FARMER',
-  permissions: [
-    'FARM_VIEW',
-    'FARM_CREATE',
-    'FARM_EDIT',
-    'CROP_VIEW',
-    'CROP_MANAGE',
-    'DRONE_VIEW',
-    'DISEASE_VIEW',
-    'DISEASE_ANALYZE',
-    'ALERT_VIEW',
-    'REPORT_VIEW',
-    'AI_ASSISTANT_USE',
-  ],
-  is_active: true,
-  is_verified: true,
-  created_at: '2026-01-15T09:00:00Z',
 };
 
 export const getRoleDashboardPath = (role?: any): string => {
@@ -295,20 +242,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const updated = await authService.updateProfile(payload);
-      const cleanUser = normalizeUser(updated) || defaultFarmerUser;
+      const cleanUser = normalizeUser(updated);
+      if (!cleanUser) throw new Error('Failed to parse updated user profile');
       setUser(cleanUser);
       return cleanUser;
-    } catch {
+    } catch (err) {
       if (user) {
         const localUpdated: UserProfile = {
           ...user,
           ...payload,
         };
-        const cleanUser = normalizeUser(localUpdated) || defaultFarmerUser;
-        setUser(cleanUser);
-        return cleanUser;
+        const cleanUser = normalizeUser(localUpdated);
+        if (cleanUser) {
+          setUser(cleanUser);
+          return cleanUser;
+        }
       }
-      throw new Error('User not found');
+      throw err;
     } finally {
       setIsLoading(false);
     }

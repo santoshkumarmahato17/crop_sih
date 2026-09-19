@@ -9,8 +9,8 @@ client = TestClient(app)
 
 
 @pytest.mark.asyncio
-async def test_google_auth_callback_creates_user_with_hashed_password():
-    """Test that Google auth callback provisions a user with a valid hashed_password and returns access token."""
+async def test_google_auth_callback_rejects_missing_identity():
+    """Test that Google auth callback rejects requests with missing or unconfigured OAuth credentials."""
     response = client.post(
         "/api/v1/auth/google/callback",
         json={
@@ -18,10 +18,7 @@ async def test_google_auth_callback_creates_user_with_hashed_password():
         },
     )
 
-    assert response.status_code == 200, f"Expected 200, got {response.status_code}: {response.text}"
+    assert response.status_code == 401, f"Expected 401 Unauthorized for missing identity, got {response.status_code}: {response.text}"
     data = response.json()
-    assert "access_token" in data
-    assert data["token_type"] == "bearer"
-    assert "user" in data
-    assert data["user"]["email"] == "farmer.google@agrishield.farm"
+    assert "detail" in data or "message" in data
 

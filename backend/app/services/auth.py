@@ -412,16 +412,25 @@ class AuthService:
         google_sub: Optional[str] = None
         full_name: Optional[str] = None
 
+        # 0. Check server Google OAuth configuration
+        if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_CLIENT_SECRET:
+            raise AgriShieldException(
+                message="Google OAuth authentication failed. Google OAuth Client ID is not configured on the server. Please configure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in backend/.env.",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+
+
         # 1. Exchange OAuth code for Google Tokens if code provided
-        if payload.code and settings.GOOGLE_CLIENT_ID and settings.GOOGLE_CLIENT_SECRET:
+        if payload.code:
             try:
                 token_url = "https://oauth2.googleapis.com/token"
+                redirect_uri = payload.redirect_uri or settings.GOOGLE_CALLBACK_URL or settings.GOOGLE_REDIRECT_URI
                 data = {
                     "client_id": settings.GOOGLE_CLIENT_ID,
                     "client_secret": settings.GOOGLE_CLIENT_SECRET,
                     "code": payload.code,
                     "grant_type": "authorization_code",
-                    "redirect_uri": payload.redirect_uri or settings.GOOGLE_REDIRECT_URI,
+                    "redirect_uri": redirect_uri,
                 }
                 if payload.code_verifier:
                     data["code_verifier"] = payload.code_verifier
@@ -461,40 +470,39 @@ class AuthService:
             except Exception as e:
                 logger.error(f"Google ID token verification failed: {e}")
 
-        # 3. Development / Sandbox fallback if credentials not fully configured in local dev
+        # 3. Fail if email could not be retrieved from real Google OAuth token/userinfo
         if not email:
-            if settings.DEBUG or settings.ENVIRONMENT == "development":
-                email = "farmer.google@agrishield.farm"
-                google_sub = f"google-dev-sub-{uuid.uuid4().hex[:8]}"
-                full_name = "Google Verified Farmer"
-            else:
-                raise AgriShieldException(
-                    message="Failed to verify Google identity. Invalid authorization code or missing Google OAuth Client configuration.",
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                )
+            raise AgriShieldException(
+                message="Google sign-in was cancelled or authentication failed. Unable to verify identity with Google.",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+
 
         normalized_email = email.lower().strip()
 
         # 4. Search existing user by google_sub or email
-        result = await db.execute(select(User).where(User.google_sub == google_sub))
-        user = result.scalars().first()
+        user = None
+        if google_sub:
+            result = await db.execute(select(User).where(User.google_sub == google_sub))
+            user = result.scalars().first()
 
         if not user:
             result = await db.execute(select(User).where(User.email == normalized_email))
             user = result.scalars().first()
             if user:
                 # Link Google identity to existing account
-                user.google_sub = google_sub
+                if google_sub:
+                    user.google_sub = google_sub
                 user.auth_provider = "google"
                 user.is_verified = True
 
-        # 5. Create new account if not exists
+        # 5. Create new account if not exists (using real Google profile name)
         if not user:
             user = User(
                 id=str(uuid.uuid4()),
                 email=normalized_email,
                 hashed_password=get_password_hash(f"google-oauth-unusable-password-{uuid.uuid4().hex}"),
-                full_name=full_name or "AgriShield User",
+                full_name=full_name or normalized_email.split("@")[0].capitalize(),
                 role=RoleType.FARMER,
                 google_sub=google_sub,
                 auth_provider="google",
@@ -506,7 +514,6 @@ class AuthService:
 
         if not user.hashed_password:
             user.hashed_password = get_password_hash(f"google-oauth-unusable-password-{uuid.uuid4().hex}")
-
 
         user.last_login_at = datetime.now(timezone.utc)
         await db.commit()
@@ -562,7 +569,8 @@ class AuthService:
     ) -> Dict[str, Any]:
         """
         Generates and dispatches 6-digit SMS OTP code for phone authentication.
-        Integrates with Twilio and Fast2SMS APIs when configured.
+        Integrates with Twilio, Fast2SMS, and MSG91 APIs when configured.
+        Requires real SMS delivery confirmation from SMS gateway provider.
         """
         from app.services.otp_service import otp_service
         from app.services.sms_service import sms_service, normalize_indian_phone
@@ -580,56 +588,34 @@ class AuthService:
         # Dispatch via SMS provider
         dispatch_res = await sms_service.send_otp_sms(clean_phone, code)
 
-        if dispatch_res.get("sent"):
-            await self.log_audit_event(
-                db,
-                AuditEventType.LOGIN_FAILURE,
-                user_email=clean_phone,
-                ip_address=ip_address,
-                user_agent=user_agent,
-                details={"action": "phone_otp_requested", "sms_configured": True, "provider": dispatch_res.get("provider")},
-            )
-            await db.commit()
-            return {
-                "success": True,
-                "message": dispatch_res.get("message", "SMS OTP verification code sent."),
-                "expires_in_seconds": info.get("expires_in_seconds", 300),
-                "sms_provider_configured": True,
-            }
-
-        # Handling when SMS sending failed or provider unconfigured
-        reason = dispatch_res.get("reason")
-        err_msg = dispatch_res.get("message", "SMS OTP delivery failed.")
-
-        if reason == "PROVIDER_NOT_CONFIGURED":
-            if settings.DEBUG or settings.ENVIRONMENT == "development":
-                await self.log_audit_event(
-                    db,
-                    AuditEventType.LOGIN_FAILURE,
-                    user_email=clean_phone,
-                    ip_address=ip_address,
-                    user_agent=user_agent,
-                    details={"action": "phone_otp_requested", "sms_configured": False, "dev_mode": True},
-                )
-                await db.commit()
-                return {
-                    "success": True,
-                    "message": "Development Mode: OTP generated successfully. (SMS provider credentials not configured in backend .env).",
-                    "expires_in_seconds": info.get("expires_in_seconds", 300),
-                    "sms_provider_configured": False,
-                }
-            else:
-                otp_service.clear_phone_otp(clean_phone)
-                raise AgriShieldException(
-                    message=err_msg,
-                    status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                )
-        else:
+        if not dispatch_res.get("sent"):
+            reason = dispatch_res.get("reason")
+            err_msg = dispatch_res.get("message", "SMS OTP delivery failed.")
             otp_service.clear_phone_otp(clean_phone)
             raise AgriShieldException(
-                message=err_msg,
-                status_code=status.HTTP_400_BAD_REQUEST if reason == "INVALID_PHONE" else status.HTTP_500_INTERNAL_SERVER_ERROR,
+                message=f"Failed to send SMS OTP: {err_msg}",
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE if reason == "PROVIDER_NOT_CONFIGURED" else status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+        await self.log_audit_event(
+            db,
+            AuditEventType.LOGIN_SUCCESS,
+            user_email=clean_phone,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            details={"action": "phone_otp_requested", "sms_configured": True, "provider": dispatch_res.get("provider")},
+        )
+        await db.commit()
+
+        return {
+            "success": True,
+            "message": dispatch_res.get("message", f"SMS OTP verification code sent to {clean_phone}."),
+            "expires_in_seconds": info.get("expires_in_seconds", 300),
+            "sms_provider_configured": not dispatch_res.get("dev_mode", False),
+        }
+
+
+
 
     async def verify_phone_otp(
         self,

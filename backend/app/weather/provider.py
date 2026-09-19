@@ -420,7 +420,14 @@ class OpenWeatherMapWeatherProvider(WeatherDataProvider):
     """OpenWeatherMap API integration for live telemetry and forecasts."""
 
     def __init__(self):
-        self.api_key = os.environ.get("OPENWEATHERMAP_API_KEY", "b5dcf8489e7cafbd3dee7fbefcd265db")
+        from app.core.config import get_settings
+        settings = get_settings()
+        self.api_key = (
+            settings.WEATHER_API_KEY
+            or settings.OPENWEATHERMAP_API_KEY
+            or os.environ.get("WEATHER_API_KEY")
+            or os.environ.get("OPENWEATHERMAP_API_KEY", "b5dcf8489e7cafbd3dee7fbefcd265db")
+        )
         self.current_base_url = "https://api.openweathermap.org/data/2.5/weather"
         self.forecast_base_url = "https://api.openweathermap.org/data/2.5/forecast"
 
@@ -470,8 +477,9 @@ class OpenWeatherMapWeatherProvider(WeatherDataProvider):
         except Exception as e:
             print(f"OpenWeatherMap current error: {e}")
 
-        # Fallback
-        return await MockWeatherProvider().get_current_weather(latitude, longitude)
+        # Fallback to OpenMeteo live API for real weather data
+        return await OpenMeteoWeatherProvider().get_current_weather(latitude, longitude)
+
 
     async def get_forecast(self, latitude: float, longitude: float, days: int = 7) -> List[WeatherDataPoint]:
         try:

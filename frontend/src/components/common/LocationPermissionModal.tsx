@@ -78,10 +78,10 @@ export const LocationPermissionModal: React.FC<LocationPermissionModalProps> = (
 
         <div className="space-y-2">
           <h2 className="text-xl font-black tracking-tight text-agri-900 dark:text-white font-display">
-            Enable Location Access
+            Location Permission Required
           </h2>
           <p className="text-xs text-agri-600 dark:text-agri-300 font-medium leading-relaxed">
-            Allow AGRI SHIELD to use your location to provide local weather information and crop-health risk insights.
+            AGRI SHIELD needs your location to provide local crop-health alerts, weather information and farm-level recommendations.
           </p>
         </div>
 
@@ -122,7 +122,7 @@ export const LocationPermissionModal: React.FC<LocationPermissionModalProps> = (
             disabled={isRequesting}
             className="w-full py-2.5 rounded-2xl bg-transparent hover:bg-agri-100/50 dark:hover:bg-agri-800/40 text-agri-600 dark:text-agri-300 font-bold text-xs transition"
           >
-            Not Now
+            Deny
           </button>
         </div>
       </div>

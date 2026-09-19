@@ -37,23 +37,44 @@ export const LoginPage: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // 1. Google Auth Handler
+  const extractErrorMessage = (err: any, fallback: string): string => {
+    if (!err.response) {
+      return 'Unable to connect to AGRI SHIELD backend server (http://localhost:8001). Please ensure the backend server is running.';
+    }
+    const data = err.response.data;
+    if (typeof data?.detail === 'string' && data.detail.trim()) {
+      return data.detail;
+    }
+    if (typeof data?.message === 'string' && data.message.trim() && data.message !== 'HTTP Error') {
+      return data.message;
+    }
+    if (Array.isArray(data?.detail)) {
+      return data.detail.map((e: any) => e.msg || e.message || String(e)).join(', ');
+    }
+    if (typeof data?.message === 'string' && data.message.trim()) {
+      return data.message;
+    }
+    return fallback;
+  };
+
+  // 1. Google Auth Handler
   const handleGoogleSignIn = async () => {
     setErrorMsg(null);
     try {
       const res = await authService.getGoogleAuthUrl();
-      if (!res.client_id_configured) {
-        // Fallback to dev sandbox mode if GOOGLE_CLIENT_ID is not configured in .env
-        navigate('/auth/google/callback');
+      if (!res.client_id_configured || !res.auth_url) {
+        setErrorMsg(
+          'Google OAuth Client ID is not configured on the server. Please configure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in backend/.env.'
+        );
         return;
       }
-      if (res.auth_url) {
-        window.location.href = res.auth_url;
-      }
+      window.location.href = res.auth_url;
     } catch (err: any) {
       setErrorMsg(
-        err?.response?.data?.detail ||
-        err?.response?.data?.message ||
-        'Unable to connect to the authentication server. Please check if the backend is running.'
+        extractErrorMessage(
+          err,
+          'Failed to initiate Google OAuth. Please ensure backend is running and GOOGLE_CLIENT_ID is configured in backend/.env.'
+        )
       );
     }
   };
@@ -74,11 +95,7 @@ export const LoginPage: React.FC = () => {
       const destination = location.state?.from?.pathname || getRoleDashboardPath(userRole);
       navigate(destination, { replace: true });
     } catch (err: any) {
-      setErrorMsg(
-        err?.response?.data?.detail ||
-          err?.response?.data?.message ||
-          'Invalid email or password credentials. Please try again.'
-      );
+      setErrorMsg(extractErrorMessage(err, 'Invalid email or password credentials. Please try again.'));
     }
   };
 
@@ -99,14 +116,9 @@ export const LoginPage: React.FC = () => {
       setOtpSent(true);
       setSuccessInfo(res.message || 'OTP verification code has been dispatched to your phone.');
     } catch (err: any) {
-      setErrorMsg(
-        err?.response?.data?.detail ||
-          err?.response?.data?.message ||
-          'Failed to send SMS OTP. Please check your phone number and try again.'
-      );
+      setErrorMsg(extractErrorMessage(err, 'Failed to send SMS OTP. Please check your phone number and try again.'));
     }
   };
-
 
   // 4. Phone OTP Verification Handler
   const handleVerifyPhoneOtp = async (e: React.FormEvent) => {
@@ -123,13 +135,10 @@ export const LoginPage: React.FC = () => {
       const destination = location.state?.from?.pathname || getRoleDashboardPath(userRole);
       navigate(destination, { replace: true });
     } catch (err: any) {
-      setErrorMsg(
-        err?.response?.data?.message ||
-          err?.response?.data?.detail ||
-          'Invalid or expired OTP code. Please check and try again.'
-      );
+      setErrorMsg(extractErrorMessage(err, 'Invalid or expired OTP code. Please check and try again.'));
     }
   };
+
 
   return (
     <div className="w-full max-w-md p-8 sm:p-9 rounded-3xl bg-white/95 dark:bg-surface-darkCard/90 border border-agri-200/40 dark:border-agri-700/30 shadow-2xl shadow-agri-900/15 dark:shadow-black/30 backdrop-blur-2xl space-y-6 animate-scale-in">

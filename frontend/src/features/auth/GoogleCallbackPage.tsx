@@ -13,6 +13,26 @@ export const GoogleCallbackPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState<boolean>(true);
   const [redirectPath, setRedirectPath] = useState<string>('/farmer/dashboard');
 
+  const extractErrorMessage = (err: any, fallback: string): string => {
+    if (!err.response) {
+      return 'Unable to connect to AGRI SHIELD backend server (http://localhost:8001). Please ensure the backend server is running.';
+    }
+    const data = err.response.data;
+    if (typeof data?.detail === 'string' && data.detail.trim()) {
+      return data.detail;
+    }
+    if (typeof data?.message === 'string' && data.message.trim() && data.message !== 'HTTP Error') {
+      return data.message;
+    }
+    if (Array.isArray(data?.detail)) {
+      return data.detail.map((e: any) => e.msg || e.message || String(e)).join(', ');
+    }
+    if (typeof data?.message === 'string' && data.message.trim()) {
+      return data.message;
+    }
+    return fallback;
+  };
+
   useEffect(() => {
     const handleGoogleCallback = async () => {
       const code = searchParams.get('code');
@@ -27,22 +47,11 @@ export const GoogleCallbackPage: React.FC = () => {
       }
 
       if (!code && !searchParams.get('id_token')) {
-        // Fallback for development if no code present in URL params
-        try {
-          const userRole = await loginWithGoogle({
-            state: state || undefined,
-            redirect_uri: window.location.origin + '/auth/google/callback',
-          });
-          const path = getRoleDashboardPath(userRole);
-          setRedirectPath(path);
-          setIsProcessing(false);
-          setShowLocationModal(true);
-        } catch (err: any) {
-          setErrorMsg(err?.response?.data?.detail || err?.response?.data?.message || 'Google sign in process was cancelled or failed.');
-          setIsProcessing(false);
-        }
+        setErrorMsg('Google OAuth authorization code or ID token was not received from Google. Please initiate sign in from the login page.');
+        setIsProcessing(false);
         return;
       }
+
 
       try {
         const userRole = await loginWithGoogle({
@@ -55,17 +64,14 @@ export const GoogleCallbackPage: React.FC = () => {
         setIsProcessing(false);
         setShowLocationModal(true);
       } catch (err: any) {
-        setErrorMsg(
-          err?.response?.data?.message ||
-            err?.response?.data?.detail ||
-            'Google OAuth authentication failed. Please try again.'
-        );
+        setErrorMsg(extractErrorMessage(err, 'Google OAuth authentication failed. Please try again.'));
         setIsProcessing(false);
       }
     };
 
     handleGoogleCallback();
   }, []);
+
 
   const handleModalClose = () => {
     setShowLocationModal(false);
