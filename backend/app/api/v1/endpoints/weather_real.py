@@ -62,7 +62,53 @@ async def _resolve_farm_coords(
     raise HTTPException(
         status_code=422,
         detail=f"Farm '{farm_id}' has no center_point. Provide lat/lon query params.",
-    )
+@router.get("/weather/coords", summary="Get Live Weather by Latitude and Longitude Coordinates")
+async def get_weather_by_coords(
+    lat: float = Query(..., ge=-90.0, le=90.0, description="Latitude"),
+    lon: float = Query(..., ge=-180.0, le=180.0, description="Longitude"),
+    force_refresh: bool = Query(False),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_user),
+) -> dict:
+    """
+    Returns real live weather data for user's permitted coordinates.
+    Source: IMD / OpenWeatherMap → Open-Meteo fallback.
+    """
+    data = await get_current_weather(lat, lon, force_refresh=force_refresh)
+    forecast_points = await get_forecast(lat, lon, days=7)
+
+    forecast_items = [
+        {
+            "date": pt.timestamp.isoformat(),
+            "temperature_c": pt.temperature_c,
+            "min_temperature_c": pt.min_temperature_c,
+            "max_temperature_c": pt.max_temperature_c,
+            "relative_humidity_percent": pt.relative_humidity_percent,
+            "rainfall_mm": pt.rainfall_mm,
+            "condition_text": pt.condition_text,
+        }
+        for pt in forecast_points
+    ]
+
+    return {
+        "location": {
+            "latitude": lat,
+            "longitude": lon,
+            "name": data.location_name or f"Location ({lat:.2f}, {lon:.2f})",
+        },
+        "current": {
+            "temperature_c": data.temperature_c,
+            "relative_humidity_percent": data.relative_humidity_percent,
+            "rainfall_mm": data.rainfall_mm,
+            "wind_speed_kmh": data.wind_speed_kmh,
+            "condition_text": data.condition_text,
+        },
+        "forecast": forecast_items,
+        "source": {
+            "provider": data.provider,
+            "data_quality": data.data_quality.value if data.data_quality else "GOOD",
+        },
+    }
 
 
 @router.get("/weather/current/{farm_id}", summary="Get Real Current Weather for Farm")

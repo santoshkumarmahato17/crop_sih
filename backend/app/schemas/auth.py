@@ -157,3 +157,63 @@ class ResetPasswordWithTokenRequest(BaseModel):
             raise ValueError("New password and confirmation password do not match.")
         return self
 
+
+class GoogleAuthUrlResponse(BaseModel):
+    """Google OAuth 2.0 authorization URL response."""
+
+    auth_url: str
+    state: str
+    code_verifier: Optional[str] = None
+    client_id_configured: bool = True
+
+
+class GoogleAuthCallbackRequest(BaseModel):
+    """Google OAuth 2.0 callback payload."""
+
+    code: Optional[str] = None
+    id_token: Optional[str] = None
+    code_verifier: Optional[str] = None
+    redirect_uri: Optional[str] = None
+    state: Optional[str] = None
+
+
+class PhoneSendOTPRequest(BaseModel):
+    """Phone number OTP request payload."""
+
+    phone_number: str = Field(min_length=8, max_length=20, description="International phone number format (e.g. +91 9842178901)")
+
+
+class PhoneSendOTPResponse(BaseModel):
+    """Phone number OTP request response."""
+
+    success: bool = True
+    message: str
+    expires_in_seconds: int = 300
+    sms_provider_configured: bool = True
+
+
+class PhoneVerifyOTPRequest(BaseModel):
+    """Phone OTP verification payload."""
+
+    phone_number: str
+    otp: str = Field(min_length=6, max_length=6, description="6-digit numeric OTP")
+
+
+class UserLocationRequest(BaseModel):
+    """User location coordinates update payload."""
+
+    latitude: float = Field(ge=-90.0, le=90.0)
+    longitude: float = Field(ge=-180.0, le=180.0)
+    location_name: Optional[str] = None
+
+
+class UserLocationResponse(BaseModel):
+    """User location response schema."""
+
+    success: bool = True
+    latitude: float
+    longitude: float
+    district_region: Optional[str] = None
+    message: str = "Location coordinates stored successfully."
+
+

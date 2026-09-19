@@ -9,7 +9,7 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot
 
 # 2. Start Frontend Vite in separate window
 Write-Host "Starting Frontend Vite UI on http://localhost:5173..." -ForegroundColor Cyan
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\frontend'; npm run dev"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\frontend'; npm.cmd run dev"
 
 Write-Host "`nSystem Launch Initiated!" -ForegroundColor Green
 Write-Host "Access Frontend at: http://localhost:5173" -ForegroundColor Yellow

@@ -10,8 +10,19 @@ from typing import Dict, Any, List, Optional
 class TranslationService:
     """Localized agricultural translation provider with strict agronomic safety guards."""
 
-    SUPPORTED_LANGUAGES = ["mr-IN", "hi-IN", "en-IN"]
-    DEFAULT_LANGUAGE = "mr-IN"
+    LANG_MAP = {
+        "en": "en-IN",
+        "hi": "hi-IN",
+        "mr": "mr-IN",
+        "ta": "ta-IN",
+        "en-in": "en-IN",
+        "hi-in": "hi-IN",
+        "mr-in": "mr-IN",
+        "ta-in": "ta-IN",
+    }
+
+    SUPPORTED_LANGUAGES = ["mr-IN", "hi-IN", "en-IN", "ta-IN"]
+    DEFAULT_LANGUAGE = "en-IN"
 
     # Static Curated Dictionaries for Agronomic Conditions & Advisories
     TEMPLATES: Dict[str, Dict[str, Any]] = {
@@ -40,7 +51,30 @@ class TranslationService:
                 ],
                 "audio_text": "Early Blight advisory active. Inspect lower leaves for dark spots, avoid wetting crop canopy, and consult local extension expert if lesions spread.",
             },
-
+            "ta-IN": {
+                "title": "இலைக்கருகல் நோய் எச்சரிக்கை (Early Blight)",
+                "summary": "வானிலை மற்றும் ஏஐ குறியீடுகளின்படி பயிரில் இலைக்கருகல் (Alternaria solani) நோய் அபாயம் அதிகரித்துள்ளது.",
+                "why_this_matters": "அதிக ஈரப்பதம் மற்றும் இலைகளில் நீர் தங்குவது பூஞ்சை பரவலை விரைவுபடுத்துகிறது.",
+                "what_to_do_now": [
+                    "கீழ் இலைகளில் கரும்பழுப்பு நிற வளைய வடிவ புள்ளிகள் உள்ளதா எனப் பார்க்கவும்.",
+                    "பாதிக்கப்பட்ட இலைகளை அகற்றி பாதுகாப்பான இடத்தில் அழிக்கவும்.",
+                    "சொட்டுநீர்ப் பாசனத்தைப் பயன்படுத்தவும்.",
+                ],
+                "what_to_monitor": [
+                    "அடுத்த 48 மணிநேரத்தில் அருகிலுள்ள பயிர் மண்டலங்களை கண்காணிக்கவும்.",
+                    "இரவு நேரத்தில் ஈரப்பதத்தின் அளவைக் கண்காணிக்கவும்.",
+                ],
+                "what_to_avoid": [
+                    "மாலை வேளையில் தெளிப்பு நீர்ப்பாசனம் செய்வதைத் தவிர்க்கவும்.",
+                    "அதிகப்படியான நைட்ரஜன் உரங்களைப் பயன்படுத்த வேண்டாம்.",
+                ],
+                "when_to_seek_expert_help": "நோய் மேல் இலைகளுக்கு பரவினால் உடனடியாக வேளாண் நிபுணரை அணுகவும்.",
+                "safety_warnings": [
+                    "பல்கலைக்கழகத்தால் பரிந்துரைக்கப்பட்ட இயற்கை பூச்சிக்கொல்லிகளைப் பயன்படுத்தவும்.",
+                    "அனுமதிக்கப்படாத ரசாயன பூச்சிக்கொல்லிகளை தெளிக்க வேண்டாம்.",
+                ],
+                "audio_text": "இலைக்கருகல் நோய் எச்சரிக்கை. கீழ் இலைகளை ஆய்வு செய்து நிபுணர் ஆலோசனை பெறவும்.",
+            },
             "hi-IN": {
                 "title": "अगेती झुलसा रोग परामर्श (Early Blight)",
                 "summary": "मौसम और एआई संकेतकों के अनुसार फसल में अगेती झुलसा (अल्टरनेरिया) का जोखिम बढ़ रहा है।",
@@ -106,7 +140,21 @@ class TranslationService:
                 "safety_warnings": ["Always practice Integrated Pest Management (IPM)."],
                 "audio_text": "Crop health advisory active. Inspect affected zone and submit photos for expert validation.",
             },
-
+            "ta-IN": {
+                "title": "பயிர் ஆரோக்கியம் மற்றும் பாதுகாப்பு ஆலோசனை",
+                "summary": "பயிர் மண்டலத்தில் நோய் அபாயம் கண்டறியப்பட்டுள்ளது.",
+                "why_this_matters": "வானிலை காரணிகள் நோய் பரவலுக்கு சாதகமாக உள்ளன.",
+                "what_to_do_now": [
+                    "பாதிக்கப்பட்ட பகுதியை ஆய்வு செய்யவும்.",
+                    "புகைப்படங்களை பதிவேற்றி நிபுணர் சரிபார்ப்பைப் பெறவும்.",
+                    "பண்ணை உபகரணங்களை சுத்தமாக வைத்திருக்கவும்.",
+                ],
+                "what_to_monitor": ["பயிரின் தாவர ஆரோக்கியக் குறியீட்டைக் கண்காணிக்கவும்."],
+                "what_to_avoid": ["பாதிக்கப்பட்ட தாவரங்களைத் தொட்ட பிறகு ஆரோக்கியமான தாவரங்களைத் தொடுவதைத் தவிர்க்கவும்."],
+                "when_to_seek_expert_help": "அறிகுறிகள் நீடித்தால் வேளாண் நிபுணரை அணுகவும்.",
+                "safety_warnings": ["ஒருங்கிணைந்த பூச்சி மேலாண்மை (IPM) முறைகளைப் பின்பற்றவும்."],
+                "audio_text": "பயிர் பாதுகாப்பு ஆலோசனை. ஆய்வுகள் செய்து புகைப்படங்களைப் பதிவேற்றவும்.",
+            },
             "hi-IN": {
                 "title": "फसल स्वास्थ्य एवं सुरक्षा परामर्श",
                 "summary": "खेत के इस क्षेत्र में रोग जोखिम देखा गया है। तत्काल निरीक्षण की आवश्यकता है।",
@@ -150,21 +198,28 @@ class TranslationService:
         """
         Retrieves localized advisory text with fallback to English if target language is missing.
         """
-        lang = target_language if target_language in cls.SUPPORTED_LANGUAGES else cls.DEFAULT_LANGUAGE
+        raw_lang = (target_language or "").lower().strip()
+        mapped_lang = cls.LANG_MAP.get(raw_lang, raw_lang)
+        
+        lang = mapped_lang if mapped_lang in cls.SUPPORTED_LANGUAGES else cls.DEFAULT_LANGUAGE
         
         # Match key or default to general_disease
         template_group = cls.TEMPLATES.get(condition_key.lower().replace(" ", "_"), cls.TEMPLATES["general_disease"])
         
         is_fallback = False
         if lang not in template_group:
-            content = template_group.get(cls.DEFAULT_LANGUAGE, cls.TEMPLATES["general_disease"]["mr-IN"])
+            content = template_group.get(cls.DEFAULT_LANGUAGE, cls.TEMPLATES["general_disease"]["en-IN"])
             is_fallback = True
         else:
             content = template_group[lang]
 
         result = dict(content)
         result["is_fallback"] = is_fallback
-        result["language"] = lang if not is_fallback else cls.DEFAULT_LANGUAGE
+        effective_lang = lang if not is_fallback else cls.DEFAULT_LANGUAGE
+        if effective_lang.endswith("-IN"):
+            result["language"] = effective_lang.split("-")[0]
+        else:
+            result["language"] = effective_lang
 
         # Apply safety checks: sanitize any unsupported dosage recipes
         result["what_to_do_now"] = [cls.sanitize_agronomic_action(a) for a in result.get("what_to_do_now", [])]

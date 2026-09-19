@@ -9,6 +9,7 @@ import { LoginPage } from '@/features/auth/LoginPage';
 import { RegisterPage } from '@/features/auth/RegisterPage';
 import { ForgotPasswordPage } from '@/features/auth/ForgotPasswordPage';
 import { UnauthorizedPage } from '@/features/auth/UnauthorizedPage';
+import { GoogleCallbackPage } from '@/features/auth/GoogleCallbackPage';
 import { OnboardingWizard } from '@/features/onboarding/OnboardingWizard';
 import { UserProfilePage } from '@/features/profile/UserProfilePage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
@@ -58,7 +59,7 @@ const RootRoleRedirect: React.FC = () => {
     return <GovernmentDashboardShell />;
   }
   if (user.role === 'EXTENSION_WORKER') {
-    return <Navigate to="/extension/dashboard" replace />;
+    return <ExtensionDashboard />;
   }
   return <FarmerDashboardPage />;
 };
@@ -76,6 +77,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="register" element={<RegisterPage />} />
         <Route path="forgot-password" element={<ForgotPasswordPage />} />
         <Route path="unauthorized" element={<UnauthorizedPage />} />
+        <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
         <Route path="onboarding" element={<OnboardingWizard />} />
 
         {/* ── FARMER Role Routes ── */}

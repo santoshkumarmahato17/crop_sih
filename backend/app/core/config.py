@@ -193,6 +193,22 @@ class Settings(BaseSettings):
     EMAILS_FROM_EMAIL: Optional[str] = "noreply@agrishield.farm"
     EMAILS_FROM_NAME: Optional[str] = "AGRI SHIELD Security"
 
+    # 9. Google OAuth 2.0 Settings
+    GOOGLE_CLIENT_ID: Optional[str] = None
+    GOOGLE_CLIENT_SECRET: Optional[str] = None
+    GOOGLE_REDIRECT_URI: str = "http://localhost:5173/auth/google/callback"
+
+    # 10. External Weather API Settings
+    WEATHER_API_KEY: Optional[str] = None
+    WEATHER_API_URL: str = "https://api.openweathermap.org/data/2.5"
+
+    # 11. SMS OTP Provider Settings
+    TWILIO_ACCOUNT_SID: Optional[str] = None
+    TWILIO_AUTH_TOKEN: Optional[str] = None
+    TWILIO_PHONE_NUMBER: Optional[str] = None
+    FAST2SMS_API_KEY: Optional[str] = None
+    SMS_PROVIDER: str = "twilio"
+
 
 @lru_cache()
 def get_settings() -> Settings:
