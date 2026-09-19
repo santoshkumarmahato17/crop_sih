@@ -23,7 +23,7 @@ import { zoneService } from '@/services/zoneService';
 import { weatherService, mockFarmWeatherRiskData, WeatherRiskDataWithMeta } from '@/services/weatherService';
 import { WeatherRiskForecastCard } from '@/features/weather/WeatherRiskForecastCard';
 import { ZoneTemporalAnalyticsModal } from '@/features/temporal/ZoneTemporalAnalyticsModal';
-import { LanguageSwitcher } from '@/features/advisories/LanguageSwitcher';
+
 import { WaterRequirementMapViewer } from '@/features/water/WaterRequirementMapViewer';
 import { advisoryService } from '@/services/advisoryService';
 import { Advisory } from '@/types/advisory';
@@ -385,12 +385,7 @@ export const FarmerDashboardPage: React.FC = () => {
               )}
             </select>
           </div>
-          
-          <div className="h-6 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block" />
-          
-          <LanguageSwitcher variant="minimal" />
         </div>
-
         <button
           type="button"
           onClick={loadInitialData}
@@ -683,12 +678,7 @@ export const FarmerDashboardPage: React.FC = () => {
             >
               {/* ── Top Visual Crop Banner with Dark Scrim for 100% Text Readability ── */}
               <div className="relative h-28 w-full overflow-hidden flex-shrink-0 bg-agri-900">
-                {crop.image_url && (
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-105"
-                    style={{ backgroundImage: `url('${crop.image_url}')` }}
-                  />
-                )}
+                {/* Removed image background to keep it clean and humanized */}
 
                 {/* Dark gradient scrim ensures top title and badge are always crystal-clear */}
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-agri-950/60 to-slate-950/40" />

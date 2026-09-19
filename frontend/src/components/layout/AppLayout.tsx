@@ -17,7 +17,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   version = '0.1.0',
 }) => {
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, showLocationModal } = useAuth();
   const location = useLocation();
 
   const isAuthPage =
@@ -27,6 +27,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
   // Hide authenticated navigation, sidebar, and assistant on login/register pages
   const shouldShowAuthenticatedChrome = !isAuthPage && isAuthenticated;
+  const shouldShowSidebar = shouldShowAuthenticatedChrome && !showLocationModal;
 
   return (
     <div className="h-screen max-h-screen bg-surface-light dark:bg-surface-darkBg text-agri-900 dark:text-agri-50 flex flex-col selection:bg-agri-500 selection:text-white transition-colors duration-300 overflow-hidden">
@@ -45,10 +46,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
       {/* 2. Main Body Container with Stationary Sidebar & Independently Scrolling Main Area */}
       <div className="flex flex-1 min-h-0 relative z-10 min-w-0 overflow-hidden">
         {/* Desktop Fixed Sidebar (Stationary barrier on the left) */}
-        {shouldShowAuthenticatedChrome && <Sidebar />}
+        {shouldShowSidebar && <Sidebar />}
 
         {/* Mobile Slide-Over Drawer with Backdrop (On screens < lg) */}
-        {shouldShowAuthenticatedChrome && isMobileDrawerOpen && (
+        {shouldShowSidebar && isMobileDrawerOpen && (
           <div className="lg:hidden fixed inset-0 z-50 flex">
             {/* Backdrop Blur Overlay */}
             <div

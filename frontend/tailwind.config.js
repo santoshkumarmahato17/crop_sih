@@ -41,9 +41,9 @@ export default {
         surface: {
           light: '#F4F7F2',
           card: '#FFFFFF',
-          darkBg: '#0a1f14',
-          darkCard: '#112920',
-          darkElevated: '#163b2c',
+          darkBg: '#0f172a',
+          darkCard: '#1e293b',
+          darkElevated: '#334155',
         },
       },
       fontFamily: {

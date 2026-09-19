@@ -70,7 +70,7 @@ export const LocationPermissionModal: React.FC<LocationPermissionModalProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-agri-950/70 backdrop-blur-md animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-transparent backdrop-blur-sm animate-fade-in">
       <div className="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/30 shadow-2xl space-y-6 text-center animate-scale-in">
         <div className="inline-flex p-3 rounded-2xl bg-agri-500/10 dark:bg-agri-500/20 text-agri-600 dark:text-accent-lime border border-agri-500/30 shadow-inner">
           <MapPin className="w-8 h-8" />
