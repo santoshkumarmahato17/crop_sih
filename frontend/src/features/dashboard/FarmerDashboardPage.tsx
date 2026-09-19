@@ -383,17 +383,17 @@ export const FarmerDashboardPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-1.5 text-xs">
-            <span className="text-[#8d7e84] font-semibold">Active Field Holding:</span>
-            <span className="text-white font-bold border-b border-dotted border-white/60 pb-0.5 cursor-pointer">
+            <span className="text-slate-500 dark:text-[#8d7e84] font-semibold">Active Field Holding:</span>
+            <span className="text-slate-900 dark:text-white font-bold border-b border-dotted border-slate-900/60 dark:border-white/60 pb-0.5 cursor-pointer">
               West Valley Holdings (Wheat)
             </span>
-            <span className="text-[#8d7e84] ml-1">·</span>
+            <span className="text-slate-400 dark:text-[#8d7e84] ml-1">·</span>
           </div>
         </div>
         <button
           type="button"
           onClick={loadInitialData}
-          className="px-3.5 py-1.5 rounded-xl bg-[#221c1f] hover:bg-[#2c2428] border border-[#382d33] text-white text-xs font-semibold flex items-center gap-2 shadow-sm transition self-start sm:self-auto"
+          className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-[#221c1f] hover:bg-slate-50 dark:hover:bg-[#2c2428] border border-slate-200 dark:border-[#382d33] text-slate-800 dark:text-white text-xs font-semibold flex items-center gap-2 shadow-sm transition self-start sm:self-auto"
           title="Refresh Telemetry"
         >
           <RefreshCw className="w-3.5 h-3.5 text-[#38bdf8]" />
@@ -412,9 +412,9 @@ export const FarmerDashboardPage: React.FC = () => {
       {/* 2. Glassmorphic Bento-Grid: Key Micro-Metric Cards (Row 1) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* 1. Overall Vitality Circle Gauge */}
-        <div className="p-5 rounded-2xl bg-[#1c1719] border border-[#2b2226] shadow-lg flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-white dark:bg-[#1c1719] border border-slate-200 dark:border-[#2b2226] shadow-lg flex flex-col justify-between">
           <div className="flex items-start justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8d7e84]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-[#8d7e84]">
               CROP HEALTH SCORE
             </span>
             {/* Circular SVG Gauge */}
@@ -441,7 +441,7 @@ export const FarmerDashboardPage: React.FC = () => {
 
           <div className="my-2">
             <div className="flex items-baseline gap-1.5">
-              <span className="text-3xl font-black text-white">
+              <span className="text-3xl font-black text-slate-900 dark:text-white">
                 {summary?.overall_health_score || 84.5}%
               </span>
               <span className="text-xs text-[#4ade80] font-bold">
@@ -457,10 +457,10 @@ export const FarmerDashboardPage: React.FC = () => {
         {/* 2. Soil Moisture & Water Stress Level */}
         <div
           onClick={() => setIsWaterModalOpen(true)}
-          className="p-5 rounded-2xl bg-[#1c1719] border border-[#2b2226] shadow-lg flex flex-col justify-between cursor-pointer hover:border-[#382d33] transition"
+          className="p-5 rounded-2xl bg-gradient-to-br from-white to-sky-50 dark:from-[#1c1719] dark:to-[#112433] border border-sky-100 dark:border-[#2b2226] shadow-lg flex flex-col justify-between cursor-pointer hover:border-sky-200 dark:hover:border-[#382d33] transition"
         >
           <div className="flex items-start justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8d7e84]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-[#8d7e84]">
               WATER STRESS / CWSI
             </span>
             <div className="p-1.5 rounded-xl bg-[#182633] text-[#38bdf8] border border-[#203a4f]">
@@ -470,7 +470,7 @@ export const FarmerDashboardPage: React.FC = () => {
 
           <div className="my-2">
             <div className="flex items-baseline gap-2.5">
-              <span className="text-3xl font-black text-white font-mono">0.76</span>
+              <span className="text-3xl font-black text-slate-900 dark:text-white font-mono">0.76</span>
               <span className="text-xs text-[#f59e0b] bg-[#422e17] border border-[#785123] px-2.5 py-0.5 rounded-full font-bold">
                 Moderate Stress
               </span>
@@ -479,7 +479,7 @@ export const FarmerDashboardPage: React.FC = () => {
             <div className="w-full h-2 rounded-full bg-[#33282d] overflow-hidden mt-3">
               <div className="h-full rounded-full bg-gradient-to-r from-[#d97706] to-[#f59e0b] w-[65%]" />
             </div>
-            <p className="text-xs text-[#8d7e84] mt-3 leading-snug">
+            <p className="text-xs text-slate-500 dark:text-[#8d7e84] mt-3 leading-snug">
               Zones Z04 &amp; Z05 need irrigation within 24h
             </p>
           </div>
@@ -488,16 +488,16 @@ export const FarmerDashboardPage: React.FC = () => {
         {/* 3. Microclimate & Weather Card (Dindigul) */}
         <div
           onClick={() => setIsWeatherModalOpen(true)}
-          className="p-5 rounded-2xl bg-[#1c1719] border border-[#2b2226] shadow-lg flex flex-col justify-between cursor-pointer hover:border-[#382d33] transition"
+          className="p-5 rounded-2xl bg-gradient-to-br from-white to-orange-50 dark:from-[#1c1719] dark:to-[#2e1d15] border border-orange-100 dark:border-[#2b2226] shadow-lg flex flex-col justify-between cursor-pointer hover:border-orange-200 dark:hover:border-[#382d33] transition"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <span className="text-[#f43f5e] text-xs">📍</span>
-              <span className="text-xs font-bold text-white">Dindigul</span>
+              <span className="text-xs font-bold text-slate-900 dark:text-white">Dindigul</span>
             </div>
             <div className="flex items-center gap-2 text-right">
               <span className="text-lg">⛅</span>
-              <div className="text-[10px] text-[#8d7e84] font-medium leading-tight">
+              <div className="text-[10px] text-slate-500 dark:text-[#8d7e84] font-medium leading-tight">
                 <div>September 19, 2026</div>
                 <div>02:58 PM</div>
               </div>
@@ -505,23 +505,23 @@ export const FarmerDashboardPage: React.FC = () => {
           </div>
 
           <div className="my-1.5">
-            <div className="text-3xl font-black text-white leading-none">
+            <div className="text-3xl font-black text-slate-900 dark:text-white leading-none">
               34.0°C
             </div>
-            <p className="text-xs text-[#8d7e84] font-medium mt-1">Cloudy</p>
+            <p className="text-xs text-slate-500 dark:text-[#8d7e84] font-medium mt-1">Cloudy</p>
 
-            <div className="grid grid-cols-3 gap-1 pt-3 border-t border-[#2b2226] text-left mt-2.5 text-xs">
+            <div className="grid grid-cols-3 gap-1 pt-3 border-t border-slate-200 dark:border-[#2b2226] text-left mt-2.5 text-xs">
               <div>
-                <span className="text-[10px] text-[#8d7e84] block font-semibold">Humidity</span>
-                <span className="font-bold text-white">48%</span>
+                <span className="text-[10px] text-slate-500 dark:text-[#8d7e84] block font-semibold">Humidity</span>
+                <span className="font-bold text-slate-900 dark:text-white">48%</span>
               </div>
               <div>
-                <span className="text-[10px] text-[#8d7e84] block font-semibold">Precipitation</span>
-                <span className="font-bold text-white">0.0 mm</span>
+                <span className="text-[10px] text-slate-500 dark:text-[#8d7e84] block font-semibold">Precipitation</span>
+                <span className="font-bold text-slate-900 dark:text-white">0.0 mm</span>
               </div>
               <div>
-                <span className="text-[10px] text-[#8d7e84] block font-semibold">Wind Speed</span>
-                <span className="font-bold text-white">8 km/h</span>
+                <span className="text-[10px] text-slate-500 dark:text-[#8d7e84] block font-semibold">Wind Speed</span>
+                <span className="font-bold text-slate-900 dark:text-white">8 km/h</span>
               </div>
             </div>
 
@@ -534,9 +534,9 @@ export const FarmerDashboardPage: React.FC = () => {
         </div>
 
         {/* 4. Next Drone Surveillance Mission */}
-        <div className="p-5 rounded-2xl bg-[#1c1719] border border-[#2b2226] shadow-lg flex flex-col justify-between">
+        <div className="p-5 rounded-2xl bg-white dark:bg-[#1c1719] border border-slate-200 dark:border-[#2b2226] shadow-lg flex flex-col justify-between">
           <div className="flex items-start justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8d7e84]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-[#8d7e84]">
               DRONE SURVEILLANCE
             </span>
             <div className="p-2 rounded-full bg-[#2d1c22] border border-[#4a2833] text-[#fb7185] flex items-center justify-center">
@@ -545,7 +545,7 @@ export const FarmerDashboardPage: React.FC = () => {
           </div>
 
           <div className="my-2">
-            <div className="text-base font-bold text-white mt-1">
+            <div className="text-base font-bold text-slate-900 dark:text-white mt-1">
               Tomorrow 09:00 AM
             </div>
             <div className="mt-1.5">
@@ -561,12 +561,12 @@ export const FarmerDashboardPage: React.FC = () => {
       </div>
 
       {/* 3. Multi-Crop Management Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[#2b2226]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-slate-200 dark:border-[#2b2226]">
         <div>
-          <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+          <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
             <span>🌾 Field Crops & Multi-Crop Status</span>
           </h2>
-          <p className="text-xs text-[#8d7e84] font-medium mt-0.5">
+          <p className="text-xs text-slate-500 dark:text-[#8d7e84] font-medium mt-0.5">
             Real-time biometric indices, NDVI metrics, and harvest milestones per crop zone
           </p>
         </div>
@@ -589,11 +589,11 @@ export const FarmerDashboardPage: React.FC = () => {
               className={`rounded-3xl overflow-hidden border ${crop.border_color} bg-white dark:bg-surface-darkCard shadow-md hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between`}
             >
               {/* ── Top Visual Crop Banner with Dark Scrim for 100% Text Readability ── */}
-              <div className="relative h-28 w-full overflow-hidden flex-shrink-0 bg-agri-900">
+              <div className="relative h-28 w-full overflow-hidden flex-shrink-0 bg-emerald-50 dark:bg-agri-900">
                 {/* Removed image background to keep it clean and humanized */}
 
-                {/* Dark gradient scrim ensures top title and badge are always crystal-clear */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-agri-950/60 to-slate-950/40" />
+                {/* Light/Dark gradient scrim ensures top title and badge are always crystal-clear */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-200/95 via-emerald-100/60 to-slate-100/40 dark:from-slate-950/95 dark:via-agri-950/60 dark:to-slate-950/40" />
 
                 {/* Top Banner Content */}
                 <div className="relative z-10 p-4 h-full flex items-start justify-between gap-3">
@@ -602,11 +602,11 @@ export const FarmerDashboardPage: React.FC = () => {
                       {crop.icon}
                     </div>
                     <div>
-                      <h3 className="font-extrabold text-white text-sm tracking-tight drop-shadow-md">
+                      <h3 className="font-extrabold text-slate-900 dark:text-white text-sm tracking-tight drop-shadow-md">
                         {crop.crop_name}
                       </h3>
-                      <p className="text-[11px] text-agri-200 font-medium flex items-center gap-1 drop-shadow-sm mt-0.5">
-                        <MapPin className="w-3 h-3 text-agri-400" />
+                      <p className="text-[11px] text-slate-600 dark:text-agri-200 font-medium flex items-center gap-1 drop-shadow-sm mt-0.5">
+                        <MapPin className="w-3 h-3 text-emerald-600 dark:text-agri-400" />
                         {crop.field_name} ({crop.area_acres} Acres)
                       </p>
                     </div>
@@ -734,24 +734,24 @@ export const FarmerDashboardPage: React.FC = () => {
         </div>
 
       {/* Row 2: FIELD EVIDENCE (Sensors & Pest Traps) */}
-      <div className="p-5 rounded-2xl bg-[#1c1719] border border-[#2b2226] shadow-lg max-w-xl w-full">
+      <div className="p-5 rounded-2xl bg-white dark:bg-[#1c1719] border border-slate-200 dark:border-[#2b2226] shadow-lg max-w-xl w-full">
         <div className="flex items-center justify-between">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#8d7e84]">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-[#8d7e84]">
             FIELD EVIDENCE
           </span>
           <div className="flex items-center gap-1.5">
-            <div className="p-1.5 rounded-lg bg-[#281f23] border border-[#3d2e35] text-[#fb7185]">
+            <div className="p-1.5 rounded-lg bg-rose-50 dark:bg-[#281f23] border border-rose-100 dark:border-[#3d2e35] text-[#fb7185]">
               <Wind className="w-3.5 h-3.5" />
             </div>
-            <div className="p-1.5 rounded-lg bg-[#281f23] border border-[#3d2e35] text-[#38bdf8]">
+            <div className="p-1.5 rounded-lg bg-sky-50 dark:bg-[#281f23] border border-sky-100 dark:border-[#3d2e35] text-[#38bdf8]">
               <Droplets className="w-3.5 h-3.5" />
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mt-3">
-          <div className="p-3.5 rounded-xl bg-[#221c1f] border border-[#33282d]">
-            <span className="text-[10px] text-[#8d7e84] uppercase font-bold tracking-wider block">
+          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#221c1f] border border-slate-200 dark:border-[#33282d]">
+            <span className="text-[10px] text-slate-500 dark:text-[#8d7e84] uppercase font-bold tracking-wider block">
               PEST TRAPS
             </span>
             <span className="text-2xl font-black text-[#f59e0b] block mt-1">24</span>
@@ -760,8 +760,8 @@ export const FarmerDashboardPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-[#221c1f] border border-[#33282d]">
-            <span className="text-[10px] text-[#8d7e84] uppercase font-bold tracking-wider block">
+          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#221c1f] border border-slate-200 dark:border-[#33282d]">
+            <span className="text-[10px] text-slate-500 dark:text-[#8d7e84] uppercase font-bold tracking-wider block">
               SOIL MOISTURE
             </span>
             <span className="text-2xl font-black text-[#38bdf8] block mt-1">18%</span>
@@ -771,7 +771,7 @@ export const FarmerDashboardPage: React.FC = () => {
           </div>
         </div>
 
-        <p className="text-xs text-[#8d7e84] mt-3">
+        <p className="text-xs text-slate-500 dark:text-[#8d7e84] mt-3">
           Zone Z04 • Real-time (Updated 10m ago)
         </p>
       </div>

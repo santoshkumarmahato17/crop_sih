@@ -139,6 +139,7 @@ from app.models.sensor import (
     FreshnessStatus,
 )
 
+
 __all__ = [
     # Base
     "Base",

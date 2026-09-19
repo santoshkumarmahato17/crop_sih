@@ -27,7 +27,6 @@ import ExtensionDashboard from '@/features/extension/ExtensionDashboard';
 import { TomatoCameraAnalysisPage } from '@/features/detection/TomatoCameraAnalysisPage';
 import { SymptomDiseaseIdentificationPage } from '@/features/diagnosis/SymptomDiseaseIdentificationPage';
 import { FarmerCommunityPage } from '@/features/community/FarmerCommunityPage';
-import { FieldMapViewerPage } from '@/features/farms/FieldMapViewerPage';
 import { FarmsListPage } from '@/features/farms/FarmsListPage';
 import { FarmDetailsPage } from '@/features/farms/FarmDetailsPage';
 import { EditFarmPage } from '@/features/farms/EditFarmPage';
@@ -40,7 +39,6 @@ import { MissionDetailsPage } from '@/features/drones/MissionDetailsPage';
 import { AdvisoriesPage } from '@/features/advisories/AdvisoriesPage';
 import { ExpertValidationPage } from '@/features/validation/ExpertValidationPage';
 import { MonitoringWorkspacePage } from '@/features/monitoring/MonitoringWorkspacePage';
-import { EOSCreateFieldOnboarding } from '@/features/farms/EOSCreateFieldOnboarding';
 
 /**
  * Root Index Dispatcher: Automatically routes authenticated user to their role's dashboard,
@@ -92,14 +90,6 @@ export const AppRoutes: React.FC = () => {
           element={
             <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
               <FarmerDashboardPage />
-            </RoleProtectedRoute>
-          }
-        />
-        <Route
-          path="farmer/farms"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
-              <FieldMapViewerPage />
             </RoleProtectedRoute>
           }
         />
@@ -406,46 +396,6 @@ export const AppRoutes: React.FC = () => {
 
         {/* Spatial Field Map & Precision Monitoring */}
         <Route
-          path="field-map"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
-              <FieldMapViewerPage />
-            </RoleProtectedRoute>
-          }
-        />
-        <Route
-          path="create-field"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
-              <EOSCreateFieldOnboarding />
-            </RoleProtectedRoute>
-          }
-        />
-        <Route
-          path="onboarding/create-field"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
-              <EOSCreateFieldOnboarding />
-            </RoleProtectedRoute>
-          }
-        />
-        <Route
-          path="farmer/create-field"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
-              <EOSCreateFieldOnboarding />
-            </RoleProtectedRoute>
-          }
-        />
-        <Route
-          path="farms"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
-              <FieldMapViewerPage />
-            </RoleProtectedRoute>
-          }
-        />
-        <Route
           path="farms/list"
           element={
             <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
@@ -453,14 +403,7 @@ export const AppRoutes: React.FC = () => {
             </RoleProtectedRoute>
           }
         />
-        <Route
-          path="farms/new"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
-              <EOSCreateFieldOnboarding />
-            </RoleProtectedRoute>
-          }
-        />
+
         <Route
           path="farms/:id"
           element={
@@ -513,14 +456,6 @@ export const AppRoutes: React.FC = () => {
         />
 
         {/* Sub-module Aliases */}
-        <Route
-          path="zones"
-          element={
-            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
-              <FieldMapViewerPage />
-            </RoleProtectedRoute>
-          }
-        />
         <Route
           path="observations"
           element={
