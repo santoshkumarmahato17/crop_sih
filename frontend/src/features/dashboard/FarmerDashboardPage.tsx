@@ -23,7 +23,7 @@ import { zoneService } from '@/services/zoneService';
 import { weatherService, mockFarmWeatherRiskData, WeatherRiskDataWithMeta, RealWeatherCurrentResponse, RealForecastResponse, SprayWindowResponse } from '@/services/weatherService';
 import { WeatherRiskForecastCard } from '@/features/weather/WeatherRiskForecastCard';
 import { ZoneTemporalAnalyticsModal } from '@/features/temporal/ZoneTemporalAnalyticsModal';
-import { LanguageSwitcher } from '@/features/advisories/LanguageSwitcher';
+
 import { WaterRequirementMapViewer } from '@/features/water/WaterRequirementMapViewer';
 import { advisoryService } from '@/services/advisoryService';
 import { Advisory } from '@/types/advisory';
@@ -389,10 +389,7 @@ export const FarmerDashboardPage: React.FC = () => {
             </span>
             <span className="text-[#8d7e84] ml-1">·</span>
           </div>
-
-          <LanguageSwitcher variant="minimal" />
         </div>
-
         <button
           type="button"
           onClick={loadInitialData}
@@ -562,6 +559,179 @@ export const FarmerDashboardPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* 3. Multi-Crop Management Section Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[#2b2226]">
+        <div>
+          <h2 className="text-xl font-black text-white tracking-tight flex items-center gap-2">
+            <span>🌾 Field Crops & Multi-Crop Status</span>
+          </h2>
+          <p className="text-xs text-[#8d7e84] font-medium mt-0.5">
+            Real-time biometric indices, NDVI metrics, and harvest milestones per crop zone
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsAddCropModalOpen(true)}
+          className="px-5 py-2.5 rounded-2xl bg-[#22c55e] hover:bg-[#16a34a] active:scale-95 text-white font-extrabold text-xs transition flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20"
+        >
+          <PlusCircle className="w-4 h-4" />
+          <span>+ Add New Crop</span>
+        </button>
+      </div>
+
+      {/* Box-Wise Multi-Crop Cards Grid with High-Contrast Text Priority */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {crops.map((crop) => (
+            <div
+              key={crop.id}
+              className={`rounded-3xl overflow-hidden border ${crop.border_color} bg-white dark:bg-surface-darkCard shadow-md hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between`}
+            >
+              {/* ── Top Visual Crop Banner with Dark Scrim for 100% Text Readability ── */}
+              <div className="relative h-28 w-full overflow-hidden flex-shrink-0 bg-agri-900">
+                {/* Removed image background to keep it clean and humanized */}
+
+                {/* Dark gradient scrim ensures top title and badge are always crystal-clear */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-agri-950/60 to-slate-950/40" />
+
+                {/* Top Banner Content */}
+                <div className="relative z-10 p-4 h-full flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-11 h-11 rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-white/40 dark:border-agri-700/30 flex items-center justify-center text-xl shadow-lg backdrop-blur-md flex-shrink-0">
+                      {crop.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-extrabold text-white text-sm tracking-tight drop-shadow-md">
+                        {crop.crop_name}
+                      </h3>
+                      <p className="text-[11px] text-agri-200 font-medium flex items-center gap-1 drop-shadow-sm mt-0.5">
+                        <MapPin className="w-3 h-3 text-agri-400" />
+                        {crop.field_name} ({crop.area_acres} Acres)
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* TOP RIGHT: Alertness Status Badge — Solid Pill with High Contrast */}
+                  <div
+                    className={`px-3 py-1 rounded-xl text-xs font-mono font-extrabold shadow-lg backdrop-blur-md flex-shrink-0 ${
+                      crop.alertness_level === 'HEALTHY'
+                        ? 'bg-agri-500 text-white border border-emerald-400/40 shadow-emerald-950/40'
+                        : crop.alertness_level === 'MODERATE_STRESS'
+                        ? 'bg-amber-500 text-slate-950 border border-amber-300 font-black shadow-amber-950/40'
+                        : 'bg-rose-600 text-white border border-rose-400/40 shadow-rose-950/40'
+                    }`}
+                  >
+                    {crop.alertness_label}
+                  </div>
+                </div>
+              </div>
+
+              {/* ── Solid High-Contrast Card Body: 100% Text Priority ── */}
+              <div className="p-5 space-y-3.5 flex flex-col justify-between flex-1 bg-white dark:bg-surface-darkCard">
+                {/* Health Score Metric */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-agri-700 dark:text-agri-300 font-bold">
+                      Health Score (NDVI):
+                    </span>
+                    <span className="font-black text-agri-900 dark:text-white text-sm">
+                      {crop.health_score}%{' '}
+                      <span className="text-xs text-agri-500/70 dark:text-agri-400/70 font-normal">
+                        ({crop.ndvi} NDVI)
+                      </span>
+                    </span>
+                  </div>
+
+                  {/* Progress Health Bar */}
+                  <div className="w-full h-2.5 rounded-full bg-agri-50 dark:bg-agri-800/50 overflow-hidden shadow-inner">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${
+                        crop.alertness_level === 'HEALTHY'
+                          ? 'bg-agri-500'
+                          : crop.alertness_level === 'MODERATE_STRESS'
+                          ? 'bg-amber-500'
+                          : 'bg-rose-500'
+                      }`}
+                      style={{ width: `${crop.health_score}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Growth Stage & Days to Harvest Grid */}
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="p-2.5 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50/80 dark:border-agri-700/25 shadow-sm">
+                    <span className="text-agri-500/70 dark:text-agri-400/70 block text-[10px] font-semibold">
+                      Growth Stage
+                    </span>
+                    <span className="font-extrabold text-agri-900 dark:text-white truncate block text-xs mt-0.5">
+                      {crop.stage}
+                    </span>
+                  </div>
+                  <div className="p-2.5 rounded-2xl bg-surface-light dark:bg-surface-darkBg border border-agri-200/50/80 dark:border-agri-700/25 shadow-sm">
+                    <span className="text-agri-500/70 dark:text-agri-400/70 block text-[10px] font-semibold">
+                      Days to Harvest
+                    </span>
+                    <span className="font-extrabold text-agri-600 dark:text-agri-400 block text-xs mt-0.5">
+                      {crop.days_to_harvest} Days Left
+                    </span>
+                  </div>
+                </div>
+
+                {/* Description Text — Ultra High Contrast */}
+                <p className="text-xs text-agri-700 dark:text-agri-300 leading-relaxed font-medium">
+                  {crop.description}
+                </p>
+
+                {/* Box Footer Actions */}
+                <div className="flex items-center justify-between pt-3 border-t border-agri-100 dark:border-agri-700/25">
+                  <span className="text-[11px] text-agri-500/70 dark:text-agri-400/70 font-mono font-semibold">
+                    Scan: {crop.last_scanned}
+                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => navigate('/analysis')}
+                      className="px-3.5 py-1.5 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold transition shadow-md shadow-emerald-600/20 flex items-center gap-1.5 active:scale-95"
+                    >
+                      <span>Scan</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveCrop(crop.id, crop.crop_name)}
+                      className="p-1.5 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-500/20 text-agri-400/70 hover:text-rose-600 dark:hover:text-rose-400 transition"
+                      title="Remove Crop Card"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Add New Crop Dash Box Card */}
+          <button
+            type="button"
+            onClick={() => setIsAddCropModalOpen(true)}
+            className="p-8 rounded-3xl border-2 border-dashed border-slate-300 dark:border-agri-700/25 hover:border-emerald-500 dark:hover:border-emerald-500 bg-surface-light/50 hover:bg-emerald-50/30 dark:bg-slate-950/40 dark:hover:bg-agri-600/5 transition duration-200 flex flex-col items-center justify-center gap-3 text-center min-h-[260px] group"
+          >
+            <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-agri-500/10 text-agri-600 dark:text-agri-400 flex items-center justify-center group-hover:scale-110 transition shadow-inner">
+              <Plus className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="font-extrabold text-agri-900 dark:text-agri-100 text-sm group-hover:text-agri-600 dark:group-hover:text-agri-400 transition">
+                + Add Another Crop Holding
+              </h3>
+              <p className="text-xs text-agri-500/70 dark:text-agri-400/70 mt-1 max-w-[200px]">
+                Monitor different crops simultaneously (Rice, Wheat, Tomato, Corn, etc.).
+              </p>
+            </div>
+          </button>
+        </div>
 
       {/* Row 2: FIELD EVIDENCE (Sensors & Pest Traps) */}
       <div className="p-5 rounded-2xl bg-[#1c1719] border border-[#2b2226] shadow-lg max-w-xl w-full">

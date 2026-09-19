@@ -1,5 +1,5 @@
 from typing import Any, Dict, List, Optional
-from fastapi import APIRouter, Depends, Query, status
+from fastapi import APIRouter, Depends, Query, status, HTTPException
 from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -113,3 +113,138 @@ async def list_audit_logs(
         }
         for log in logs
     ]
+
+
+@router.get(
+    "/government-requests",
+    response_model=List[UserResponse],
+    summary="List Pending Government Accounts",
+    description="Returns all government users awaiting verification.",
+)
+async def list_pending_government_requests(
+    limit: int = Query(50, ge=1, le=200),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_role(RoleType.ADMIN)),
+) -> List[UserResponse]:
+    stmt = select(User).where(
+        User.role == RoleType.GOVERNMENT,
+        User.is_verified == False,
+        User.is_active == True,
+    ).order_by(desc(User.created_at)).limit(limit)
+    
+    result = await db.execute(stmt)
+    users = result.scalars().all()
+    
+    return [
+        UserResponse(
+            id=u.id,
+            email=u.email,
+            full_name=u.full_name,
+            phone_number=u.phone_number,
+            address=u.address,
+            role=u.role,
+            permissions=u.permissions,
+            organization_name=u.organization_name,
+            department=u.department,
+            assigned_region=u.assigned_region,
+            is_active=u.is_active,
+            is_verified=u.is_verified,
+            created_at=u.created_at,
+            last_login_at=u.last_login_at,
+        )
+        for u in users
+    ]
+
+
+@router.post(
+    "/government-requests/{user_id}/approve",
+    summary="Approve Government Account",
+)
+async def approve_government_account(
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_role(RoleType.ADMIN)),
+) -> Dict[str, Any]:
+    from app.services.auth import auth_service
+    from app.models.audit import AuditEventType
+    
+    user = await db.get(User, user_id)
+    if not user or user.role != RoleType.GOVERNMENT:
+        raise HTTPException(status_code=404, detail="Government user not found.")
+        
+    user.is_verified = True
+    await db.commit()
+    
+    await auth_service.log_audit_event(
+        db,
+        AuditEventType.ROLE_CHANGED, # Custom event can be used
+        user_id=current_user.id,
+        user_email=current_user.email,
+        details={"action": "GOVERNMENT_APPROVED", "target_user_id": user_id, "target_user_email": user.email}
+    )
+    await db.commit()
+    return {"success": True, "message": "Government account approved successfully."}
+
+
+@router.post(
+    "/government-requests/{user_id}/reject",
+    summary="Reject Government Account",
+)
+async def reject_government_account(
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_role(RoleType.ADMIN)),
+) -> Dict[str, Any]:
+    from app.services.auth import auth_service
+    from app.models.audit import AuditEventType
+    
+    user = await db.get(User, user_id)
+    if not user or user.role != RoleType.GOVERNMENT:
+        raise HTTPException(status_code=404, detail="Government user not found.")
+        
+    user.is_active = False # Deactivate user
+    await db.commit()
+    
+    await auth_service.log_audit_event(
+        db,
+        AuditEventType.USER_DEACTIVATED,
+        user_id=current_user.id,
+        user_email=current_user.email,
+        details={"action": "GOVERNMENT_REJECTED", "target_user_id": user_id, "target_user_email": user.email}
+    )
+    await db.commit()
+    return {"success": True, "message": "Government account rejected."}
+
+
+@router.post(
+    "/users/{user_id}/suspend",
+    summary="Suspend User Account",
+)
+async def suspend_user_account(
+    user_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(require_role(RoleType.ADMIN)),
+) -> Dict[str, Any]:
+    from app.services.auth import auth_service
+    from app.models.audit import AuditEventType
+    
+    user = await db.get(User, user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+        
+    if user.id == current_user.id:
+        raise HTTPException(status_code=400, detail="Cannot suspend your own account.")
+        
+    user.is_active = False
+    await db.commit()
+    
+    await auth_service.log_audit_event(
+        db,
+        AuditEventType.USER_DEACTIVATED,
+        user_id=current_user.id,
+        user_email=current_user.email,
+        details={"action": "USER_SUSPENDED", "target_user_id": user_id, "target_user_email": user.email}
+    )
+    await db.commit()
+    return {"success": True, "message": "User account suspended."}
+

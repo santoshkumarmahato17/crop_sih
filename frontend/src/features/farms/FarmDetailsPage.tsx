@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -18,6 +18,7 @@ import { ZoneRiskExplanationModal } from '@/features/risk/ZoneRiskExplanationMod
 import { SpreadRiskGraphViewer } from '@/features/spread/SpreadRiskGraphViewer';
 import { WaterRequirementMapViewer } from '@/features/water/WaterRequirementMapViewer';
 import { AdaptiveMonitoringPanel } from '@/features/adaptive/AdaptiveMonitoringPanel';
+import { FarmSatelliteViewer } from '@/features/farms/FarmSatelliteViewer';
 import { farmService } from '@/services/farmService';
 import { zoneService } from '@/services/zoneService';
 import { Farm, Zone } from '@/types';
@@ -510,6 +511,9 @@ export const FarmDetailsPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Satellite Imagery Integration */}
+      <FarmSatelliteViewer farmId={farm.id} />
 
       {/* Farm-Wide Temporal Health Timeline */}
       <div className="p-5 rounded-2xl bg-agri-900/60 border border-slate-800 space-y-4 shadow-lg">

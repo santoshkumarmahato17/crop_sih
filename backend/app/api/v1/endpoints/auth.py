@@ -7,10 +7,17 @@ from app.models.auth import User
 from app.schemas.auth import (
     ForgotPasswordRequest,
     ForgotPasswordResponse,
+    GoogleAuthCallbackRequest,
+    GoogleAuthUrlResponse,
     LogoutResponse,
+    PhoneSendOTPRequest,
+    PhoneSendOTPResponse,
+    PhoneVerifyOTPRequest,
     RefreshTokenRequest,
     ResetPasswordWithTokenRequest,
     TokenResponse,
+    UserLocationRequest,
+    UserLocationResponse,
     UserLoginRequest,
     UserPasswordUpdateRequest,
     UserProfileUpdateRequest,
@@ -187,7 +194,7 @@ async def forgot_password(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No account found registered with this email address. Please check your email or register."
+            detail="No AGRI SHIELD account was found for this email."
         )
 
     try:
@@ -200,32 +207,18 @@ async def forgot_password(
     if not dispatch_res.get("sent"):
         reason = dispatch_res.get("reason")
         err_msg = dispatch_res.get("message") or "Email service delivery failed."
-        if reason == "SMTP_NOT_CONFIGURED":
-            import sys
-            is_pytest = "pytest" in sys.modules or any("pytest" in str(arg) for arg in sys.argv) or bool(os.environ.get("PYTEST_CURRENT_TEST"))
-            if (settings.DEBUG or settings.ENVIRONMENT == "development") and not is_pytest:
-                return ForgotPasswordResponse(
-                    success=True,
-                    message=f"Development Mode: OTP '{otp_code}' generated.",
-                    smtp_configured=False,
-                )
-            otp_service.clear_otp(email)
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"Email service is not configured on the server. {err_msg}"
-            )
-        else:
-            otp_service.clear_otp(email)
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"SMTP Email Delivery Failure: {err_msg}"
-            )
+        otp_service.clear_otp(email)
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE if reason == "SMTP_NOT_CONFIGURED" else status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Unable to send password reset OTP email: {err_msg}. Please configure SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in backend/.env."
+        )
 
     return ForgotPasswordResponse(
         success=True,
         message="OTP sent to your registered email address.",
         smtp_configured=True,
     )
+
 
 
 @router.post(
@@ -289,3 +282,123 @@ async def reset_password(
         "success": True,
         "message": "Password changed successfully. You can now sign in with your new password.",
     }
+
+
+@router.get(
+    "/google/url",
+    response_model=dict,
+    status_code=status.HTTP_200_OK,
+    summary="Get Google OAuth Authorization URL",
+    description="Constructs secure Google OAuth 2.0 PKCE consent authorization link.",
+)
+async def get_google_auth_url() -> dict:
+    import secrets
+    from app.core.config import get_settings
+
+    settings = get_settings()
+    state = secrets.token_urlsafe(16)
+    client_id = settings.GOOGLE_CLIENT_ID
+    redirect_uri = settings.GOOGLE_CALLBACK_URL or settings.GOOGLE_REDIRECT_URI
+
+    if not client_id:
+        return {
+            "auth_url": "",
+            "state": state,
+            "client_id_configured": False,
+            "message": "Google OAuth Client ID is not configured on the server. Please configure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in backend/.env.",
+        }
+
+    auth_url = (
+        f"https://accounts.google.com/o/oauth2/v2/auth?"
+        f"client_id={client_id}&"
+        f"redirect_uri={redirect_uri}&"
+        f"response_type=code&"
+        f"scope=openid%20email%20profile&"
+        f"state={state}&"
+        f"prompt=select_account"
+    )
+
+    return {
+        "auth_url": auth_url,
+        "state": state,
+        "client_id_configured": True,
+    }
+
+
+
+
+@router.post(
+    "/google/callback",
+    response_model=TokenResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Google OAuth Callback & ID Token Verification",
+    description="Exchanges OAuth authorization code or verifies Google ID token, creating or linking AGRI SHIELD user account.",
+)
+async def google_callback(
+    req: GoogleAuthCallbackRequest,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+) -> TokenResponse:
+    client_ip = request.client.host if request.client else None
+    user_agent = request.headers.get("user-agent")
+    return await auth_service.authenticate_google_user(
+        db, req, ip_address=client_ip, user_agent=user_agent
+    )
+
+
+@router.post(
+    "/phone/send-otp",
+    response_model=PhoneSendOTPResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Send SMS OTP for Phone Number Sign In",
+    description="Generates 6-digit numeric SMS OTP code and dispatches via SMS provider.",
+)
+async def send_phone_otp(
+    req: PhoneSendOTPRequest,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+) -> PhoneSendOTPResponse:
+    client_ip = request.client.host if request.client else None
+    user_agent = request.headers.get("user-agent")
+    res = await auth_service.send_phone_otp(
+        db, req.phone_number, ip_address=client_ip, user_agent=user_agent
+    )
+    return PhoneSendOTPResponse(**res)
+
+
+@router.post(
+    "/phone/verify-otp",
+    response_model=TokenResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Verify SMS OTP Code for Phone Number Login",
+    description="Validates SMS OTP, provisions or authenticates Farmer account, and issues JWT tokens.",
+)
+async def verify_phone_otp(
+    req: PhoneVerifyOTPRequest,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+) -> TokenResponse:
+    client_ip = request.client.host if request.client else None
+    user_agent = request.headers.get("user-agent")
+    return await auth_service.verify_phone_otp(
+        db, req.phone_number, req.otp, ip_address=client_ip, user_agent=user_agent
+    )
+
+
+@router.post(
+    "/location",
+    response_model=UserLocationResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Store User Permitted Geolocation Coordinates",
+    description="Stores latitude/longitude coordinates permitted by user for weather and crop disease risk telemetry.",
+)
+async def store_user_location(
+    req: UserLocationRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db),
+) -> UserLocationResponse:
+    res = await auth_service.update_user_location(
+        db, current_user.id, req.latitude, req.longitude
+    )
+    return UserLocationResponse(**res)
+

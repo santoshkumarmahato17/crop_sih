@@ -39,9 +39,9 @@ export const normalizeUser = (user: any): UserProfile | null => {
   const role = normalizeRole(user.role);
   return {
     ...user,
-    id: user.id || 'usr-default',
-    email: user.email || 'farmer@agrishield.farm',
-    full_name: user.full_name || 'Agricultural Operator',
+    id: user.id || '',
+    email: user.email || '',
+    full_name: user.full_name || '',
     role,
     permissions: Array.isArray(user.permissions)
       ? user.permissions
@@ -62,51 +62,6 @@ export const normalizeUser = (user: any): UserProfile | null => {
     is_verified: user.is_verified !== undefined ? user.is_verified : true,
     created_at: user.created_at || new Date().toISOString(),
   };
-};
-
-interface AuthContextType {
-  user: UserProfile | null;
-  token: string | null;
-  role: RoleType | null;
-  permissions: string[];
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  isOnboarded: boolean;
-  onboardingData: OnboardingData | null;
-  login: (email: string, password: string) => Promise<RoleType>;
-  register: (payload: UserRegisterPayload) => Promise<RoleType>;
-  updateProfile: (payload: UserProfileUpdatePayload) => Promise<UserProfile>;
-  updatePassword: (payload: UserPasswordUpdatePayload) => Promise<void>;
-  completeOnboarding: (data: OnboardingData) => void;
-  logout: () => void;
-  hasRole: (roles: RoleType | RoleType[]) => boolean;
-  hasPermission: (permission: string) => boolean;
-  getRoleDashboardPath: (role?: any) => string;
-}
-
-const defaultFarmerUser: UserProfile = {
-  id: 'usr-farmer-01',
-  email: 'ramanathan@agrishield.farm',
-  full_name: 'Farmer Ramanathan K.',
-  phone_number: '+91 98421 78901',
-  address: 'Plot 14, West Valley Agro Sector, Coimbatore District, Tamil Nadu',
-  role: 'FARMER',
-  permissions: [
-    'FARM_VIEW',
-    'FARM_CREATE',
-    'FARM_EDIT',
-    'CROP_VIEW',
-    'CROP_MANAGE',
-    'DRONE_VIEW',
-    'DISEASE_VIEW',
-    'DISEASE_ANALYZE',
-    'ALERT_VIEW',
-    'REPORT_VIEW',
-    'AI_ASSISTANT_USE',
-  ],
-  is_active: true,
-  is_verified: true,
-  created_at: '2026-01-15T09:00:00Z',
 };
 
 export const getRoleDashboardPath = (role?: any): string => {
@@ -153,6 +108,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return saved ? JSON.parse(saved) : null;
   });
 
+  const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(() => {
+    const saved = localStorage.getItem('agrishield_user_location');
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const [showLocationModal, setShowLocationModal] = useState<boolean>(false);
+
   useEffect(() => {
     if (user) {
       localStorage.setItem('agrishield_user', JSON.stringify(user));
@@ -194,11 +156,73 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const loginWithGoogle = async (payload: {
+    code?: string;
+    id_token?: string;
+    code_verifier?: string;
+    redirect_uri?: string;
+    state?: string;
+  }): Promise<RoleType> => {
+    setIsLoading(true);
+    try {
+      const authData = await authService.loginWithGoogle(payload);
+      const cleanUser = normalizeUser(authData.user);
+      if (!cleanUser) {
+        throw new Error('Invalid Google user account payload returned by server.');
+      }
+      setUser(cleanUser);
+      setToken(authData.access_token);
+      setIsOnboarded(true);
+      localStorage.setItem('agrishield_onboarded', 'true');
+      setShowLocationModal(true);
+      return cleanUser.role;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendPhoneOtp = async (phone_number: string): Promise<{ success: boolean; message: string; sms_provider_configured: boolean }> => {
+    setIsLoading(true);
+    try {
+      return await authService.sendPhoneOtp(phone_number);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const verifyPhoneOtp = async (phone_number: string, otp: string): Promise<RoleType> => {
+    setIsLoading(true);
+    try {
+      const authData = await authService.verifyPhoneOtp(phone_number, otp);
+      const cleanUser = normalizeUser(authData.user);
+      if (!cleanUser) {
+        throw new Error('Invalid account payload returned by server.');
+      }
+      setUser(cleanUser);
+      setToken(authData.access_token);
+      setIsOnboarded(true);
+      localStorage.setItem('agrishield_onboarded', 'true');
+      return cleanUser.role;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateUserLocation = async (latitude: number, longitude: number): Promise<void> => {
+    const loc = { latitude, longitude };
+    setUserLocation(loc);
+    localStorage.setItem('agrishield_user_location', JSON.stringify(loc));
+    try {
+      if (token) {
+        await authService.updateLocation(latitude, longitude);
+      }
+    } catch {}
+  };
+
   const register = async (payload: UserRegisterPayload): Promise<RoleType> => {
     setIsLoading(true);
     try {
       const newUser = await authService.register(payload);
-      // Automatically log in newly registered account to acquire JWT session token
       const authData = await authService.login(payload.email, payload.password);
       const cleanUser = normalizeUser(authData.user) || normalizeUser(newUser);
       if (!cleanUser) {
@@ -218,20 +242,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     try {
       const updated = await authService.updateProfile(payload);
-      const cleanUser = normalizeUser(updated) || defaultFarmerUser;
+      const cleanUser = normalizeUser(updated);
+      if (!cleanUser) throw new Error('Failed to parse updated user profile');
       setUser(cleanUser);
       return cleanUser;
-    } catch {
+    } catch (err) {
       if (user) {
         const localUpdated: UserProfile = {
           ...user,
           ...payload,
         };
-        const cleanUser = normalizeUser(localUpdated) || defaultFarmerUser;
-        setUser(cleanUser);
-        return cleanUser;
+        const cleanUser = normalizeUser(localUpdated);
+        if (cleanUser) {
+          setUser(cleanUser);
+          return cleanUser;
+        }
       }
-      throw new Error('User not found');
+      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -279,10 +306,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         isOnboarded,
         onboardingData,
+        userLocation,
+        showLocationModal,
+        setShowLocationModal,
         login,
+        loginWithGoogle,
+        sendPhoneOtp,
+        verifyPhoneOtp,
         register,
         updateProfile,
         updatePassword,
+        updateUserLocation,
         completeOnboarding,
         logout,
         hasRole,
@@ -294,6 +328,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);

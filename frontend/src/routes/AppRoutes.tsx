@@ -9,14 +9,17 @@ import { LoginPage } from '@/features/auth/LoginPage';
 import { RegisterPage } from '@/features/auth/RegisterPage';
 import { ForgotPasswordPage } from '@/features/auth/ForgotPasswordPage';
 import { UnauthorizedPage } from '@/features/auth/UnauthorizedPage';
+import { GoogleCallbackPage } from '@/features/auth/GoogleCallbackPage';
 import { OnboardingWizard } from '@/features/onboarding/OnboardingWizard';
 import { UserProfilePage } from '@/features/profile/UserProfilePage';
 import { SettingsPage } from '@/features/settings/SettingsPage';
+import { GovernmentPendingPage } from '@/features/auth/GovernmentPendingPage';
 
 // Dashboards
 import { FarmerDashboardPage } from '@/features/dashboard/FarmerDashboardPage';
 import { GovernmentDashboardShell } from '@/features/government/GovernmentDashboardShell';
 import { AdminDashboardShell } from '@/features/admin/AdminDashboardShell';
+import { GovernmentApprovalPage } from '@/features/admin/GovernmentApprovalPage';
 import { ExtensionOfficerDashboardPage } from '@/features/officer/ExtensionOfficerDashboardPage';
 import ExtensionDashboard from '@/features/extension/ExtensionDashboard';
 
@@ -55,10 +58,13 @@ const RootRoleRedirect: React.FC = () => {
     return <AdminDashboardShell />;
   }
   if (user.role === 'GOVERNMENT') {
+    if (!user.is_verified) {
+      return <Navigate to="/government/pending" replace />;
+    }
+    if (user.department === 'EXTENSION_WORKER') {
+      return <ExtensionDashboard />;
+    }
     return <GovernmentDashboardShell />;
-  }
-  if (user.role === 'EXTENSION_WORKER') {
-    return <Navigate to="/extension/dashboard" replace />;
   }
   return <FarmerDashboardPage />;
 };
@@ -76,7 +82,9 @@ export const AppRoutes: React.FC = () => {
         <Route path="register" element={<RegisterPage />} />
         <Route path="forgot-password" element={<ForgotPasswordPage />} />
         <Route path="unauthorized" element={<UnauthorizedPage />} />
+        <Route path="auth/google/callback" element={<GoogleCallbackPage />} />
         <Route path="onboarding" element={<OnboardingWizard />} />
+        <Route path="government/pending" element={<GovernmentPendingPage />} />
 
         {/* ── FARMER Role Routes ── */}
         <Route
@@ -274,6 +282,14 @@ export const AppRoutes: React.FC = () => {
           element={
             <RoleProtectedRoute allowedRoles={['ADMIN']}>
               <AdminDashboardShell />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="admin/government-approvals"
+          element={
+            <RoleProtectedRoute allowedRoles={['ADMIN']}>
+              <GovernmentApprovalPage />
             </RoleProtectedRoute>
           }
         />

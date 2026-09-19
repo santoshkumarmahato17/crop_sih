@@ -66,4 +66,61 @@ export const authService = {
     const response = await apiClient.post<{ success: boolean; message: string }>('/auth/reset-password', payload);
     return response.data;
   },
+
+  async getGoogleAuthUrl(): Promise<{ auth_url: string; state: string; client_id_configured: boolean }> {
+    const response = await apiClient.get<{ auth_url: string; state: string; client_id_configured: boolean }>(
+      '/auth/google/url'
+    );
+    return response.data;
+  },
+
+  async loginWithGoogle(payload: {
+    code?: string;
+    id_token?: string;
+    code_verifier?: string;
+    redirect_uri?: string;
+    state?: string;
+  }): Promise<AuthTokenResponse> {
+    const response = await apiClient.post<AuthTokenResponse>('/auth/google/callback', payload);
+    return response.data;
+  },
+
+  async sendPhoneOtp(phone_number: string): Promise<{
+    success: boolean;
+    message: string;
+    expires_in_seconds: number;
+    sms_provider_configured: boolean;
+  }> {
+    const response = await apiClient.post<{
+      success: boolean;
+      message: string;
+      expires_in_seconds: number;
+      sms_provider_configured: boolean;
+    }>('/auth/phone/send-otp', { phone_number });
+    return response.data;
+  },
+
+  async verifyPhoneOtp(phone_number: string, otp: string): Promise<AuthTokenResponse> {
+    const response = await apiClient.post<AuthTokenResponse>('/auth/phone/verify-otp', {
+      phone_number,
+      otp,
+    });
+    return response.data;
+  },
+
+  async updateLocation(latitude: number, longitude: number): Promise<{
+    success: boolean;
+    latitude: number;
+    longitude: number;
+    message: string;
+  }> {
+    const response = await apiClient.post<{
+      success: boolean;
+      latitude: number;
+      longitude: number;
+      message: string;
+    }>('/auth/location', { latitude, longitude });
+    return response.data;
+  },
 };
+

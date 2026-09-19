@@ -32,6 +32,7 @@ from app.api.v1.endpoints import (
     weather_forecast,
     weather_real,
     zones,
+    satellite,
 )
 
 api_router = APIRouter()
@@ -61,6 +62,7 @@ api_router.include_router(water_stress.router)
 api_router.include_router(weather_forecast.router)
 # New normalized real-weather endpoints
 api_router.include_router(weather_real.router)
+
 api_router.include_router(validation.router)
 api_router.include_router(predict.router)
 api_router.include_router(advisories.router)
@@ -69,4 +71,5 @@ api_router.include_router(laboratory.router, prefix="/laboratory", tags=["labora
 api_router.include_router(extension.router, prefix="/extension", tags=["extension"])
 api_router.include_router(monitoring.router)
 api_router.include_router(sensors.router, prefix="/sensors", tags=["sensors"])
+api_router.include_router(satellite.router)
 

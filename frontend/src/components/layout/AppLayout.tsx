@@ -17,7 +17,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   version = '0.1.0',
 }) => {
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, showLocationModal } = useAuth();
   const location = useLocation();
 
   const isAuthPage =
@@ -27,24 +27,30 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
 
   // Hide authenticated navigation, sidebar, and assistant on login/register pages
   const shouldShowAuthenticatedChrome = !isAuthPage && isAuthenticated;
+  const shouldShowSidebar = shouldShowAuthenticatedChrome && !showLocationModal;
 
   return (
     <div className="h-screen max-h-screen bg-[#121011] text-[#d8cbcf] flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-hidden">
       {/* 1. Fixed Stationary Header Bar */}
-      <div className="relative z-40 shrink-0 w-full">
-        <Header
-          systemStatus={systemStatus}
-          version={version}
-          isMinimal={!shouldShowAuthenticatedChrome}
-          onToggleSidebar={() => setIsMobileDrawerOpen((prev) => !prev)}
-        />
-      </div>
+      {!isAuthPage && (
+        <div className="relative z-40 shrink-0 w-full">
+          <Header
+            systemStatus={systemStatus}
+            version={version}
+            isMinimal={!shouldShowAuthenticatedChrome}
+            onToggleSidebar={() => setIsMobileDrawerOpen((prev) => !prev)}
+          />
+        </div>
+      )}
 
       {/* 2. Main Body Container with Slide-Over Farmer Menu & Independently Scrolling Main Area */}
       <div className="flex flex-1 min-h-0 relative z-10 min-w-0 overflow-hidden">
-        {/* Slide-Over Farmer Menu Drawer with Backdrop (Sliding Design on MENU click) */}
-        {shouldShowAuthenticatedChrome && isMobileDrawerOpen && (
-          <div className="fixed inset-0 z-50 flex animate-fade-in">
+        {/* Desktop Fixed Sidebar (Stationary barrier on the left) */}
+        {shouldShowSidebar && <Sidebar />}
+
+        {/* Mobile Slide-Over Drawer with Backdrop (On screens < lg) */}
+        {shouldShowSidebar && isMobileDrawerOpen && (
+          <div className="lg:hidden fixed inset-0 z-50 flex">
             {/* Backdrop Blur Overlay */}
             <div
               className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"

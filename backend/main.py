@@ -12,6 +12,21 @@ REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if REPO_ROOT not in sys.path:
     sys.path.insert(0, REPO_ROOT)
 
+# Auto-switch to virtual environment Python if running under global Python missing uvicorn/fastapi
+VENV_PYTHON = os.path.join(os.path.dirname(__file__), "venv", "Scripts", "python.exe")
+if not os.path.exists(VENV_PYTHON):
+    VENV_PYTHON = os.path.join(os.path.dirname(__file__), "venv", "bin", "python")
+
+if os.path.exists(VENV_PYTHON) and os.path.abspath(sys.executable) != os.path.abspath(VENV_PYTHON):
+    try:
+        import uvicorn
+        import fastapi
+    except ImportError:
+        print(f"--> Switch to virtualenv Python: {VENV_PYTHON}")
+        import subprocess
+        result = subprocess.run([VENV_PYTHON] + sys.argv)
+        sys.exit(result.returncode)
+
 import uvicorn
 from app.main import app
 

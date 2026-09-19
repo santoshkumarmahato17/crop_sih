@@ -391,5 +391,362 @@ class AuthService:
         await db.commit()
         return {"success": True, "message": "Password updated successfully."}
 
+    async def authenticate_google_user(
+        self,
+        db: AsyncSession,
+        req: Any,
+        ip_address: Optional[str] = None,
+        user_agent: Optional[str] = None,
+    ) -> TokenResponse:
+        """
+        Processes Google OAuth 2.0 PKCE / OpenID Connect authentication callback.
+        Exchanges code or verifies ID Token server-side, finds or creates account,
+        and returns signed AGRI SHIELD JWT tokens.
+        """
+        import httpx
+        from app.schemas.auth import GoogleAuthCallbackRequest
+
+        payload: GoogleAuthCallbackRequest = req if isinstance(req, GoogleAuthCallbackRequest) else GoogleAuthCallbackRequest(**req)
+
+        email: Optional[str] = None
+        google_sub: Optional[str] = None
+        full_name: Optional[str] = None
+
+        # 0. Check server Google OAuth configuration
+        if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_CLIENT_SECRET:
+            raise AgriShieldException(
+                message="Google OAuth authentication failed. Google OAuth Client ID is not configured on the server. Please configure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in backend/.env.",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+
+
+        # 1. Exchange OAuth code for Google Tokens if code provided
+        if payload.code:
+            try:
+                token_url = "https://oauth2.googleapis.com/token"
+                redirect_uri = payload.redirect_uri or settings.GOOGLE_CALLBACK_URL or settings.GOOGLE_REDIRECT_URI
+                data = {
+                    "client_id": settings.GOOGLE_CLIENT_ID,
+                    "client_secret": settings.GOOGLE_CLIENT_SECRET,
+                    "code": payload.code,
+                    "grant_type": "authorization_code",
+                    "redirect_uri": redirect_uri,
+                }
+                if payload.code_verifier:
+                    data["code_verifier"] = payload.code_verifier
+
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    resp = await client.post(token_url, data=data)
+                    if resp.status_code == 200:
+                        token_data = resp.json()
+                        access_token = token_data.get("access_token")
+                        # Fetch userinfo using Google access token
+                        userinfo_resp = await client.get(
+                            "https://www.googleapis.com/oauth2/v3/userinfo",
+                            headers={"Authorization": f"Bearer {access_token}"},
+                        )
+                        if userinfo_resp.status_code == 200:
+                            info = userinfo_resp.json()
+                            email = info.get("email")
+                            google_sub = info.get("sub")
+                            full_name = info.get("name") or info.get("given_name")
+                    else:
+                        logger.error(f"Google OAuth token exchange error: HTTP {resp.status_code} - {resp.text}")
+            except Exception as e:
+                logger.error(f"Google OAuth token exchange failed: {e}")
+
+        # 2. Verify Google ID Token if provided directly
+        if not email and payload.id_token:
+            try:
+                async with httpx.AsyncClient(timeout=10.0) as client:
+                    resp = await client.get(
+                        f"https://oauth2.googleapis.com/tokeninfo?id_token={payload.id_token}"
+                    )
+                    if resp.status_code == 200:
+                        info = resp.json()
+                        email = info.get("email")
+                        google_sub = info.get("sub")
+                        full_name = info.get("name")
+            except Exception as e:
+                logger.error(f"Google ID token verification failed: {e}")
+
+        # 3. Fail if email could not be retrieved from real Google OAuth token/userinfo
+        if not email:
+            raise AgriShieldException(
+                message="Google sign-in was cancelled or authentication failed. Unable to verify identity with Google.",
+                status_code=status.HTTP_401_UNAUTHORIZED,
+            )
+
+
+        normalized_email = email.lower().strip()
+
+        # 4. Search existing user by google_sub or email
+        user = None
+        if google_sub:
+            result = await db.execute(select(User).where(User.google_sub == google_sub))
+            user = result.scalars().first()
+
+        if not user:
+            result = await db.execute(select(User).where(User.email == normalized_email))
+            user = result.scalars().first()
+            if user:
+                # Link Google identity to existing account
+                if google_sub:
+                    user.google_sub = google_sub
+                user.auth_provider = "google"
+                user.is_verified = True
+
+        # 5. Create new account if not exists (using real Google profile name)
+        if not user:
+            user = User(
+                id=str(uuid.uuid4()),
+                email=normalized_email,
+                hashed_password=get_password_hash(f"google-oauth-unusable-password-{uuid.uuid4().hex}"),
+                full_name=full_name or normalized_email.split("@")[0].capitalize(),
+                role=RoleType.FARMER,
+                google_sub=google_sub,
+                auth_provider="google",
+                is_active=True,
+                is_verified=True,
+                created_at=datetime.now(timezone.utc),
+            )
+            db.add(user)
+
+        if not user.hashed_password:
+            user.hashed_password = get_password_hash(f"google-oauth-unusable-password-{uuid.uuid4().hex}")
+
+        user.last_login_at = datetime.now(timezone.utc)
+        await db.commit()
+        await db.refresh(user)
+
+        # 6. Record Audit Event
+        await self.log_audit_event(
+            db,
+            AuditEventType.LOGIN_SUCCESS,
+            user_id=user.id,
+            user_email=user.email,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            details={"provider": "google"},
+        )
+        await db.commit()
+
+        # 7. Issue JWT Tokens
+        access_token = create_access_token(user.id, user.email, user.role.value)
+        refresh_token = create_refresh_token(user.id, user.email, user.role.value)
+
+        user_resp = UserResponse(
+            id=user.id,
+            email=user.email,
+            full_name=user.full_name,
+            phone_number=user.phone_number,
+            address=user.address,
+            role=user.role,
+            permissions=user.permissions,
+            organization_name=user.organization_name,
+            department=user.department,
+            assigned_region=user.assigned_region,
+            is_active=user.is_active,
+            is_verified=user.is_verified,
+            created_at=user.created_at,
+            last_login_at=user.last_login_at,
+        )
+
+        return TokenResponse(
+            access_token=access_token,
+            refresh_token=refresh_token,
+            token_type="bearer",
+            expires_in_seconds=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            user=user_resp,
+        )
+
+    async def send_phone_otp(
+        self,
+        db: AsyncSession,
+        phone_number: str,
+        ip_address: Optional[str] = None,
+        user_agent: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Generates and dispatches 6-digit SMS OTP code for phone authentication.
+        Integrates with Twilio, Fast2SMS, and MSG91 APIs when configured.
+        Requires real SMS delivery confirmation from SMS gateway provider.
+        """
+        from app.services.otp_service import otp_service
+        from app.services.sms_service import sms_service, normalize_indian_phone
+
+        try:
+            clean_phone = normalize_indian_phone(phone_number)
+        except ValueError as val_err:
+            raise AgriShieldException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            code, info = otp_service.generate_phone_otp(clean_phone)
+        except ValueError as val_err:
+            raise AgriShieldException(message=str(val_err), status_code=status.HTTP_429_TOO_MANY_REQUESTS)
+
+        # Dispatch via SMS provider
+        dispatch_res = await sms_service.send_otp_sms(clean_phone, code)
+
+        if not dispatch_res.get("sent"):
+            reason = dispatch_res.get("reason")
+            err_msg = dispatch_res.get("message", "SMS OTP delivery failed.")
+            otp_service.clear_phone_otp(clean_phone)
+            raise AgriShieldException(
+                message=f"Failed to send SMS OTP: {err_msg}",
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE if reason == "PROVIDER_NOT_CONFIGURED" else status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        await self.log_audit_event(
+            db,
+            AuditEventType.LOGIN_SUCCESS,
+            user_email=clean_phone,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            details={"action": "phone_otp_requested", "sms_configured": True, "provider": dispatch_res.get("provider")},
+        )
+        await db.commit()
+
+        return {
+            "success": True,
+            "message": dispatch_res.get("message", f"SMS OTP verification code sent to {clean_phone}."),
+            "expires_in_seconds": info.get("expires_in_seconds", 300),
+            "sms_provider_configured": not dispatch_res.get("dev_mode", False),
+        }
+
+
+
+
+    async def verify_phone_otp(
+        self,
+        db: AsyncSession,
+        phone_number: str,
+        otp: str,
+        ip_address: Optional[str] = None,
+        user_agent: Optional[str] = None,
+    ) -> TokenResponse:
+        """
+        Verifies 6-digit SMS OTP, finds or creates Farmer account, and returns JWT tokens.
+        """
+        from app.services.otp_service import otp_service
+        from app.services.sms_service import normalize_indian_phone
+
+        try:
+            clean_phone = normalize_indian_phone(phone_number)
+        except ValueError as val_err:
+            raise AgriShieldException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            otp_service.verify_phone_otp(clean_phone, otp)
+        except ValueError as val_err:
+            raise AgriShieldException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
+
+        # Find or create user by phone number
+        result = await db.execute(select(User).where(User.phone_number == clean_phone))
+        user = result.scalars().first()
+
+        if not user:
+            # Check raw format if previous user registered without normalized phone
+            raw_phone = phone_number.strip()
+            result = await db.execute(select(User).where(User.phone_number == raw_phone))
+            user = result.scalars().first()
+
+        if not user:
+            # Synthetic email fallback for phone-only accounts
+            synthetic_email = f"{clean_phone.replace('+', '')}@agrishield.farm"
+            result = await db.execute(select(User).where(User.email == synthetic_email))
+            user = result.scalars().first()
+
+        if not user:
+            synthetic_email = f"{clean_phone.replace('+', '')}@agrishield.farm"
+            user = User(
+                id=str(uuid.uuid4()),
+                email=synthetic_email,
+                hashed_password=get_password_hash(f"phone-otp-unusable-password-{uuid.uuid4().hex}"),
+                phone_number=clean_phone,
+                full_name=f"Farmer ({clean_phone})",
+                role=RoleType.FARMER,
+                auth_provider="phone",
+                is_active=True,
+                is_verified=True,
+                created_at=datetime.now(timezone.utc),
+            )
+            db.add(user)
+
+        if not user.hashed_password:
+            user.hashed_password = get_password_hash(f"phone-otp-unusable-password-{uuid.uuid4().hex}")
+
+        user.phone_number = clean_phone
+        user.last_login_at = datetime.now(timezone.utc)
+        await db.commit()
+        await db.refresh(user)
+
+        await self.log_audit_event(
+            db,
+            AuditEventType.LOGIN_SUCCESS,
+            user_id=user.id,
+            user_email=user.email,
+            ip_address=ip_address,
+            user_agent=user_agent,
+            details={"provider": "phone"},
+        )
+        await db.commit()
+
+        access_token = create_access_token(user.id, user.email, user.role.value)
+        refresh_token = create_refresh_token(user.id, user.email, user.role.value)
+
+        user_resp = UserResponse(
+            id=user.id,
+            email=user.email,
+            full_name=user.full_name,
+            phone_number=user.phone_number,
+            address=user.address,
+            role=user.role,
+
+            permissions=user.permissions,
+            organization_name=user.organization_name,
+            department=user.department,
+            assigned_region=user.assigned_region,
+            is_active=user.is_active,
+            is_verified=user.is_verified,
+            created_at=user.created_at,
+            last_login_at=user.last_login_at,
+        )
+
+        return TokenResponse(
+            access_token=access_token,
+            refresh_token=refresh_token,
+            token_type="bearer",
+            expires_in_seconds=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            user=user_resp,
+        )
+
+    async def update_user_location(
+        self,
+        db: AsyncSession,
+        user_id: str,
+        latitude: float,
+        longitude: float,
+    ) -> Dict[str, Any]:
+        """
+        Stores permitted user geolocation coordinates.
+        """
+        user = await self.user_repo.get(db, user_id)
+        if not user:
+            raise AgriShieldException(message="User account not found.", status_code=status.HTTP_404_NOT_FOUND)
+
+        user.latitude = latitude
+        user.longitude = longitude
+        await db.commit()
+        await db.refresh(user)
+
+        return {
+            "success": True,
+            "latitude": user.latitude,
+            "longitude": user.longitude,
+            "message": "Location coordinates stored successfully.",
+        }
+
 
 auth_service = AuthService()
+

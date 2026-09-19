@@ -10,7 +10,7 @@ from typing import Dict, Any, List, Optional
 class TranslationService:
     """Localized agricultural translation provider with strict agronomic safety guards."""
 
-    SUPPORTED_LANGUAGES = ["en", "ta", "hi", "mr", "en-IN", "ta-IN", "hi-IN", "mr-IN"]
+    SUPPORTED_LANGUAGES = ["en", "ta", "hi", "mr"]
     DEFAULT_LANGUAGE = "en"
 
     # Static Curated Dictionaries for Agronomic Conditions & Advisories
@@ -186,8 +186,8 @@ class TranslationService:
         """Normalizes language codes such as 'en-IN' or 'en_US' down to base 2-letter codes."""
         if not lang:
             return cls.DEFAULT_LANGUAGE
-        cleaned = lang.lower().split("-")[0].split("_")[0]
-        if cleaned in ["en", "hi", "mr", "ta"]:
+        cleaned = lang.lower().split("-")[0].split("_")[0].strip()
+        if cleaned in cls.SUPPORTED_LANGUAGES:
             return cleaned
         return cls.DEFAULT_LANGUAGE
 
@@ -201,22 +201,22 @@ class TranslationService:
         """
         Retrieves localized advisory text with fallback to English if target language is missing.
         """
-        raw_lang = (target_language or "").lower()
-        if raw_lang in ["en", "hi", "mr", "ta"]:
-            lang = raw_lang
-            is_valid_lang = True
-        elif raw_lang in ["en-in", "hi-in", "mr-in", "ta-in"]:
-            lang = raw_lang.split("-")[0]
-            is_valid_lang = True
+        raw_lang = (target_language or "").lower().strip()
+        cleaned = raw_lang.split("-")[0].split("_")[0].strip()
+
+        is_fallback = False
+        if cleaned in cls.SUPPORTED_LANGUAGES:
+            lang = cleaned
         else:
             lang = cls.DEFAULT_LANGUAGE
-            is_valid_lang = False
+            is_fallback = True
 
         # Match key or default to general_disease
-        template_group = cls.TEMPLATES.get(condition_key.lower().replace(" ", "_"), cls.TEMPLATES["general_disease"])
-        
-        is_fallback = False
-        if not is_valid_lang or lang not in template_group:
+        template_group = cls.TEMPLATES.get(
+            condition_key.lower().replace(" ", "_"), cls.TEMPLATES["general_disease"]
+        )
+
+        if lang not in template_group:
             content = template_group.get(cls.DEFAULT_LANGUAGE, cls.TEMPLATES["general_disease"]["en"])
             is_fallback = True
             lang = cls.DEFAULT_LANGUAGE
