@@ -1223,13 +1223,59 @@ async def predict_orange_leaf(
         return JSONResponse(status_code=400, content={"success": False, "message": quality_msg})
 
     try:
-        predictor_orange = get_orange_predictor()
-        result = predictor_orange.predict(contents, threshold=confidence_threshold)
-        if not result.get("success"):
-            return JSONResponse(status_code=500, content=result)
+        from app.services.orange_diagnosis import OrangeDiseaseModelService
+        service = OrangeDiseaseModelService()
+        # Reset the file pointer since we already read it for quality check
+        await image.seek(0)
+        result = await service.analyze_image(image)
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Orange Leaf Inference failed: {str(e)}")
+
+
+# ---------------------------------------------------------------------------
+# Rice Leaf Disease Classification Endpoints
+# ---------------------------------------------------------------------------
+
+@app.post(
+    "/api/rice/predict",
+    tags=["Rice Leaf Inference"],
+    summary="Predict Rice Leaf Disease",
+    description="Accepts a photograph of a rice leaf and returns prediction and confidence.",
+)
+async def predict_rice_leaf(
+    image: UploadFile = File(..., description="Photograph of a rice leaf (JPG/PNG)"),
+    confidence_threshold: Optional[float] = Form(0.70, description="Confidence threshold"),
+):
+    if not image or not image.filename:
+        raise HTTPException(status_code=400, detail="Valid image file must be uploaded.")
+
+    valid_exts = {".jpg", ".jpeg", ".png", ".webp"}
+    ext = os.path.splitext(image.filename)[1].lower()
+    if ext not in valid_exts:
+        raise HTTPException(status_code=400, detail=f"Unsupported format '{ext}'. Allowed: {valid_exts}")
+
+    try:
+        contents = await image.read()
+        if len(contents) == 0:
+            raise HTTPException(status_code=400, detail="Uploaded image file is empty.")
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Failed to read image: {e}")
+
+    # Image Quality Check
+    is_good, quality_msg = check_image_quality(contents)
+    if not is_good:
+        return JSONResponse(status_code=400, content={"success": False, "message": quality_msg})
+
+    try:
+        from app.services.rice_diagnosis import RiceDiseaseModelService
+        service = RiceDiseaseModelService()
+        # Reset the file pointer since we already read it for quality check
+        await image.seek(0)
+        result = await service.analyze_image(image)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Rice Leaf Inference failed: {str(e)}")
 
 
 # ---------------------------------------------------------------------------

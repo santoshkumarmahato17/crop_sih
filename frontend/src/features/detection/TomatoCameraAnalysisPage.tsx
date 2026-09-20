@@ -106,7 +106,7 @@ interface YOLOSampleItem {
   relative_path: string;
 }
 
-type DiagnosticMode = 'apple' | 'cashew' | 'cassava' | 'maize' | 'tomato' | 'yolo' | 'soybean';
+type DiagnosticMode = 'apple' | 'cashew' | 'cassava' | 'maize' | 'orange' | 'tomato' | 'yolo' | 'soybean' | 'rice';
 type VisualLayer = 'original' | 'yolo_bbox' | 'segmentation' | 'spectral_heatmap';
 
 const SOYBEAN_CLASSES = [
@@ -138,6 +138,21 @@ const APPLE_CLASSES = [
   'Healthy',
 ];
 export const APPLE_DISEASES = ['Apple Scab', 'Black Rot', 'Cedar Apple Rust'];
+
+const ORANGE_CLASSES = [
+  'Citrus Canker',
+  'Citrus Nutrient Yellow',
+  'Healthy',
+];
+export const ORANGE_DISEASES = ['Citrus Canker', 'Citrus Nutrient Yellow'];
+
+const RICE_CLASSES = [
+  'Bacterial leaf blight',
+  'Brown spot',
+  'Leaf smut',
+];
+export const RICE_DISEASES = ['Bacterial leaf blight', 'Brown spot', 'Leaf smut'];
+
 
 const CASHEW_CLASSES = [
   'Anthracnose',
@@ -218,6 +233,10 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
   const activeClasses =
     selectedCrop === 'apple'
       ? APPLE_CLASSES
+      : selectedCrop === 'orange'
+      ? ORANGE_CLASSES
+      : selectedCrop === 'rice'
+      ? RICE_CLASSES
       : selectedCrop === 'cashew'
       ? CASHEW_CLASSES
       : selectedCrop === 'cassava'
@@ -517,8 +536,95 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
           // try next
         }
       }
-      if (!success) {
         setErrorMsg('Could not connect to Soybean Disease Analysis service. Ensure the backend server is active.');
+      }
+    } else if (targetMode === 'orange') {
+      const endpoints = ['/api/orange/predict', '/api/v1/orange/predict'];
+      let success = false;
+      for (const url of endpoints) {
+        try {
+          const resp = await fetch(url, { method: 'POST', body: formData });
+          if (resp.ok) {
+            const data = await resp.json();
+            const pred = data.prediction || {};
+            setDetectedCropInfo({
+              crop: 'Orange',
+              display: '🍊 Orange',
+              confidence: 99.0,
+            });
+            setResult({
+              success: true,
+              crop: 'Orange',
+              crop_display: '🍊 Orange Foliage',
+              prediction: pred.class || pred.class_name || 'Unknown',
+              confidence: pred.confidence_percent || (pred.confidence ? pred.confidence * 100 : 0),
+              status: pred.confidence_status || (data.decision?.status || 'HIGH_CONFIDENCE'),
+              reliable: pred.confidence_status === 'HIGH_CONFIDENCE' || data.decision?.status === 'HIGH_CONFIDENCE',
+              probabilities: data.class_probabilities || (data.top_predictions
+                ? Object.fromEntries(data.top_predictions.map((p: any) => [p.class_name, p.confidence]))
+                : {}),
+              explanation: pred.message || data.description,
+              disease_details: {
+                scientific_name: data.pathogen,
+                condition_type: data.disease_type,
+                description: data.description,
+                urgency: data.urgency,
+                recommendation: data.recommendation,
+              },
+            });
+            success = true;
+            break;
+          }
+        } catch {
+          // try next
+        }
+      }
+      if (!success) {
+        setErrorMsg('Could not connect to Orange Disease Analysis service. Ensure the backend server is active.');
+      }
+    } else if (targetMode === 'rice') {
+      const endpoints = ['/api/rice/predict'];
+      let success = false;
+      for (const url of endpoints) {
+        try {
+          const resp = await fetch(url, { method: 'POST', body: formData });
+          if (resp.ok) {
+            const data = await resp.json();
+            const pred = data.prediction || {};
+            setDetectedCropInfo({
+              crop: 'Rice',
+              display: '🌾 Rice',
+              confidence: 99.0,
+            });
+            setResult({
+              success: true,
+              crop: 'Rice',
+              crop_display: '🌾 Rice Foliage',
+              prediction: pred.class || pred.class_name || 'Unknown',
+              confidence: pred.confidence_percent || (pred.confidence ? pred.confidence * 100 : 0),
+              status: pred.confidence_status || (data.decision?.status || 'HIGH_CONFIDENCE'),
+              reliable: pred.confidence_status === 'HIGH_CONFIDENCE' || data.decision?.status === 'HIGH_CONFIDENCE',
+              probabilities: data.class_probabilities || (data.top_predictions
+                ? Object.fromEntries(data.top_predictions.map((p: any) => [p.class_name, p.confidence]))
+                : {}),
+              explanation: pred.message || data.description,
+              disease_details: {
+                scientific_name: data.pathogen,
+                condition_type: data.disease_type,
+                description: data.description,
+                urgency: data.urgency,
+                recommendation: data.recommendation,
+              },
+            });
+            success = true;
+            break;
+          }
+        } catch {
+          // try next
+        }
+      }
+      if (!success) {
+        setErrorMsg('Could not connect to Rice Disease Analysis service. Ensure the backend server is active.');
       }
     } else {
       // Primary: Unified Multi-Crop Auto-Detection (Apple, Cashew, Cassava, Maize, Tomato)
@@ -688,6 +794,36 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       return {
         type: 'Disease Detected',
         label: 'Pathogenic Disease Detected',
+        icon: <Activity className="w-4 h-4 text-rose-400" />,
+        badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
+      };
+    } else if (selectedCrop === 'orange') {
+      if (predClass === 'Healthy') {
+        return {
+          type: 'Healthy',
+          label: 'Optimal Foliage Health',
+          icon: <Leaf className="w-4 h-4 text-agri-400" />,
+          badgeClass: 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25',
+        };
+      }
+      return {
+        type: 'Disease Detected',
+        label: 'Citrus Disease Detected',
+        icon: <Activity className="w-4 h-4 text-rose-400" />,
+        badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
+      };
+    } else if (selectedCrop === 'rice') {
+      if (predClass === 'Healthy') {
+        return {
+          type: 'Healthy',
+          label: 'Optimal Foliage Health',
+          icon: <Leaf className="w-4 h-4 text-agri-400" />,
+          badgeClass: 'bg-agri-500/10 text-agri-600 dark:text-agri-400 border-agri-500/25',
+        };
+      }
+      return {
+        type: 'Disease Detected',
+        label: 'Rice Disease Detected',
         icon: <Activity className="w-4 h-4 text-rose-400" />,
         badgeClass: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/30',
       };
@@ -1441,6 +1577,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                 <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🌰 Cashew</span>
                 <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🍃 Cassava</span>
                 <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🌽 Maize</span>
+                <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🍊 Orange</span>
+                <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🌾 Rice</span>
                 <span className="px-2.5 py-1 rounded-lg bg-agri-50 dark:bg-agri-800/50 border border-agri-200/50 dark:border-agri-700/30">🍅 Tomato</span>
               </div>
             </div>
