@@ -56,6 +56,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
   const farmerNavItems: NavItem[] = [
     { to: '/farmer/dashboard', label: 'Farmer Dashboard', icon: LayoutDashboard, iconColor: 'text-[#f97316]' },
     { to: '/analysis', label: 'AI Disease Analysis', icon: BrainCircuit, iconColor: 'text-[#ec4899]' },
+    { to: '/pest-sensors', label: 'Pest Trap & Sensors', icon: ShieldAlert, iconColor: 'text-[#ef4444]' },
     { to: '/onboarding/create-field', label: 'Add Farm', icon: Plus, iconColor: 'text-[#a855f7]' },
     { to: '/field-map', label: 'My Farm', icon: ClipboardList, iconColor: 'text-[#eab308]' },
     { to: '/monitoring', label: 'Follow-Up Tracking', icon: Activity, badge: 'Loop', iconColor: 'text-[#38bdf8]' },
@@ -71,6 +72,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
   // 2. Government Officer Navigation
   const governmentNavItems: NavItem[] = [
     { to: '/government/dashboard', label: 'Regional Command', icon: LayoutDashboard, iconColor: 'text-[#38bdf8]' },
+    { to: '/pest-sensors', label: 'Pest Trap & Sensors', icon: ShieldAlert, iconColor: 'text-[#ef4444]' },
     { to: '/monitoring', label: 'Follow-Up Monitoring', icon: Activity, badge: 'Active', iconColor: 'text-[#4ade80]' },
     { to: '/validation', label: 'Expert Validation', icon: ShieldCheck, badge: 'Cases', iconColor: 'text-[#f59e0b]' },
     { to: '/advisories', label: 'Regional Advisories', icon: Sprout, iconColor: 'text-[#84cc16]' },
@@ -86,6 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
   // 3. Extension Worker Navigation
   const extensionNavItems: NavItem[] = [
     { to: '/extension/dashboard', label: 'Field Operations', icon: LayoutDashboard, badge: 'Queue', iconColor: 'text-[#38bdf8]' },
+    { to: '/pest-sensors', label: 'Pest Trap & Sensors', icon: ShieldAlert, iconColor: 'text-[#ef4444]' },
     { to: '/field-map', label: 'Jurisdiction Map', icon: ClipboardList, iconColor: 'text-[#eab308]' },
     { to: '/validation', label: 'Expert Validation', icon: ShieldCheck, iconColor: 'text-[#f59e0b]' },
     { to: '/advisories', label: 'Regional Advisories', icon: Sprout, iconColor: 'text-[#84cc16]' },
@@ -97,6 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onClose, isMobileDrawer = fals
   // 4. System Administrator Navigation
   const adminNavItems: NavItem[] = [
     { to: '/admin/dashboard', label: 'Admin Console', icon: KeyRound, badge: 'Root', iconColor: 'text-[#a855f7]' },
+    { to: '/pest-sensors', label: 'Pest Trap & Sensors', icon: ShieldAlert, iconColor: 'text-[#ef4444]' },
     { to: '/monitoring', label: 'Monitoring Engine', icon: Activity, iconColor: 'text-[#4ade80]' },
     { to: '/validation', label: 'Validation System', icon: ShieldCheck, iconColor: 'text-[#f59e0b]' },
     { to: '/advisories', label: 'Advisory Engine', icon: Sprout, iconColor: 'text-[#84cc16]' },

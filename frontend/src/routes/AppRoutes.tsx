@@ -39,6 +39,7 @@ import { MissionDetailsPage } from '@/features/drones/MissionDetailsPage';
 import { AdvisoriesPage } from '@/features/advisories/AdvisoriesPage';
 import { ExpertValidationPage } from '@/features/validation/ExpertValidationPage';
 import { MonitoringWorkspacePage } from '@/features/monitoring/MonitoringWorkspacePage';
+import { PestTrapSensorMonitoringPage } from '@/features/pest-sensors/PestTrapSensorMonitoringPage';
 
 /**
  * Root Index Dispatcher: Automatically routes authenticated user to their role's dashboard,
@@ -326,6 +327,38 @@ export const AppRoutes: React.FC = () => {
 
         {/* ── Shared Operations & Diagnostics ── */}
         <Route
+          path="pest-sensors"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'EXTENSION_WORKER', 'ADMIN']}>
+              <PestTrapSensorMonitoringPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farmer/pest-sensors"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <PestTrapSensorMonitoringPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="government/pest-sensors"
+          element={
+            <RoleProtectedRoute allowedRoles={['GOVERNMENT', 'ADMIN']}>
+              <PestTrapSensorMonitoringPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="extension/pest-sensors"
+          element={
+            <RoleProtectedRoute allowedRoles={['EXTENSION_WORKER', 'ADMIN', 'GOVERNMENT']}>
+              <PestTrapSensorMonitoringPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
           path="profile"
           element={
             <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
@@ -333,6 +366,7 @@ export const AppRoutes: React.FC = () => {
             </RoleProtectedRoute>
           }
         />
+
         <Route
           path="settings"
           element={
