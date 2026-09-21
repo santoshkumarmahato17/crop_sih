@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Globe,
@@ -515,7 +515,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 p-1 flex items-center justify-center shadow-lg">
-                <img src="/agri-logo.png" alt="AgriShield" className="w-full h-full object-contain" />
+                <img src="/kisan-sathi-logo.png" alt="Kisan Sathi" className="w-full h-full object-contain" />
               </div>
               <div>
                 <div className="flex items-center gap-2">

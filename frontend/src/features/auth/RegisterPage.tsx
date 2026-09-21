@@ -117,7 +117,7 @@ export const RegisterPage: React.FC = () => {
       {/* Header */}
       <div className="text-center space-y-2">
         <div className="inline-flex p-1 rounded-2xl bg-white dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 shadow-md overflow-hidden">
-          <img src="/kisan-sathi-logo.png" alt="Kisan Sathi Logo" className="w-20 h-16 object-cover object-center rounded-xl" />
+          <img src="/kisan-sathi-logo.png" alt="Kisan Sathi Logo" className="w-24 h-20 object-contain rounded-xl" />
         </div>
         <h1 className="text-2xl font-black tracking-tight text-agri-900 dark:text-white">
           Create KISAN SATHI Account

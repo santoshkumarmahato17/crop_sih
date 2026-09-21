@@ -84,7 +84,7 @@ export const GoogleCallbackPage: React.FC = () => {
         {/* Brand Header */}
         <div className="space-y-2">
           <div className="inline-flex p-2 rounded-2xl bg-white dark:bg-agri-900/60 border border-agri-200/50 dark:border-agri-700/30 shadow-md">
-            <img src="/agri-logo.png" alt="AgriShield Logo" className="w-16 h-12 object-contain" />
+            <img src="/kisan-sathi-logo.png" alt="Kisan Sathi Logo" className="w-16 h-12 object-contain" />
           </div>
           <h1 className="text-xl font-black tracking-tight text-agri-900 dark:text-white font-display">
             Authenticating with Google

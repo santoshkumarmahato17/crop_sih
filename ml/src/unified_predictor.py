@@ -255,6 +255,18 @@ class UnifiedPlantDiagnosticEngine:
         emoji = CROP_EMOJIS.get(identified_crop, "🌿")
         desc = CROP_DESCRIPTIONS.get(identified_crop, f"{identified_crop} leaf")
 
+        severity_level = yolo_result.get("severity_level", "Moderate") if yolo_result else "Moderate"
+        detections_list = yolo_result.get("detections", []) if yolo_result else []
+        symptoms_list = yolo_result.get("symptoms", [
+            "Leaf tissue discoloration",
+            "Chlorotic yellowing around leaf margins",
+            "Foliar necrotic lesions"
+        ]) if yolo_result else [
+            "Leaf tissue discoloration",
+            "Chlorotic yellowing around leaf margins",
+            "Foliar necrotic lesions"
+        ]
+
         return {
             "success": True,
             "crop": identified_crop,
@@ -263,9 +275,14 @@ class UnifiedPlantDiagnosticEngine:
             "crop_probabilities": all_crop_probs,
             "crop_description": desc,
             "prediction": pred_class,
+            "disease": pred_class,
             "display_name": pred_class,
             "category": category,  # "disease" | "pest" | "healthy"
             "confidence": confidence,
+            "confidence_percent": round(confidence if confidence > 1.0 else confidence * 100, 1),
+            "severity": severity_level,
+            "detections": detections_list,
+            "symptoms": symptoms_list,
             "reliable": reliable,
             "status": status_text,
             "threshold_used": confidence_threshold,
@@ -274,6 +291,7 @@ class UnifiedPlantDiagnosticEngine:
             "yolo": yolo_result,
             "explanation": explanation,
             "quality_assessment": quality,
+            "disclaimer": "Consult an agricultural expert when confidence is low or symptoms are unclear.",
         }
 
 

@@ -65,10 +65,8 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group min-w-0"
           >
-            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-[#241b1f] border border-slate-200 dark:border-[#382a30] p-1 flex items-center justify-center shadow-md shrink-0">
-              <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-[#3b82f6] to-[#f97316] flex items-center justify-center text-white text-[10px] font-black">
-                🛡️
-              </div>
+            <div className="w-9 h-9 rounded-xl bg-white dark:bg-[#241b1f] border border-slate-200 dark:border-[#382a30] p-0.5 flex items-center justify-center shadow-md shrink-0 overflow-hidden">
+              <img src="/kisan-sathi-logo.png" alt="Kisan Sathi Logo" className="w-full h-full object-contain rounded-lg" />
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm sm:text-base font-black tracking-tight text-slate-900 dark:text-white font-display whitespace-nowrap">

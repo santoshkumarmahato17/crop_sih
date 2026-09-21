@@ -195,7 +195,7 @@ export const ForgotPasswordPage: React.FC = () => {
       {/* Brand Header */}
       <div className="text-center space-y-2">
         <div className="inline-flex p-2 rounded-2xl bg-white dark:bg-agri-900/60 border border-agri-200/50 dark:border-agri-700/30 shadow-md shadow-agri-500/10">
-          <img src="/agri-logo.png" alt="AgriShield Logo" className="w-16 h-12 object-contain" />
+          <img src="/kisan-sathi-logo.png" alt="Kisan Sathi Logo" className="w-16 h-12 object-contain" />
         </div>
         <h1 className="text-2xl font-black tracking-tight text-agri-900 dark:text-white font-display">
           {step === 'EMAIL' && 'Forgot Password?'}
