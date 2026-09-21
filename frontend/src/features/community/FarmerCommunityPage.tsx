@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Search,
@@ -14,10 +14,7 @@ import {
   Send,
   Camera,
   Sparkles,
-  ShieldCheck,
-  TrendingUp,
   Users,
-  ChevronRight,
 } from 'lucide-react';
 import { communityService } from '@/services/communityService';
 import { CommunityPost } from '@/types';
@@ -390,12 +387,12 @@ export const FarmerCommunityPage: React.FC = () => {
         </div>
 
         {/* ========================================================================= */}
-        {/* CENTER COLUMN (6 Cols): Plantix-Style Search, Filter & Discussion Cards   */}
+        {/* MAIN FEED COLUMN (9 Cols): Search, Filter & Community Questions Feed      */}
         {/* ========================================================================= */}
-        <div className="lg:col-span-6 space-y-5">
+        <div className="lg:col-span-9 space-y-5">
           {/* Top Plantix-Style Search Bar & Pill Filter Row */}
           <div className="p-4 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm space-y-3">
-            {/* Search Input matching screenshot */}
+            {/* Search Input */}
             <div className="flex items-center gap-3">
               <div className="relative flex-1">
                 <Search className="w-4 h-4 text-agri-400/70 absolute left-4 top-3" />
@@ -426,7 +423,7 @@ export const FarmerCommunityPage: React.FC = () => {
               </button>
             </div>
 
-            {/* Filter by Horizontal Pills matching screenshot */}
+            {/* Filter by Horizontal Pills */}
             <div className="flex items-center justify-between pt-1">
               <span className="text-xs font-bold text-agri-900 dark:text-white">Filter by</span>
               <span className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer" onClick={() => setSelectedCrop('Popular')}>
@@ -506,7 +503,7 @@ export const FarmerCommunityPage: React.FC = () => {
                     id={post.id}
                     className="rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md"
                   >
-                    {/* Optional Crop Leaf Image on Top (matching screenshot 2) */}
+                    {/* Optional Crop Leaf Image on Top */}
                     {post.image_url && (
                       <div className="w-full h-64 bg-slate-950 overflow-hidden relative group">
                         <img
@@ -521,7 +518,7 @@ export const FarmerCommunityPage: React.FC = () => {
                     )}
 
                     <div className="p-5 space-y-3.5">
-                      {/* Top Author Header matching screenshot: Avatar + Blue Name + India + Crop */}
+                      {/* Top Author Header */}
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs border border-blue-200 dark:border-blue-700/50 flex-shrink-0">
                           {post.author_name.charAt(0)}
@@ -571,7 +568,7 @@ export const FarmerCommunityPage: React.FC = () => {
                         </button>
                       </div>
 
-                      {/* Bottom Action Bar: Upvote 👍, Downvote 👎, Share ↗️ */}
+                      {/* Bottom Action Bar */}
                       <div className="flex items-center justify-between pt-3 border-t border-agri-100 dark:border-agri-700/25 text-xs">
                         <div className="flex items-center gap-4">
                           <button
@@ -666,76 +663,6 @@ export const FarmerCommunityPage: React.FC = () => {
             )}
           </div>
         </div>
-
-        {/* ========================================================================= */}
-        {/* RIGHT COLUMN (3 Cols): Live Outbreak Radar & AI Fast-Diagnosis Widget     */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-3 space-y-5">
-          {/* Trending Regional Outbreaks */}
-          <div className="p-5 rounded-3xl bg-white dark:bg-surface-darkCard border border-agri-200/50/90 dark:border-slate-800/90 shadow-sm space-y-4">
-            <div className="flex items-center justify-between border-b border-agri-100 dark:border-agri-700/25 pb-2.5">
-              <h3 className="font-bold text-agri-900 dark:text-white text-xs uppercase tracking-wider flex items-center gap-1.5">
-                <TrendingUp className="w-4 h-4 text-rose-500" />
-                <span>Regional Outbreak Radar</span>
-              </h3>
-            </div>
-
-            <div className="space-y-2.5 text-xs">
-              {[
-                { disease: 'Yellow Rust on Wheat', area: 'Coimbatore North • 18 reports', alert: 'HIGH' },
-                { disease: 'Bacterial Blight on Paddy', area: 'Thanjavur Delta • 12 reports', alert: 'MODERATE' },
-                { disease: 'Fall Armyworm on Maize', area: 'Dindigul Highland • 9 reports', alert: 'HIGH' },
-              ].map((item, idx) => (
-                <div key={idx} className="p-3 rounded-2xl bg-surface-light dark:bg-agri-950/60 border border-agri-200/50 dark:border-agri-700/25 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-agri-900 dark:text-agri-200">{item.disease}</span>
-                    <span className="px-2 py-0.5 rounded bg-rose-500/15 text-rose-600 dark:text-rose-400 font-mono font-bold text-[9px]">
-                      {item.alert}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70">{item.area}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Precision AI Scanner Quick Card */}
-          <div className="p-6 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-900 text-white shadow-xl space-y-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-white">
-              <Sparkles className="w-5 h-5 text-accent-lime" />
-            </div>
-            <h3 className="font-extrabold text-sm">Need Instant AI Pathology Diagnosis?</h3>
-            <p className="text-xs text-blue-100 leading-relaxed">
-              Upload your field leaf image to run instant YOLOv8 & ViT neural network lesion inference with 94%+ accuracy.
-            </p>
-            <button
-              type="button"
-              onClick={() => navigate('/analysis')}
-              className="w-full py-2.5 rounded-xl bg-white text-agri-900 hover:bg-blue-50 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-md"
-            >
-              <span>Instant AI Disease Diagnosis</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Expert Extension Ground Visit Request */}
-          <div className="p-5 rounded-3xl bg-emerald-50/80 dark:bg-emerald-950/25 border border-agri-200 dark:border-agri-500/25 space-y-3">
-            <div className="flex items-center gap-2 text-agri-800 dark:text-agri-300 text-xs font-bold">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Certified Extension Support</span>
-            </div>
-            <p className="text-xs text-agri-600 dark:text-agri-400/70 leading-relaxed">
-              Facing persistent disease contagion? Request an on-site inspection by your regional Extension Division officer.
-            </p>
-            <button
-              type="button"
-              onClick={() => navigate('/officer')}
-              className="w-full py-2 rounded-xl bg-agri-500 hover:bg-agri-500 text-white text-xs font-bold transition shadow-sm"
-            >
-              Request Field Visit
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* 3. Create Question Modal */}
@@ -828,7 +755,7 @@ export const FarmerCommunityPage: React.FC = () => {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. केले के अंदर छोटे-छोटे फल आते हैं वह बड़े नहीं ..."
+                  placeholder="e.g. Yellow leaf spots with wilting on banana foliage..."
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500 font-semibold"
@@ -842,7 +769,7 @@ export const FarmerCommunityPage: React.FC = () => {
                 <textarea
                   required
                   rows={3}
-                  placeholder="Describe what you see on the leaves or fruit (e.g. छोटी कीड़ा जैसे है)..."
+                  placeholder="Describe what you see on the leaves, stems or fruit..."
                   value={newContent}
                   onChange={(e) => setNewContent(e.target.value)}
                   className="w-full bg-surface-light dark:bg-surface-darkBg border border-agri-200/50 dark:border-agri-700/25 rounded-xl px-3.5 py-2 text-xs text-agri-900 dark:text-agri-100 focus:outline-none focus:border-blue-500"
