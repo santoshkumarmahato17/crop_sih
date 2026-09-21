@@ -473,8 +473,6 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         const endpoints = [
           `/api/v1/ai/yolo/sample-images`,
           `/api/v1/dataset/sample-images`,
-          `http://${window.location.hostname}:8001/api/v1/ai/yolo/sample-images`,
-          `http://${window.location.hostname}:8000/api/yolo/sample-images`,
         ];
         for (const url of endpoints) {
           try {
@@ -494,10 +492,8 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       } else {
         const endpoints = [
           `/api/v1/ai/sample-images`,
+          `/api/v1/ai/unified/sample-images`,
           `/api/v1/dataset/sample-images`,
-          `http://${window.location.hostname}:8001/api/v1/ai/sample-images`,
-          `http://${window.location.hostname}:8001/api/v1/ai/unified/sample-images`,
-          `http://${window.location.hostname}:8000/api/sample-images`,
         ];
 
         for (const url of endpoints) {
@@ -708,7 +704,6 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       }
       if (!success) {
         setErrorMsg('Could not connect to Soybean Disease Analysis service. Ensure the backend server is active.');
-      }
       }
     } else if (targetMode === 'orange') {
       const endpoints = ['/api/orange/predict', '/api/v1/orange/predict'];

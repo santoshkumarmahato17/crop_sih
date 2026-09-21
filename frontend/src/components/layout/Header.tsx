@@ -19,6 +19,7 @@ interface HeaderProps {
   systemStatus?: 'healthy' | 'degraded' | 'unhealthy' | string;
   version?: string;
   onToggleSidebar?: () => void;
+  isSidebarOpen?: boolean;
   isMinimal?: boolean;
 }
 
@@ -26,6 +27,7 @@ export const Header: React.FC<HeaderProps> = ({
   systemStatus = 'healthy',
   version = '0.1.0',
   onToggleSidebar,
+  isSidebarOpen = false,
   isMinimal = false,
 }) => {
   const { theme, toggleTheme } = useTheme();
@@ -53,8 +55,22 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       <header className="min-h-[3.75rem] sm:h-16 pt-[max(env(safe-area-inset-top,0px),0.5rem)] sm:pt-0 pb-1.5 sm:pb-0 border-b border-slate-200 dark:border-[#261f22] bg-white dark:bg-[#161314] px-3 sm:px-6 flex items-center justify-between sticky top-0 z-40 transition-colors duration-200">
-        <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-          {/* Logo & Brand Identity (Single straight line) */}
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          {/* Primary Top-Left Hamburger Sidebar Toggle Button */}
+          {!isAuthRoute && (
+            <button
+              type="button"
+              onClick={onToggleSidebar}
+              aria-label={isSidebarOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isSidebarOpen}
+              title={isSidebarOpen ? 'Close menu' : 'Open menu'}
+              className="p-2 rounded-xl bg-slate-100 dark:bg-[#241c20] hover:bg-slate-200 dark:hover:bg-[#2e2328] active:scale-95 border border-slate-200 dark:border-[#382d33] hover:border-agri-500/50 text-slate-800 dark:text-white transition shrink-0 shadow-sm focus:outline-none focus:ring-2 focus:ring-agri-500/50 flex items-center justify-center cursor-pointer group"
+            >
+              <Menu className="w-5 h-5 text-slate-700 dark:text-white group-hover:scale-110 transition-transform duration-200" />
+            </button>
+          )}
+
+          {/* Logo & Brand Identity */}
           <div
             onClick={() => {
               if (isAuthRoute) {
@@ -77,22 +93,6 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </div>
           </div>
-
-          {/* MENU Button Toggle (Click to slide open Farmer Menu) */}
-          {!isAuthRoute && (
-            <button
-              type="button"
-              onClick={onToggleSidebar}
-              aria-label="Toggle Farmer Menu"
-              title="Open Farmer Menu"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-[#241c20] hover:bg-slate-200 dark:hover:bg-[#2e2328] active:scale-95 border border-slate-200 dark:border-[#382d33] hover:border-[#d65b38]/50 text-slate-800 dark:text-white transition shrink-0 shadow-sm group"
-            >
-              <Menu className="w-4 h-4 text-[#d65b38] group-hover:scale-110 transition-transform" />
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-[#d8cbcf] group-hover:text-slate-900 dark:group-hover:text-white">
-                MENU
-              </span>
-            </button>
-          )}
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto">

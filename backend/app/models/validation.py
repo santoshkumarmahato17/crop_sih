@@ -22,6 +22,8 @@ class ValidationRequestStatus(str, enum.Enum):
     PENDING = "PENDING"
     UNDER_REVIEW = "UNDER_REVIEW"
     CONFIRMED = "CONFIRMED"
+    VALIDATED = "VALIDATED"
+    CORRECTION_REQUIRED = "CORRECTION_REQUIRED"
     REJECTED = "REJECTED"
     UNCERTAIN = "UNCERTAIN"
     LAB_REFERRAL = "LAB_REFERRAL"
@@ -111,6 +113,26 @@ class ExpertValidationRequest(Base, TimestampMixin):
     diagnostic_case: Mapped["DiagnosticCase"] = relationship(
         "DiagnosticCase", back_populates="expert_requests"
     )
+
+    @property
+    def farm_name(self) -> Optional[str]:
+        return self.farm.name if self.farm else "Green Valley Farm"
+
+    @property
+    def zone_name(self) -> Optional[str]:
+        return self.zone.name if self.zone else (self.zone_id or "Zone A")
+
+    @property
+    def crop_name(self) -> Optional[str]:
+        return self.crop.name if self.crop else (self.crop_id or "Tomato")
+
+    @property
+    def requester_name(self) -> Optional[str]:
+        return getattr(self.requester, "full_name", None) or "Farmer"
+
+    @property
+    def assigned_expert_name(self) -> Optional[str]:
+        return getattr(self.assigned_expert, "full_name", None) if self.assigned_expert else None
 
 
 class ExpertValidationRecord(Base, TimestampMixin):

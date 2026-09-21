@@ -9,6 +9,12 @@ export interface WizardState {
   zones: Zone[];
   selectedZoneId: string;
 
+  // Location Enablement
+  latitude?: number;
+  longitude?: number;
+  locationName?: string;
+  locationStatus: 'NOT_REQUESTED' | 'GRANTED' | 'DENIED' | 'UNAVAILABLE' | 'MANUAL';
+
   // Crop & Stage
   selectedCrop: string;
   growthStage: string;
@@ -37,6 +43,7 @@ export interface WizardActions {
   setSelectedFarmId: (id: string) => void;
   setZones: (zones: Zone[]) => void;
   setSelectedZoneId: (id: string) => void;
+  setLocationData: (data: { latitude?: number; longitude?: number; locationName?: string; locationStatus?: 'NOT_REQUESTED' | 'GRANTED' | 'DENIED' | 'UNAVAILABLE' | 'MANUAL' }) => void;
   setSelectedCrop: (crop: string) => void;
   setGrowthStage: (stage: string) => void;
   setSelectedPlantParts: (parts: string[]) => void;
@@ -58,6 +65,10 @@ const defaultState: WizardState = {
   selectedFarmId: '',
   zones: [],
   selectedZoneId: '',
+  latitude: undefined,
+  longitude: undefined,
+  locationName: undefined,
+  locationStatus: 'NOT_REQUESTED',
   selectedCrop: 'Tomato',
   growthStage: 'Flowering',
   selectedPlantParts: ['Leaf'],
@@ -82,6 +93,13 @@ export const DiagnosisWizardProvider: React.FC<{ children: ReactNode }> = ({ chi
     setSelectedFarmId: (selectedFarmId) => setState((s) => ({ ...s, selectedFarmId })),
     setZones: (zones) => setState((s) => ({ ...s, zones })),
     setSelectedZoneId: (selectedZoneId) => setState((s) => ({ ...s, selectedZoneId })),
+    setLocationData: (data) => setState((s) => ({
+      ...s,
+      latitude: data.latitude !== undefined ? data.latitude : s.latitude,
+      longitude: data.longitude !== undefined ? data.longitude : s.longitude,
+      locationName: data.locationName !== undefined ? data.locationName : s.locationName,
+      locationStatus: data.locationStatus !== undefined ? data.locationStatus : s.locationStatus,
+    })),
     setSelectedCrop: (selectedCrop) => setState((s) => ({ ...s, selectedCrop })),
     setGrowthStage: (growthStage) => setState((s) => ({ ...s, growthStage })),
     setSelectedPlantParts: (selectedPlantParts) => setState((s) => ({ ...s, selectedPlantParts })),

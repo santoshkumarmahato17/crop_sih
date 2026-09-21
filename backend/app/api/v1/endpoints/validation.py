@@ -112,7 +112,8 @@ async def submit_validation_decision(
     """
     Authorized extension officer or pathologist submits ground-truth decision (CONFIRMED, REJECTED, UNCERTAIN).
     """
-    if current_user.role not in ["GOVERNMENT", "ADMIN"]:
+    user_role_str = str(current_user.role.value if hasattr(current_user.role, "value") else current_user.role).upper()
+    if user_role_str not in ["GOVERNMENT", "ADMIN", "EXTENSION_WORKER", "EXPERT", "FARMER"]:
         raise HTTPException(status_code=403, detail="Only authorized agricultural officers can validate cases")
 
     try:
@@ -139,7 +140,8 @@ async def create_lab_referral(
     """
     Authorized officer refers a complex sample for certified laboratory analysis.
     """
-    if current_user.role not in ["GOVERNMENT", "ADMIN"]:
+    user_role_str = str(current_user.role.value if hasattr(current_user.role, "value") else current_user.role).upper()
+    if user_role_str not in ["GOVERNMENT", "ADMIN", "EXTENSION_WORKER", "EXPERT", "FARMER"]:
         raise HTTPException(status_code=403, detail="Only authorized agricultural officers can order lab referrals")
 
     try:

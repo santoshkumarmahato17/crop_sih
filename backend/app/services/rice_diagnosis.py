@@ -174,3 +174,6 @@ class RiceDiseaseModelService:
         }
         
         return formatted_response
+
+
+RiceDiagnosisService = RiceDiseaseModelService
