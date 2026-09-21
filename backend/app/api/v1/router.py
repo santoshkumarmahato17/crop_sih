@@ -71,5 +71,7 @@ api_router.include_router(laboratory.router, prefix="/laboratory", tags=["labora
 api_router.include_router(extension.router, prefix="/extension", tags=["extension"])
 api_router.include_router(monitoring.router)
 api_router.include_router(sensors.router, prefix="/sensors", tags=["sensors"])
+api_router.include_router(sensors.router, tags=["pest-sensors"])
 api_router.include_router(satellite.router)
+
 
