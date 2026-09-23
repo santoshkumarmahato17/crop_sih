@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Technical Foundation Verification Script (Step 2).
+KISAN SATHI — Technical Foundation Verification Script (Step 2).
 Validates:
 1. Directory Structure Integrity (8 required top-level directories)
 2. Backend App & Health Endpoint (/api/v1/health)
@@ -54,7 +54,7 @@ async def verify_backend_health() -> bool:
             print(f"  Response Payload: {data}")
 
             assert response.status_code == 200, f"Expected 200, got {response.status_code}"
-            assert data["system"] == "AGRI SHIELD", "System name mismatch"
+            assert data["system"] == "KISAN SATHI", "System name mismatch"
             assert "subsystems" in data, "Subsystems key missing"
             assert "postgis" in data["subsystems"], "PostGIS subsystem missing"
             assert "redis" in data["subsystems"], "Redis subsystem missing"
@@ -91,7 +91,7 @@ async def verify_error_handling() -> bool:
 async def main():
     root_dir = Path(__file__).resolve().parent.parent
     print("==========================================================")
-    print("AGRI SHIELD: Step 2 Technical Foundation Verification")
+    print("KISAN SATHI: Step 2 Technical Foundation Verification")
     print("==========================================================")
 
     d_ok = verify_directory_structure(root_dir)

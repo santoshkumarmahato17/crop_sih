@@ -176,7 +176,8 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
   const imageQuality = analysisResult?.image_quality;
   const isQualityUnusable = imageQuality?.status === 'UNUSABLE' || imageQuality?.is_usable === false;
 
-  const detectedCrop = analysisResult?.crop || meta.detected_crop || (isProcessing ? 'Analyzing...' : 'Pending Image');
+  const detectedCrop = analysisResult?.crop_name || analysisResult?.crop || meta.detected_crop || (isProcessing ? 'Analyzing...' : 'Not identified');
+  const cropSource = analysisResult?.crop_source || meta.crop_source || 'not_identified';
   const detectedCondition =
     analysisResult?.condition || meta.detected_condition || (isProcessing ? 'Scanning foliar pathology...' : 'Awaiting Inspection');
   const conditionCategory = analysisResult?.condition_category || 'Disease';
@@ -872,7 +873,7 @@ export const AIDiseaseAnalysisPage: React.FC = () => {
                   Confidence
                 </span>
                 <p className="text-base font-black text-agri-600 dark:text-agri-400 font-mono">
-                  {confidencePercent}%
+                  {cropSource === 'not_identified' && detectedCrop === 'Not identified' ? 'N/A' : `${confidencePercent}%`}
                 </p>
               </div>
 

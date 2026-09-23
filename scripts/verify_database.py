@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Comprehensive Database Architecture Verification Script (Step 3).
+KISAN SATHI — Comprehensive Database Architecture Verification Script (Step 3).
 Validates:
 1. All 24 ORM Domain Models in Base.metadata
 2. PostGIS Geometry Column Definitions and SRID 4326 Conformance
@@ -148,7 +148,7 @@ def verify_alembic_configuration() -> bool:
 
 def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 3 Database Architecture Verification")
+    print("KISAN SATHI: Step 3 Database Architecture Verification")
     print("==========================================================")
 
     m_ok = verify_models_and_tables()

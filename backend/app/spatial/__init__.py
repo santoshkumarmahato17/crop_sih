@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Geospatial Processing & Analysis Package.
+KISAN SATHI — Geospatial Processing & Analysis Package.
 Provides coordinate transformations, vector sanitization, raster index math, grid-based intelligent zoning, and PostGIS helpers.
 """
 

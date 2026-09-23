@@ -1,8 +1,8 @@
 # Validation & Verification Master Report
-## AgriShield Crop Health Application
+## Kisan Sathi Crop Health Application
 
 ### 1. Executive Summary
-The AgriShield system underwent a comprehensive Verification and Validation (V&V) audit. The audit evaluated backend architecture, AI pipeline integration, human-in-the-loop workflows, and strict validation of crop anomalies.
+The Kisan Sathi system underwent a comprehensive Verification and Validation (V&V) audit. The audit evaluated backend architecture, AI pipeline integration, human-in-the-loop workflows, and strict validation of crop anomalies.
 
 **Current State**: `PARTIAL / RED`
 - The core API logic passes the vast majority of tests (83 passed).

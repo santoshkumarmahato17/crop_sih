@@ -8,15 +8,22 @@ from app.core.config import get_settings
 settings = get_settings()
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Verify a plaintext password against a stored bcrypt hash."""
+def verify_password(plain_password: str, hashed_password: Optional[str]) -> bool:
+    """Verify a plaintext password against a stored bcrypt hash safely."""
+    if not plain_password or not hashed_password or not isinstance(hashed_password, str):
+        return False
+    # Validate bcrypt format ($2a$, $2b$, or $2y$ prefix and minimum length 59)
+    clean_hash = hashed_password.strip()
+    if len(clean_hash) < 59 or not (clean_hash.startswith("$2a$") or clean_hash.startswith("$2b$") or clean_hash.startswith("$2y$")):
+        return False
     try:
         return bcrypt.checkpw(
             plain_password.encode("utf-8")[:72],
-            hashed_password.encode("utf-8"),
+            clean_hash.encode("utf-8"),
         )
     except Exception:
         return False
+
 
 
 def get_password_hash(password: str) -> str:

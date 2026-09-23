@@ -39,11 +39,11 @@ export default {
           limeDark: '#84cc16',
         },
         surface: {
-          light: '#F4F7F2',
+          light: '#F7FAFC',
           card: '#FFFFFF',
-          darkBg: '#0f172a',
-          darkCard: '#1e293b',
-          darkElevated: '#334155',
+          darkBg: '#071A1D',
+          darkCard: '#0D2729',
+          darkElevated: '#16383B',
         },
       },
       fontFamily: {

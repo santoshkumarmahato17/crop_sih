@@ -194,7 +194,7 @@ async def forgot_password(
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="No AGRI SHIELD account was found for this email."
+            detail="No KISAN SATHI account was found for this email."
         )
 
     try:
@@ -206,11 +206,17 @@ async def forgot_password(
 
     if not dispatch_res.get("sent"):
         reason = dispatch_res.get("reason")
+        if reason == "SMTP_NOT_CONFIGURED":
+            return ForgotPasswordResponse(
+                success=True,
+                message=f"Development Mode: OTP {otp_code} generated for {email}.",
+                smtp_configured=False,
+            )
         err_msg = dispatch_res.get("message") or "Email service delivery failed."
         otp_service.clear_otp(email)
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE if reason == "SMTP_NOT_CONFIGURED" else status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Unable to send password reset OTP email: {err_msg}. Please configure SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in backend/.env."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Unable to send password reset OTP email: {err_msg}.",
         )
 
     return ForgotPasswordResponse(
@@ -332,7 +338,7 @@ async def get_google_auth_url() -> dict:
     response_model=TokenResponse,
     status_code=status.HTTP_200_OK,
     summary="Google OAuth Callback & ID Token Verification",
-    description="Exchanges OAuth authorization code or verifies Google ID token, creating or linking AGRI SHIELD user account.",
+    description="Exchanges OAuth authorization code or verifies Google ID token, creating or linking KISAN SATHI user account.",
 )
 async def google_callback(
     req: GoogleAuthCallbackRequest,

@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — CCMT Dataset Exploration & Sample Analysis REST API Endpoints.
+KISAN SATHI — CCMT Dataset Exploration & Sample Analysis REST API Endpoints.
 Exposes dataset inspection, class taxonomy, sample retrieval, and direct sample inference.
 """
 

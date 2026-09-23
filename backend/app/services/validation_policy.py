@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Expert Validation Policy Engine.
+KISAN SATHI — Expert Validation Policy Engine.
 Provides configurable rules to determine when an AI prediction or field telemetry
 observation mandates human agricultural expert validation.
 """

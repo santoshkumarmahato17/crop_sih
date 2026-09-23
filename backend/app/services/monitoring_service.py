@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Follow-up Monitoring & Closed-Loop Health Tracking Service.
+KISAN SATHI — Follow-up Monitoring & Closed-Loop Health Tracking Service.
 Orchestrates monitoring task lifecycle, field observations, before-vs-after comparison,
 reassessment, advisory generation, and audit logging.
 """

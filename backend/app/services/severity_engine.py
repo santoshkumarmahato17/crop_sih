@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Standalone Crop Pathology Severity Engine.
+KISAN SATHI — Standalone Crop Pathology Severity Engine.
 Evaluates current observed physical damage on foliar tissue (affected area %,
 lesion density, and visual degradation index) strictly decoupled from contextual risk.
 """

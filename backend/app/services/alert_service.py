@@ -92,7 +92,7 @@ class AlertService:
 
             # Create notification for owner/recipient
             recipient_id = current_user.id if current_user else "user-farmer-1"
-            recipient_email = current_user.email if current_user else "farmer@agrishield.com"
+            recipient_email = current_user.email if current_user else "farmer@kisansathi.com"
 
             notif = Notification(
                 id=str(uuid.uuid4()),

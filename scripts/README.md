@@ -1,4 +1,4 @@
-# AGRI SHIELD — System Automation & Operational Scripts
+# KISAN SATHI — System Automation & Operational Scripts
 
 Helper scripts for local environment bootstrap, data loading, database migrations, and verification.
 

@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Multilingual Translation & Safe IPM Advisory Service.
+KISAN SATHI — Multilingual Translation & Safe IPM Advisory Service.
 Provides static curated regional dictionaries (English, Tamil, Hindi, Marathi)
 and ensures strict adherence to Integrated Pest Management (IPM) safety rules.
 """

@@ -90,6 +90,7 @@ class CropHealthAnalysisService:
         thermal_bytes: Optional[bytes] = None,
         farm_id: Optional[str] = None,
         zone_id: Optional[str] = None,
+        crop: Optional[str] = None,
         mission_id: Optional[str] = None,
         current_user: Optional[User] = None,
         patch_roi: Optional[str] = None,
@@ -98,6 +99,31 @@ class CropHealthAnalysisService:
         Executes crop health inference using the active CropHealthModel
         and persists structured observations in PostGIS.
         """
+        # 0. Resolve Crop Context & Priority Source
+        resolved_crop = crop.strip() if crop and crop.strip() and crop.strip().lower() not in ["unknown", "not identified", "crop leaf", ""] else None
+        crop_source = "not_identified"
+
+        if not resolved_crop and zone_id:
+            try:
+                zone_result = await db.execute(select(FarmZone).where(FarmZone.id == zone_id))
+                zone_obj = zone_result.scalars().first()
+                if zone_obj and zone_obj.crop:
+                    resolved_crop = zone_obj.crop
+            except Exception:
+                pass
+
+        if not resolved_crop and farm_id:
+            try:
+                farm_result = await db.execute(select(Farm).where(Farm.id == farm_id))
+                farm_obj = farm_result.scalars().first()
+                if farm_obj and farm_obj.primary_crop:
+                    resolved_crop = farm_obj.primary_crop
+            except Exception:
+                pass
+
+        if resolved_crop:
+            crop_source = "farm_context"
+
         # 1. Resolve Image Bytes and Associated Farm/Zone/Mission Context
         target_location = None
         drone_image: Optional[DroneImage] = None
@@ -173,10 +199,10 @@ class CropHealthAnalysisService:
                             "action_type": "Image Quality Warning",
                             "title": "Clearer Image Required",
                             "detail": quality_data.get("warning_message") or "Image is blurred or poorly lit. Please upload a clear photo of the plant leaf.",
-                            "source": "AGRI SHIELD Vision Quality Gate",
+                            "source": "KISAN SATHI Vision Quality Gate",
                         }
                     ],
-                    model_name="AgriShield-QualityGate-v2.0",
+                    model_name="Kisan Sathi-QualityGate-v2.0",
                     model_version="2.1.0",
                     inference_timestamp=datetime.now(timezone.utc),
                     prediction_metadata={
@@ -199,6 +225,7 @@ class CropHealthAnalysisService:
             metadata={
                 "farm_id": farm_id,
                 "zone_id": zone_id,
+                "crop": resolved_crop,
                 "mission_id": mission_id,
                 "patch_roi": patch_roi,
             },
@@ -206,30 +233,44 @@ class CropHealthAnalysisService:
 
         # 4. Extract Real Diagnostic Telemetry & Meta
         p_meta = prediction.prediction_metadata or {}
-        detected_crop = p_meta.get("detected_crop", "Crop Leaf")
+        model_detected_crop = p_meta.get("detected_crop")
+        
+        # Priority Source Resolution Engine
+        if resolved_crop:
+            final_crop_name = resolved_crop.title()
+            final_crop_source = "farm_context"
+            final_crop_confidence = 1.0
+        elif model_detected_crop and model_detected_crop.strip().lower() not in ["unknown", "not identified", "crop leaf", ""]:
+            final_crop_name = model_detected_crop.strip().title()
+            final_crop_source = "crop_classifier"
+            final_crop_confidence = round(prediction.confidence, 2)
+        else:
+            final_crop_name = "Not identified"
+            final_crop_source = "not_identified"
+            final_crop_confidence = 0.0
+
+        detected_crop = final_crop_name
         detected_condition = p_meta.get("detected_condition", "Canopy Foliage")
         pathogen_type_str = p_meta.get("pathogen_type", "None (Healthy)")
         scientific_name = p_meta.get("scientific_name", "")
         specific_class = p_meta.get("specific_class", detected_condition.lower().replace(" ", "_"))
 
-        # Crop Validation Gate (Rule 3 & 4)
+        # Crop Validation Gate
         candidates = p_meta.get("top_candidates", [])
         crop_confidence = candidates[0].get("probability", prediction.confidence) if candidates else prediction.confidence
         
-        supported_crops = ["maize", "cassava", "tomato", "cashew", "apple", "rice", "corn", "wheat"]
+        supported_crops = ["maize", "cassava", "tomato", "cashew", "apple", "rice", "corn", "wheat", "cotton", "soybean", "potato", "chilli", "pepper"]
         crop_status = "CONFIDENT"
         
-        if crop_confidence < 0.40 or detected_crop.lower() not in supported_crops:
+        if final_crop_source == "not_identified":
+            crop_status = "UNKNOWN"
+            p_meta["detected_crop"] = "Not identified"
+        elif final_crop_source == "crop_classifier" and (crop_confidence < 0.40 or final_crop_name.lower() not in supported_crops):
             crop_status = "UNKNOWN" if crop_confidence < 0.40 else "UNSUPPORTED"
-            detected_crop = "UNKNOWN"
-            detected_condition = "INSUFFICIENT_EVIDENCE"
-            pathogen_type_str = "Unknown"
-            specific_class = "unknown_condition"
-            prediction.confidence = crop_confidence
-            prediction.disease_probability = 0.0
-            prediction.pest_probability = 0.0
-            p_meta["detected_crop"] = "UNKNOWN"
-            p_meta["detected_condition"] = "INSUFFICIENT_EVIDENCE"
+            final_crop_name = "Not identified"
+            final_crop_source = "not_identified"
+            final_crop_confidence = 0.0
+            p_meta["detected_crop"] = "Not identified"
             
         # Determine true biological health
         is_healthy = "healthy" in pathogen_type_str.lower() or "healthy" in detected_condition.lower()
@@ -354,10 +395,12 @@ class CropHealthAnalysisService:
             id=analysis_id,
             analysis_id=analysis_id,
             image_quality=quality_data,
-            crop=detected_crop,
-            crop_confidence=round(crop_confidence, 2),
+            crop=final_crop_name,
+            crop_name=final_crop_name,
+            crop_source=final_crop_source,
+            crop_confidence=final_crop_confidence,
             crop_status=crop_status,
-            crop_origin="MODEL_IDENTIFIED",
+            crop_origin="USER_CONFIRMED" if final_crop_source == "farm_context" else "MODEL_IDENTIFIED",
             condition=detected_condition if condition_status == "CONFIDENT" else f"Possible {detected_condition}",
             condition_category=cond_category,
             specific_class=specific_class,

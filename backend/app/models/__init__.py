@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — ORM Domain Models Package.
+KISAN SATHI — ORM Domain Models Package.
 All 24 relational and PostGIS spatial models register metadata on Base.
 """
 

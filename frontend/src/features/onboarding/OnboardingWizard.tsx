@@ -37,7 +37,7 @@ export const INDIAN_LANGUAGES: LanguageOption[] = [
     name: 'English',
     nativeName: 'English (Default)',
     code: 'en-US',
-    samplePhrase: 'Welcome to AGRI SHIELD precision crop health, weather risk, and pest forecasting platform.',
+    samplePhrase: 'Welcome to KISAN SATHI precision crop health, weather risk, and pest forecasting platform.',
     region: 'Global / All-India',
     isPriority: true,
   },
@@ -527,7 +527,7 @@ export const OnboardingWizard: React.FC<{ onClose?: () => void }> = ({ onClose }
                   </span>
                 </div>
                 <h1 className="text-xl sm:text-2xl font-black tracking-tight">
-                  AgriShield Smart Farm Onboarding
+                  Kisan Sathi Smart Farm Onboarding
                 </h1>
                 <p className="text-xs text-emerald-200/80">
                   Customizing crops, soil profiles, location telemetry, and hardware access.

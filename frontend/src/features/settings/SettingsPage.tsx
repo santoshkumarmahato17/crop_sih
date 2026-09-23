@@ -359,14 +359,14 @@ export const SettingsPage: React.FC = () => {
             <span>Account Session & Sign Out</span>
           </h2>
           <p className="text-xs text-rose-700 dark:text-rose-400">
-            Terminate your active AGRI SHIELD session across this browser.
+            Terminate your active KISAN SATHI session across this browser.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <p className="text-xs font-bold text-agri-900 dark:text-agri-100">
-              Signed in as: <span className="text-agri-700 dark:text-agri-400">{user?.email || 'farmer@agrishield.farm'}</span>
+              Signed in as: <span className="text-agri-700 dark:text-agri-400">{user?.email || 'farmer@kisansathi.farm'}</span>
             </p>
             <p className="text-[11px] text-agri-500/70 dark:text-agri-400/70">
               Role: <span className="font-mono font-semibold">{typeof user?.role === 'string' ? user.role : (user?.role as any)?.name || 'FARMER'}</span> • Device: Current Browser Session

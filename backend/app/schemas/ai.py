@@ -72,8 +72,10 @@ class CropHealthAnalysisResponse(BaseSchema):
     image_quality: Optional[ImageQualitySchema] = None
 
     # 2. Crop Identification
-    crop: str = Field(default="Crop Leaf", description="Identified crop: Rice, Maize, Tomato, Cashew, Cassava")
-    crop_confidence: float = Field(default=0.90, description="Crop identification confidence")
+    crop: str = Field(default="Not identified", description="Identified crop: Rice, Maize, Tomato, Cashew, Cassava, etc.")
+    crop_name: Optional[str] = Field(default="Not identified", description="Explicit crop name")
+    crop_source: str = Field(default="not_identified", description="Resolution source: farm_context | crop_classifier | not_identified")
+    crop_confidence: float = Field(default=0.0, description="Crop identification confidence score")
     crop_status: str = Field(default="CONFIDENT", description="CONFIDENT | UNCERTAIN | UNKNOWN | UNSUPPORTED")
     crop_origin: str = Field(default="MODEL_IDENTIFIED", description="MODEL_IDENTIFIED | USER_CONFIRMED | EXPERT_CONFIRMED")
 
@@ -123,7 +125,7 @@ class CropHealthAnalysisResponse(BaseSchema):
     disease_probability: float = Field(default=0.0)
     pest_probability: float = Field(default=0.0)
 
-    model_name: str = "AgriShield-VisionPathologyNet"
+    model_name: str = "Kisan Sathi-VisionPathologyNet"
     model_version: str = "2.1.0-production"
     crop_model_version: str = "1.2.0"
     detector_model_version: str = "1.4.0"
@@ -139,6 +141,6 @@ class CropHealthAnalysisResponse(BaseSchema):
     water_stress_observation_id: Optional[str] = None
 
     prototype_disclaimer: str = Field(
-        default="AGRI SHIELD AI DIAGNOSTICS: Calibrated PyTorch Vision Pipeline + Real Foliar Segmentation with Human-in-the-Loop Expert Validation.",
+        default="KISAN SATHI AI DIAGNOSTICS: Calibrated PyTorch Vision Pipeline + Real Foliar Segmentation with Human-in-the-Loop Expert Validation.",
         description="Scientific and regulatory disclaimer",
     )

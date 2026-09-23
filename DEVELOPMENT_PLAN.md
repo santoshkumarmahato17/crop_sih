@@ -1,6 +1,6 @@
-# AGRI SHIELD — Incremental Development Plan
+# KISAN SATHI — Incremental Development Plan
 
-This document outlines the systematic, multi-phase roadmap for engineering the **AGRI SHIELD** AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System.
+This document outlines the systematic, multi-phase roadmap for engineering the **KISAN SATHI** AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System.
 
 ---
 

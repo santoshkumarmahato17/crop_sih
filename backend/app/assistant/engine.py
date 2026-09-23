@@ -11,7 +11,7 @@ from app.models.auth import User
 
 
 class AgriculturalAssistantEngine:
-    """Enterprise Multilingual Grounded Reasoning & Gemini AI Engine for AGRI SHIELD."""
+    """Enterprise Multilingual Grounded Reasoning & Gemini AI Engine for KISAN SATHI."""
 
     def __init__(self):
         self.tools = assistant_tools
@@ -37,7 +37,7 @@ class AgriculturalAssistantEngine:
             lang_instruction = "Marathi (मराठी) with authentic agricultural terms for Maharashtra farmers"
 
         system_instruction = (
-            "You are the AgriShield Senior Expert Agronomist & Agricultural AI Engine. "
+            "You are the Kisan Sathi Senior Expert Agronomist & Agricultural AI Engine. "
             "You provide highly accurate, practical, actionable agricultural advice for farmers, growers, and extension officers across India. "
             "You specialize in crop health diagnostics, integrated pest management (IPM), precision irrigation, "
             "multispectral NDVI interpretation, drone flight scouting, soil nutrients, and disease spread prevention.\n\n"
@@ -110,7 +110,7 @@ class AgriculturalAssistantEngine:
         """
         q = query.lower().strip()
         f_id = farm_id or "farm-101"
-        user = current_user or User(id="user-farmer-1", email="farmer@agrishield.com", full_name="Agricultural Operator")
+        user = current_user or User(id="user-farmer-1", email="farmer@kisansathi.com", full_name="Agricultural Operator")
 
         tools_used: List[str] = []
         data_sources: List[Dict[str, Any]] = []
@@ -270,7 +270,7 @@ class AgriculturalAssistantEngine:
                 )
             else:
                 ans = (
-                    f"🌾 **AgriShield Dashboard Telemetry & Risk Assessment:**\n\n"
+                    f"🌾 **Kisan Sathi Dashboard Telemetry & Risk Assessment:**\n\n"
                     f"1. **🚨 Zone Z03 (High Concern):** Multispectral drone telemetry detected foliar chlorosis and early Yellow Rust pustules (Health Score: 68% | NDVI 0.62).\n"
                     f"   - *Action:* Field check NW sector and prepare bio-fungicide foliar application.\n"
                     f"2. **💧 Zones Z04 & Z05 (Moisture Deficit):** CWSI 0.76 - 0.78 indicates urgent drip cycle needed.\n"
@@ -315,7 +315,7 @@ class AgriculturalAssistantEngine:
         elif is_tamil:
             ans = f"அக்ரிஷீல்ட் AI: உங்கள் பண்ணையில் மண்டலம் Z03 கண்காணிக்கப்பட வேண்டும் மற்றும் Z04-Z05 பாசனம் தேவை."
         else:
-            ans = f"AgriShield Agronomist: Active monitoring on 5 field zones. Zone Z03 flagged for foliar check and Zones Z04-Z05 require scheduled irrigation."
+            ans = f"Kisan Sathi Agronomist: Active monitoring on 5 field zones. Zone Z03 flagged for foliar check and Zones Z04-Z05 require scheduled irrigation."
 
         return ans, tools_used, data_sources
 

@@ -12,11 +12,14 @@ async def test_farm_creation_and_authoritative_area(async_client: AsyncClient):
     authoritative area from the geometry rather than trusting user inputs.
     """
     # 1. Register and Login a test farmer
+    import uuid
+    test_email = f"farmanalyst_{uuid.uuid4().hex[:6]}@kisansathi.internal"
+    test_phone = f"+9198{uuid.uuid4().int % 100000000:08d}"
     register_payload = {
-        "email": "farmanalyst@agrishield.internal",
+        "email": test_email,
         "password": "FarmerPassword123!",
         "full_name": "Kiran Agro",
-        "phone_number": "+919876543299",
+        "phone_number": test_phone,
         "role_name": "FARMER",
     }
     try:
@@ -27,7 +30,7 @@ async def test_farm_creation_and_authoritative_area(async_client: AsyncClient):
 
     login_res = await async_client.post(
         "/api/v1/auth/login",
-        json={"email": "farmanalyst@agrishield.internal", "password": "FarmerPassword123!"},
+        json={"email": test_email, "password": "FarmerPassword123!"},
     )
     assert login_res.status_code == 200
     token = login_res.json()["access_token"]
@@ -98,7 +101,7 @@ async def test_farm_creation_and_authoritative_area(async_client: AsyncClient):
 
     # 5. Anti-IDOR Ownership Check: Register another farmer and verify they CANNOT access Farmer 1's farm
     farmer2_payload = {
-        "email": "otherfarmer@agrishield.internal",
+        "email": "otherfarmer@kisansathi.internal",
         "password": "FarmerPassword123!",
         "full_name": "Other Farmer",
         "role_name": "FARMER",
@@ -106,7 +109,7 @@ async def test_farm_creation_and_authoritative_area(async_client: AsyncClient):
     await async_client.post("/api/v1/auth/register", json=farmer2_payload)
     login2_res = await async_client.post(
         "/api/v1/auth/login",
-        json={"email": "otherfarmer@agrishield.internal", "password": "FarmerPassword123!"},
+        json={"email": "otherfarmer@kisansathi.internal", "password": "FarmerPassword123!"},
     )
     farmer2_token = login2_res.json()["access_token"]
     farmer2_headers = {"Authorization": f"Bearer {farmer2_token}"}

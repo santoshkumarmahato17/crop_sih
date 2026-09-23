@@ -39,7 +39,7 @@ async function callDirectGeminiAPI(
     langInstruction = 'Tamil (தமிழ்) with natural Tamil phrasing and key technical terms';
   }
 
-  const systemInstruction = `You are the AgriShield Senior Expert Agronomist & Agricultural AI Engine.
+  const systemInstruction = `You are the Kisan Sathi Senior Expert Agronomist & Agricultural AI Engine.
 You provide highly accurate, practical, and scientific crop health, pest & disease identification, irrigation, and drone monitoring guidance for farmers across India.
 Language: Respond fluently and naturally in ${langInstruction}.
 
@@ -217,7 +217,7 @@ export const assistantService = {
     let fallbackText = '';
     if (q.includes('dashbord') || q.includes('dashboard') || q.includes('risk') || q.includes('जोखिम')) {
       if (isHindi) {
-        fallbackText = `🌾 **एग्रीशील्ड डैशबोर्ड और फसल जोखिम विश्लेषण (AgriShield Dashboard Analysis):**
+        fallbackText = `🌾 **एग्रीशील्ड डैशबोर्ड और फसल जोखिम विश्लेषण (Kisan Sathi Dashboard Analysis):**
 
 1. **🚨 जोन Z03 (उच्च जोखिम - High Risk):**
    - ड्रोन मल्टीस्पेक्ट्रल विश्लेषण में पत्तों में क्लोरोसिस और येलो रस्ट (Yellow Rust) के लक्षण पाए गए हैं (स्वास्थ्य स्कोर: 68% | NDVI 0.62)।
@@ -238,7 +238,7 @@ export const assistantService = {
 2. **மண்டலங்கள் Z04 & Z05 (நீர் பற்றாக்குறை):** CWSI 0.78 - உடனடி சொட்டு நீர் பாசனம் தேவை.
 3. **மண்டலங்கள் Z01 & Z02 (ஆரோக்கியம்):** 94% பயிர் ஆரோக்கியம் சீராக உள்ளது.`;
       } else {
-        fallbackText = `🌾 **AgriShield Dashboard Telemetry & Risk Assessment:**
+        fallbackText = `🌾 **Kisan Sathi Dashboard Telemetry & Risk Assessment:**
 
 1. **🚨 Zone Z03 (High Concern):** Foliar chlorosis and early Yellow Rust suspected (Health Score: 68% | NDVI 0.62). Field check NW sector.
 2. **💧 Zones Z04 & Z05 (Moisture Deficit):** CWSI 0.78 indicates urgent 2-hour drip irrigation cycle.
@@ -273,7 +273,7 @@ export const assistantService = {
 2. [ஆய்வு]: மண்டலம் Z03-ல் இலைகளின் அடிப்பகுதியை சரிபார்க்கவும்.
 3. [ட்ரோன்]: அடுத்த பறப்பு நாளை காலை 09:00 மணிக்கு திட்டமிடப்பட்டுள்ளது.`;
       } else {
-        fallbackText = `AgriShield Agronomic Guidance:
+        fallbackText = `Kisan Sathi Agronomic Guidance:
 1. [Irrigation - Urgent]: Flush 2-hour drip cycle on Zones Z04 & Z05.
 2. [Scouting - High]: Field check Zone Z03 NW quadrant for foliar lesions.
 3. [Drone Mission]: Multispectral autonomous flight scheduled for tomorrow 09:00 AM.`;

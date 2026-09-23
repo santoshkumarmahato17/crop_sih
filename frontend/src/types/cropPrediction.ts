@@ -1,5 +1,5 @@
 /**
- * AGRI SHIELD — Crop Pathology Prediction & Risk Advisory Types.
+ * KISAN SATHI — Crop Pathology Prediction & Risk Advisory Types.
  */
 
 export interface TopPredictionItem {

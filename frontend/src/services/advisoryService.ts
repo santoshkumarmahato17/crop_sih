@@ -19,8 +19,13 @@ export const advisoryService = {
       const response = await apiClient.get<Advisory[]>('/advisories', { params });
       return response.data;
     } catch (err) {
-      console.warn('API getAdvisories failed, returning fallback mock advisories', err);
-      return getMockAdvisories(params?.language || 'en');
+      const isDemo = localStorage.getItem('kisan_sathi_demo_mode') === 'true';
+      if (isDemo) {
+        console.warn('API getAdvisories failed. Demo mode enabled: returning simulated advisories.');
+        return getMockAdvisories(params?.language || 'en');
+      }
+      console.error('API getAdvisories failed: Unable to connect to server.', err);
+      throw new Error('Unable to connect to server');
     }
   },
 
@@ -34,9 +39,13 @@ export const advisoryService = {
       });
       return response.data;
     } catch (err) {
-      console.warn(`API getAdvisoryById failed for ${id}, using mock`, err);
-      const mocks = getMockAdvisories(language || 'en');
-      return mocks.find((m) => m.id === id) || mocks[0];
+      const isDemo = localStorage.getItem('kisan_sathi_demo_mode') === 'true';
+      if (isDemo) {
+        const mocks = getMockAdvisories(language || 'en');
+        return mocks.find((m) => m.id === id) || mocks[0];
+      }
+      console.error(`API getAdvisoryById failed for ${id}: Unable to connect to server.`);
+      throw new Error('Unable to connect to server');
     }
   },
 
@@ -98,7 +107,7 @@ export const advisoryService = {
       await apiClient.patch('/advisories/me/language', { language });
     } catch (err) {
       console.warn('API updateUserLanguage failed, persisting to localStorage', err);
-      localStorage.setItem('agrishield_preferred_lang', language);
+      localStorage.setItem('kisansathi_preferred_lang', language);
     }
   },
 };

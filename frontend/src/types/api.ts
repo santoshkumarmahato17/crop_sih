@@ -1,5 +1,5 @@
 /**
- * AGRI SHIELD — API Response Envelope Interfaces.
+ * KISAN SATHI — API Response Envelope Interfaces.
  */
 
 export interface ApiResponse<T> {

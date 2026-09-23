@@ -5,7 +5,7 @@ from app.api.deps import get_current_user
 from app.models.auth import User
 from app.core.permissions import RoleType
 
-mock_user = User(id="test-user-rice-id", email="test@agrishield.farm", role=RoleType.FARMER, full_name="Test Rice Farmer")
+mock_user = User(id="test-user-rice-id", email="test@kisansathi.farm", role=RoleType.FARMER, full_name="Test Rice Farmer")
 
 def test_rice_predict_endpoint_missing_file():
     from app.main import app

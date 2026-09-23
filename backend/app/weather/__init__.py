@@ -1,5 +1,5 @@
 """
-AgriShield Agro-Meteorological Telemetry, Signal Analysis & Multi-Vector Risk Forecasting.
+Kisan Sathi Agro-Meteorological Telemetry, Signal Analysis & Multi-Vector Risk Forecasting.
 """
 
 from app.weather.provider import (

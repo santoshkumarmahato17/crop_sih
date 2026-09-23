@@ -363,13 +363,13 @@ class RealCropVisionAnalyzer:
         return boxes
 
     def _infer_crop_type(self, img: Image.Image) -> str:
-        """Heuristic crop morphology estimator (e.g. Tomato, Maize, Rice, Cashew, Cassava)."""
+        """Heuristic crop morphology estimator."""
         w, h = img.size
         aspect = w / max(h, 1)
-        # Narrow elongated blade vs compound broadleaf
+        # Narrow elongated blade vs broadleaf
         if aspect > 1.6 or aspect < 0.6:
             return "Maize"
-        return "Tomato"
+        return "Not identified"
 
 
 # Global singleton instance

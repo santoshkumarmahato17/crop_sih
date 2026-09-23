@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
-from app.core.errors import AgriShieldException
+from app.core.errors import KisanSathiException
 from app.core.logging import logger
 from app.core.permissions import RoleType, get_permissions_for_role
 from app.core.security import (
@@ -81,7 +81,7 @@ class AuthService:
                 user_agent=user_agent,
                 details={"reason": "Attempted public ADMIN registration"},
             )
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="Admin accounts cannot be created via public registration.",
                 status_code=status.HTTP_403_FORBIDDEN,
             )
@@ -89,7 +89,7 @@ class AuthService:
         # 2. Check if email exists
         existing = await self.user_repo.get_by_email(db, req.email)
         if existing:
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message=f"An account with email '{req.email}' already exists.",
                 status_code=status.HTTP_409_CONFLICT,
             )
@@ -107,7 +107,7 @@ class AuthService:
             department=req.department.strip() if req.department else None,
             assigned_region=req.assigned_region.strip() if req.assigned_region else None,
             is_active=True,
-            is_verified=False,
+            is_verified=(req.role == RoleType.FARMER),
             is_superuser=False,
             created_at=datetime.now(timezone.utc),
         )
@@ -170,7 +170,7 @@ class AuthService:
                 details={"reason": "Invalid credentials"},
             )
             await db.commit()
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="Invalid email or password.",
                 status_code=status.HTTP_401_UNAUTHORIZED,
             )
@@ -187,7 +187,7 @@ class AuthService:
                 details={"reason": "Account deactivated"},
             )
             await db.commit()
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="User account is deactivated. Contact system administrator.",
                 status_code=status.HTTP_403_FORBIDDEN,
             )
@@ -209,7 +209,7 @@ class AuthService:
                     details={"reason": "Email not present in ADMIN_EMAIL_ALLOWLIST"},
                 )
                 await db.commit()
-                raise AgriShieldException(
+                raise KisanSathiException(
                     message="Access Denied: Administrator account is not authorized on this environment.",
                     status_code=status.HTTP_403_FORBIDDEN,
                 )
@@ -274,7 +274,7 @@ class AuthService:
         """Exchanges a valid refresh token for a newly rotated access and refresh token pair."""
         payload = decode_token(refresh_token)
         if not payload or payload.get("type") != "refresh":
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="Invalid or expired refresh token.",
                 status_code=status.HTTP_401_UNAUTHORIZED,
             )
@@ -282,7 +282,7 @@ class AuthService:
         user_id = payload.get("sub")
         user = await self.user_repo.get(db, user_id)
         if not user or not user.is_active:
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="User associated with token is no longer active.",
                 status_code=status.HTTP_401_UNAUTHORIZED,
             )
@@ -291,7 +291,7 @@ class AuthService:
         if user.role == RoleType.ADMIN:
             allowlist = [e.lower().strip() for e in settings.ADMIN_EMAIL_ALLOWLIST]
             if user.email.lower().strip() not in allowlist:
-                raise AgriShieldException(
+                raise KisanSathiException(
                     message="Administrator privileges revoked.",
                     status_code=status.HTTP_403_FORBIDDEN,
                 )
@@ -331,7 +331,7 @@ class AuthService:
         """Updates user profile information."""
         user = await self.user_repo.get(db, user_id)
         if not user:
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="User not found.",
                 status_code=status.HTTP_404_NOT_FOUND,
             )
@@ -339,7 +339,7 @@ class AuthService:
         if req.email and req.email.lower().strip() != user.email:
             existing = await self.user_repo.get_by_email(db, req.email)
             if existing and existing.id != user.id:
-                raise AgriShieldException(
+                raise KisanSathiException(
                     message=f"Email '{req.email}' is already in use by another account.",
                     status_code=status.HTTP_409_CONFLICT,
                 )
@@ -382,7 +382,7 @@ class AuthService:
         """Updates user password after verifying current password."""
         user = await self.user_repo.get(db, user_id)
         if not user or not verify_password(req.current_password, user.hashed_password):
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="Current password is incorrect.",
                 status_code=status.HTTP_400_BAD_REQUEST,
             )
@@ -401,7 +401,7 @@ class AuthService:
         """
         Processes Google OAuth 2.0 PKCE / OpenID Connect authentication callback.
         Exchanges code or verifies ID Token server-side, finds or creates account,
-        and returns signed AGRI SHIELD JWT tokens.
+        and returns signed KISAN SATHI JWT tokens.
         """
         import httpx
         from app.schemas.auth import GoogleAuthCallbackRequest
@@ -414,7 +414,7 @@ class AuthService:
 
         # 0. Check server Google OAuth configuration
         if not settings.GOOGLE_CLIENT_ID or not settings.GOOGLE_CLIENT_SECRET:
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="Google OAuth authentication failed. Google OAuth Client ID is not configured on the server. Please configure GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in backend/.env.",
                 status_code=status.HTTP_401_UNAUTHORIZED,
             )
@@ -472,7 +472,7 @@ class AuthService:
 
         # 3. Fail if email could not be retrieved from real Google OAuth token/userinfo
         if not email:
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message="Google sign-in was cancelled or authentication failed. Unable to verify identity with Google.",
                 status_code=status.HTTP_401_UNAUTHORIZED,
             )
@@ -578,12 +578,12 @@ class AuthService:
         try:
             clean_phone = normalize_indian_phone(phone_number)
         except ValueError as val_err:
-            raise AgriShieldException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
+            raise KisanSathiException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
 
         try:
             code, info = otp_service.generate_phone_otp(clean_phone)
         except ValueError as val_err:
-            raise AgriShieldException(message=str(val_err), status_code=status.HTTP_429_TOO_MANY_REQUESTS)
+            raise KisanSathiException(message=str(val_err), status_code=status.HTTP_429_TOO_MANY_REQUESTS)
 
         # Dispatch via SMS provider
         dispatch_res = await sms_service.send_otp_sms(clean_phone, code)
@@ -592,7 +592,7 @@ class AuthService:
             reason = dispatch_res.get("reason")
             err_msg = dispatch_res.get("message", "SMS OTP delivery failed.")
             otp_service.clear_phone_otp(clean_phone)
-            raise AgriShieldException(
+            raise KisanSathiException(
                 message=f"Failed to send SMS OTP: {err_msg}",
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE if reason == "PROVIDER_NOT_CONFIGURED" else status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
@@ -634,12 +634,12 @@ class AuthService:
         try:
             clean_phone = normalize_indian_phone(phone_number)
         except ValueError as val_err:
-            raise AgriShieldException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
+            raise KisanSathiException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
 
         try:
             otp_service.verify_phone_otp(clean_phone, otp)
         except ValueError as val_err:
-            raise AgriShieldException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
+            raise KisanSathiException(message=str(val_err), status_code=status.HTTP_400_BAD_REQUEST)
 
         # Find or create user by phone number
         result = await db.execute(select(User).where(User.phone_number == clean_phone))
@@ -653,12 +653,12 @@ class AuthService:
 
         if not user:
             # Synthetic email fallback for phone-only accounts
-            synthetic_email = f"{clean_phone.replace('+', '')}@agrishield.farm"
+            synthetic_email = f"{clean_phone.replace('+', '')}@kisansathi.farm"
             result = await db.execute(select(User).where(User.email == synthetic_email))
             user = result.scalars().first()
 
         if not user:
-            synthetic_email = f"{clean_phone.replace('+', '')}@agrishield.farm"
+            synthetic_email = f"{clean_phone.replace('+', '')}@kisansathi.farm"
             user = User(
                 id=str(uuid.uuid4()),
                 email=synthetic_email,
@@ -733,7 +733,7 @@ class AuthService:
         """
         user = await self.user_repo.get(db, user_id)
         if not user:
-            raise AgriShieldException(message="User account not found.", status_code=status.HTTP_404_NOT_FOUND)
+            raise KisanSathiException(message="User account not found.", status_code=status.HTTP_404_NOT_FOUND)
 
         user.latitude = latitude
         user.longitude = longitude

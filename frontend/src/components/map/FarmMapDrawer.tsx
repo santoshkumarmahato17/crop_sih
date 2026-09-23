@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Undo, Trash2, Check, Sparkles, Layers, AlertCircle } from 'lucide-react';
 
 interface Point {
@@ -112,14 +112,14 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
   return (
     <div className="space-y-3">
       {/* Map Control Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-[#F4FAF7] dark:bg-[#0D2729] border border-[#D4E8DF] dark:border-[#214A47] text-xs">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 text-agri-300 font-medium">
-            <MapPin className="w-4 h-4 text-agri-400" />
+          <div className="flex items-center gap-1.5 text-[#00695C] dark:text-[#8FE0C1] font-bold">
+            <MapPin className="w-4 h-4 text-[#2FA36B] dark:text-[#5CCFA0]" />
             <span>Boundary Coordinates ({points.length} vertices)</span>
           </div>
 
-          <div className="px-2.5 py-1 rounded-full bg-agri-500/10 border border-agri-500/25 text-agri-400 font-mono font-semibold">
+          <div className="px-2.5 py-1 rounded-full bg-[#E8F5EF] dark:bg-[#123B35] border border-[#D4E8DF] dark:border-[#28504D] text-[#00695C] dark:text-[#8FE0C1] font-mono font-bold">
             Live Area: {liveAreaHa.toFixed(2)} ha (~{(liveAreaHa * 2.47105).toFixed(2)} acres)
           </div>
         </div>
@@ -128,9 +128,9 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
           <button
             type="button"
             onClick={loadPresetDemoPolygon}
-            className="px-2.5 py-1 rounded-lg bg-agri-800 hover:bg-slate-700 text-agri-300 transition flex items-center gap-1"
+            className="px-3 py-1.5 rounded-[10px] bg-[#E8F5EF] dark:bg-[#123B35] hover:bg-[#D8ECE3] dark:hover:bg-[#1a4a43] border border-[#B9D8CA] dark:border-[#28504D] text-[#00695C] dark:text-[#8FE0C1] font-bold transition flex items-center gap-1"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <Sparkles className="w-3.5 h-3.5 text-[#2FA36B] dark:text-[#5CCFA0]" />
             <span>Load Demo Polygon</span>
           </button>
 
@@ -138,7 +138,7 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
             <button
               type="button"
               onClick={handleClosePolygon}
-              className="px-3 py-1 rounded-lg bg-agri-500 hover:bg-agri-500 text-white font-medium transition flex items-center gap-1"
+              className="px-3.5 py-1.5 rounded-[10px] bg-[#087B62] dark:bg-[#087B62] hover:bg-[#006B55] dark:hover:bg-[#2FA36B] text-white font-bold transition flex items-center gap-1 shadow-sm"
             >
               <Check className="w-3.5 h-3.5" />
               <span>Complete Boundary</span>
@@ -150,7 +150,7 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
               <button
                 type="button"
                 onClick={handleUndo}
-                className="p-1.5 rounded-lg bg-agri-800 hover:bg-slate-700 text-agri-300 transition"
+                className="p-1.5 rounded-lg bg-white dark:bg-[#091F22] border border-[#D4E8DF] dark:border-[#28504D] hover:bg-[#F7FAFC] dark:hover:bg-[#102F31] text-[#5F7775] dark:text-[#9DBBB5] transition"
                 title="Undo last vertex"
               >
                 <Undo className="w-3.5 h-3.5" />
@@ -158,7 +158,7 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
               <button
                 type="button"
                 onClick={handleReset}
-                className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition"
+                className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 transition"
                 title="Clear boundary"
               >
                 <Trash2 className="w-3.5 h-3.5" />
@@ -169,18 +169,18 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
       </div>
 
       {/* Interactive Map Drawing Canvas */}
-      <div className="relative w-full h-80 rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-inner">
+      <div className="relative w-full h-80 rounded-2xl overflow-hidden border border-[#D4E8DF] dark:border-[#28504D] bg-[#F7FAFC] dark:bg-[#071A1D] shadow-inner">
         {/* Background Grid */}
-        <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-40 pointer-events-none" />
+        <div className="absolute inset-0 bg-[radial-gradient(#c2e2d5_1px,transparent_1px)] dark:bg-[radial-gradient(#214a47_1px,transparent_1px)] [background-size:16px_16px] opacity-70 pointer-events-none" />
 
         {/* Map Center Coordinates Overlay */}
-        <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-md bg-agri-900/60 border border-slate-800 text-[10px] font-mono text-agri-400/70">
+        <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-md bg-white/90 dark:bg-[#0D2729]/90 border border-[#D4E8DF] dark:border-[#28504D] text-[10px] font-mono text-[#5F7775] dark:text-[#9DBBB5] font-semibold">
           Center: {baseCenter.lat.toFixed(4)}° N, {baseCenter.lng.toFixed(4)}° E (SRID 4326)
         </div>
 
         {/* Instruction Banner */}
-        <div className="absolute top-3 left-3 z-10 px-3 py-1.5 rounded-lg bg-agri-900/60 border border-slate-800 text-xs text-agri-300 backdrop-blur flex items-center gap-2">
-          <Layers className="w-3.5 h-3.5 text-agri-400" />
+        <div className="absolute top-3 left-3 z-10 px-3 py-1.5 rounded-lg bg-white/95 dark:bg-[#0D2729]/95 border border-[#D4E8DF] dark:border-[#28504D] text-xs text-[#00695C] dark:text-[#8FE0C1] font-semibold shadow-sm flex items-center gap-2">
+          <Layers className="w-3.5 h-3.5 text-[#2FA36B] dark:text-[#5CCFA0]" />
           <span>
             {isClosed
               ? 'Boundary closed and validated. Click "Load Demo Polygon" or "Clear" to modify.'
@@ -200,8 +200,8 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
                   return `${x},${y}`;
                 })
                 .join(' ')}
-              fill="rgba(34, 197, 94, 0.18)"
-              stroke="#22c55e"
+              fill="rgba(47, 163, 107, 0.22)"
+              stroke="#5CCFA0"
               strokeWidth="2.5"
               strokeDasharray={isClosed ? 'none' : '4 4'}
             />
@@ -213,8 +213,8 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
             const y = 160 - (p.lat - baseCenter.lat) / scale;
             return (
               <g key={idx}>
-                <circle cx={x} cy={y} r="6" fill="#22c55e" stroke="#0f172a" strokeWidth="2" />
-                <text x={x + 8} y={y + 4} fill="#86efac" fontSize="10" fontFamily="monospace">
+                <circle cx={x} cy={y} r="6" fill="#5CCFA0" stroke="#071A1D" strokeWidth="2" />
+                <text x={x + 8} y={y + 4} fill="#8FE0C1" fontSize="10" fontFamily="monospace" fontWeight="bold">
                   P{idx + 1}
                 </text>
               </g>
@@ -233,8 +233,8 @@ export const FarmMapDrawer: React.FC<FarmMapDrawerProps> = ({
       </div>
 
       {points.length > 0 && points.length < 3 && (
-        <div className="flex items-center gap-2 text-xs text-amber-400 bg-amber-500/10 p-2.5 rounded-lg border border-amber-500/20">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+        <div className="flex items-center gap-2 text-xs text-amber-800 dark:text-amber-200 bg-amber-50 dark:bg-amber-950/40 p-2.5 rounded-lg border border-amber-200 dark:border-amber-800 font-semibold">
+          <AlertCircle className="w-4 h-4 flex-shrink-0 text-amber-600 dark:text-amber-400" />
           <span>Add at least {3 - points.length} more point(s) to form a closed agricultural polygon.</span>
         </div>
       )}

@@ -4,29 +4,29 @@
 
 @layer base {
   :root {
-    --color-bg-primary: #F4F7F2;
+    --color-bg-primary: #F7FAFC;
     --color-bg-surface: #FFFFFF;
     --color-bg-card: #FFFFFF;
-    --color-border: #d4e4d9;
-    --color-primary: #2F855A;
-    --color-primary-hover: #236b47;
-    --color-primary-deep: #123D2A;
-    --color-accent: #A3E635;
-    --color-text: #173226;
-    --color-text-secondary: #4a6b5a;
+    --color-border: #D4E8DF;
+    --color-primary: #087B62;
+    --color-primary-hover: #00695C;
+    --color-primary-deep: #004D43;
+    --color-accent: #2FA36B;
+    --color-text: #12302E;
+    --color-text-secondary: #5F7775;
   }
 
   .dark {
-    --color-bg-primary: #0f172a;
-    --color-bg-surface: #1e293b;
-    --color-bg-card: #334155;
-    --color-border: #475569;
-    --color-primary: #2F855A;
-    --color-primary-hover: #38a169;
-    --color-primary-deep: #A3E635;
-    --color-accent: #A3E635;
-    --color-text: #f8fafc;
-    --color-text-secondary: #94a3b8;
+    --color-bg-primary: #071A1D;
+    --color-bg-surface: #0D2729;
+    --color-bg-card: #0D2729;
+    --color-border: #16383B;
+    --color-primary: #087B62;
+    --color-primary-hover: #2FA36B;
+    --color-primary-deep: #2FA36B;
+    --color-accent: #2FA36B;
+    --color-text: #E6F5F0;
+    --color-text-secondary: #8CAFA8;
   }
 
   body {

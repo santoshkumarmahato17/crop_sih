@@ -9,7 +9,7 @@ from app.main import app
 async def test_assistant_chat_queries():
     """Test AI assistant answering prompt benchmark questions in English and Tamil."""
     farmer_token = create_access_token(
-        subject="farmer-101", email="farmer@agrishield.com", role="FARMER"
+        subject="farmer-101", email="farmer@kisansathi.com", role="FARMER"
     )
     headers = {"Authorization": f"Bearer {farmer_token}"}
 

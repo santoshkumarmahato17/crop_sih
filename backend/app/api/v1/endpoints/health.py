@@ -18,7 +18,7 @@ router = APIRouter(tags=["System Health"])
     response_model=HealthCheckResponse,
     status_code=status.HTTP_200_OK,
     summary="System Health & Readiness Probe",
-    description="Returns the runtime operational status and diagnostic latency for core AGRI SHIELD subsystems.",
+    description="Returns the runtime operational status and diagnostic latency for core KISAN SATHI subsystems.",
 )
 async def check_health(
     db: AsyncSession = Depends(get_db),
@@ -72,7 +72,7 @@ async def check_health(
     )
 
     return HealthCheckResponse(
-        system="AGRI SHIELD",
+        system="KISAN SATHI",
         version=__version__,
         environment=settings.ENVIRONMENT,
         status=overall_status,

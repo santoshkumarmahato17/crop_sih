@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Database Seeding Command.
+KISAN SATHI — Database Seeding Command.
 Populates the database with initial roles, sample farm holdings, zones, missions, observations, and IPM recommendations.
 """
 
@@ -18,7 +18,7 @@ from app.db.seed_data import seed_all_data
 
 async def main():
     print("==========================================================")
-    print("AGRI SHIELD: Seeding Agronomic Development Data...")
+    print("KISAN SATHI: Seeding Agronomic Development Data...")
     print("==========================================================")
 
     async with AsyncSessionLocal() as session:

@@ -9,7 +9,7 @@ async def test_auth_profile_flow(async_client: AsyncClient):
     Test user registration with farm address, login, getting profile,
     updating address/name, and changing password.
     """
-    unique_email = f"saravanan.farmer_{uuid.uuid4().hex[:8]}@agrishield.farm"
+    unique_email = f"saravanan.farmer_{uuid.uuid4().hex[:8]}@kisansathi.farm"
     register_payload = {
         "email": unique_email,
         "password": "StrongPassword2026!",

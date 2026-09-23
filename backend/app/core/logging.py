@@ -4,7 +4,7 @@ from app.core.config import get_settings
 
 
 def setup_logging() -> None:
-    """Configures structured, level-controlled logging for AGRI SHIELD."""
+    """Configures structured, level-controlled logging for KISAN SATHI."""
     settings = get_settings()
     log_level = getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO)
 

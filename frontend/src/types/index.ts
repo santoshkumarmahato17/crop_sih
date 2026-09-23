@@ -1,5 +1,5 @@
 /**
- * AGRI SHIELD — Shared Domain TypeScript Definitions.
+ * KISAN SATHI — Shared Domain TypeScript Definitions.
  */
 
 export * from './auth';

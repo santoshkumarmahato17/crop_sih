@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Service Layer Package.
+KISAN SATHI — Service Layer Package.
 Encapsulates business operations, workflows, and transaction orchestration.
 """
 

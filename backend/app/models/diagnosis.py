@@ -127,7 +127,7 @@ class DiagnosisAnalysis(Base, TimestampMixin):
         Enum(DiagnosisStatus), default=DiagnosisStatus.AI_SUSPECTED, nullable=False, index=True
     )
     ai_confidence: Mapped[float] = mapped_column(Float, default=0.0, nullable=False) # 0.0 to 1.0 (e.g. 0.78 for 78%)
-    ai_model_name: Mapped[str] = mapped_column(String(100), default="AgriShield-SymptomReasoner-v1.0", nullable=False)
+    ai_model_name: Mapped[str] = mapped_column(String(100), default="Kisan Sathi-SymptomReasoner-v1.0", nullable=False)
     ai_model_version: Mapped[str] = mapped_column(String(50), default="1.0.0-prototype", nullable=False)
     is_prototype: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 

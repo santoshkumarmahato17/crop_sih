@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Monitoring Policy & Scheduling Turnaround Engine.
+KISAN SATHI — Monitoring Policy & Scheduling Turnaround Engine.
 Calculates dynamic turnaround deadlines, spatial buffer zones, and duplicate prevention.
 """
 

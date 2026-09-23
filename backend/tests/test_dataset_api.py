@@ -15,7 +15,7 @@ def override_auth():
     """Mock authenticated active farmer user for dataset endpoint tests."""
     mock_user = User(
         id="mock-farmer-id-123",
-        email="farmer@agrishield.internal",
+        email="farmer@kisansathi.internal",
         hashed_password="hashed_password",
         full_name="Rajesh Patil",
         role=RoleType.FARMER,

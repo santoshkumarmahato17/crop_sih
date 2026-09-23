@@ -8,7 +8,7 @@ from app.main import app
 @pytest.mark.asyncio
 async def test_farmer_dashboard_summary_endpoint():
     """Test GET /api/v1/dashboard/farmer-summary returns answers to all 8 core questions."""
-    token = create_access_token(subject="farmer-test-1", email="farmer@agrishield.com", role="FARMER")
+    token = create_access_token(subject="farmer-test-1", email="farmer@kisansathi.com", role="FARMER")
     headers = {"Authorization": f"Bearer {token}"}
 
     async with AsyncClient(

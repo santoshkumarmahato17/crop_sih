@@ -5,7 +5,7 @@ from app.core.config import get_settings
 settings = get_settings()
 
 celery_app = Celery(
-    "agrishield_workers",
+    "kisansathi_workers",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
 )
@@ -26,4 +26,4 @@ celery_app.conf.update(
 @celery_app.task(name="health_check_task")
 def health_check_task() -> str:
     """Diagnostic Celery task to verify worker health."""
-    return "AGRI SHIELD Celery Worker is operational."
+    return "KISAN SATHI Celery Worker is operational."

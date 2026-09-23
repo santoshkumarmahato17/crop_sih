@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Follow-up Monitoring & Closed-Loop Crop Health Tracking Data Models.
+KISAN SATHI — Follow-up Monitoring & Closed-Loop Crop Health Tracking Data Models.
 Tracks monitoring tasks, observations, before vs after comparisons, targeted drone
 recommendations, and dynamic monitoring policies.
 """

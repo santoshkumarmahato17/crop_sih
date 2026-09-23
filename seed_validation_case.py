@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 
 def seed_demo_case():
-    conn = sqlite3.connect('agrishield.db')
+    conn = sqlite3.connect('kisan_sathi.db')
     cursor = conn.cursor()
 
     # 1. Ensure a demo farm exists

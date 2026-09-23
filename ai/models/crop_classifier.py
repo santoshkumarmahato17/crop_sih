@@ -5,9 +5,22 @@ as specified for high-accuracy crop disease and pest diagnosis on edge CPU / GPU
 """
 
 from typing import Any, Dict, List, Optional, Tuple, Union
-import torch
-import torch.nn as nn
-from torchvision import models
+try:
+    import torch
+    import torch.nn as nn
+    from torchvision import models
+except ImportError:
+    class _DummyTorch:
+        Tensor = object
+    torch = _DummyTorch()
+    class _DummyModule:
+        def __init__(self, *args, **kwargs): pass
+        def to(self, *args, **kwargs): return self
+        def eval(self, *args, **kwargs): return self
+    class _DummyNN:
+        Module = _DummyModule
+    nn = _DummyNN()
+    models = None
 
 # ------------------------------------------------------------------------------
 # 12 Core MVP Classes (Rice & Maize)
@@ -606,44 +619,57 @@ class CropDiseaseNet(nn.Module):
         self.backbone_name = backbone_name.lower()
         self.classes = classes or RICE_MAIZE_CLASSES
 
-        if self.backbone_name == "efficientnet_b0":
-            weights = models.EfficientNet_B0_Weights.DEFAULT if pretrained else None
-            self.backbone = models.efficientnet_b0(weights=weights)
-            in_features = self.backbone.classifier[1].in_features  # 1280
-            # Replace original classifier with custom multi-layer head
-            self.backbone.classifier = nn.Identity()
+        if models is None:
+            self.backbone = None
+            in_features = 1280
+            self.classifier = None
+        elif self.backbone_name == "efficientnet_b0":
+            weights = getattr(models, "EfficientNet_B0_Weights", None)
+            w_val = weights.DEFAULT if (weights and pretrained) else None
+            self.backbone = models.efficientnet_b0(weights=w_val)
+            in_features = getattr(self.backbone.classifier[1], "in_features", 1280)
+            if hasattr(nn, "Identity"):
+                self.backbone.classifier = nn.Identity()
 
         elif self.backbone_name in ("mobilenet_v3", "mobilenet_v3_small"):
-            weights = models.MobileNet_V3_Small_Weights.DEFAULT if pretrained else None
-            self.backbone = models.mobilenet_v3_small(weights=weights)
-            in_features = self.backbone.classifier[0].in_features  # 576
-            self.backbone.classifier = nn.Identity()
+            weights = getattr(models, "MobileNet_V3_Small_Weights", None)
+            w_val = weights.DEFAULT if (weights and pretrained) else None
+            self.backbone = models.mobilenet_v3_small(weights=w_val)
+            in_features = getattr(self.backbone.classifier[0], "in_features", 576)
+            if hasattr(nn, "Identity"):
+                self.backbone.classifier = nn.Identity()
 
         elif self.backbone_name == "mobilenet_v3_large":
-            weights = models.MobileNet_V3_Large_Weights.DEFAULT if pretrained else None
-            self.backbone = models.mobilenet_v3_large(weights=weights)
-            in_features = self.backbone.classifier[0].in_features  # 960
-            self.backbone.classifier = nn.Identity()
+            weights = getattr(models, "MobileNet_V3_Large_Weights", None)
+            w_val = weights.DEFAULT if (weights and pretrained) else None
+            self.backbone = models.mobilenet_v3_large(weights=w_val)
+            in_features = getattr(self.backbone.classifier[0], "in_features", 960)
+            if hasattr(nn, "Identity"):
+                self.backbone.classifier = nn.Identity()
 
         elif self.backbone_name == "resnet50":
-            weights = models.ResNet50_Weights.DEFAULT if pretrained else None
-            self.backbone = models.resnet50(weights=weights)
-            in_features = self.backbone.fc.in_features  # 2048
-            self.backbone.fc = nn.Identity()
+            weights = getattr(models, "ResNet50_Weights", None)
+            w_val = weights.DEFAULT if (weights and pretrained) else None
+            self.backbone = models.resnet50(weights=w_val)
+            in_features = getattr(self.backbone.fc, "in_features", 2048)
+            if hasattr(nn, "Identity"):
+                self.backbone.fc = nn.Identity()
 
         else:
             raise ValueError(f"Unsupported backbone: {backbone_name}. Choose efficientnet_b0, mobilenet_v3, or resnet50.")
 
-        # Custom Classifier Head as specified
-        self.classifier = nn.Sequential(
-            nn.Linear(in_features, 512),
-            nn.ReLU(inplace=True),
-            nn.Dropout(p=0.5),
-            nn.Linear(512, 128),
-            nn.ReLU(inplace=True),
-            nn.Dropout(p=0.3),
-            nn.Linear(128, num_classes),
-        )
+        if models is not None and hasattr(nn, "Sequential"):
+            self.classifier = nn.Sequential(
+                nn.Linear(in_features, 512),
+                nn.ReLU(inplace=True),
+                nn.Dropout(p=0.5),
+                nn.Linear(512, 128),
+                nn.ReLU(inplace=True),
+                nn.Dropout(p=0.3),
+                nn.Linear(128, num_classes),
+            )
+        else:
+            self.classifier = None
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Forward pass through backbone + custom classifier head."""

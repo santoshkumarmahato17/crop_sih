@@ -61,7 +61,7 @@ export const ForgotPasswordPage: React.FC = () => {
 
   const extractErrorMessage = (err: any, fallback: string): string => {
     if (!err.response) {
-      return 'Unable to connect to AGRI SHIELD backend server (http://localhost:8001). Please ensure the backend server is running.';
+      return 'Unable to connect to KISAN SATHI backend server (http://localhost:8001). Please ensure the backend server is running.';
     }
     const data = err.response.data;
     if (typeof data?.detail === 'string' && data.detail.trim()) {
@@ -206,7 +206,7 @@ export const ForgotPasswordPage: React.FC = () => {
         <p className="text-xs text-agri-600/70 dark:text-agri-400/60 font-medium">
           {step === 'EMAIL' && 'Enter your registered email address to receive an OTP.'}
           {step === 'OTP' && 'Enter the OTP sent to your registered email address.'}
-          {step === 'RESET' && 'Set a new secure password for your AGRI SHIELD account.'}
+          {step === 'RESET' && 'Set a new secure password for your KISAN SATHI account.'}
           {step === 'SUCCESS' && 'Password changed successfully. You can now sign in with your new password.'}
         </p>
       </div>

@@ -8,7 +8,7 @@ async def test_health_check_endpoint(async_client: AsyncClient) -> None:
     response = await async_client.get("/api/v1/health")
     assert response.status_code == 200
     data = response.json()
-    assert data["system"] == "AGRI SHIELD"
+    assert data["system"] == "KISAN SATHI"
     assert "version" in data
     assert "status" in data
     assert "subsystems" in data

@@ -55,8 +55,13 @@ export const validationService = {
       });
       return response.data;
     } catch (err) {
-      console.warn('API getValidationRequests failed, returning fallback mock cases', err);
-      return getMockValidationRequests();
+      const isDemo = localStorage.getItem('kisan_sathi_demo_mode') === 'true';
+      if (isDemo) {
+        console.warn('API getValidationRequests failed. Demo mode active: returning simulated cases.');
+        return getMockValidationRequests();
+      }
+      console.error('API getValidationRequests failed: Unable to connect to server.', err);
+      throw new Error('Unable to connect to server');
     }
   },
 
@@ -68,9 +73,13 @@ export const validationService = {
       const response = await apiClient.get<ExpertValidationRequest>(`/validation/requests/${id}`);
       return response.data;
     } catch (err) {
-      console.warn(`API getValidationRequestById failed for ${id}, using mock`, err);
-      const mocks = getMockValidationRequests();
-      return mocks.find((m) => m.id === id) || mocks[0];
+      const isDemo = localStorage.getItem('kisan_sathi_demo_mode') === 'true';
+      if (isDemo) {
+        const mocks = getMockValidationRequests();
+        return mocks.find((m) => m.id === id) || mocks[0];
+      }
+      console.error(`API getValidationRequestById failed for ${id}: Unable to connect to server.`);
+      throw new Error('Unable to connect to server');
     }
   },
 

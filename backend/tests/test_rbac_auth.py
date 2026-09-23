@@ -47,7 +47,7 @@ def test_admin_email_allowlist_configuration():
     settings = get_settings()
     allowlist = [e.lower().strip() for e in settings.ADMIN_EMAIL_ALLOWLIST]
 
-    assert "admin@agrishield.com" in allowlist
+    assert "admin@kisansathi.com" in allowlist
     assert len(allowlist) >= 2
 
 
@@ -78,7 +78,7 @@ def test_user_model_role_and_permissions_property():
 
     admin = User(
         id="usr-2",
-        email="admin@agrishield.com",
+        email="admin@kisansathi.com",
         hashed_password="hash",
         full_name="Admin Chief",
         role=RoleType.ADMIN,

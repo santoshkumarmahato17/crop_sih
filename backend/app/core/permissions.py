@@ -3,7 +3,7 @@ from typing import Dict, List, Set
 
 
 class RoleType(str, enum.Enum):
-    """Primary user authorization roles for AGRI SHIELD."""
+    """Primary user authorization roles for KISAN SATHI."""
     FARMER = "FARMER"
     EXTENSION_WORKER = "EXTENSION_WORKER"
     GOVERNMENT = "GOVERNMENT"

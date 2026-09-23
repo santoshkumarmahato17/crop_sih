@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 15 Farmer Dashboard Verification Script.
+KISAN SATHI — Step 15 Farmer Dashboard Verification Script.
 Validates:
 1. Answers to all 8 Core Farmer Questions:
    - Q1: Is my farm healthy?
@@ -30,7 +30,7 @@ from app.main import app
 
 async def test_farmer_dashboard_answers():
     print("\n--- 1. Testing Farmer Dashboard 8 Core Question Resolution ---")
-    token = create_access_token(subject="farmer-test-1", email="farmer@agrishield.com", role="FARMER")
+    token = create_access_token(subject="farmer-test-1", email="farmer@kisansathi.com", role="FARMER")
     headers = {"Authorization": f"Bearer {token}"}
 
     async with AsyncClient(
@@ -61,7 +61,7 @@ async def test_farmer_dashboard_answers():
 
 async def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 15 Farmer Dashboard Verification")
+    print("KISAN SATHI: Step 15 Farmer Dashboard Verification")
     print("==========================================================")
 
     d_ok = await test_farmer_dashboard_answers()

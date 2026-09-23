@@ -81,7 +81,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<UserProfile | null>(() => {
-    const saved = localStorage.getItem('agrishield_user');
+    const saved = localStorage.getItem('kisansathi_user');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -94,22 +94,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem('agrishield_token') || null;
+    return localStorage.getItem('kisansathi_token') || null;
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isOnboarded, setIsOnboarded] = useState<boolean>(() => {
-    return localStorage.getItem('agrishield_onboarded') === 'true';
+    return localStorage.getItem('kisansathi_onboarded') === 'true';
   });
 
   const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(() => {
-    const saved = localStorage.getItem('agrishield_onboarding_data');
+    const saved = localStorage.getItem('kisansathi_onboarding_data');
     return saved ? JSON.parse(saved) : null;
   });
 
   const [userLocation, setUserLocation] = useState<{ latitude: number; longitude: number } | null>(() => {
-    const saved = localStorage.getItem('agrishield_user_location');
+    const saved = localStorage.getItem('kisansathi_user_location');
     return saved ? JSON.parse(saved) : null;
   });
 
@@ -117,39 +117,70 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem('agrishield_user', JSON.stringify(user));
+      localStorage.setItem('kisansathi_user', JSON.stringify(user));
     } else {
-      localStorage.removeItem('agrishield_user');
+      localStorage.removeItem('kisansathi_user');
     }
   }, [user]);
 
   useEffect(() => {
     if (token) {
-      localStorage.setItem('agrishield_token', token);
+      localStorage.setItem('kisansathi_token', token);
     } else {
-      localStorage.removeItem('agrishield_token');
+      localStorage.removeItem('kisansathi_token');
     }
   }, [token]);
+
+  // Initial session restoration & token verification against /auth/me endpoint
+  useEffect(() => {
+    const restoreSession = async () => {
+      const storedToken = localStorage.getItem('kisansathi_token');
+      if (storedToken) {
+        try {
+          const profile = await authService.getProfile();
+          const cleanUser = normalizeUser(profile);
+          if (cleanUser) {
+            setUser(cleanUser);
+          } else {
+            setUser(null);
+            setToken(null);
+            localStorage.removeItem('kisansathi_user');
+            localStorage.removeItem('kisansathi_token');
+          }
+        } catch {
+          // Token invalid or expired — clear stored state
+          setUser(null);
+          setToken(null);
+          localStorage.removeItem('kisansathi_user');
+          localStorage.removeItem('kisansathi_token');
+        }
+      }
+    };
+    restoreSession();
+  }, []);
 
   const completeOnboarding = (data: OnboardingData) => {
     setIsOnboarded(true);
     setOnboardingData(data);
-    localStorage.setItem('agrishield_onboarded', 'true');
-    localStorage.setItem('agrishield_onboarding_data', JSON.stringify(data));
+    localStorage.setItem('kisansathi_onboarded', 'true');
+    localStorage.setItem('kisansathi_onboarding_data', JSON.stringify(data));
   };
 
   const login = async (email: string, password: string): Promise<RoleType> => {
     setIsLoading(true);
     try {
-      const authData = await authService.login(email, password);
+      const cleanEmail = email.trim().toLowerCase();
+      const authData = await authService.login(cleanEmail, password);
       const cleanUser = normalizeUser(authData.user);
       if (!cleanUser) {
         throw new Error('Invalid user account format returned by server.');
       }
       setUser(cleanUser);
       setToken(authData.access_token);
+      localStorage.setItem('kisansathi_user', JSON.stringify(cleanUser));
+      localStorage.setItem('kisansathi_token', authData.access_token);
       setIsOnboarded(true);
-      localStorage.setItem('agrishield_onboarded', 'true');
+      localStorage.setItem('kisansathi_onboarded', 'true');
       return cleanUser.role;
     } finally {
       setIsLoading(false);
@@ -173,7 +204,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(cleanUser);
       setToken(authData.access_token);
       setIsOnboarded(true);
-      localStorage.setItem('agrishield_onboarded', 'true');
+      localStorage.setItem('kisansathi_onboarded', 'true');
       setShowLocationModal(true);
       return cleanUser.role;
     } finally {
@@ -201,7 +232,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(cleanUser);
       setToken(authData.access_token);
       setIsOnboarded(true);
-      localStorage.setItem('agrishield_onboarded', 'true');
+      localStorage.setItem('kisansathi_onboarded', 'true');
       return cleanUser.role;
     } finally {
       setIsLoading(false);
@@ -211,7 +242,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateUserLocation = async (latitude: number, longitude: number): Promise<void> => {
     const loc = { latitude, longitude };
     setUserLocation(loc);
-    localStorage.setItem('agrishield_user_location', JSON.stringify(loc));
+    localStorage.setItem('kisansathi_user_location', JSON.stringify(loc));
     try {
       if (token) {
         await authService.updateLocation(latitude, longitude);
@@ -222,16 +253,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (payload: UserRegisterPayload): Promise<RoleType> => {
     setIsLoading(true);
     try {
-      const newUser = await authService.register(payload);
-      const authData = await authService.login(payload.email, payload.password);
+      const cleanPayload = {
+        ...payload,
+        email: payload.email.trim().toLowerCase(),
+        full_name: payload.full_name.trim(),
+      };
+      const newUser = await authService.register(cleanPayload);
+      const authData = await authService.login(cleanPayload.email, cleanPayload.password);
       const cleanUser = normalizeUser(authData.user) || normalizeUser(newUser);
       if (!cleanUser) {
         throw new Error('Registration completed, but profile could not be loaded.');
       }
       setUser(cleanUser);
       setToken(authData.access_token);
+      localStorage.setItem('kisansathi_user', JSON.stringify(cleanUser));
+      localStorage.setItem('kisansathi_token', authData.access_token);
       setIsOnboarded(false);
-      localStorage.setItem('agrishield_onboarded', 'false');
+      localStorage.setItem('kisansathi_onboarded', 'false');
       return cleanUser.role;
     } finally {
       setIsLoading(false);
@@ -279,8 +317,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {}
     setUser(null);
     setToken(null);
-    localStorage.removeItem('agrishield_user');
-    localStorage.removeItem('agrishield_token');
+    localStorage.removeItem('kisansathi_user');
+    localStorage.removeItem('kisansathi_token');
   };
 
   const hasRole = (roles: RoleType | RoleType[]): boolean => {

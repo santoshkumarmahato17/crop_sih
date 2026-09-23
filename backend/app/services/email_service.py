@@ -12,7 +12,7 @@ settings = get_settings()
 
 class EmailService:
     """
-    AGRI SHIELD Email Service.
+    KISAN SATHI Email Service.
     Handles secure email dispatch for authentication, OTP verification, and system notifications.
     Reads SMTP credentials securely from environment variables.
     """
@@ -35,10 +35,10 @@ class EmailService:
                 "message": "SMTP email service is not configured. Set SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD in backend/.env",
             }
 
-        sender_email = settings.EMAILS_FROM_EMAIL or "noreply@agrishield.farm"
-        sender_name = settings.EMAILS_FROM_NAME or "AGRI SHIELD Security"
+        sender_email = settings.EMAILS_FROM_EMAIL or "noreply@kisansathi.farm"
+        sender_name = settings.EMAILS_FROM_NAME or "KISAN SATHI Security"
 
-        subject = f"{otp_code} — Your AGRI SHIELD Verification OTP"
+        subject = f"{otp_code} — Your KISAN SATHI Verification OTP"
 
         html_content = f"""
         <!DOCTYPE html>
@@ -60,7 +60,7 @@ class EmailService:
         <body>
           <div class="container">
             <div class="header">
-              <h1 class="title">AGRI SHIELD</h1>
+              <h1 class="title">KISAN SATHI</h1>
               <p class="subtitle">Precision Agricultural Security & Password Reset System</p>
             </div>
             <div class="content">
@@ -69,7 +69,7 @@ class EmailService:
               <p class="notice">This OTP will expire in <strong>5 minutes</strong>.<br>For security reasons, do not share this OTP with anyone.</p>
             </div>
             <div class="footer">
-              <p>© 2026 AGRI SHIELD System. If you did not request this OTP, please ignore this email.</p>
+              <p>© 2026 KISAN SATHI System. If you did not request this OTP, please ignore this email.</p>
             </div>
           </div>
         </body>
@@ -81,7 +81,7 @@ class EmailService:
         msg["From"] = f"{sender_name} <{sender_email}>"
         msg["To"] = to_email
 
-        plain_text = f"Your AGRI SHIELD password reset OTP is: {otp_code}. Valid for 5 minutes."
+        plain_text = f"Your KISAN SATHI password reset OTP is: {otp_code}. Valid for 5 minutes."
         msg.attach(MIMEText(plain_text, "plain"))
         msg.attach(MIMEText(html_content, "html"))
 

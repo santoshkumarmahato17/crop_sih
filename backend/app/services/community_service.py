@@ -12,7 +12,56 @@ from app.schemas.community import (
 
 class CommunityService:
     def __init__(self):
-        self._posts: Dict[str, dict] = {}
+        self._posts: Dict[str, dict] = {
+            "post-1": {
+                "id": "post-1",
+                "title": "Tomato Early Blight Outbreak Control",
+                "content": "Concentric rings observed on lower leaves following monsoon rain. Recommended copper fungicide.",
+                "crop_type": "Tomato",
+                "disease_tag": "Early Blight",
+                "image_url": "https://images.unsplash.com/photo-1592417817098-8f3d6eb22509",
+                "author_name": "Dr. Sharma",
+                "author_role": "Agronomist",
+                "author_location": "Nashik Region",
+                "created_at": "2 hours ago",
+                "likes_count": 14,
+                "downvotes_count": 0,
+                "shares_count": 3,
+                "comments": [],
+            },
+            "post-2": {
+                "id": "post-2",
+                "title": "Maize Fall Armyworm Monitoring",
+                "content": "Yellow sticky trap counts increasing near field borders. Pheromone trap deployment active.",
+                "crop_type": "Maize",
+                "disease_tag": "Fall Armyworm",
+                "image_url": None,
+                "author_name": "Ravi Kumar",
+                "author_role": "Extension Officer",
+                "author_location": "Pune Sector",
+                "created_at": "5 hours ago",
+                "likes_count": 8,
+                "downvotes_count": 0,
+                "shares_count": 1,
+                "comments": [],
+            },
+            "post-3": {
+                "id": "post-3",
+                "title": "Rice Blast Management Guidelines",
+                "content": "Spindle-shaped lesions found on leaf blades. Maintain 5cm water level and avoid excess nitrogen.",
+                "crop_type": "Rice",
+                "disease_tag": "Rice Blast",
+                "image_url": None,
+                "author_name": "Priya Patil",
+                "author_role": "Farmer Lead",
+                "author_location": "Kolhapur Cluster",
+                "created_at": "1 day ago",
+                "likes_count": 22,
+                "downvotes_count": 1,
+                "shares_count": 6,
+                "comments": [],
+            },
+        }
 
     def list_posts(self, crop: Optional[str] = None, disease: Optional[str] = None) -> CommunityPostListResponse:
         posts = list(self._posts.values())

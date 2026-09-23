@@ -10,8 +10,12 @@ import sys
 from typing import Any, Dict, List, Optional, Tuple, Union
 from PIL import Image, ImageStat
 import numpy as np
-import torch
-import torchvision.transforms as T
+try:
+    import torch
+    import torchvision.transforms as T
+except ImportError:
+    torch = None
+    T = None
 
 # Ensure repo root is in python path
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -28,16 +32,18 @@ from ai.models.crop_classifier import (
 from ai.pipelines.explainability import GradCAM
 
 
-# Standard inference transformation pipeline
-INFERENCE_TRANSFORM = T.Compose([
-    T.Resize(256),
-    T.CenterCrop(224),
-    T.ToTensor(),
-    T.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std=[0.229, 0.224, 0.225],
-    ),
-])
+if T is not None:
+    INFERENCE_TRANSFORM = T.Compose([
+        T.Resize(256),
+        T.CenterCrop(224),
+        T.ToTensor(),
+        T.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225],
+        ),
+    ])
+else:
+    INFERENCE_TRANSFORM = None
 
 
 class CropDiseasePredictor:
@@ -61,10 +67,13 @@ class CropDiseasePredictor:
         self.confidence_threshold = confidence_threshold
         self.margin_threshold = margin_threshold
 
-        if device:
-            self.device = torch.device(device)
+        if torch is not None and hasattr(torch, "device"):
+            if device:
+                self.device = torch.device(device)
+            else:
+                self.device = torch.device("cuda" if getattr(torch.cuda, "is_available", lambda: False)() else "cpu")
         else:
-            self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            self.device = "cpu"
 
         # Resolve weights path
         resolved_weights = self._find_weights_file(weights_path, backbone_name)

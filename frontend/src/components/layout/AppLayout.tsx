@@ -35,7 +35,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({
   const shouldShowSidebar = shouldShowAuthenticatedChrome && !showLocationModal;
 
   return (
-    <div className="h-screen max-h-screen bg-slate-50 dark:bg-[#121011] text-slate-900 dark:text-[#d8cbcf] flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-hidden">
+    <div className="h-screen max-h-screen bg-[#F7FAFC] dark:bg-[#071A1D] text-[#12302E] dark:text-[#E6F5F0] flex flex-col selection:bg-emerald-500 selection:text-white transition-colors duration-200 overflow-hidden">
       {/* 1. Fixed Header Bar with Top-Left Hamburger Toggle */}
       {!isAuthPage && (
         <div className="relative z-40 shrink-0 w-full">

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 10 Temporal Crop Health Analysis Verification Script.
+KISAN SATHI — Step 10 Temporal Crop Health Analysis Verification Script.
 Validates:
 1. Multi-scan chronological comparison engine
 2. Rate-of-change and velocity calculations
@@ -110,7 +110,7 @@ def test_recovery_scenario() -> bool:
 
 def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 10 Temporal Crop Health Analysis")
+    print("KISAN SATHI: Step 10 Temporal Crop Health Analysis")
     print("==========================================================")
 
     p_ok = test_user_prompt_scenario()

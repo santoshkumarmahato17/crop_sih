@@ -39,20 +39,17 @@ export const LoginPage: React.FC = () => {
   // 1. Google Auth Handler
   const extractErrorMessage = (err: any, fallback: string): string => {
     if (!err.response) {
-      return 'Unable to connect to AGRI SHIELD backend server (http://localhost:8001). Please ensure the backend server is running.';
+      return 'Unable to connect to KISAN SATHI backend server (http://localhost:8001). Please ensure the backend server is running.';
     }
     const data = err.response.data;
-    if (typeof data?.detail === 'string' && data.detail.trim()) {
-      return data.detail;
-    }
     if (typeof data?.message === 'string' && data.message.trim() && data.message !== 'HTTP Error') {
       return data.message;
     }
-    if (Array.isArray(data?.detail)) {
-      return data.detail.map((e: any) => e.msg || e.message || String(e)).join(', ');
+    if (typeof data?.detail === 'string' && data.detail.trim()) {
+      return data.detail;
     }
-    if (typeof data?.message === 'string' && data.message.trim()) {
-      return data.message;
+    if (Array.isArray(data?.detail) && data.detail.length > 0) {
+      return data.detail.map((e: any) => e.msg || e.message || String(e)).join(', ');
     }
     return fallback;
   };

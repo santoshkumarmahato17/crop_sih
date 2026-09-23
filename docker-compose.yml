@@ -4,30 +4,30 @@ services:
   # ----------------------------------------------------------------------------
   postgis:
     image: postgis/postgis:16-3.4
-    container_name: agrishield_postgis
+    container_name: kisansathi_postgis
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-agrishield_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agrishield_secure_password}
-      POSTGRES_DB: ${POSTGRES_DB:-agrishield_db}
+      POSTGRES_USER: ${POSTGRES_USER:-kisansathi_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kisansathi_secure_password}
+      POSTGRES_DB: ${POSTGRES_DB:-kisansathi_db}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-agrishield_user} -d ${POSTGRES_DB:-agrishield_db}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kisansathi_user} -d ${POSTGRES_DB:-kisansathi_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - agrishield_network
+      - kisansathi_network
 
   # ----------------------------------------------------------------------------
   # 2. Redis (Cache & Celery Message Broker)
   # ----------------------------------------------------------------------------
   redis:
     image: redis:7-alpine
-    container_name: agrishield_redis
+    container_name: kisansathi_redis
     restart: unless-stopped
     ports:
       - "${REDIS_PORT:-6379}:6379"
@@ -39,14 +39,14 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - agrishield_network
+      - kisansathi_network
 
   # ----------------------------------------------------------------------------
   # 3. MinIO (S3-Compatible Object Storage for Drone Rasters)
   # ----------------------------------------------------------------------------
   minio:
     image: minio/minio:latest
-    container_name: agrishield_minio
+    container_name: kisansathi_minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
@@ -63,25 +63,25 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - agrishield_network
+      - kisansathi_network
 
   # ----------------------------------------------------------------------------
-  # 4. AGRI SHIELD Backend API (FastAPI)
+  # 4. KISAN SATHI Backend API (FastAPI)
   # ----------------------------------------------------------------------------
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: agrishield_backend
+    container_name: kisansathi_backend
     restart: unless-stopped
     environment:
       - ENVIRONMENT=development
       - DEBUG=true
       - POSTGRES_SERVER=postgis
       - POSTGRES_PORT=5432
-      - POSTGRES_USER=${POSTGRES_USER:-agrishield_user}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-agrishield_secure_password}
-      - POSTGRES_DB=${POSTGRES_DB:-agrishield_db}
+      - POSTGRES_USER=${POSTGRES_USER:-kisansathi_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-kisansathi_secure_password}
+      - POSTGRES_DB=${POSTGRES_DB:-kisansathi_db}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - CELERY_BROKER_URL=redis://redis:6379/1
@@ -101,25 +101,25 @@ services:
       minio:
         condition: service_healthy
     networks:
-      - agrishield_network
+      - kisansathi_network
 
   # ----------------------------------------------------------------------------
-  # 5. AGRI SHIELD Celery Worker (Asynchronous Geospatial & ML Inference)
+  # 5. KISAN SATHI Celery Worker (Asynchronous Geospatial & ML Inference)
   # ----------------------------------------------------------------------------
   celery_worker:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: agrishield_celery_worker
+    container_name: kisansathi_celery_worker
     restart: unless-stopped
     command: celery -A app.workers.celery_app worker --loglevel=info -c 4
     environment:
       - ENVIRONMENT=development
       - POSTGRES_SERVER=postgis
       - POSTGRES_PORT=5432
-      - POSTGRES_USER=${POSTGRES_USER:-agrishield_user}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-agrishield_secure_password}
-      - POSTGRES_DB=${POSTGRES_DB:-agrishield_db}
+      - POSTGRES_USER=${POSTGRES_USER:-kisansathi_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-kisansathi_secure_password}
+      - POSTGRES_DB=${POSTGRES_DB:-kisansathi_db}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - CELERY_BROKER_URL=redis://redis:6379/1
@@ -137,16 +137,16 @@ services:
       minio:
         condition: service_healthy
     networks:
-      - agrishield_network
+      - kisansathi_network
 
   # ----------------------------------------------------------------------------
-  # 6. AGRI SHIELD Frontend (React + TypeScript + Vite)
+  # 6. KISAN SATHI Frontend (React + TypeScript + Vite)
   # ----------------------------------------------------------------------------
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: agrishield_frontend
+    container_name: kisansathi_frontend
     restart: unless-stopped
     ports:
       - "5173:5173"
@@ -158,7 +158,7 @@ services:
     depends_on:
       - backend
     networks:
-      - agrishield_network
+      - kisansathi_network
 
 volumes:
   postgres_data:
@@ -169,5 +169,5 @@ volumes:
     driver: local
 
 networks:
-  agrishield_network:
+  kisansathi_network:
     driver: bridge

@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Base Model Mixins and Enums.
+KISAN SATHI — Base Model Mixins and Enums.
 """
 
 import enum

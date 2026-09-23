@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Multilingual Agricultural Advisory Engine.
+KISAN SATHI — Multilingual Agricultural Advisory Engine.
 Converts multi-signal environmental and agronomic risk telemetry into
 localized, IPM-safe farmer advisories in English, Tamil, Hindi, and Marathi.
 """

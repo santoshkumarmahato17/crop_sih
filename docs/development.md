@@ -1,4 +1,4 @@
-# AGRI SHIELD — Developer Guide
+# KISAN SATHI — Developer Guide
 
 ## Prerequisites
 - Python 3.11+

@@ -77,7 +77,10 @@ export const pestSensorService = {
       const response = await apiClient.post<PestObservation>('/sensors/pest-observations', payload);
       return response.data;
     } catch (err) {
-      // Fallback for offline prototype mode
+      const isDemo = localStorage.getItem('kisan_sathi_demo_mode') === 'true';
+      if (!isDemo) {
+        throw new Error('Unable to connect to server');
+      }
       const count = payload.pestCount ?? 0;
       const riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' =
         count <= 10 ? 'LOW' : count <= 30 ? 'MEDIUM' : 'HIGH';
@@ -92,8 +95,8 @@ export const pestSensorService = {
         observationDate: payload.observationDate || new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
         pestCount: count,
         riskLevel,
-        notes: payload.notes || 'Observed via AGRI SHIELD console',
-        isSimulated: payload.isSimulated || false,
+        notes: payload.notes || 'Observed via KISAN SATHI console',
+        isSimulated: true,
       };
     }
   },
@@ -103,13 +106,17 @@ export const pestSensorService = {
       const response = await apiClient.get<PestObservation[]>('/sensors/pest-observations', {
         params: { farm_id: farmId },
       });
-      if (response.data && response.data.length > 0) {
+      if (response.data) {
         return response.data;
       }
     } catch (err) {
-      // Fallback to local default demo observations
+      const isDemo = localStorage.getItem('kisan_sathi_demo_mode') === 'true';
+      if (isDemo) {
+        return DEFAULT_OBSERVATIONS;
+      }
+      throw new Error('Unable to connect to server');
     }
-    return DEFAULT_OBSERVATIONS;
+    return [];
   },
 
   submitSensorData: async (payload: Partial<SensorData>): Promise<SensorData> => {
@@ -117,6 +124,10 @@ export const pestSensorService = {
       const response = await apiClient.post<SensorData>('/sensors/sensor-data', payload);
       return response.data;
     } catch (err) {
+      const isDemo = localStorage.getItem('kisan_sathi_demo_mode') === 'true';
+      if (!isDemo) {
+        throw new Error('Unable to connect to server');
+      }
       return {
         farmId: payload.farmId || 'Green Valley Farm',
         zoneId: payload.zoneId || 'Zone A',
@@ -126,10 +137,10 @@ export const pestSensorService = {
         rainfall: payload.rainfall ?? 12.0,
         leafWetness: payload.leafWetness || 'High',
         windSpeed: payload.windSpeed ?? 8.0,
-        mode: payload.isSimulated ? 'Prototype Sensor Mode' : 'Manual Entry Mode',
+        mode: 'Demo Mode - Simulated Data',
         sensorStatus: 'Online',
         lastUpdated: 'Just now',
-        isSimulated: payload.isSimulated ?? false,
+        isSimulated: true,
       };
     }
   },
@@ -141,6 +152,10 @@ export const pestSensorService = {
       });
       return response.data;
     } catch (err) {
+      const isDemo = localStorage.getItem('kisan_sathi_demo_mode') === 'true';
+      if (!isDemo) {
+        throw new Error('Unable to connect to server');
+      }
       return {
         farmId: farmId || 'Green Valley Farm',
         zoneId: zoneId || 'Zone A',
@@ -150,7 +165,7 @@ export const pestSensorService = {
         rainfall: 12.0,
         leafWetness: 'High',
         windSpeed: 8.0,
-        mode: 'Prototype Sensor Mode',
+        mode: 'Demo Mode - Simulated Data',
         sensorStatus: 'Online',
         lastUpdated: '2 minutes ago',
         isSimulated: true,

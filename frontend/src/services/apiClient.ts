@@ -15,7 +15,7 @@ export const apiClient: AxiosInstance = axios.create({
 // Request interceptor to attach auth token
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('agrishield_token');
+    const token = localStorage.getItem('kisansathi_token');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -32,15 +32,15 @@ apiClient.interceptors.response.use(
       const status = error.response.status;
       
       if (status === 401) {
-        const token = localStorage.getItem('agrishield_token');
+        const token = localStorage.getItem('kisansathi_token');
         const isLoginUrl = error.config?.url?.includes('/auth/login');
         const isRegisterUrl = error.config?.url?.includes('/auth/register');
         const isDemoToken = token?.startsWith('demo-token') || token?.startsWith('token-');
         
         if (!isLoginUrl && !isRegisterUrl && token && !isDemoToken) {
           // Token is invalid/expired — clear session and send to login
-          localStorage.removeItem('agrishield_token');
-          localStorage.removeItem('agrishield_user');
+          localStorage.removeItem('kisansathi_token');
+          localStorage.removeItem('kisansathi_user');
           setTimeout(() => {
             window.location.href = '/login';
           }, 100);

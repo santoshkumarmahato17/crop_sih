@@ -1,3 +1,3 @@
 """
-AGRI SHIELD — API Version 1 Package Initializer.
+KISAN SATHI — API Version 1 Package Initializer.
 """

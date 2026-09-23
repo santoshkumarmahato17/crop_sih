@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Expert Validation REST API Endpoints.
+KISAN SATHI — Expert Validation REST API Endpoints.
 Provides endpoints for creating validation requests, viewing the case queue,
 evidence aggregation, decision submission, and lab referral dispatch.
 """

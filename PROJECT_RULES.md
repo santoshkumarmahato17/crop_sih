@@ -1,7 +1,7 @@
-# AGRI SHIELD — Project Rules and Engineering Standards
+# KISAN SATHI — Project Rules and Engineering Standards
 
 ## 1. System Identity and Scope
-- **Official Designation**: AGRI SHIELD (AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System).
+- **Official Designation**: KISAN SATHI (AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System).
 - **Terminology Standard**: This software project is strictly designated as a **System** or **Application**. Never refer to this project as an "app".
 - **Incremental Construction**: Functionality is implemented strictly in planned, modular phases. Premature monolithic code, mock business data, or half-baked feature suites are strictly prohibited.
 

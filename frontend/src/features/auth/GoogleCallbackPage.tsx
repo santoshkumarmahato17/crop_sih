@@ -15,7 +15,7 @@ export const GoogleCallbackPage: React.FC = () => {
 
   const extractErrorMessage = (err: any, fallback: string): string => {
     if (!err.response) {
-      return 'Unable to connect to AGRI SHIELD backend server (http://localhost:8001). Please ensure the backend server is running.';
+      return 'Unable to connect to KISAN SATHI backend server (http://localhost:8001). Please ensure the backend server is running.';
     }
     const data = err.response.data;
     if (typeof data?.detail === 'string' && data.detail.trim()) {
@@ -90,7 +90,7 @@ export const GoogleCallbackPage: React.FC = () => {
             Authenticating with Google
           </h1>
           <p className="text-xs text-agri-600/70 dark:text-agri-400/60 font-medium">
-            AGRI SHIELD Precision Security Verification
+            KISAN SATHI Precision Security Verification
           </p>
         </div>
 

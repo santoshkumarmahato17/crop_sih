@@ -33,7 +33,7 @@ from app.schemas.diagnosis import (
 )
 from fastapi import HTTPException, status
 from app.ai.diagnosis_engine import PrototypeDiseaseIdentificationService
-from app.core.errors import AgriShieldException, EntityNotFoundError
+from app.core.errors import KisanSathiException, EntityNotFoundError
 
 
 class DiagnosisService:

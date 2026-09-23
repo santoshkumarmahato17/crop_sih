@@ -21,7 +21,7 @@ export const UserProfilePage: React.FC = () => {
 
   // Profile Form States
   const [fullName, setFullName] = useState<string>(user?.full_name || 'Farmer Ramanathan K.');
-  const [email, setEmail] = useState<string>(user?.email || 'ramanathan@agrishield.farm');
+  const [email, setEmail] = useState<string>(user?.email || 'ramanathan@kisansathi.farm');
   const [phone, setPhone] = useState<string>(user?.phone_number || '+91 98421 78901');
   const [address, setAddress] = useState<string>(
     user?.address || 'Plot 14, West Valley Agro Sector, Coimbatore District, Tamil Nadu 641001'

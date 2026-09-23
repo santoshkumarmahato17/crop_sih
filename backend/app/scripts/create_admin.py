@@ -1,6 +1,6 @@
 """
 Administrator Account Provisioning Script (Backend-Only CLI).
-Usage: python -m app.scripts.create_admin --email admin@agrishield.com --password YourSecurePassword123! --name "System Administrator"
+Usage: python -m app.scripts.create_admin --email admin@kisansathi.com --password YourSecurePassword123! --name "System Administrator"
 """
 
 import argparse
@@ -83,7 +83,7 @@ async def create_admin_user(email: str, password: str, full_name: str) -> None:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Provision an authorized AgriShield administrator account.")
+    parser = argparse.ArgumentParser(description="Provision an authorized Kisan Sathi administrator account.")
     parser.add_argument("--email", required=True, help="Administrator email (must be in ADMIN_EMAIL_ALLOWLIST)")
     parser.add_argument("--password", required=True, help="Secure password for administrator")
     parser.add_argument("--name", default="System Administrator", help="Full name of administrator")

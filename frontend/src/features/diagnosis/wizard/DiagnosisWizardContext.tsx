@@ -69,7 +69,7 @@ const defaultState: WizardState = {
   longitude: undefined,
   locationName: undefined,
   locationStatus: 'NOT_REQUESTED',
-  selectedCrop: 'Tomato',
+  selectedCrop: '',
   growthStage: 'Flowering',
   selectedPlantParts: ['Leaf'],
   selectedSymptoms: ['Spots', 'Yellowing'],

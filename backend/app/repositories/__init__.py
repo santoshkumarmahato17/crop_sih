@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Data Access & Repository Layer Package.
+KISAN SATHI — Data Access & Repository Layer Package.
 Isolates database queries and ORM operations from domain services.
 """
 

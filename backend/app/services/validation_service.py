@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Expert Ground-Truth Validation Service.
+KISAN SATHI — Expert Ground-Truth Validation Service.
 Manages the complete lifecycle of expert validation requests, case queue,
 evidence aggregation, decision processing, and audit logging.
 """

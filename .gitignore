@@ -108,6 +108,7 @@ postgres-data/
 redis-data/
 *.db
 *.sqlite*
+*.bak
 agrishield.db
 Dataset for Crop Pest and Disease Detection/
 soybean d-set/

@@ -161,7 +161,7 @@ async def get_farmer_dashboard(
         # 8. When is the next monitoring mission?
         next_mission={
             "mission_code": "MSN-2026-0831-04",
-            "drone_name": "AgriShield Eagle-1 (DJI Matrice 350 RTK)",
+            "drone_name": "Kisan Sathi Eagle-1 (DJI Matrice 350 RTK)",
             "scheduled_time": (now + timedelta(hours=14)).isoformat(),
             "target_zones": ["Z03", "Z04", "Z05"],
             "sensor_payload": "Multispectral (NDVI/RedEdge) + Thermal IR",

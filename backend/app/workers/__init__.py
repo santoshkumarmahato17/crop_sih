@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Asynchronous Background Task Workers Package.
+KISAN SATHI — Asynchronous Background Task Workers Package.
 """
 
 from app.workers.celery_app import celery_app

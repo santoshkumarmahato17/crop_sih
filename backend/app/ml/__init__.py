@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — AI/ML Vision & Predictive Spread Intelligence Engine.
+KISAN SATHI — AI/ML Vision & Predictive Spread Intelligence Engine.
 """
 
 from app.ml.base import BaseMLModel

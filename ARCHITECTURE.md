@@ -1,8 +1,8 @@
-# AGRI SHIELD — System Architecture Specification
+# KISAN SATHI — System Architecture Specification
 
 ## 1. Executive Overview
 
-**AGRI SHIELD** is an enterprise-grade AI-powered crop health monitoring, disease early detection, and spread intelligence system. It continuously ingests, processes, and analyzes multi-modal agricultural land data—including drone RGB/multispectral/thermal imagery, IoT telemetry, weather streams, and farmer ground observations—to provide actionable disease hotspots, risk forecasts, and Integrated Pest Management (IPM) recommendations.
+**KISAN SATHI** is an enterprise-grade AI-powered crop health monitoring, disease early detection, and spread intelligence system. It continuously ingests, processes, and analyzes multi-modal agricultural land data—including drone RGB/multispectral/thermal imagery, IoT telemetry, weather streams, and farmer ground observations—to provide actionable disease hotspots, risk forecasts, and Integrated Pest Management (IPM) recommendations.
 
 ---
 
@@ -35,7 +35,7 @@ flowchart TB
     end
 
     subgraph APILayer["API & Ingress Gateway Tier"]
-        FastAPI["AGRI SHIELD Core API<br/>(FastAPI / Python 3.11+)"]
+        FastAPI["KISAN SATHI Core API<br/>(FastAPI / Python 3.11+)"]
         AuthMiddleware["Security & RBAC Enforcement"]
         SpatialQueryEngine["Geospatial Query Routing Engine"]
     end
@@ -113,10 +113,10 @@ flowchart TB
   - Strict foreign key constraints across `farms`, `monitoring_zones`, `crops`, `missions`, `imagery_assets`, `health_observations`, `disease_detections`, `spread_analyses`, and `ipm_recommendations`.
 - **Object Storage (MinIO / S3)**:
   - Structured bucket hierarchy:
-    - `agrishield-raw-imagery/`: Raw uploaded drone image sets & flight telemetry logs.
-    - `agrishield-orthomosaics/`: Stitched GeoTIFFs and COGs (Cloud Optimized GeoTIFFs).
-    - `agrishield-index-rasters/`: Processed NDVI / NDRE / Thermal colormap rasters and tile caches.
-    - `agrishield-model-artifacts/`: Trained PyTorch weights and calibration files.
+    - `kisansathi-raw-imagery/`: Raw uploaded drone image sets & flight telemetry logs.
+    - `kisansathi-orthomosaics/`: Stitched GeoTIFFs and COGs (Cloud Optimized GeoTIFFs).
+    - `kisansathi-index-rasters/`: Processed NDVI / NDRE / Thermal colormap rasters and tile caches.
+    - `kisansathi-model-artifacts/`: Trained PyTorch weights and calibration files.
 
 ---
 

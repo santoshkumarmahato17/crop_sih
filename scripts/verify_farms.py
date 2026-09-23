@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 5 Farm Management & Authoritative Area Verification Script.
+KISAN SATHI — Step 5 Farm Management & Authoritative Area Verification Script.
 Validates:
 1. Geospatial boundary polygon validation & sanitization
 2. Authoritative geodesic area computation (never trusting user-supplied numbers)
@@ -195,7 +195,7 @@ def test_anti_idor_rules() -> bool:
 
 def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 5 Farm Management Verification")
+    print("KISAN SATHI: Step 5 Farm Management Verification")
     print("==========================================================")
 
     v_ok = test_spatial_boundary_validation()

@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     """
-    AGRI SHIELD System Configuration Settings.
+    KISAN SATHI System Configuration Settings.
     Loaded securely from environment variables.
     """
 
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     )
 
     # 1. System Settings
-    PROJECT_NAME: str = "AGRI SHIELD"
+    PROJECT_NAME: str = "KISAN SATHI"
     ENVIRONMENT: str = "development"
     DEBUG: bool = True
     LOG_LEVEL: str = "INFO"
@@ -51,9 +51,9 @@ class Settings(BaseSettings):
     DATABASE_URL: Optional[str] = None
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
-    POSTGRES_USER: str = "agrishield_user"
-    POSTGRES_PASSWORD: str = "agrishield_secure_password"
-    POSTGRES_DB: str = "agrishield_db"
+    POSTGRES_USER: str = "kisansathi_user"
+    POSTGRES_PASSWORD: str = "kisansathi_secure_password"
+    POSTGRES_DB: str = "kisansathi_db"
     DATABASE_POOL_SIZE: int = 20
     DATABASE_MAX_OVERFLOW: int = 10
 
@@ -136,22 +136,24 @@ class Settings(BaseSettings):
     MINIO_SECRET_KEY: str = "minio_admin_secure_password"
     MINIO_USE_SSL: bool = False
     MINIO_REGION: str = "us-east-1"
-    MINIO_BUCKET_RAW_IMAGERY: str = "agrishield-raw-imagery"
-    MINIO_BUCKET_ORTHOMOSAICS: str = "agrishield-orthomosaics"
-    MINIO_BUCKET_INDEX_RASTERS: str = "agrishield-index-rasters"
-    MINIO_BUCKET_MODELS: str = "agrishield-model-artifacts"
+    MINIO_BUCKET_RAW_IMAGERY: str = "kisansathi-raw-imagery"
+    MINIO_BUCKET_ORTHOMOSAICS: str = "kisansathi-orthomosaics"
+    MINIO_BUCKET_INDEX_RASTERS: str = "kisansathi-index-rasters"
+    MINIO_BUCKET_MODELS: str = "kisansathi-model-artifacts"
 
     # 6. Security & JWT Settings
-    SECRET_KEY: str = "agrishield-dev-secret-key-replace-in-production-min-32-chars"
+    SECRET_KEY: str = "kisansathi-dev-secret-key-replace-in-production-min-32-chars"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # 30 minutes short-lived access token
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7    # 7 days refresh token
     ADMIN_EMAIL_ALLOWLIST: Union[List[str], str] = [
-        "admin@agrishield.com",
+        "admin@kisansathi.com",
+        "admin@kisansathi.com",
         "admin@example.com",
         "admin1@example.com",
         "admin2@example.com",
-        "security@agrishield.com",
+        "security@kisansathi.com",
+        "security@kisansathi.com",
     ]
 
     @field_validator("ADMIN_EMAIL_ALLOWLIST", mode="before")
@@ -190,8 +192,8 @@ class Settings(BaseSettings):
     SMTP_HOST: Optional[str] = None
     SMTP_USER: Optional[str] = None
     SMTP_PASSWORD: Optional[str] = None
-    EMAILS_FROM_EMAIL: Optional[str] = "noreply@agrishield.farm"
-    EMAILS_FROM_NAME: Optional[str] = "AGRI SHIELD Security"
+    EMAILS_FROM_EMAIL: Optional[str] = "noreply@kisansathi.farm"
+    EMAILS_FROM_NAME: Optional[str] = "KISAN SATHI Security"
 
     # 9. Google OAuth 2.0 Settings
     GOOGLE_CLIENT_ID: Optional[str] = None

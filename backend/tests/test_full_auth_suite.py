@@ -22,7 +22,7 @@ def test_01_phone_number_normalization():
 
 def test_02_register_and_login_flow():
     """Verify user registration and password login."""
-    unique_email = f"test.farmer.{uuid.uuid4().hex[:6]}@agrishield.farm"
+    unique_email = f"test.farmer.{uuid.uuid4().hex[:6]}@kisansathi.farm"
     password = "TestPassword123!"
 
     # 1. Register
@@ -56,16 +56,16 @@ def test_03_forgot_password_unregistered_email():
     """Verify forgot-password for non-existent email returns clear 404 message."""
     resp = client.post(
         "/api/v1/auth/forgot-password",
-        json={"email": "nonexistent.user.12345@agrishield.farm"},
+        json={"email": "nonexistent.user.12345@kisansathi.farm"},
     )
     assert resp.status_code == 404
     data = resp.json()
-    assert "No AGRI SHIELD account was found" in data["message"] or "No account found" in data["message"]
+    assert "No KISAN SATHI account" in data["message"] or "No account" in data["message"]
 
 
 def test_04_forgot_password_end_to_end_reset():
     """Verify complete Forgot Password -> OTP -> Reset Token -> New Password -> Login flow."""
-    unique_email = f"forgot.user.{uuid.uuid4().hex[:6]}@agrishield.farm"
+    unique_email = f"forgot.user.{uuid.uuid4().hex[:6]}@kisansathi.farm"
     old_pwd = "OldPassword123!"
     new_pwd = "NewSecurePassword456!"
 
@@ -82,10 +82,13 @@ def test_04_forgot_password_end_to_end_reset():
     )
 
     # 2. Request OTP
-    fp_resp = client.post(
-        "/api/v1/auth/forgot-password",
-        json={"email": unique_email},
-    )
+    from unittest.mock import patch
+    mock_dispatch = {"sent": True, "message": "Dispatched for test"}
+    with patch("app.services.email_service.email_service.send_otp_email", return_value=mock_dispatch):
+        fp_resp = client.post(
+            "/api/v1/auth/forgot-password",
+            json={"email": unique_email},
+        )
     assert fp_resp.status_code == 200
     assert fp_resp.json()["success"] is True
 
@@ -171,16 +174,16 @@ def test_07_user_location_and_weather():
     # Login to get token (try updated password from test_03 or original password)
     login_resp = client.post(
         "/api/v1/auth/login",
-        json={"email": "farmer@agrishield.internal", "password": "newpassword123"},
+        json={"email": "farmer@kisansathi.internal", "password": "newpassword123"},
     )
     if login_resp.status_code != 200:
         login_resp = client.post(
             "/api/v1/auth/login",
-            json={"email": "farmer@agrishield.internal", "password": "password123"},
+            json={"email": "farmer@kisansathi.internal", "password": "password123"},
         )
     if login_resp.status_code != 200:
         # Register fresh test user if not present
-        fresh_email = f"farmer_loc_{uuid.uuid4().hex[:6]}@agrishield.internal"
+        fresh_email = f"farmer_loc_{uuid.uuid4().hex[:6]}@kisansathi.internal"
         client.post(
             "/api/v1/auth/register",
             json={

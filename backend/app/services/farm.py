@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from geoalchemy2.elements import WKTElement
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.errors import AgriShieldException, SpatialValidationError
+from app.core.errors import KisanSathiException, SpatialValidationError
 from app.models.auth import User
 from app.models.farm import Crop, CropCycle, CropCycleStatus, Farm
 from app.repositories.farm import FarmRepository, farm_repo

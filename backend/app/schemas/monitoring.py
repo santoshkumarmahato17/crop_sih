@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Pydantic Schemas for Follow-up Monitoring & Crop Health Tracking.
+KISAN SATHI — Pydantic Schemas for Follow-up Monitoring & Crop Health Tracking.
 """
 
 from datetime import datetime

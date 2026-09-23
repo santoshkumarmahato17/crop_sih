@@ -26,7 +26,7 @@ export const farmService = {
 
       return response.data;
     } catch (err) {
-      console.warn('API listFarms failed, returning local cached farms fallback.', err);
+      console.warn('API listFarms failed.', err);
       const localFarmsRaw = localStorage.getItem('kisan_sathi_local_farms');
       if (localFarmsRaw) {
         try {
@@ -37,7 +37,7 @@ export const farmService = {
           // ignore parsing error
         }
       }
-      return { farms: [], total: 0, total_hectares: 0 };
+      throw new Error('Unable to connect to server');
     }
   },
 

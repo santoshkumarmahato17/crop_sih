@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Core Backend Application Package.
+KISAN SATHI — Core Backend Application Package.
 AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System.
 """
 

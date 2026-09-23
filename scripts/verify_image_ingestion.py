@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 8 Drone Image Ingestion Pipeline Verification Script.
+KISAN SATHI — Step 8 Drone Image Ingestion Pipeline Verification Script.
 Validates:
 1. Multi-format image support: JPEG, PNG, GeoTIFF
 2. MinIO / S3 object storage streaming and secure path generation
@@ -92,7 +92,7 @@ def test_point_in_polygon_zone_matching() -> bool:
 
 async def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 8 Drone Image Ingestion Verification")
+    print("KISAN SATHI: Step 8 Drone Image Ingestion Verification")
     print("==========================================================")
 
     s_ok = await test_storage_and_formats()

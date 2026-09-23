@@ -13,7 +13,7 @@ async def test_weather_and_risk_api_endpoints():
     """Test all weather and multi-vector risk REST API endpoints."""
     token = create_access_token(
         subject="farmer-user-01",
-        email="farmer@agrishield.com",
+        email="farmer@kisansathi.com",
         role="FARMER",
     )
     headers = {"Authorization": f"Bearer {token}"}
@@ -57,7 +57,7 @@ async def test_weather_and_risk_api_endpoints():
         # 6. Regional Risk (Government/Official)
         gov_token = create_access_token(
             subject="officer-user-01",
-            email="officer@agrishield.com",
+            email="officer@kisansathi.com",
             role="GOVERNMENT",
         )
         gov_headers = {"Authorization": f"Bearer {gov_token}"}

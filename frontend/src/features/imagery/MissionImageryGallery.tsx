@@ -141,7 +141,7 @@ export const MissionImageryGallery: React.FC<MissionImageryGalleryProps> = ({
         disease_probability: 0.08,
         pest_probability: 0.05,
         confidence: 0.84,
-        model_name: 'AgriShield-Vision-DemoPrototype',
+        model_name: 'Kisan Sathi-Vision-DemoPrototype',
         model_version: 'v0.1.0-prototype',
         inference_timestamp: new Date().toISOString(),
         prediction_metadata: {

@@ -566,7 +566,7 @@ class OpenWeatherMapWeatherProvider(WeatherDataProvider):
 
 def get_weather_provider() -> WeatherDataProvider:
     """Factory creating appropriate weather provider based on runtime environment."""
-    provider_type = os.environ.get("AGRISHIELD_WEATHER_PROVIDER", "openweathermap").lower()
+    provider_type = os.environ.get("KISANSATHI_WEATHER_PROVIDER", "openweathermap").lower()
     if provider_type == "openweathermap":
         return OpenWeatherMapWeatherProvider()
     elif provider_type == "accuweather":

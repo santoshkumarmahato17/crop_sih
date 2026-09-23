@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 18 Alert System & Notification Center Verification Script.
+KISAN SATHI — Step 18 Alert System & Notification Center Verification Script.
 Validates:
 1. All 8 Alert Types:
    - DISEASE_DETECTED
@@ -33,7 +33,7 @@ from app.main import app
 async def test_alert_system_workflow():
     print("\n--- 1. Testing Alert Types & Multi-Role Dispatch ---")
     farmer_token = create_access_token(
-        subject="farmer-101", email="farmer@agrishield.com", role="FARMER"
+        subject="farmer-101", email="farmer@kisansathi.com", role="FARMER"
     )
     headers = {"Authorization": f"Bearer {farmer_token}"}
 
@@ -94,7 +94,7 @@ async def test_alert_system_workflow():
 
 async def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 18 Alert System & Notification Center")
+    print("KISAN SATHI: Step 18 Alert System & Notification Center")
     print("==========================================================")
 
     a_ok = await test_alert_system_workflow()

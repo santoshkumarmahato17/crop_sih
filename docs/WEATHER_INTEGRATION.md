@@ -1,7 +1,7 @@
-# AGRI SHIELD Weather Integration
+# KISAN SATHI Weather Integration
 
 ## Overview
-This document describes the real-time weather integration architecture implemented for AGRI SHIELD. The system replaces mocked weather data with authoritative real-time and forecasted weather data via a robust provider strategy pattern.
+This document describes the real-time weather integration architecture implemented for KISAN SATHI. The system replaces mocked weather data with authoritative real-time and forecasted weather data via a robust provider strategy pattern.
 
 ## Provider Architecture
 
@@ -40,7 +40,7 @@ The system calculates the safest and most effective window for pesticide applica
 Weather settings are managed via `.env`. Example configurations:
 
 ```ini
-AGRISHIELD_WEATHER_PROVIDER=open_meteo
+KISANSATHI_WEATHER_PROVIDER=open_meteo
 
 # IMD Config
 IMD_API_BASE_URL=

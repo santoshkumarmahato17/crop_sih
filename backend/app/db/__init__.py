@@ -1,3 +1,3 @@
 """
-AGRI SHIELD — Database Package Initializer.
+KISAN SATHI — Database Package Initializer.
 """

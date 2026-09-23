@@ -14,7 +14,7 @@ class SubsystemHealth(BaseModel):
 class HealthCheckResponse(BaseModel):
     """Comprehensive system health check report."""
 
-    system: str = "AGRI SHIELD"
+    system: str = "KISAN SATHI"
     version: str
     environment: str
     status: str = Field(description="Overall system status (healthy, degraded, unhealthy)")

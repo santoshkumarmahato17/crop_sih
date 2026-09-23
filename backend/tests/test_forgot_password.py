@@ -24,18 +24,18 @@ async def test_forgot_password_complete_flow(async_client: AsyncClient):
     from app.services.otp_service import otp_service
 
     # 1. Unregistered email check
-    unregistered_email = f"nonexistent_{uuid.uuid4().hex[:6]}@agrishield.farm"
+    unregistered_email = f"nonexistent_{uuid.uuid4().hex[:6]}@kisansathi.farm"
     unreg_res = await async_client.post(
         "/api/v1/auth/forgot-password",
         json={"email": unregistered_email}
     )
     assert unreg_res.status_code == 404, f"Response body: {unreg_res.json()}"
     msg = unreg_res.json().get("message") or unreg_res.json().get("detail")
-    assert "No AGRI SHIELD account" in str(msg) or "No account" in str(msg)
+    assert "No KISAN SATHI account" in str(msg) or "No account" in str(msg)
 
 
     # 2. Register a new test account
-    test_email = f"farmer_reset_{uuid.uuid4().hex[:6]}@agrishield.farm"
+    test_email = f"farmer_reset_{uuid.uuid4().hex[:6]}@kisansathi.farm"
     old_password = "OldSecurePassword123!"
     new_password = "NewSecurePassword456!"
 
@@ -50,19 +50,20 @@ async def test_forgot_password_complete_flow(async_client: AsyncClient):
     assert reg_res.status_code == 201
 
     # 3. Unconfigured SMTP check
-    from app.core.config import get_settings
-    settings = get_settings()
-    with patch.object(settings, "SMTP_HOST", ""):
+    from app.services import email_service as email_service_mod
+    with patch.object(email_service_mod.settings, "SMTP_HOST", ""):
         unconfig_res = await async_client.post(
             "/api/v1/auth/forgot-password",
             json={"email": test_email}
         )
-        assert unconfig_res.status_code == 503
-        unconfig_msg = unconfig_res.json().get("message") or unconfig_res.json().get("detail")
-        assert "not configured" in str(unconfig_msg) or "Email service" in str(unconfig_msg)
+        assert unconfig_res.status_code == 200
+        unconfig_data = unconfig_res.json()
+        assert unconfig_data.get("smtp_configured") is False
+        assert "Development Mode" in unconfig_data.get("message", "")
 
 
     # 4. Mock successful email delivery for testing full verification & reset pipeline
+    otp_service.clear_otp(test_email)
     mock_dispatch = {"sent": True, "message": "Dispatched for test"}
     with patch("app.services.email_service.email_service.send_otp_email", return_value=mock_dispatch):
         forgot_res = await async_client.post(

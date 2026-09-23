@@ -18,7 +18,7 @@ class DemoCropHealthModel(CropHealthModel):
     """
 
     def __init__(self):
-        self._name = "AgriShield-Vision-DemoPrototype"
+        self._name = "Kisan Sathi-Vision-DemoPrototype"
         self._version = "v0.1.0-prototype"
 
     @property

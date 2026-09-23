@@ -1,6 +1,6 @@
-# AGRI SHIELD — System Documentation Hub
+# KISAN SATHI — System Documentation Hub
 
-Welcome to the AGRI SHIELD system documentation.
+Welcome to the KISAN SATHI system documentation.
 
 ## Documentation Index
 - [Architecture Guide](architecture.md): Complete C4 architectural specification and system topology.

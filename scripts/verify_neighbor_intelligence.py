@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 12 Neighbor Farm Intelligence & Spread Risk Verification.
+KISAN SATHI — Step 12 Neighbor Farm Intelligence & Spread Risk Verification.
 Validates:
 1. Geodesic distance & compass bearing calculations
 2. Directed Farm Risk Graph edges (Source Node -> Target Node)
@@ -80,7 +80,7 @@ def test_terminology_and_disclaimer() -> bool:
 
 def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 12 Neighbor Farm Intelligence & Spread Risk")
+    print("KISAN SATHI: Step 12 Neighbor Farm Intelligence & Spread Risk")
     print("==========================================================")
 
     g_ok = test_spread_risk_graph_engine()

@@ -982,7 +982,7 @@ export const FarmerDashboardPage: React.FC = () => {
             </div>
             <WaterRequirementMapViewer 
               farmId={selectedFarmId || 'farm-cbe-01'}
-              farmName={summary?.farm_name || 'AgriShield Demo Farm'}
+              farmName={summary?.farm_name || 'Kisan Sathi Demo Farm'}
             />
           </div>
         </div>

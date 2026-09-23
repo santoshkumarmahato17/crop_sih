@@ -54,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <header className="min-h-[3.75rem] sm:h-16 pt-[max(env(safe-area-inset-top,0px),0.5rem)] sm:pt-0 pb-1.5 sm:pb-0 border-b border-slate-200 dark:border-[#261f22] bg-white dark:bg-[#161314] px-3 sm:px-6 flex items-center justify-between sticky top-0 z-40 transition-colors duration-200">
+      <header className="min-h-[3.75rem] sm:h-16 pt-[max(env(safe-area-inset-top,0px),0.5rem)] sm:pt-0 pb-1.5 sm:pb-0 border-b border-[#D4E8DF] dark:border-[#16383B] bg-white dark:bg-[#0D2729] px-3 sm:px-6 flex items-center justify-between sticky top-0 z-40 transition-colors duration-200">
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           {/* Primary Top-Left Hamburger Sidebar Toggle Button */}
           {!isAuthRoute && (
@@ -64,9 +64,9 @@ export const Header: React.FC<HeaderProps> = ({
               aria-label={isSidebarOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isSidebarOpen}
               title={isSidebarOpen ? 'Close menu' : 'Open menu'}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-[#241c20] hover:bg-slate-200 dark:hover:bg-[#2e2328] active:scale-95 border border-slate-200 dark:border-[#382d33] hover:border-agri-500/50 text-slate-800 dark:text-white transition shrink-0 shadow-sm focus:outline-none focus:ring-2 focus:ring-agri-500/50 flex items-center justify-center cursor-pointer group"
+              className="p-2 rounded-xl bg-slate-100 dark:bg-[#071A1D] hover:bg-slate-200 dark:hover:bg-[#16383B] active:scale-95 border border-[#D4E8DF] dark:border-[#16383B] hover:border-emerald-500/50 text-[#12302E] dark:text-[#E6F5F0] transition shrink-0 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 flex items-center justify-center cursor-pointer group"
             >
-              <Menu className="w-5 h-5 text-slate-700 dark:text-white group-hover:scale-110 transition-transform duration-200" />
+              <Menu className="w-5 h-5 text-slate-700 dark:text-[#E6F5F0] group-hover:scale-110 transition-transform duration-200" />
             </button>
           )}
 
@@ -81,14 +81,14 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-2 sm:gap-2.5 cursor-pointer group min-w-0"
           >
-            <div className="w-9 h-9 rounded-xl bg-white dark:bg-[#241b1f] border border-slate-200 dark:border-[#382a30] p-0.5 flex items-center justify-center shadow-md shrink-0 overflow-hidden">
+            <div className="w-9 h-9 rounded-xl bg-white dark:bg-[#071A1D] border border-[#D4E8DF] dark:border-[#16383B] p-0.5 flex items-center justify-center shadow-md shrink-0 overflow-hidden">
               <img src="/kisan-sathi-logo.png" alt="Kisan Sathi Logo" className="w-full h-full object-contain rounded-lg" />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm sm:text-base font-black tracking-tight text-slate-900 dark:text-white font-display whitespace-nowrap">
+              <span className="text-sm sm:text-base font-black tracking-tight text-[#12302E] dark:text-[#E6F5F0] font-display whitespace-nowrap">
                 KISAN SATHI
               </span>
-              <span className="text-[10px] bg-slate-100 dark:bg-[#241c20] text-slate-600 dark:text-[#8d7e84] px-1.5 py-0.5 rounded-md font-mono border border-slate-200 dark:border-[#382d33] font-semibold">
+              <span className="text-[10px] bg-slate-100 dark:bg-[#071A1D] text-[#5F7775] dark:text-[#8CAFA8] px-1.5 py-0.5 rounded-md font-mono border border-[#D4E8DF] dark:border-[#16383B] font-semibold">
                 v{version}
               </span>
             </div>
@@ -98,8 +98,8 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 ml-auto">
           {/* System State Badge (Only on authenticated pages) */}
           {!isAuthRoute && (
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-[#18261b] border border-emerald-200 dark:border-[#2b442f] text-emerald-600 dark:text-[#4ade80] text-xs font-semibold">
-              <span className="w-2 h-2 rounded-full bg-[#4ade80] inline-block animate-pulse" />
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F5EF] dark:bg-[#0F3532] border border-[#D4E8DF] dark:border-[#16383B] text-[#087B62] dark:text-[#2FA36B] text-xs font-semibold">
+              <span className="w-2 h-2 rounded-full bg-[#2FA36B] inline-block animate-pulse" />
               <span>State:</span>
               <span className="font-bold">Healthy</span>
             </div>
@@ -109,7 +109,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-xl bg-slate-100 dark:bg-[#241c20] hover:bg-slate-200 dark:hover:bg-[#2e2328] border border-slate-200 dark:border-[#382d33] text-amber-500 transition"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-[#071A1D] hover:bg-slate-200 dark:hover:bg-[#16383B] border border-[#D4E8DF] dark:border-[#16383B] text-amber-500 transition"
             title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
             aria-label="Toggle Theme"
           >
@@ -126,7 +126,7 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               aria-label="Alerts"
               onClick={() => setIsNotifOpen(true)}
-              className="p-2 rounded-xl bg-slate-100 dark:bg-[#241c20] hover:bg-slate-200 dark:hover:bg-[#2e2328] border border-slate-200 dark:border-[#382d33] text-slate-600 dark:text-[#d8cbcf] transition relative"
+              className="p-2 rounded-xl bg-slate-100 dark:bg-[#071A1D] hover:bg-slate-200 dark:hover:bg-[#16383B] border border-[#D4E8DF] dark:border-[#16383B] text-slate-600 dark:text-[#E6F5F0] transition relative"
             >
               <Bell className="w-4 h-4" />
               {unreadCount > 0 && (
@@ -143,18 +143,18 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => navigate('/profile')}
-                className="flex items-center gap-2.5 p-1.5 px-3 rounded-xl bg-slate-100 dark:bg-[#241c20] hover:bg-slate-200 dark:hover:bg-[#2e2328] border border-slate-200 dark:border-[#382d33] transition text-left"
+                className="flex items-center gap-2.5 p-1.5 px-3 rounded-xl bg-slate-100 dark:bg-[#071A1D] hover:bg-slate-200 dark:hover:bg-[#16383B] border border-[#D4E8DF] dark:border-[#16383B] transition text-left"
                 title="View Profile & Role Info"
               >
                 <div className="hidden md:block leading-tight text-right">
-                  <p className="text-xs font-bold text-slate-900 dark:text-white truncate max-w-[120px]">
+                  <p className="text-xs font-bold text-[#12302E] dark:text-[#E6F5F0] truncate max-w-[120px]">
                     {user.full_name ? user.full_name.split(' ')[0] : 'Suriya'}
                   </p>
-                  <span className="text-[9px] font-mono font-bold uppercase text-slate-500 dark:text-[#8d7e84]">
+                  <span className="text-[9px] font-mono font-bold uppercase text-[#5F7775] dark:text-[#8CAFA8]">
                     {typeof user.role === 'string' ? user.role : (user.role as any)?.name || 'FARMER'}
                   </span>
                 </div>
-                <div className="w-7 h-7 rounded-full bg-[#d97706] text-white font-black text-xs flex items-center justify-center shadow-sm">
+                <div className="w-7 h-7 rounded-full bg-[#087B62] text-white font-black text-xs flex items-center justify-center shadow-sm">
                   {user.full_name ? user.full_name.charAt(0) : 'S'}
                 </div>
               </button>
@@ -165,7 +165,7 @@ export const Header: React.FC<HeaderProps> = ({
                   logout();
                   navigate('/login');
                 }}
-                className="p-2 rounded-xl text-slate-600 dark:text-[#8d7e84] hover:text-[#ef4444] hover:bg-rose-50 dark:hover:bg-[#2b1715] transition border border-slate-200 dark:border-[#382d33]"
+                className="p-2 rounded-xl text-slate-600 dark:text-[#8CAFA8] hover:text-[#ef4444] hover:bg-rose-50 dark:hover:bg-rose-950/40 transition border border-[#D4E8DF] dark:border-[#16383B]"
                 title="Logout"
               >
                 <LogOut className="w-4 h-4" />

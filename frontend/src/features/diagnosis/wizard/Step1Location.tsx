@@ -99,7 +99,7 @@ export const Step1Location: React.FC<Props> = ({ onNext }) => {
             farm_id: fId,
             name: 'Zone A — Main Field',
             area_hectares: (targetFarm as any)?.calculated_area_hectares || 1.2,
-            crop_type: (targetFarm as any)?.crop_info?.common_name || 'Tomato',
+            crop_type: (targetFarm as any)?.crop_info?.common_name || '',
           } as any,
         ];
       }
@@ -288,7 +288,7 @@ export const Step1Location: React.FC<Props> = ({ onNext }) => {
             </button>
             <button
               type="button"
-              onClick={() => navigate('/onboarding/create-field')}
+              onClick={() => navigate('/farms/new')}
               className="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-slate-800 text-white font-bold text-xs transition"
             >
               Full Farm Registration Page

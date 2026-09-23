@@ -1,5 +1,5 @@
 /**
- * AGRI SHIELD — Crop Pathology Vision Prediction & Advisory Service.
+ * KISAN SATHI — Crop Pathology Vision Prediction & Advisory Service.
  * Connects client application components to the FastAPI Vision AI backend.
  */
 
@@ -33,7 +33,7 @@ export async function connectToService<T = CropPredictionResponse>(
     };
 
     // Attach authentication token if logged in
-    const token = localStorage.getItem('agrishield_token');
+    const token = localStorage.getItem('kisansathi_token');
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }

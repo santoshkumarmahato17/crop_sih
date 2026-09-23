@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Closed-Loop Before vs After Comparison & Health Trend Engine.
+KISAN SATHI — Closed-Loop Before vs After Comparison & Health Trend Engine.
 Performs quantitative delta analysis, trend categorization, hotspot evolution tracking,
 and escalation triggers.
 """

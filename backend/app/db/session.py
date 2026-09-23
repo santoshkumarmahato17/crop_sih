@@ -100,7 +100,7 @@ if postgres_online:
         connect_args=connect_args,
     )
 else:
-    db_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../agrishield.db"))
+    db_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../kisan_sathi.db"))
     database_url = f"sqlite+aiosqlite:///{db_file_path}"
     is_sqlite = True
     logger.warning(
@@ -211,21 +211,51 @@ async def init_db() -> None:
             # Auto-migrate missing columns for SQLite
             if is_sqlite:
                 from sqlalchemy import text
-                for col_name, col_type in [
-                    ("google_sub", "VARCHAR(255)"),
-                    ("auth_provider", "VARCHAR(50)"),
-                    ("latitude", "FLOAT"),
-                    ("longitude", "FLOAT"),
+                for tbl, col_name, col_type in [
+                    ("users", "google_sub", "VARCHAR(255)"),
+                    ("users", "auth_provider", "VARCHAR(50)"),
+                    ("users", "latitude", "FLOAT"),
+                    ("users", "longitude", "FLOAT"),
+                    ("weather_observations", "zone_id", "VARCHAR(255)"),
+                    ("weather_observations", "latitude", "FLOAT"),
+                    ("weather_observations", "longitude", "FLOAT"),
+                    ("weather_observations", "observed_at", "DATETIME"),
+                    ("weather_observations", "temperature", "FLOAT"),
+                    ("weather_observations", "relative_humidity", "FLOAT"),
+                    ("weather_observations", "rainfall", "FLOAT"),
+                    ("weather_observations", "precipitation_probability", "FLOAT"),
+                    ("weather_observations", "wind_speed", "FLOAT"),
+                    ("weather_observations", "wind_direction", "FLOAT"),
+                    ("weather_observations", "dew_point", "FLOAT"),
+                    ("weather_observations", "soil_moisture", "FLOAT"),
+                    ("weather_observations", "et0", "FLOAT"),
+                    ("weather_observations", "vpd", "FLOAT"),
+                    ("weather_observations", "provider", "VARCHAR(50)"),
+                    ("weather_observations", "model", "VARCHAR(100)"),
+                    ("weather_observations", "source_timestamp", "DATETIME"),
+                    ("weather_forecasts", "zone_id", "VARCHAR(255)"),
+                    ("weather_forecasts", "forecast_time", "DATETIME"),
+                    ("weather_forecasts", "temperature", "FLOAT"),
+                    ("weather_forecasts", "relative_humidity", "FLOAT"),
+                    ("weather_forecasts", "precipitation", "FLOAT"),
+                    ("weather_forecasts", "precipitation_probability", "FLOAT"),
+                    ("weather_forecasts", "rainfall", "FLOAT"),
+                    ("weather_forecasts", "wind_speed", "FLOAT"),
+                    ("weather_forecasts", "wind_direction", "FLOAT"),
+                    ("weather_forecasts", "dew_point", "FLOAT"),
+                    ("weather_forecasts", "soil_moisture", "FLOAT"),
+                    ("weather_forecasts", "et0", "FLOAT"),
+                    ("weather_forecasts", "vpd", "FLOAT"),
+                    ("weather_forecasts", "provider", "VARCHAR(50)"),
+                    ("weather_forecasts", "model", "VARCHAR(100)"),
+                    ("weather_forecasts", "forecast_generated_at", "DATETIME"),
                 ]:
                     try:
-                        await conn.execute(text(f"ALTER TABLE users ADD COLUMN {col_name} {col_type};"))
+                        await conn.execute(text(f"ALTER TABLE {tbl} ADD COLUMN {col_name} {col_type};"))
                     except Exception:
                         pass  # Column already exists
 
-                try:
-                    await conn.execute(text("UPDATE users SET hashed_password = '$2b$12$eImiTXuWVxfM37uY4JANjO56Esk0i0g5iS7n6qf6vN7Z8eG9L' WHERE hashed_password IS NULL;"))
-                except Exception:
-                    pass
+
 
         logger.info("[Database] Verified all schema tables and columns exist.")
 

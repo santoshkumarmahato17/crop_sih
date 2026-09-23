@@ -1433,7 +1433,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     : result?.confidence || 92.8;
                   const confScore = Math.min(99.4, Math.max(10.0, rawConf));
                   const cropName =
-                    detectedCropInfo?.crop || result?.crop || (selectedCrop === 'yolo' ? 'Tomato' : selectedCrop.toUpperCase());
+                    result?.crop_name || detectedCropInfo?.crop || result?.crop || (selectedCrop === 'yolo' ? 'Not identified' : selectedCrop ? selectedCrop.charAt(0).toUpperCase() + selectedCrop.slice(1) : 'Not identified');
                   const detections = allDetections;
                   const severityLevel =
                     yoloResult?.severity_level || result?.severity || (confScore > 80 ? 'Moderate' : 'Mild');

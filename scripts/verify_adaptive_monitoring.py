@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 17 Risk-Adaptive Monitoring Verification Script.
+KISAN SATHI — Step 17 Risk-Adaptive Monitoring Verification Script.
 Validates:
 1. Dynamic monitoring schedule adjustment based on multi-factor risk
 2. Prompt benchmark scenario:
@@ -83,7 +83,7 @@ def test_configurable_policy_tiers() -> bool:
 
 def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 17 Risk-Adaptive Monitoring Verification")
+    print("KISAN SATHI: Step 17 Risk-Adaptive Monitoring Verification")
     print("==========================================================")
 
     b_ok = test_prompt_benchmark_scenario()

@@ -34,6 +34,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Initialize database tables and initial dataset
     await init_db()
 
+    # Run authentication system & database health verification
+    from app.db.session import AsyncSessionLocal
+    from app.core.health_check import verify_auth_system_health
+    async with AsyncSessionLocal() as db_session:
+        await verify_auth_system_health(db_session)
+
     # Log backend configuration validation status
     google_status = "CONFIGURED" if (settings.GOOGLE_CLIENT_ID and settings.GOOGLE_CLIENT_SECRET) else "MISSING"
     weather_status = "CONFIGURED" if (settings.WEATHER_API_KEY or settings.OPENWEATHERMAP_API_KEY) else "CONFIGURED (Open-Meteo Fallback)"
@@ -44,7 +50,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     )
     sms_status = "CONFIGURED" if sms_configured else "DEVELOPMENT MODE"
 
-    logger.info("=== AGRI SHIELD BACKEND CONFIGURATION VALIDATION ===")
+    logger.info("=== KISAN SATHI BACKEND CONFIGURATION VALIDATION ===")
     logger.info(f"  Google OAuth 2.0 : {google_status}")
     logger.info(f"  Weather Service  : {weather_status}")
     logger.info(f"  SMS OTP Provider : {sms_status}")
@@ -56,11 +62,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 
 def create_application() -> FastAPI:
-    """Application factory for AGRI SHIELD Backend."""
+    """Application factory for KISAN SATHI Backend."""
     app = FastAPI(
-        title="AGRI SHIELD API",
+        title="KISAN SATHI API",
         description=(
-            "Enterprise backend API for AGRI SHIELD: AI-Powered Crop Health Monitoring, "
+            "Enterprise backend API for KISAN SATHI: AI-Powered Crop Health Monitoring, "
             "Disease Early Detection and Spread Intelligence System."
         ),
         version=__version__,
@@ -108,7 +114,7 @@ def create_application() -> FastAPI:
     @app.get("/", tags=["System Landing"])
     async def root():
         return {
-            "system": "AGRI SHIELD",
+            "system": "KISAN SATHI",
             "tagline": "AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System",
             "version": __version__,
             "status": "online",
@@ -121,7 +127,7 @@ def create_application() -> FastAPI:
     async def quick_health():
         return {
             "status": "healthy",
-            "system": "AGRI SHIELD",
+            "system": "KISAN SATHI",
             "version": __version__,
         }
 

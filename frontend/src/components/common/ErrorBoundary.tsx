@@ -20,7 +20,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('AGRI SHIELD Uncaught React Exception:', error, errorInfo);
+    console.error('KISAN SATHI Uncaught React Exception:', error, errorInfo);
   }
 
   public handleReset = () => {

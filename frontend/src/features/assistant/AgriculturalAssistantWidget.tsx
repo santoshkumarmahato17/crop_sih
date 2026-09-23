@@ -42,7 +42,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
   // Movable trigger button position (default bottom-right, respecting mobile nav bar)
   const [position, setPosition] = useState<{ x: number; y: number }>(() => {
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-    const saved = localStorage.getItem('agrishield_assistant_pos');
+    const saved = localStorage.getItem('kisansathi_assistant_pos');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -64,7 +64,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
     {
       id: 'welcome-1',
       sender: 'assistant',
-      text: 'Hello! I am your AgriShield AI Agronomist powered by Google Gemini. Ask any crop question or upload a plant photo to get full diagnosis: Root Cause & Reason, Symptoms, Crop Prevention, and Medicine/Pesticide suggestions.',
+      text: 'Hello! I am your Kisan Sathi AI Agronomist powered by Google Gemini. Ask any crop question or upload a plant photo to get full diagnosis: Root Cause & Reason, Symptoms, Crop Prevention, and Medicine/Pesticide suggestions.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       language: 'en',
     },
@@ -120,7 +120,7 @@ export const AgriculturalAssistantWidget: React.FC = () => {
 
   // Save button position
   useEffect(() => {
-    localStorage.setItem('agrishield_assistant_pos', JSON.stringify(position));
+    localStorage.setItem('kisansathi_assistant_pos', JSON.stringify(position));
   }, [position]);
 
   // ── Drag Logic for Floating Trigger Button ──

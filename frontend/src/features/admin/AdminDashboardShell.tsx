@@ -26,7 +26,7 @@ export const AdminDashboardShell: React.FC = () => {
     {
       id: 'log-1',
       event_type: 'ADMIN_LOGIN',
-      user_email: user?.email || 'admin@agrishield.com',
+      user_email: user?.email || 'admin@kisansathi.com',
       ip_address: '127.0.0.1',
       timestamp: new Date().toLocaleTimeString(),
       details: { role: 'ADMIN', allowlist_verified: true },
@@ -34,7 +34,7 @@ export const AdminDashboardShell: React.FC = () => {
     {
       id: 'log-2',
       event_type: 'LOGIN_SUCCESS',
-      user_email: 'sundaram@gov.agrishield.in',
+      user_email: 'sundaram@gov.kisansathi.in',
       ip_address: '192.168.1.45',
       timestamp: '10 mins ago',
       details: { role: 'GOVERNMENT' },
@@ -42,7 +42,7 @@ export const AdminDashboardShell: React.FC = () => {
     {
       id: 'log-3',
       event_type: 'LOGIN_SUCCESS',
-      user_email: 'ramanathan@agrishield.farm',
+      user_email: 'ramanathan@kisansathi.farm',
       ip_address: '10.0.0.12',
       timestamp: '25 mins ago',
       details: { role: 'FARMER' },

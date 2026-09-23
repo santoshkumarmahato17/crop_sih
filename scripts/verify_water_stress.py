@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 13 Precision Water-Stress Analysis Verification Script.
+KISAN SATHI — Step 13 Precision Water-Stress Analysis Verification Script.
 Validates:
 1. Zonal precision water-stress status categorization (ADEQUATE, MODERATE_STRESS, HIGH_STRESS, POSSIBLE_WATERLOGGING)
 2. Prompt benchmark scenario (Z01 -> Adequate, Z02 -> Adequate, Z03 -> Moderate, Z04 -> High, Z05 -> High)
@@ -50,7 +50,7 @@ def test_waterlogging_and_decision_support() -> bool:
 
 def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 13 Precision Water-Stress Verification")
+    print("KISAN SATHI: Step 13 Precision Water-Stress Verification")
     print("==========================================================")
 
     b_ok = test_prompt_benchmark_scenario()

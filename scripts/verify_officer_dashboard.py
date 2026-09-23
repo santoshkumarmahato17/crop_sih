@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 16 Extension Officer Dashboard & Audited Review Verification Script.
+KISAN SATHI — Step 16 Extension Officer Dashboard & Audited Review Verification Script.
 Validates:
 1. Priority-ranked assigned farm portfolio (CRITICAL, HIGH, MEDIUM, LOW)
 2. Threat metrics (Critical zones, pest hotspots, spread risk, unresolved alerts)
@@ -25,7 +25,7 @@ async def test_extension_officer_workflow():
     print("\n--- 1. Testing Extension Officer Priority Dashboard ---")
     token = create_access_token(
         subject="officer-user-01",
-        email="officer@agrishield.com",
+        email="officer@kisansathi.com",
         role="EXTENSION_OFFICER",
     )
     headers = {"Authorization": f"Bearer {token}"}
@@ -71,7 +71,7 @@ async def test_extension_officer_workflow():
 
 async def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 16 Extension Officer Verification")
+    print("KISAN SATHI: Step 16 Extension Officer Verification")
     print("==========================================================")
 
     o_ok = await test_extension_officer_workflow()

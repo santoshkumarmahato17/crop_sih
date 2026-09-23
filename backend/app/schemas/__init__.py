@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Pydantic Validation & Serialization Schemas Package.
+KISAN SATHI — Pydantic Validation & Serialization Schemas Package.
 """
 
 from app.schemas.common import ApiResponse, PaginatedResponse, StatusMessage

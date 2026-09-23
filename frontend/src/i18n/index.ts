@@ -26,7 +26,7 @@ const dictionaries: Record<SupportedLanguage, any> = {
 
 export function useTranslation() {
   const [currentLanguage, setCurrentLanguageState] = useState<SupportedLanguage>(() => {
-    const saved = localStorage.getItem('agrishield_preferred_lang');
+    const saved = localStorage.getItem('kisansathi_preferred_lang');
     if (saved && (saved === 'en-IN' || saved === 'hi-IN' || saved === 'mr-IN')) {
       return saved as SupportedLanguage;
     }
@@ -47,7 +47,7 @@ export function useTranslation() {
   }, []);
 
   const setLanguage = useCallback((lang: SupportedLanguage) => {
-    localStorage.setItem('agrishield_preferred_lang', lang);
+    localStorage.setItem('kisansathi_preferred_lang', lang);
     setCurrentLanguageState(lang);
     window.dispatchEvent(
       new CustomEvent('agrishield:language_changed', { detail: { language: lang } })

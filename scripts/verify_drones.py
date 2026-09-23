@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 7 Drone Monitoring Management Verification Script.
+KISAN SATHI — Step 7 Drone Monitoring Management Verification Script.
 Validates:
 1. Decoupled DroneProvider interface and MockDroneProvider simulation
 2. Drone model construction with sensors and battery telemetry
@@ -167,7 +167,7 @@ def test_target_zones_flight_corridor_merging() -> bool:
 
 async def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 7 Drone Monitoring Management Verification")
+    print("KISAN SATHI: Step 7 Drone Monitoring Management Verification")
     print("==========================================================")
 
     p_ok = await test_mock_drone_provider()

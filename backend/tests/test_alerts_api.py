@@ -9,10 +9,10 @@ from app.main import app
 async def test_alert_lifecycle_and_notifications():
     """Test alert creation, multi-role retrieval, and notification center acknowledgment."""
     farmer_token = create_access_token(
-        subject="farmer-user-1", email="farmer@agrishield.com", role="FARMER"
+        subject="farmer-user-1", email="farmer@kisansathi.com", role="FARMER"
     )
     admin_token = create_access_token(
-        subject="admin-user-1", email="admin@agrishield.com", role="SYSTEM_ADMIN"
+        subject="admin-user-1", email="admin@kisansathi.com", role="SYSTEM_ADMIN"
     )
 
     headers_farmer = {"Authorization": f"Bearer {farmer_token}"}

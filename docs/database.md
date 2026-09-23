@@ -1,8 +1,8 @@
-# AGRI SHIELD — PostGIS Database Architecture & Data Dictionary
+# KISAN SATHI — PostGIS Database Architecture & Data Dictionary
 
 ## 1. Architectural Overview
 
-**AGRI SHIELD** utilizes **PostgreSQL 16** with the **PostGIS 3.4** spatial engine to manage relational entities, spatial vector boundaries, multi-modal sensor streams, and multi-temporal crop pathology intelligence.
+**KISAN SATHI** utilizes **PostgreSQL 16** with the **PostGIS 3.4** spatial engine to manage relational entities, spatial vector boundaries, multi-modal sensor streams, and multi-temporal crop pathology intelligence.
 
 ### 1.1 Spatial Reference Standard
 - **Standard Storage SRID**: `EPSG:4326` (WGS 84 GPS Coordinates: Longitude, Latitude).

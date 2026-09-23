@@ -5,7 +5,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 
 class Base(DeclarativeBase):
-    """Base declarative class for all AGRI SHIELD database entities."""
+    """Base declarative class for all KISAN SATHI database entities."""
 
     id: Any
     __name__: str

@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-db_path = r"c:\Users\krsan\Desktop\crop\backend\data\test_agrishield.db"
+db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../kisan_sathi.db"))
 if not os.path.exists(db_path):
     print("No SQLite database found.")
 else:

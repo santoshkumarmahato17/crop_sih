@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Authoritative Agricultural Knowledge, IPM Guidance & Verified Video Registry.
+KISAN SATHI — Authoritative Agricultural Knowledge, IPM Guidance & Verified Video Registry.
 Sources recommendations strictly from ICAR, Maharashtra Department of Agriculture,
 and State Agricultural Universities. Provides direct verified video watch links and educational resources.
 """

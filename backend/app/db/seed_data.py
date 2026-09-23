@@ -116,7 +116,7 @@ async def seed_all_data(db: AsyncSession) -> dict:
     # --------------------------------------------------------------------------
     user_farmer = User(
         id=str(uuid.uuid4()),
-        email="farmer@agrishield.internal",
+        email="farmer@kisansathi.internal",
         hashed_password=get_password_hash("FarmerSecurePass123!"),
         full_name="Rajesh Patil",
         phone_number="+919876543210",
@@ -125,7 +125,7 @@ async def seed_all_data(db: AsyncSession) -> dict:
     )
     user_agronomist = User(
         id=str(uuid.uuid4()),
-        email="agronomist@agrishield.internal",
+        email="agronomist@kisansathi.internal",
         hashed_password=get_password_hash("AgroSecurePass123!"),
         full_name="Dr. Priya Sharma",
         phone_number="+919876543211",
@@ -134,14 +134,23 @@ async def seed_all_data(db: AsyncSession) -> dict:
     )
     user_operator = User(
         id=str(uuid.uuid4()),
-        email="pilot@agrishield.internal",
+        email="pilot@kisansathi.internal",
         hashed_password=get_password_hash("PilotSecurePass123!"),
         full_name="Ravi Kumar",
         phone_number="+919876543212",
         is_active=True,
         role_id=roles["admin"].id,
     )
-    db.add_all([user_farmer, user_agronomist, user_operator])
+    user_government = User(
+        id=str(uuid.uuid4()),
+        email="government@kisansathi.internal",
+        hashed_password=get_password_hash("GovOfficialPass123!"),
+        full_name="Dr. Aniket Patil",
+        phone_number="+919876543213",
+        is_active=True,
+        role_id=roles["authority"].id,
+    )
+    db.add_all([user_farmer, user_agronomist, user_operator, user_government])
     await db.flush()
 
     # --------------------------------------------------------------------------
@@ -312,7 +321,7 @@ async def seed_all_data(db: AsyncSession) -> dict:
         id=str(uuid.uuid4()),
         mission_id=mission.id,
         zone_id=zones[0].id,
-        file_path="agrishield-raw-imagery/2026/08/29/DJI_0042_RGB.tif",
+        file_path="kisansathi-raw-imagery/2026/08/29/DJI_0042_RGB.tif",
         image_type=ImageType.RGB,
         capture_time=now - timedelta(days=2, hours=1),
         location=point_wkt(73.8515, 18.5235),

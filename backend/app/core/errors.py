@@ -7,8 +7,8 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from app.core.logging import logger
 
 
-class AgriShieldException(Exception):
-    """Base domain exception for AGRI SHIELD."""
+class KisanSathiException(Exception):
+    """Base domain exception for KISAN SATHI."""
 
     def __init__(self, message: str, status_code: int = 400, details: Optional[Any] = None):
         super().__init__(message)
@@ -17,7 +17,7 @@ class AgriShieldException(Exception):
         self.details = details
 
 
-class EntityNotFoundError(AgriShieldException):
+class EntityNotFoundError(KisanSathiException):
     """Raised when a requested entity does not exist."""
 
     def __init__(self, entity_name: str, entity_id: Any):
@@ -27,7 +27,7 @@ class EntityNotFoundError(AgriShieldException):
         )
 
 
-class SpatialValidationError(AgriShieldException):
+class SpatialValidationError(KisanSathiException):
     """Raised when spatial geometry or CRS validation fails."""
 
     def __init__(self, message: str, details: Optional[Any] = None):
@@ -41,9 +41,9 @@ class SpatialValidationError(AgriShieldException):
 def register_error_handlers(app: FastAPI, debug: bool = False) -> None:
     """Registers standardized JSON error handlers conforming to RFC 7807."""
 
-    @app.exception_handler(AgriShieldException)
-    async def agrishield_exception_handler(
-        request: Request, exc: AgriShieldException
+    @app.exception_handler(KisanSathiException)
+    async def kisansathi_exception_handler(
+        request: Request, exc: KisanSathiException
     ) -> JSONResponse:
         logger.warning(f"Domain error at {request.method} {request.url.path}: {exc.message}")
         origin = request.headers.get("origin")

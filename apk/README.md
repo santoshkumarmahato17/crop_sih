@@ -1,4 +1,4 @@
-# 🌾 AgriShield — Universal Multi-Role Android APK
+# 🌾 Kisan Sathi — Universal Multi-Role Android APK
 
 This APK provides access to all three platform roles (**Farmer**, **Government Official**, and **Administrator**) with a complete step-by-step onboarding, registration, and login flow.
 
@@ -6,9 +6,9 @@ This APK provides access to all three platform roles (**Farmer**, **Government O
 
 ## 📱 APK File Location
 
-- **Direct Download / Install:** [`agrishield-universal-access.apk`](file:///c:/Users/krsan/Desktop/crop/apk/agrishield-universal-access.apk)
-- **Secondary Mirror:** [`agrishield-debug.apk`](file:///c:/Users/krsan/Desktop/crop/apk/agrishield-debug.apk)
-- **Root Directory Mirror:** [`../agrishield-debug.apk`](file:///c:/Users/krsan/Desktop/crop/agrishield-debug.apk)
+- **Direct Download / Install:** [`kisansathi-universal-access.apk`](file:///c:/Users/krsan/Desktop/crop/apk/kisansathi-universal-access.apk)
+- **Secondary Mirror:** [`kisansathi-debug.apk`](file:///c:/Users/krsan/Desktop/crop/apk/kisansathi-debug.apk)
+- **Root Directory Mirror:** [`../kisansathi-debug.apk`](file:///c:/Users/krsan/Desktop/crop/kisansathi-debug.apk)
 - **File Size:** ~14.35 MB
 
 ---
@@ -41,15 +41,15 @@ When you launch the APK on your mobile device, the app guides you through the pr
 
 | Role | Email | Password | Primary Landing Experience |
 |---|---|---|---|
-| 👨‍🌾 **FARMER** | `ramanathan@agrishield.farm` | `FarmerSecure2026!` | Dynamic Farm Health Dashboard, CWSI Water Stress, Satellite Maps |
-| 🏛️ **GOVERNMENT** | `sundaram@gov.agrishield.in` | `GovSecure2026!` | Regional Command Center, Epidemic Heatmaps, Advisory Dispatch |
-| 🛡️ **ADMIN** | `admin@agrishield.com` | `AdminRoot2026!` | Master System Console, AI Model Registry, Drone Fleet Controls |
+| 👨‍🌾 **FARMER** | `ramanathan@kisansathi.farm` | `FarmerSecure2026!` | Dynamic Farm Health Dashboard, CWSI Water Stress, Satellite Maps |
+| 🏛️ **GOVERNMENT** | `sundaram@gov.kisansathi.in` | `GovSecure2026!` | Regional Command Center, Epidemic Heatmaps, Advisory Dispatch |
+| 🛡️ **ADMIN** | `admin@kisansathi.com` | `AdminRoot2026!` | Master System Console, AI Model Registry, Drone Fleet Controls |
 
 ---
 
 ## 🚀 How to Install & Test on Android
 
-1. Transfer the `.apk` file ([`apk/agrishield-universal-access.apk`](file:///c:/Users/krsan/Desktop/crop/apk/agrishield-universal-access.apk)) to your Android phone via USB, WhatsApp, or Google Drive.
+1. Transfer the `.apk` file ([`apk/kisansathi-universal-access.apk`](file:///c:/Users/krsan/Desktop/crop/apk/kisansathi-universal-access.apk)) to your Android phone via USB, WhatsApp, or Google Drive.
 2. Tap on the file in your device file manager.
 3. Allow **"Install from unknown sources"** if prompted.
-4. Launch **AGRI SHIELD** to experience the step-by-step registration, onboarding wizard, or 1-tap role access!
+4. Launch **KISAN SATHI** to experience the step-by-step registration, onboarding wizard, or 1-tap role access!

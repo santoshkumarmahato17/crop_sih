@@ -1,3 +1,3 @@
 """
-AGRI SHIELD — Core Package Initializer.
+KISAN SATHI — Core Package Initializer.
 """

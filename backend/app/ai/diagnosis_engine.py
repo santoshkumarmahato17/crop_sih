@@ -23,7 +23,7 @@ class AgronomicDiagnosisResult:
     recommendations: List[Dict[str, Any]]
     follow_up_monitoring: Dict[str, Any]
     regional_spread_risk: str
-    model_name: str = "AgriShield-SymptomReasoner-v2.0"
+    model_name: str = "Kisan Sathi-SymptomReasoner-v2.0"
     model_version: str = "2.0.0-beta"
     is_prototype: bool = False
 
@@ -388,13 +388,47 @@ class PrototypeDiseaseIdentificationService(DiseaseIdentificationService):
         has_images: bool = False,
     ) -> AgronomicDiagnosisResult:
         
-        normalized_crop = "Tomato"
+        clean_crop = crop_type.strip().title() if crop_type and crop_type.strip() and crop_type.strip().lower() not in ["unknown", "not identified", "crop leaf", ""] else "Not identified"
+        normalized_crop = None
         for key in self.DISEASE_KNOWLEDGE_BASE:
-            if key.lower() in crop_type.lower():
+            if key.lower() in clean_crop.lower() or clean_crop.lower() in key.lower():
                 normalized_crop = key
                 break
 
-        candidates_pool = self.DISEASE_KNOWLEDGE_BASE.get(normalized_crop, self.DISEASE_KNOWLEDGE_BASE["Tomato"])
+        if normalized_crop and normalized_crop in self.DISEASE_KNOWLEDGE_BASE:
+            candidates_pool = self.DISEASE_KNOWLEDGE_BASE[normalized_crop]
+            resolved_crop_name = normalized_crop
+        else:
+            resolved_crop_name = clean_crop
+            candidates_pool = [
+                {
+                    "name": f"{clean_crop} Foliar Spot & Blight",
+                    "triggers": ["Spots", "Browning", "Yellowing", "Necrosis", "Blotches", "Lesions"],
+                    "parts": ["Leaf", "Stem"],
+                    "stages": ["Vegetative", "Flowering", "Fruiting", "Maturity"],
+                    "pathogen": "Fungal",
+                    "base_prob": 0.80,
+                    "urgency": "High",
+                    "desc": f"Foliar necrotic lesions and chlorosis detected on {clean_crop} canopy.",
+                    "recs": [
+                        {"action_type": "IPM", "title": f"Apply Organic Bio-Fungicide for {clean_crop}", "description": "Spray copper-based organic formulation in early morning to inhibit fungal germination.", "priority": "High"},
+                        {"action_type": "Management", "title": "Field Sanitation & Canopy Aeration", "description": "Prune severely affected foliage and ensure adequate spacing.", "priority": "Medium"}
+                    ]
+                },
+                {
+                    "name": f"{clean_crop} Insect Feeding Damage",
+                    "triggers": ["Chewed", "Holes", "Stippling", "Curling"],
+                    "parts": ["Leaf"],
+                    "stages": ["Vegetative", "Flowering"],
+                    "pathogen": "Pest / Insect",
+                    "base_prob": 0.75,
+                    "urgency": "Medium",
+                    "desc": f"Chewing damage and foliar feeding spots observed on {clean_crop} leaves.",
+                    "recs": [
+                        {"action_type": "IPM", "title": "Deploy Neem Oil & Sticky Traps", "description": "Spray 5ml/L cold-pressed neem oil to deter adult chewing pests.", "priority": "High"}
+                    ]
+                }
+            ]
         
         # Calculate matching scores
         scored_candidates = []
@@ -539,7 +573,7 @@ class PrototypeDiseaseIdentificationService(DiseaseIdentificationService):
             recommendations=recommendations,
             follow_up_monitoring=follow_up,
             regional_spread_risk=regional_spread,
-            model_name="AgriShield-SymptomReasoner-v2.0",
+            model_name="Kisan Sathi-SymptomReasoner-v2.0",
             model_version="2.0.0-beta",
             is_prototype=False,
         )

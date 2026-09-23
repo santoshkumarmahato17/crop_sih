@@ -28,6 +28,7 @@ import { TomatoCameraAnalysisPage } from '@/features/detection/TomatoCameraAnaly
 import { SymptomDiseaseIdentificationPage } from '@/features/diagnosis/SymptomDiseaseIdentificationPage';
 import { FarmerCommunityPage } from '@/features/community/FarmerCommunityPage';
 import { FarmsListPage } from '@/features/farms/FarmsListPage';
+import { CreateFarmPage } from '@/features/farms/CreateFarmPage';
 import { FarmDetailsPage } from '@/features/farms/FarmDetailsPage';
 import { EditFarmPage } from '@/features/farms/EditFarmPage';
 import { DronesListPage } from '@/features/drones/DronesListPage';
@@ -430,10 +431,60 @@ export const AppRoutes: React.FC = () => {
 
         {/* Spatial Field Map & Precision Monitoring */}
         <Route
+          path="farms"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <FarmsListPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
           path="farms/list"
           element={
             <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
               <FarmsListPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="field-map"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'GOVERNMENT', 'ADMIN']}>
+              <FarmsListPage />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* Add / Create Farm Routes */}
+        <Route
+          path="farms/new"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <CreateFarmPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="farms/create"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <CreateFarmPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="add-farm"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <CreateFarmPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path="onboarding/create-field"
+          element={
+            <RoleProtectedRoute allowedRoles={['FARMER', 'ADMIN']}>
+              <CreateFarmPage />
             </RoleProtectedRoute>
           }
         />

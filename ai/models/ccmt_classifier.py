@@ -4,9 +4,22 @@ PyTorch Vision Architecture covering 22 pathological conditions across 4 staple 
 """
 
 from typing import Any, Dict, List, Optional, Tuple
-import torch
-import torch.nn as nn
-import torchvision.models as models
+try:
+    import torch
+    import torch.nn as nn
+    import torchvision.models as models
+except ImportError:
+    class _DummyTorch:
+        Tensor = object
+    torch = _DummyTorch()
+    class _DummyModule:
+        def __init__(self, *args, **kwargs): pass
+        def to(self, *args, **kwargs): return self
+        def eval(self, *args, **kwargs): return self
+    class _DummyNN:
+        Module = _DummyModule
+    nn = _DummyNN()
+    models = None
 
 # ------------------------------------------------------------------------------
 # 22 Normalized Class Taxonomy for CCMT Dataset
@@ -413,18 +426,19 @@ class CCMTDiseaseClassifier(nn.Module):
         self.num_classes = num_classes
         self.classes = CCMT_CLASSES
 
-        # MobileNetV3-Small backbone
-        weights = models.MobileNet_V3_Small_Weights.DEFAULT if pretrained_backbone else None
-        self.backbone = models.mobilenet_v3_small(weights=weights)
-
-        # Replace classification head
-        in_features = self.backbone.classifier[0].in_features
-        self.backbone.classifier = nn.Sequential(
-            nn.Linear(in_features, 512),
-            nn.Hardswish(),
-            nn.Dropout(p=0.2),
-            nn.Linear(512, num_classes),
-        )
+        if models is not None:
+            weights = getattr(models, "MobileNet_V3_Small_Weights", None)
+            w_val = weights.DEFAULT if (weights and pretrained_backbone) else None
+            self.backbone = models.mobilenet_v3_small(weights=w_val)
+            in_features = self.backbone.classifier[0].in_features
+            self.backbone.classifier = nn.Sequential(
+                nn.Linear(in_features, 512),
+                nn.Hardswish(),
+                nn.Dropout(p=0.2),
+                nn.Linear(512, num_classes),
+            )
+        else:
+            self.backbone = None
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.backbone(x)

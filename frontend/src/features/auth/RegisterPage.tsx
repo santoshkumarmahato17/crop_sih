@@ -101,13 +101,14 @@ export const RegisterPage: React.FC = () => {
         }
       }, 1000);
     } catch (err: any) {
-      const detail = err?.response?.data?.detail || err?.response?.data?.message;
-      if (typeof detail === 'string') {
-        setErrorMsg(detail);
-      } else if (Array.isArray(detail) && detail.length > 0) {
-        setErrorMsg(detail[0]?.msg || 'Registration failed. Please check your details.');
+      const data = err?.response?.data;
+      const msg = data?.message || (typeof data?.detail === 'string' ? data?.detail : null);
+      if (typeof msg === 'string' && msg.trim()) {
+        setErrorMsg(msg);
+      } else if (Array.isArray(data?.detail) && data.detail.length > 0) {
+        setErrorMsg(data.detail[0]?.msg || data.detail[0]?.message || 'Registration failed. Please check your input fields.');
       } else {
-        setErrorMsg('Registration failed. Please check your details and try again.');
+        setErrorMsg(err?.message || 'Registration failed. Please check your details and try again.');
       }
     }
   };
@@ -269,7 +270,7 @@ export const RegisterPage: React.FC = () => {
                 autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={role === 'FARMER' ? 'grower@agrishield.farm' : 'officer@gov.agrishield.in'}
+                placeholder={role === 'FARMER' ? 'grower@kisansathi.farm' : 'officer@gov.kisansathi.in'}
                 className="w-full bg-surface-light dark:bg-surface-darkBg/80 border border-agri-200/50 dark:border-agri-700/25 rounded-xl pl-10 pr-3.5 py-2.5 text-xs text-agri-900 dark:text-agri-100 placeholder-agri-400/50 focus:outline-none focus:border-agri-500 font-semibold"
               />
             </div>

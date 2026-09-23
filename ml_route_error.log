@@ -1,11 +1,8 @@
 Traceback (most recent call last):
-  File "C:\Users\krsan\Desktop\crop\backend\app\main.py", line 117, in create_application
+  File "C:\Users\shivakumar\OneDrive\Desktop\SIH26\crop_sih\backend\app\main.py", line 144, in create_application
     from ml.api.app import app as ml_app
-  File "C:\Users\krsan\Desktop\crop\ml\api\app.py", line 37, in <module>
-    from ml.src.predict_rice import get_rice_predictor
-  File "C:\Users\krsan\Desktop\crop\ml\src\predict_rice.py", line 14, in <module>
-    import tensorflow as tf
-  File "C:\Users\krsan\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\tensorflow\__init__.py", line 40, in <module>
-    from tensorflow.python import pywrap_tensorflow as _pywrap_tensorflow  # pylint: disable=unused-import
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-ModuleNotFoundError: No module named 'tensorflow.python'
+  File "C:\Users\shivakumar\OneDrive\Desktop\SIH26\crop_sih\ml\api\app.py", line 22, in <module>
+    from ml.src.predict import get_tomato_predictor
+  File "C:\Users\shivakumar\OneDrive\Desktop\SIH26\crop_sih\ml\src\predict.py", line 12, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'

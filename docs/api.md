@@ -1,7 +1,7 @@
-# AGRI SHIELD — API Documentation
+# KISAN SATHI — API Documentation
 
 ## Base URL
-- Production: `https://api.agrishield.internal/api/v1`
+- Production: `https://api.kisansathi.internal/api/v1`
 - Local Development: `http://localhost:8000/api/v1`
 
 ## Authentication

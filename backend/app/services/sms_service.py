@@ -44,7 +44,7 @@ def normalize_indian_phone(phone: str) -> str:
 
 class SMSService:
     """
-    AGRI SHIELD SMS Delivery Engine.
+    KISAN SATHI SMS Delivery Engine.
     Handles SMS OTP dispatching across Twilio and Fast2SMS providers.
     """
 
@@ -61,7 +61,7 @@ class SMSService:
             return {"sent": False, "reason": "INVALID_PHONE", "message": str(e)}
 
         phone_10_digits = normalized_phone.replace("+91", "")
-        message_body = f"[AGRI SHIELD] Your verification code is: {otp_code}. Valid for 5 minutes."
+        message_body = f"[KISAN SATHI] Your verification code is: {otp_code}. Valid for 5 minutes."
 
         # 1. Try Twilio if credentials configured
         if (

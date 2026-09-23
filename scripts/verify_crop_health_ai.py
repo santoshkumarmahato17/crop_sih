@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 9 Crop Health Analysis Foundation Verification Script.
+KISAN SATHI — Step 9 Crop Health Analysis Foundation Verification Script.
 Validates:
 1. Modular CropHealthModel abstract interface and swappable factory
 2. DemoCropHealthModel bounded inference ([0.0, 1.0])
@@ -81,7 +81,7 @@ async def test_prototype_disclaimer() -> bool:
 
 async def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 9 Crop Health Analysis AI Foundation")
+    print("KISAN SATHI: Step 9 Crop Health Analysis AI Foundation")
     print("==========================================================")
 
     m_ok = await test_ai_model_interface_and_bounds()

@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — CLI Demonstration for Crop Pathology Vision Model.
+KISAN SATHI — CLI Demonstration for Crop Pathology Vision Model.
 Executes diagnosis on a test image and displays structured JSON, risk advisory,
 and saves a Grad-CAM lesion explainability overlay.
 """
@@ -55,7 +55,7 @@ def main():
         image_path = create_sample_leaf_image("sample_leaf.jpg")
 
     print("=" * 70)
-    print(" AGRI SHIELD — CROP HEALTH VISION AI INFERENCE")
+    print(" KISAN SATHI — CROP HEALTH VISION AI INFERENCE")
     print("=" * 70)
     print(f"Input Image:   {image_path}")
     print(f"Backbone:      {args.backbone.upper()}")

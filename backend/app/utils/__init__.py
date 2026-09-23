@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — General & Geospatial Utilities Package.
+KISAN SATHI — General & Geospatial Utilities Package.
 """
 
 from app.utils.geo import calculate_bounding_box, format_hectares

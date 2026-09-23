@@ -81,7 +81,7 @@ export const LocationPermissionModal: React.FC<LocationPermissionModalProps> = (
             Location Permission Required
           </h2>
           <p className="text-xs text-agri-600 dark:text-agri-300 font-medium leading-relaxed">
-            AGRI SHIELD needs your location to provide local crop-health alerts, weather information and farm-level recommendations.
+            KISAN SATHI needs your location to provide local crop-health alerts, weather information and farm-level recommendations.
           </p>
         </div>
 

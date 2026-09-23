@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 20 Agricultural AI Assistant Verification Script.
+KISAN SATHI — Step 20 Agricultural AI Assistant Verification Script.
 Validates:
 1. All 7 User Prompt Benchmark Questions:
    - "Why is Zone Z17 red?"
@@ -33,7 +33,7 @@ from app.main import app
 async def test_assistant_benchmark_questions():
     print("\n--- 1. Testing Agricultural AI Assistant Benchmark Questions ---")
     farmer_token = create_access_token(
-        subject="farmer-101", email="farmer@agrishield.com", role="FARMER"
+        subject="farmer-101", email="farmer@kisansathi.com", role="FARMER"
     )
     headers = {"Authorization": f"Bearer {farmer_token}"}
 
@@ -90,7 +90,7 @@ async def test_assistant_benchmark_questions():
 
 async def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 20 Agricultural AI Assistant")
+    print("KISAN SATHI: Step 20 Agricultural AI Assistant")
     print("==========================================================")
 
     a_ok = await test_assistant_benchmark_questions()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 6 Intelligent Farm Zoning Verification Script.
+KISAN SATHI — Step 6 Intelligent Farm Zoning Verification Script.
 Validates:
 1. Grid zoning on standard rectangular farm boundaries
 2. Grid zoning on irregular / concave / L-shaped agricultural boundaries
@@ -114,7 +114,7 @@ def test_meter_grid_zoning() -> bool:
 
 def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 6 Intelligent Farm Zoning Verification")
+    print("KISAN SATHI: Step 6 Intelligent Farm Zoning Verification")
     print("==========================================================")
 
     r_ok = test_regular_boundary_zoning()

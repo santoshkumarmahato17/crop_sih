@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Multilingual Agricultural Advisories REST API Endpoints.
+KISAN SATHI — Multilingual Agricultural Advisories REST API Endpoints.
 Provides endpoints for querying localized farmer advisories, generating dynamic
 multi-signal risk advisories, and updating user language preference.
 """

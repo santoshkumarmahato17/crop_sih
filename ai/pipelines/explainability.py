@@ -9,9 +9,17 @@ import base64
 from typing import Optional, Tuple, Union
 import numpy as np
 from PIL import Image
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
+try:
+    import torch
+    import torch.nn as nn
+    import torch.nn.functional as F
+except ImportError:
+    class _DummyTorch: Tensor = object
+    torch = _DummyTorch()
+    class _DummyModule: pass
+    class _DummyNN: Module = _DummyModule
+    nn = _DummyNN()
+    F = None
 
 from ai.models.crop_classifier import CropDiseaseNet
 

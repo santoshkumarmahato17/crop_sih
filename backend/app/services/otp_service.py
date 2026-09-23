@@ -25,7 +25,7 @@ class ResetTokenRecord:
 
 class OTPService:
     """
-    AGRI SHIELD OTP & Reset Token Security Service.
+    KISAN SATHI OTP & Reset Token Security Service.
     Manages short-lived OTP verification and password reset authorization tokens.
     """
 

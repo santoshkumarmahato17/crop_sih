@@ -10,7 +10,7 @@ async def test_extension_officer_dashboard_and_validation():
     """Test Extension Officer prioritized dashboard and audited validation review."""
     token = create_access_token(
         subject="officer-user-01",
-        email="officer@agrishield.com",
+        email="officer@kisansathi.com",
         role="EXTENSION_OFFICER",
     )
     headers = {"Authorization": f"Bearer {token}"}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AGRI SHIELD — Step 11 Crop Health Risk Engine Verification Script.
+KISAN SATHI — Step 11 Crop Health Risk Engine Verification Script.
 Validates:
 1. Explainable multi-factor risk calculations (Disease, Pest, Water Stress, Overall)
 2. Exact $+/-$ point attribution and transparent factor descriptions
@@ -75,7 +75,7 @@ def test_low_risk_benchmark() -> bool:
 
 def main():
     print("==========================================================")
-    print("AGRI SHIELD: Step 11 Crop Health Risk Engine Verification")
+    print("KISAN SATHI: Step 11 Crop Health Risk Engine Verification")
     print("==========================================================")
 
     u_ok = test_user_prompt_explainability()

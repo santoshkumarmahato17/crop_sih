@@ -1,5 +1,5 @@
 """
-AGRI SHIELD — Follow-up Monitoring & Closed-Loop Health Tracking REST Endpoints.
+KISAN SATHI — Follow-up Monitoring & Closed-Loop Health Tracking REST Endpoints.
 """
 
 from typing import List, Optional
@@ -164,17 +164,13 @@ async def get_monitoring_statistics(
     Returns aggregated monitoring metrics and coverage percentage.
     """
     return MonitoringStatsResponse(
-        total_tasks=12,
-        scheduled_tasks=5,
-        in_progress_tasks=3,
-        completed_tasks=4,
-        escalated_tasks=1,
-        overdue_tasks=0,
-        average_resolution_days=2.5,
-        field_coverage_percent=88.5,
-        improved_percentage=75.0,
-        worsened_percentage=8.3,
-        stable_percentage=16.7,
+        scheduled=5,
+        in_progress=3,
+        completed=4,
+        overdue=0,
+        critical=1,
+        hotspots_under_monitoring=2,
+        monitoring_coverage_pct=88.5,
     )
 
 

@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 
 class BaseMLModel(ABC):
-    """Abstract interface for all AGRI SHIELD machine learning inference pipelines."""
+    """Abstract interface for all KISAN SATHI machine learning inference pipelines."""
 
     def __init__(self, model_path: Optional[str] = None, device: str = "cpu"):
         self.model_path = model_path

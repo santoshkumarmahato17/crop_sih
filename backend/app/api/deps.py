@@ -46,7 +46,7 @@ async def get_current_user(
                 r_enum = RoleType.GOVERNMENT
         return User(
             id=f"demo-{raw_role.lower()}-01",
-            email=f"{raw_role.lower()}@agrishield.local",
+            email=f"{raw_role.lower()}@kisansathi.local",
             hashed_password="demo-hash-not-real",
             full_name=f"Demo {raw_role.capitalize()} User",
             role=r_enum,
@@ -86,7 +86,7 @@ async def get_current_user(
 
         user = User(
             id=user_id,
-            email=payload.get("email", "farmer@agrishield.com"),
+            email=payload.get("email", "farmer@kisansathi.com"),
             hashed_password="transient-hash",
             full_name="Agricultural Operator",
             role=r_enum,
@@ -119,7 +119,7 @@ async def get_optional_current_user(
     if not token_header or not token_header.credentials:
         return User(
             id="farmer-guest-01",
-            email="farmer@agrishield.com",
+            email="farmer@kisansathi.com",
             hashed_password="transient-guest-hash",
             full_name="Farm Operator",
             role=RoleType.FARMER,
@@ -130,7 +130,7 @@ async def get_optional_current_user(
     except Exception:
         return User(
             id="farmer-guest-01",
-            email="farmer@agrishield.com",
+            email="farmer@kisansathi.com",
             hashed_password="transient-guest-hash",
             full_name="Farm Operator",
             role=RoleType.FARMER,
