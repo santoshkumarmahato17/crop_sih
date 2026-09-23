@@ -200,6 +200,7 @@ export const FarmerDashboardPage: React.FC = () => {
   const [realWeather, setRealWeather] = useState<RealWeatherCurrentResponse | null>(null);
   const [realForecast, setRealForecast] = useState<RealForecastResponse | null>(null);
   const [sprayWindow, setSprayWindow] = useState<SprayWindowResponse | null>(null);
+  const geoCoordsRef = useRef<{ lat?: number; lon?: number; denied?: boolean }>({});
 
   useEffect(() => {
     loadInitialData();
@@ -220,25 +221,34 @@ export const FarmerDashboardPage: React.FC = () => {
       let lat: number | undefined;
       let lon: number | undefined;
       
-      // Attempt geolocation if supported
-      if ('geolocation' in navigator) {
-        try {
-          const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, { 
-                timeout: 10000,
-                enableHighAccuracy: true 
+      // Attempt geolocation if supported and not previously denied
+      if (!geoCoordsRef.current.denied) {
+        if (geoCoordsRef.current.lat !== undefined && geoCoordsRef.current.lon !== undefined) {
+          lat = geoCoordsRef.current.lat;
+          lon = geoCoordsRef.current.lon;
+        } else if ('geolocation' in navigator) {
+          try {
+            const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, { 
+                  timeout: 5000,
+                  maximumAge: 600000,
+                  enableHighAccuracy: false 
+              });
             });
-          });
-          lat = pos.coords.latitude;
-          lon = pos.coords.longitude;
-          // Show formatted coords now; will be replaced by resolved city name below
-          setUserLocationName(
-            `${lat >= 0 ? lat.toFixed(4) + '°N' : Math.abs(lat).toFixed(4) + '°S'}, ` +
-            `${lon >= 0 ? lon.toFixed(4) + '°E' : Math.abs(lon).toFixed(4) + '°W'}`
-          );
-        } catch (e: any) {
-          console.warn('Geolocation error:', e);
-          // Default to farm region when GPS is denied/unavailable
+            lat = pos.coords.latitude;
+            lon = pos.coords.longitude;
+            geoCoordsRef.current = { lat, lon, denied: false };
+            setUserLocationName(
+              `${lat >= 0 ? lat.toFixed(4) + '°N' : Math.abs(lat).toFixed(4) + '°S'}, ` +
+              `${lon >= 0 ? lon.toFixed(4) + '°E' : Math.abs(lon).toFixed(4) + '°W'}`
+            );
+          } catch (e: any) {
+            // Record denial/failure so we don't spam repeated geolocation requests
+            geoCoordsRef.current.denied = true;
+            setUserLocationName('Coimbatore, Tamil Nadu');
+          }
+        } else {
+          geoCoordsRef.current.denied = true;
           setUserLocationName('Coimbatore, Tamil Nadu');
         }
       } else {

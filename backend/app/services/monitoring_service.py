@@ -7,7 +7,8 @@ reassessment, advisory generation, and audit logging.
 import uuid
 from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, desc, func, and_
 
 from app.models.monitoring import (
@@ -188,8 +189,8 @@ class FollowupMonitoringService:
         return task
 
     @staticmethod
-    def submit_monitoring_result(
-        db: Session,
+    async def submit_monitoring_result(
+        db: AsyncSession,
         task_id: str,
         result_in: MonitoringResultCreate,
         current_user: User,
@@ -198,14 +199,20 @@ class FollowupMonitoringService:
         Submits follow-up observation result, executes before-vs-after comparison,
         updates task to COMPLETED, and triggers escalation / advisories if required.
         """
-        task = FollowupMonitoringService.get_monitoring_task(db, task_id)
+        stmt = (
+            select(MonitoringTask)
+            .options(selectinload(MonitoringTask.results))
+            .where(MonitoringTask.id == task_id)
+        )
+        task_res = await db.execute(stmt)
+        task = task_res.scalar_one_or_none()
         if not task:
             raise ValueError(f"Monitoring task {task_id} not found")
 
         # 1. Determine Baseline / Previous Metrics
-        prev_health = task.baseline_health_score if task.baseline_health_score is not None else 72.0
-        prev_disease = task.baseline_disease_risk if task.baseline_disease_risk is not None else 58.0
-        prev_area = task.baseline_affected_area_ha if task.baseline_affected_area_ha is not None else 1.0
+        prev_health = task.baseline_health_score if task.baseline_health_score is not None else 70.0
+        prev_disease = task.baseline_disease_risk if task.baseline_disease_risk is not None else 50.0
+        prev_area = task.baseline_affected_area_ha if task.baseline_affected_area_ha is not None else 0.5
 
         # If previous results exist on task, use the most recent result as baseline
         if task.results and len(task.results) > 0:
@@ -227,6 +234,7 @@ class FollowupMonitoringService:
         # 3. Create Monitoring Result Record
         now_utc = datetime.now(timezone.utc)
         result_record = MonitoringResult(
+            id=str(uuid.uuid4()),
             monitoring_task_id=task.id,
             farm_id=task.farm_id,
             zone_id=task.zone_id,
@@ -246,10 +254,11 @@ class FollowupMonitoringService:
         )
 
         db.add(result_record)
-        db.flush()
+        await db.flush()
 
         # 4. Create Monitoring Comparison Record
         comparison_record = MonitoringComparison(
+            id=str(uuid.uuid4()),
             monitoring_result_id=result_record.id,
             previous_observation_id=task.trigger_entity_id,
             current_observation_id=result_in.observation_id,
@@ -279,8 +288,15 @@ class FollowupMonitoringService:
         )
         task.completed_at = now_utc
 
-        db.commit()
-        db.refresh(result_record)
+        await db.commit()
+        
+        res_stmt = (
+            select(MonitoringResult)
+            .options(selectinload(MonitoringResult.comparisons))
+            .where(MonitoringResult.id == result_record.id)
+        )
+        final_res = await db.execute(res_stmt)
+        return final_res.scalar_one()
 
         # 6. Audit Logging
         audit_res = AuditLog(

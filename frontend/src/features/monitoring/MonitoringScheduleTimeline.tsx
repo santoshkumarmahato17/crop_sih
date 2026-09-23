@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import {
   Calendar,
   Clock,
@@ -51,17 +51,22 @@ export const MonitoringScheduleTimeline: React.FC<MonitoringScheduleTimelineProp
     }
   };
 
-  // Group tasks by timeline horizon
+  // Group tasks by timeline horizon using explicit local YYYY-MM-DD comparison
   const todayTasks = tasks.filter((t) => {
     const d = new Date(t.scheduled_at);
     const now = new Date();
-    return d.toDateString() === now.toDateString() || d < now;
+    const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const nowStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    return dStr === nowStr || d <= now;
   });
 
   const tomorrowTasks = tasks.filter((t) => {
+    if (todayTasks.includes(t)) return false;
     const d = new Date(t.scheduled_at);
     const tomorrow = new Date(Date.now() + 24 * 3600 * 1000);
-    return d.toDateString() === tomorrow.toDateString();
+    const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const tomStr = `${tomorrow.getFullYear()}-${String(tomorrow.getMonth() + 1).padStart(2, '0')}-${String(tomorrow.getDate()).padStart(2, '0')}`;
+    return dStr === tomStr;
   });
 
   const upcomingTasks = tasks.filter(

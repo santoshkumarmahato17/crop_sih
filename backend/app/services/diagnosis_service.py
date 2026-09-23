@@ -160,16 +160,18 @@ class DiagnosisService:
         }
         severity_enum = sev_map.get(request.severity.upper(), SymptomSeverity.MEDIUM)
 
+        confidence_val = getattr(ai_result, 'disease_confidence', getattr(ai_result, 'confidence', 0.95))
+
         # 7. Persist DiagnosisAnalysis in Database
         analysis_record = DiagnosisAnalysis(
             id=str(uuid.uuid4()),
             user_id=current_user.id,
             farm_id=farm.id,
             zone_id=zone.id,
-            crop_type=request.crop_type,
+            farmer_selected_crop=request.crop_type,
             growth_stage=request.growth_stage,
             plant_parts=request.plant_parts,
-            severity=severity_enum,
+            farmer_reported_severity=severity_enum,
             distribution=request.distribution,
             symptom_start_date=request.symptom_start_date,
             farmer_notes=request.farmer_notes,
@@ -181,7 +183,7 @@ class DiagnosisService:
             recent_unusual_weather=request.recent_unusual_weather,
             other_observations=request.other_observations,
             status=DiagnosisStatus(ai_result.status),
-            ai_confidence=ai_result.confidence,
+            ai_confidence=confidence_val,
             ai_model_name=ai_result.model_name,
             ai_model_version=ai_result.model_version,
             is_prototype=ai_result.is_prototype,
@@ -234,7 +236,7 @@ class DiagnosisService:
         ]
 
         from app.models.validation import ExpertValidationRequest, ValidationPriority
-        val_priority = ValidationPriority.HIGH if (ai_result.confidence < 0.85 or severity_enum in [SymptomSeverity.HIGH, SymptomSeverity.SEVERE]) else ValidationPriority.MEDIUM
+        val_priority = ValidationPriority.HIGH if (confidence_val < 0.85 or severity_enum in [SymptomSeverity.HIGH, SymptomSeverity.SEVERE]) else ValidationPriority.MEDIUM
 
         val_req = ExpertValidationRequest(
             id=str(uuid.uuid4()),
@@ -246,9 +248,9 @@ class DiagnosisService:
             requested_by=current_user.id,
             priority=val_priority,
             status=ValidationRequestStatus.PENDING,
-            reason=f"Automatic validation case generated from AI analysis of {ai_result.primary_condition} ({int(ai_result.confidence * 100)}% AI confidence).",
+            reason=f"Automatic validation case generated from AI analysis of {ai_result.primary_condition} ({int(confidence_val * 100)}% AI confidence).",
             suspected_condition=ai_result.primary_condition,
-            ai_confidence=ai_result.confidence,
+            ai_confidence=confidence_val,
             crop_growth_stage=request.growth_stage,
             symptoms=request.symptoms,
             image_urls=image_urls_list,
@@ -256,6 +258,56 @@ class DiagnosisService:
         )
         self.db.add(val_req)
         analysis_record.validation_status = ValidationRequestStatus.PENDING
+
+        # 11. Automatically Create Follow-Up Monitoring Task in Database Queue
+        from app.models.monitoring import (
+            MonitoringTask,
+            MonitoringTaskStatus,
+            MonitoringPriority,
+            MonitoringTriggerType,
+            MonitoringMethod,
+        )
+        from datetime import timedelta
+
+        priority_map = {
+            SymptomSeverity.LOW: MonitoringPriority.LOW,
+            SymptomSeverity.MEDIUM: MonitoringPriority.MEDIUM,
+            SymptomSeverity.HIGH: MonitoringPriority.HIGH,
+            SymptomSeverity.SEVERE: MonitoringPriority.CRITICAL,
+        }
+        mon_priority = priority_map.get(severity_enum, MonitoringPriority.MEDIUM)
+
+        now_utc = datetime.now(timezone.utc)
+        due_days = 1 if mon_priority == MonitoringPriority.CRITICAL else (2 if mon_priority == MonitoringPriority.HIGH else 4)
+        due_at = now_utc + timedelta(days=due_days)
+
+        task_code = f"MT-{now_utc.strftime('%Y%m')}-{uuid.uuid4().hex[:4].upper()}"
+
+        baseline_health = round(max(10.0, (1.0 - (confidence_val * 0.4)) * 100), 1)
+        baseline_disease = round(confidence_val * 100, 1)
+
+        monitoring_task = MonitoringTask(
+            id=str(uuid.uuid4()),
+            task_code=task_code,
+            farm_id=farm.id,
+            zone_id=zone.id if zone else None,
+            crop_id=None,
+            trigger_type=MonitoringTriggerType.DISEASE_RISK,
+            trigger_entity_id=analysis_record.id,
+            suspected_condition=ai_result.primary_condition,
+            priority=mon_priority,
+            monitoring_method=MonitoringMethod.FARMER_IMAGE,
+            status=MonitoringTaskStatus.SCHEDULED,
+            scheduled_at=now_utc,
+            due_at=due_at,
+            target_zone_ids=[zone.id] if zone else [],
+            instructions=f"Follow-up crop health inspection for {ai_result.primary_condition} on {request.crop_type}.",
+            created_by=current_user.id,
+            baseline_health_score=baseline_health,
+            baseline_disease_risk=baseline_disease,
+            baseline_affected_area_ha=0.5,
+        )
+        self.db.add(monitoring_task)
 
         await self.db.commit()
         await self.db.refresh(analysis_record)

@@ -1,6 +1,6 @@
 import io
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 from PIL import Image
 from fastapi import HTTPException, status
@@ -372,6 +372,42 @@ class CropHealthAnalysisService:
                 observation_date=now,
             )
             db.add(disease_obs)
+
+        if farm_id and not is_healthy:
+            from app.models.monitoring import (
+                MonitoringTask,
+                MonitoringTaskStatus,
+                MonitoringPriority,
+                MonitoringTriggerType,
+                MonitoringMethod,
+            )
+            p_level = severity_eval.get("level", "MEDIUM")
+            priority_val = MonitoringPriority.CRITICAL if p_level in ("HIGH", "CRITICAL") else MonitoringPriority.MEDIUM
+            due_hours = 24 if priority_val == MonitoringPriority.CRITICAL else 48
+            due_at = now + timedelta(hours=due_hours)
+            task_code = f"MT-{now.strftime('%Y%m')}-{uuid.uuid4().hex[:4].upper()}"
+
+            mon_task = MonitoringTask(
+                id=str(uuid.uuid4()),
+                task_code=task_code,
+                farm_id=farm_id,
+                zone_id=zone_id,
+                trigger_type=MonitoringTriggerType.DISEASE_RISK,
+                trigger_entity_id=disease_obs_id or health_obs_id,
+                suspected_condition=detected_condition,
+                priority=priority_val,
+                monitoring_method=MonitoringMethod.FARMER_IMAGE,
+                status=MonitoringTaskStatus.SCHEDULED,
+                scheduled_at=now,
+                due_at=due_at,
+                target_zone_ids=[zone_id] if zone_id else [],
+                instructions=f"Follow-up crop health inspection for {detected_condition} on {final_crop_name}.",
+                created_by=current_user.id if current_user else None,
+                baseline_health_score=round(prediction.health_score * 100, 1),
+                baseline_disease_risk=round(prediction.confidence * 100, 1),
+                baseline_affected_area_ha=round(affected_area_pct / 100.0, 2),
+            )
+            db.add(mon_task)
 
         try:
             await db.commit()

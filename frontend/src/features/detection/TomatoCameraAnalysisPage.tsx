@@ -134,8 +134,27 @@ interface YOLOSampleItem {
   relative_path: string;
 }
 
-type DiagnosticMode = 'apple' | 'cashew' | 'cassava' | 'maize' | 'orange' | 'tomato' | 'yolo' | 'soybean' | 'rice';
+type DiagnosticMode = 'apple' | 'cashew' | 'cassava' | 'chilli' | 'cotton' | 'maize' | 'orange' | 'rice' | 'soybean' | 'tomato' | 'yolo';
 type VisualLayer = 'original' | 'yolo_bbox' | 'segmentation' | 'spectral_heatmap';
+
+export const CROP_OPTIONS: { id: DiagnosticMode; name: string; icon: string }[] = [
+  { id: 'rice', name: 'Rice', icon: '🌾' },
+  { id: 'cotton', name: 'Cotton', icon: '☁️' },
+  { id: 'soybean', name: 'Soybean', icon: '🌱' },
+  { id: 'maize', name: 'Maize', icon: '🌽' },
+  { id: 'chilli', name: 'Chilli', icon: '🌶️' },
+  { id: 'tomato', name: 'Tomato', icon: '🍅' },
+  { id: 'cassava', name: 'Cassava', icon: '🍃' },
+  { id: 'apple', name: 'Apple', icon: '🍎' },
+  { id: 'cashew', name: 'Cashew', icon: '🌰' },
+  { id: 'orange', name: 'Orange', icon: '🍊' },
+];
+
+const COTTON_CLASSES = ['Bacterial Blight', 'Curl Virus', 'Fussarium Wilt', 'Healthy'];
+export const COTTON_DISEASES = ['Bacterial Blight', 'Curl Virus', 'Fussarium Wilt'];
+
+const CHILLI_CLASSES = ['Anthracnose', 'Leaf Curl', 'Healthy', 'Whitefly Damage'];
+export const CHILLI_DISEASES = ['Anthracnose', 'Leaf Curl', 'Whitefly Damage'];
 
 const SOYBEAN_CLASSES = [
   'Bacterial Pustule',
@@ -229,6 +248,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // Diagnostic mode: Cassava, Maize, Tomato, Apple, Cashew, YOLO, Soybean
   const [selectedCrop, setSelectedCrop] = useState<DiagnosticMode>('cassava');
@@ -279,6 +299,16 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     return () => clearInterval(interval);
   }, [isAnalyzing]);
 
+  // List of non-agricultural general object labels to exclude
+  const BANNED_NON_AGRICULTURAL_KEYWORDS = [
+    'person', 'human', 'face', 'hand', 'head', 'body', 'man', 'woman', 'child',
+    'chair', 'table', 'couch', 'sofa', 'wall', 'phone', 'mobile phone',
+    'cell phone', 'laptop', 'tv', 'monitor', 'keyboard', 'mouse', 'bottle',
+    'cup', 'fork', 'knife', 'spoon', 'bowl', 'book', 'clock', 'vase',
+    'scissors', 'car', 'truck', 'bus', 'bicycle', 'motorcycle', 'dog',
+    'cat', 'horse', 'sheep', 'cow', 'bird', 'background'
+  ];
+
   // Post-processed & NMS-filtered detections
   const getActiveDetections = (): YOLODetectionItem[] => {
     let raw: YOLODetectionItem[] = [];
@@ -289,7 +319,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       raw = result.yolo.detections;
     } else if (result?.detections && result.detections.length > 0) {
       raw = result.detections;
-    } else if (result && result.prediction && result.prediction !== 'Healthy') {
+    } else if (result && result.prediction && result.prediction !== 'Healthy' && result.prediction !== 'INSUFFICIENT EVIDENCE') {
       const label = result.prediction;
       const conf = Math.round((result.confidence || 94.2) * 10) / 10;
       raw = [
@@ -308,10 +338,20 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
       ];
     }
 
-    // Filter by confidence (>= 50.0%) and background boundary bounds
+    // Filter by confidence (>= 50.0%), boundary bounds, AND non-agricultural object exclusion
     const filtered = raw.filter((det) => {
       const conf = det.confidence || 0;
       if (conf < 50.0) return false;
+
+      const labelLower = (det.label || '').toLowerCase().trim();
+      
+      const isBanned = BANNED_NON_AGRICULTURAL_KEYWORDS.some((keyword) => {
+        if (labelLower === keyword) return true;
+        if (labelLower.includes(` ${keyword}`) || labelLower.includes(`${keyword} `)) return true;
+        return false;
+      });
+
+      if (isBanned) return false;
 
       if (det.bbox_normalized) {
         const [x, y, w, h] = det.bbox_normalized;
@@ -401,65 +441,118 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
     });
   };
 
-  const activeClasses =
-    selectedCrop === 'apple'
-      ? APPLE_CLASSES
-      : selectedCrop === 'orange'
-      ? ORANGE_CLASSES
-      : selectedCrop === 'rice'
-      ? RICE_CLASSES
-      : selectedCrop === 'cashew'
-      ? CASHEW_CLASSES
-      : selectedCrop === 'cassava'
-      ? CASSAVA_CLASSES
-      : selectedCrop === 'maize'
-      ? MAIZE_CLASSES
-      : selectedCrop === 'soybean'
-      ? SOYBEAN_CLASSES
-      : TOMATO_CLASSES;
+  // Crop identification priority resolver
+  const determineCropName = (): string => {
+    // Priority 1: User explicitly selected crop during current AI Disease Analysis workflow
+    if (selectedCrop && selectedCrop !== 'yolo') {
+      const match = CROP_OPTIONS.find((c) => c.id === selectedCrop);
+      if (match) return match.name;
+      return selectedCrop.charAt(0).toUpperCase() + selectedCrop.slice(1);
+    }
+    // Priority 2 & 3: Crop classification result from ML model if valid
+    const mlCrop = result?.crop_display || result?.crop_name || result?.crop || detectedCropInfo?.crop || yoloResult?.crop;
+    if (mlCrop && mlCrop.toLowerCase() !== 'foliage' && mlCrop.toLowerCase() !== 'unknown' && mlCrop.toLowerCase() !== 'yolo') {
+      return mlCrop.charAt(0).toUpperCase() + mlCrop.slice(1);
+    }
+    // Priority 5: Fallback to Not identified (Never hardcode Tomato or Maize)
+    return 'Not identified';
+  };
+
+  // Stop & Clean up camera stream
+  const stopCamera = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => {
+        try {
+          track.stop();
+        } catch {
+          // ignore
+        }
+      });
+      streamRef.current = null;
+    }
+    setStream(null);
+    setCameraActive(false);
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
 
   // Start Camera Stream
   const startCamera = async (mode = facingMode) => {
     stopCamera();
     setCameraError(null);
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      setCameraError('Camera is not supported by this browser.');
+      setCameraActive(false);
+      return;
+    }
+
     try {
-      const constraints: MediaStreamConstraints = {
-        video: {
-          facingMode: mode,
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
-        },
-        audio: false,
-      };
-      const newStream = await navigator.mediaDevices.getUserMedia(constraints);
+      let newStream: MediaStream;
+      try {
+        newStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: mode },
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+          },
+          audio: false,
+        });
+      } catch (firstErr: any) {
+        if (
+          firstErr.name === 'OverconstrainedError' ||
+          firstErr.name === 'NotFoundError' ||
+          firstErr.name === 'ConstraintNotSatisfiedError'
+        ) {
+          newStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false,
+          });
+        } else {
+          throw firstErr;
+        }
+      }
+
+      streamRef.current = newStream;
       setStream(newStream);
       setCameraActive(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = newStream;
-        videoRef.current.play();
-      }
     } catch (err: any) {
       console.warn('Camera access error:', err);
-      setCameraError('Camera access not available. Upload a leaf photo or pick a sample below.');
       setCameraActive(false);
+
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        setCameraError('Camera permission was denied. Allow camera access in your browser settings and try again.');
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        setCameraError('No camera device was detected.');
+      } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+        setCameraError('Camera is currently unavailable. Close other applications using the camera and try again.');
+      } else if (err.name === 'NotSupportedError') {
+        setCameraError('Camera is not supported by this browser.');
+      } else {
+        setCameraError(`Camera access error (${err.name || 'Unknown'}). Please check camera settings or upload a photo.`);
+      }
     }
   };
 
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
-      setStream(null);
+  // Bind active stream to video element whenever DOM mounts or stream updates
+  useEffect(() => {
+    if (cameraActive && stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play().catch((e) => console.warn('Video play error:', e));
     }
-    setCameraActive(false);
-  };
+  }, [cameraActive, stream]);
 
+  // Clean up camera stream on tab switch / unmount
   useEffect(() => {
     if (activeTab === 'camera' && !capturedImage) {
       startCamera();
     } else {
       stopCamera();
     }
-    return () => stopCamera();
+    return () => {
+      stopCamera();
+    };
   }, [facingMode, activeTab, capturedImage]);
 
   // Load sample images whenever selectedCrop changes
@@ -891,11 +984,23 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
 
   // Active image to display in viewport
   const displayImageSrc = () => {
-    if (selectedCrop === 'yolo' && yoloResult) {
-      if (selectedLayer === 'yolo_bbox') return yoloResult.layers.yolo_bbox;
-      if (selectedLayer === 'segmentation') return yoloResult.layers.segmentation;
-      if (selectedLayer === 'spectral_heatmap') return yoloResult.layers.spectral_heatmap;
-      return yoloResult.layers.original;
+    if (selectedLayer === 'original') {
+      return yoloResult?.layers?.original || capturedImage;
+    }
+    if (selectedLayer === 'yolo_bbox') {
+      return (selectedCrop === 'yolo' && yoloResult?.layers?.yolo_bbox)
+        ? yoloResult.layers.yolo_bbox
+        : capturedImage;
+    }
+    if (selectedLayer === 'segmentation') {
+      return (selectedCrop === 'yolo' && yoloResult?.layers?.segmentation)
+        ? yoloResult.layers.segmentation
+        : capturedImage;
+    }
+    if (selectedLayer === 'spectral_heatmap') {
+      return (selectedCrop === 'yolo' && yoloResult?.layers?.spectral_heatmap)
+        ? yoloResult.layers.spectral_heatmap
+        : capturedImage;
     }
     return capturedImage;
   };
@@ -1059,6 +1164,29 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Target Crop Selection Bar */}
+      <div className="flex flex-wrap items-center gap-2 p-3.5 rounded-2xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm">
+        <span className="text-xs font-bold text-agri-900 dark:text-white flex items-center gap-1.5 mr-1">
+          <Leaf className="w-4 h-4 text-agri-500" />
+          Target Crop:
+        </span>
+        {CROP_OPTIONS.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            onClick={() => handleCropChange(c.id)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
+              selectedCrop === c.id
+                ? 'bg-agri-600 text-white border-agri-500 shadow-sm'
+                : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-750'
+            }`}
+          >
+            <span>{c.icon}</span>
+            <span>{c.name}</span>
+          </button>
+        ))}
+      </div>
+
       {/* Main Diagnostic Workspace Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* ── LEFT COLUMN: Analysis Result / Camera / Upload / Image Viewport (7 Cols) ── */}
@@ -1182,8 +1310,23 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                     className="w-full h-full object-contain bg-slate-950 pointer-events-none"
                   />
 
+                  {/* Layer Status Overlay for Segmentation & Heatmap */}
+                  {displayImageSrc() && selectedLayer === 'segmentation' && (!yoloResult?.layers?.segmentation) && (
+                    <div className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-amber-400 text-xs font-bold backdrop-blur-md shadow-lg flex items-center gap-1.5">
+                      <Info className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Segmentation data not available</span>
+                    </div>
+                  )}
+
+                  {displayImageSrc() && selectedLayer === 'spectral_heatmap' && (!yoloResult?.layers?.spectral_heatmap) && (
+                    <div className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-amber-500/40 text-amber-400 text-xs font-bold backdrop-blur-md shadow-lg flex items-center gap-1.5">
+                      <Info className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Heatmap data not available</span>
+                    </div>
+                  )}
+
                   {/* Bounding Box Overlay (Warm Orange #f59e0b) */}
-                  {showOverlay && formattedDetections.length > 0 && (
+                  {showOverlay && selectedLayer === 'yolo_bbox' && formattedDetections.length > 0 && (
                     <div className="absolute inset-0 pointer-events-auto z-10">
                       <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
                         {formattedDetections.map((det) => {
@@ -1275,19 +1418,37 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                   )}
                 </div>
               ) : activeTab === 'camera' ? (
-                cameraActive ? (
-                  <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+                cameraActive && stream ? (
+                  <div className="relative w-full h-full">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      onLoadedMetadata={() => videoRef.current?.play()}
+                      className="w-full h-full object-cover rounded-2xl"
+                    />
+                    <div className="absolute top-3 left-3 z-10 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 shadow-md">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                      <span>LIVE CAMERA</span>
+                    </div>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center p-6 text-center text-agri-400/70">
-                    <Camera className="w-14 h-14 mb-3 text-agri-600 animate-pulse" />
-                    <p className="text-sm font-medium text-agri-300">
+                    <Camera className="w-14 h-14 mb-3 text-amber-500 animate-pulse" />
+                    <p className="text-sm font-bold text-slate-200 max-w-sm">
                       {cameraError || 'Initializing Camera Feed...'}
                     </p>
+                    {cameraError && (
+                      <p className="text-xs text-slate-400 mt-1.5 max-w-md">
+                        Allow camera access in your browser settings or upload a foliage photo.
+                      </p>
+                    )}
                     <button
                       onClick={() => startCamera()}
-                      className="mt-4 px-4 py-2 bg-agri-500 hover:bg-agri-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-1.5 transition"
+                      className="mt-4 px-4 py-2 bg-agri-600 hover:bg-agri-500 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 transition shadow-md"
                     >
-                      <RefreshCw className="w-4 h-4" /> Start Camera
+                      <RefreshCw className="w-4 h-4" /> {cameraError ? 'Try Again / Request Camera' : 'Start Camera'}
                     </button>
                   </div>
                 )
@@ -1366,17 +1527,84 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
               </button>
             </div>
 
+            {/* Visual Analysis Layer */}
+            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-agri-200/50 dark:border-agri-700/25 space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-agri-800 dark:text-agri-300 flex items-center gap-1.5">
+                  <Layers className="w-3.5 h-3.5 text-agri-500" />
+                  Visual Analysis Layer
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedLayer('yolo_bbox')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition border ${
+                    selectedLayer === 'yolo_bbox'
+                      ? 'bg-agri-600 text-white border-agri-500 shadow-sm'
+                      : 'bg-white dark:bg-slate-800 text-agri-700 dark:text-agri-300 border-agri-200 dark:border-slate-700 hover:bg-agri-50 dark:hover:bg-slate-750'
+                  }`}
+                >
+                  🎯 YOLO BBoxes
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedLayer('segmentation')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition border ${
+                    selectedLayer === 'segmentation'
+                      ? 'bg-agri-600 text-white border-agri-500 shadow-sm'
+                      : 'bg-white dark:bg-slate-800 text-agri-700 dark:text-agri-300 border-agri-200 dark:border-slate-700 hover:bg-agri-50 dark:hover:bg-slate-750'
+                  }`}
+                >
+                  🎨 Segmentation
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedLayer('spectral_heatmap')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition border ${
+                    selectedLayer === 'spectral_heatmap'
+                      ? 'bg-agri-600 text-white border-agri-500 shadow-sm'
+                      : 'bg-white dark:bg-slate-800 text-agri-700 dark:text-agri-300 border-agri-200 dark:border-slate-700 hover:bg-agri-50 dark:hover:bg-slate-750'
+                  }`}
+                >
+                  🌈 Spectral Heatmap
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedLayer('original')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition border ${
+                    selectedLayer === 'original'
+                      ? 'bg-agri-600 text-white border-agri-500 shadow-sm'
+                      : 'bg-white dark:bg-slate-800 text-agri-700 dark:text-agri-300 border-agri-200 dark:border-slate-700 hover:bg-agri-50 dark:hover:bg-slate-750'
+                  }`}
+                >
+                  🖼 Original
+                </button>
+              </div>
+            </div>
+
             {/* Viewport Action Buttons */}
             <div className="flex items-center gap-3">
               {activeTab === 'camera' && !capturedImage ? (
-                <button
-                  onClick={capturePhoto}
-                  disabled={!cameraActive || isAnalyzing}
-                  className="flex-1 py-3 px-6 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg bg-agri-500 hover:bg-agri-400 text-slate-950 transition active:scale-[0.98] disabled:bg-agri-800 disabled:text-agri-600"
-                >
-                  <Camera className="w-4 h-4" />
-                  Capture Foliage Photo
-                </button>
+                <div className="flex-1 flex items-center gap-2">
+                  <button
+                    onClick={capturePhoto}
+                    disabled={!cameraActive || isAnalyzing}
+                    className="flex-1 py-3 px-6 rounded-xl font-black text-sm flex items-center justify-center gap-2 shadow-lg bg-agri-600 hover:bg-agri-500 text-white transition active:scale-[0.98] disabled:bg-slate-700 disabled:text-slate-400"
+                  >
+                    <Camera className="w-4 h-4" />
+                    Capture Foliage Photo
+                  </button>
+                  {cameraActive && (
+                    <button
+                      onClick={stopCamera}
+                      className="py-3 px-4 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-xs font-bold transition flex items-center gap-1.5"
+                      title="Stop Camera Stream"
+                    >
+                      <span>Stop Camera</span>
+                    </button>
+                  )}
+                </div>
               ) : capturedImage ? (
                 <button
                   onClick={handleRetake}
@@ -1476,7 +1704,7 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
                       <div className="grid grid-cols-3 gap-2 text-center text-xs">
                         <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-agri-100 dark:border-agri-700/25">
                           <span className="text-[10px] font-bold text-agri-400/70 uppercase block">Crop</span>
-                          <span className="font-black text-slate-800 dark:text-slate-200 mt-0.5 block">{cropName}</span>
+                          <span className="font-black text-slate-800 dark:text-slate-200 mt-0.5 block">{determineCropName()}</span>
                         </div>
                         <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-agri-100 dark:border-agri-700/25">
                           <span className="text-[10px] font-bold text-agri-400/70 uppercase block">Regions</span>

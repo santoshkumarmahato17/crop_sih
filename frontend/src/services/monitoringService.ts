@@ -56,10 +56,10 @@ export const monitoringService = {
   }): Promise<MonitoringTask[]> {
     try {
       const response = await apiClient.get<MonitoringTask[]>('/monitoring/tasks', { params });
-      return response.data;
+      return response.data || [];
     } catch (err) {
-      console.warn('API getTasks failed, using fallback mock tasks', err);
-      return getMockMonitoringTasks();
+      console.warn('API getTasks failed', err);
+      return [];
     }
   },
 
@@ -259,13 +259,13 @@ export const monitoringService = {
       return response.data;
     } catch (err) {
       return {
-        scheduled: 42,
-        in_progress: 14,
-        completed: 31,
-        overdue: 7,
-        critical: 4,
-        hotspots_under_monitoring: 8,
-        monitoring_coverage_pct: 84.5,
+        scheduled: 0,
+        in_progress: 0,
+        completed: 0,
+        overdue: 0,
+        critical: 0,
+        hotspots_under_monitoring: 0,
+        monitoring_coverage_pct: 0,
       };
     }
   },
