@@ -1,5 +1,7 @@
 # KISAN SATHI
 
+[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/kr.santoshmahato/kisansathi)
+
 **AI-Powered Crop Health Monitoring, Disease Early Detection and Spread Intelligence System** 
 
 KISAN SATHI is an enterprise-grade agricultural intelligence platform engineered to continuously monitor farm lands, detect crop stress and pathology early, simulate disease/pest contagion across neighboring boundaries, and provide verified Integrated Pest Management (IPM) guidance.
