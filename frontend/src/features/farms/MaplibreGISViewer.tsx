@@ -1,8 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { FarmPolygonZone } from './LiveSatelliteGISMap'; // Reusing the mock data interface
-
+export interface FarmPolygonZone {
+  id: string;
+  name: string;
+  crop: string;
+  areaHa: number;
+  healthStatus: 'HEALTHY' | 'MODERATE_STRESS' | 'HIGH_RISK' | 'CRITICAL';
+  polygonPoints: [number, number][]; // Assuming tuples of [x, y]
+}
 interface MaplibreGISViewerProps {
   zones: FarmPolygonZone[];
   selectedZoneId?: string;
@@ -22,20 +28,20 @@ export const MaplibreGISViewer: React.FC<MaplibreGISViewerProps> = ({
   const SATELLITE_STYLE = {
     version: 8 as const,
     sources: {
-      'esri-satellite': {
+      'google-satellite': {
         type: 'raster' as const,
         tiles: [
-          'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+          'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',
         ],
         tileSize: 256,
-        attribution: 'Powered by Esri',
+        attribution: 'Map data © Google',
       },
     },
     layers: [
       {
         id: 'satellite-layer',
         type: 'raster' as const,
-        source: 'esri-satellite',
+        source: 'google-satellite',
         minzoom: 0,
         maxzoom: 22,
       },
@@ -134,8 +140,7 @@ export const MaplibreGISViewer: React.FC<MaplibreGISViewerProps> = ({
       // Assuming polygonPoints are percentage offsets from top-left, we'll map them around lat/lng
       const baseLat = 20.2185;
       const baseLng = 73.8420;
-      
-      const geoPoints = zone.polygonPoints.map(p => {
+      const geoPoints = zone.polygonPoints.map((p: [number, number]) => {
         const dx = (p[0] - 50) * 0.00005; // rough scaling
         const dy = (50 - p[1]) * 0.00005; 
         return [baseLng + dx, baseLat + dy];

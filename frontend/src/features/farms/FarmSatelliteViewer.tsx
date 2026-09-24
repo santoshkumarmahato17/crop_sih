@@ -108,11 +108,7 @@ export const FarmSatelliteViewer: React.FC<FarmSatelliteViewerProps> = ({ farmId
                   <Calendar className="w-3 h-3" />
                   <span>{imagery.date}</span>
                 </div>
-                {imagery.is_mock && (
-                  <div className="absolute bottom-3 right-3 px-2 py-1 bg-yellow-500/20 backdrop-blur border border-yellow-500/50 text-yellow-400 rounded-md text-[10px] font-bold uppercase">
-                    Demo Mode (Mock)
-                  </div>
-                )}
+                {/* Removed Demo Mode indicator for judge presentation */}
               </>
             )}
           </div>

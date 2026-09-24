@@ -1164,28 +1164,6 @@ export const TomatoCameraAnalysisPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Target Crop Selection Bar */}
-      <div className="flex flex-wrap items-center gap-2 p-3.5 rounded-2xl bg-white dark:bg-surface-darkCard border border-agri-200/50 dark:border-agri-700/25 shadow-sm">
-        <span className="text-xs font-bold text-agri-900 dark:text-white flex items-center gap-1.5 mr-1">
-          <Leaf className="w-4 h-4 text-agri-500" />
-          Target Crop:
-        </span>
-        {CROP_OPTIONS.map((c) => (
-          <button
-            key={c.id}
-            type="button"
-            onClick={() => handleCropChange(c.id)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 border ${
-              selectedCrop === c.id
-                ? 'bg-agri-600 text-white border-agri-500 shadow-sm'
-                : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-750'
-            }`}
-          >
-            <span>{c.icon}</span>
-            <span>{c.name}</span>
-          </button>
-        ))}
-      </div>
 
       {/* Main Diagnostic Workspace Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

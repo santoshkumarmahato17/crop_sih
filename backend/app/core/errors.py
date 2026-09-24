@@ -92,6 +92,11 @@ def register_error_handlers(app: FastAPI, debug: bool = False) -> None:
             {"loc": list(err["loc"]), "msg": err["msg"], "type": err["type"]}
             for err in errors
         ]
+        origin = request.headers.get("origin")
+        headers = {}
+        if origin:
+            headers["access-control-allow-origin"] = origin
+            headers["access-control-allow-credentials"] = "true"
         return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             content={
@@ -99,6 +104,7 @@ def register_error_handlers(app: FastAPI, debug: bool = False) -> None:
                 "message": "Request validation failed.",
                 "detail": formatted_errors,
             },
+            headers=headers,
         )
 
     @app.exception_handler(Exception)
@@ -107,6 +113,11 @@ def register_error_handlers(app: FastAPI, debug: bool = False) -> None:
             f"Unhandled server error at {request.method} {request.url.path}: {str(exc)}",
             exc_info=True,
         )
+        origin = request.headers.get("origin")
+        headers = {}
+        if origin:
+            headers["access-control-allow-origin"] = origin
+            headers["access-control-allow-credentials"] = "true"
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={
@@ -114,4 +125,5 @@ def register_error_handlers(app: FastAPI, debug: bool = False) -> None:
                 "message": "An unexpected internal server error occurred.",
                 "detail": str(exc) if debug else None,
             },
+            headers=headers,
         )

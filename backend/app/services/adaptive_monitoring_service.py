@@ -79,7 +79,7 @@ class AdaptiveMonitoringService:
             disease_growth_rate=0.22,
             recent_rainfall_mm=14.0,
             relative_humidity_pct=85.0,
-            crop_stage=farm.growth_stage if farm else "Grain Filling",
+            crop_stage=(farm.growth_stages[0].get("stage", "Grain Filling") if farm and farm.growth_stages and isinstance(farm.growth_stages, list) and len(farm.growth_stages) > 0 else "Grain Filling") if farm else "Grain Filling",
             neighbor_spread_risk_score=74,
             problem_zone_codes=["Z17", "Z18", "Z19"] if not (farm and farm.zones) else [z.zone_code for z in farm.zones[:3]],
         )

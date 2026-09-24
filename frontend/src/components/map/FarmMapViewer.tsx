@@ -1,5 +1,7 @@
-﻿import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { MapPin, Info } from 'lucide-react';
+import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { GeoJSONGeometry, Zone } from '@/types';
 
 interface FarmMapViewerProps {
@@ -20,67 +22,217 @@ export const FarmMapViewer: React.FC<FarmMapViewerProps> = ({
   selectedZoneId,
   onZoneSelect,
 }) => {
-  // Parse farm boundary coordinates
-  let farmCoords: [number, number][] = [];
-  if (boundary && boundary.coordinates) {
-    if (boundary.type === 'Polygon' && boundary.coordinates.length > 0) {
-      farmCoords = boundary.coordinates[0];
-    } else if (boundary.type === 'MultiPolygon' && boundary.coordinates.length > 0) {
-      farmCoords = boundary.coordinates[0][0];
-    }
-  }
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<maplibregl.Map | null>(null);
 
-  // Calculate local SVG scaling
+  // Fallback to Pune coordinates if not provided
   const baseCenter = { lng: 73.8530, lat: 18.5225 };
-  const scale = 0.00005;
 
   const getStatusColor = (status: string, isSelected: boolean) => {
     if (isSelected) {
-      return {
-        fill: 'rgba(56, 189, 248, 0.45)',
-        stroke: '#38bdf8',
-        strokeWidth: '3.5',
-      };
+      return { fill: 'rgba(56, 189, 248, 0.45)', stroke: '#38bdf8' };
     }
-
     switch (status.toLowerCase()) {
       case 'healthy':
-        return {
-          fill: 'rgba(16, 185, 129, 0.25)',
-          stroke: '#10b981',
-          strokeWidth: '2',
-        };
+        return { fill: 'rgba(16, 185, 129, 0.35)', stroke: '#10b981' };
       case 'moderate_concern':
-        return {
-          fill: 'rgba(234, 179, 8, 0.3)',
-          stroke: '#eab308',
-          strokeWidth: '2',
-        };
+        return { fill: 'rgba(234, 179, 8, 0.4)', stroke: '#eab308' };
       case 'high_concern':
-        return {
-          fill: 'rgba(249, 115, 22, 0.35)',
-          stroke: '#f97316',
-          strokeWidth: '2',
-        };
+        return { fill: 'rgba(249, 115, 22, 0.45)', stroke: '#f97316' };
       case 'critical':
-        return {
-          fill: 'rgba(239, 68, 68, 0.4)',
-          stroke: '#ef4444',
-          strokeWidth: '2.5',
-        };
+        return { fill: 'rgba(239, 68, 68, 0.5)', stroke: '#ef4444' };
       default:
-        return {
-          fill: 'rgba(16, 185, 129, 0.2)',
-          stroke: '#10b981',
-          strokeWidth: '1.5',
-        };
+        return { fill: 'rgba(16, 185, 129, 0.2)', stroke: '#10b981' };
     }
   };
 
+  useEffect(() => {
+    if (!mapContainer.current) return;
+    const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_API_KEY;
+
+    let centerLng = baseCenter.lng;
+    let centerLat = baseCenter.lat;
+
+    if (boundary && boundary.coordinates && boundary.type === 'Polygon') {
+      const coords = boundary.coordinates[0];
+      if (coords && coords.length > 0) {
+        centerLng = coords[0][0];
+        centerLat = coords[0][1];
+      }
+    }
+
+    const esriSatelliteStyle = {
+      version: 8,
+      sources: {
+        'google-satellite': {
+          type: 'raster',
+          tiles: [
+            'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+          ],
+          tileSize: 256
+        }
+      },
+      layers: [
+        {
+          id: 'google-satellite-layer',
+          type: 'raster',
+          source: 'google-satellite',
+          minzoom: 0,
+          maxzoom: 22
+        }
+      ]
+    };
+
+    map.current = new maplibregl.Map({
+      container: mapContainer.current,
+      style: googleSatelliteStyle as any,
+      center: [centerLng, centerLat],
+      zoom: 16, // zoomed in to see the field
+      interactive: true,
+    });
+
+    map.current.on('load', () => {
+      // Add farm boundary
+      if (boundary) {
+        map.current?.addSource('farm-boundary', {
+          type: 'geojson',
+          data: {
+            type: 'Feature',
+            geometry: boundary,
+            properties: {}
+          }
+        });
+        map.current?.addLayer({
+          id: 'farm-boundary-line',
+          type: 'line',
+          source: 'farm-boundary',
+          paint: {
+            'line-color': '#94a3b8',
+            'line-width': 2,
+            'line-dasharray': [4, 4]
+          }
+        });
+      }
+
+      // Add zones
+      const features = zones.map(zone => {
+        const isSelected = selectedZoneId === zone.id;
+        const style = getStatusColor(zone.health_status, isSelected);
+        return {
+          type: 'Feature',
+          geometry: zone.boundary,
+          properties: {
+            id: zone.id,
+            zone_code: zone.zone_code,
+            fillColor: style.fill,
+            strokeColor: style.stroke,
+            isSelected
+          }
+        };
+      });
+
+      map.current?.addSource('zones', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features: features as any
+        }
+      });
+
+      map.current?.addLayer({
+        id: 'zones-fill',
+        type: 'fill',
+        source: 'zones',
+        paint: {
+          'fill-color': ['get', 'fillColor'],
+          'fill-opacity': 1
+        }
+      });
+
+      map.current?.addLayer({
+        id: 'zones-line',
+        type: 'line',
+        source: 'zones',
+        paint: {
+          'line-color': ['get', 'strokeColor'],
+          'line-width': ['case', ['boolean', ['get', 'isSelected'], false], 3, 2]
+        }
+      });
+
+      // Add text label for zones
+      map.current?.addLayer({
+        id: 'zones-labels',
+        type: 'symbol',
+        source: 'zones',
+        layout: {
+          'text-field': ['get', 'zone_code'],
+          'text-size': 12,
+          'text-anchor': 'center',
+          'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'] // Standard fallback
+        },
+        paint: {
+          'text-color': '#ffffff',
+          'text-halo-color': '#000000',
+          'text-halo-width': 1.5
+        }
+      });
+
+      // Add click handler for zones
+      map.current?.on('click', 'zones-fill', (e) => {
+        if (e.features && e.features.length > 0 && onZoneSelect) {
+          const clickedId = e.features[0].properties.id;
+          const zone = zones.find(z => z.id === clickedId);
+          if (zone) onZoneSelect(zone);
+        }
+      });
+      
+      // Change cursor
+      map.current?.on('mouseenter', 'zones-fill', () => {
+        if (map.current) map.current.getCanvas().style.cursor = 'pointer';
+      });
+      map.current?.on('mouseleave', 'zones-fill', () => {
+        if (map.current) map.current.getCanvas().style.cursor = '';
+      });
+    });
+
+    return () => {
+      map.current?.remove();
+    };
+  }, [boundary]); // Initialize once per farm boundary
+
+  // Update styles and selections dynamically without full reload
+  useEffect(() => {
+    if (!map.current || !map.current.isStyleLoaded()) return;
+    
+    const features = zones.map(zone => {
+      const isSelected = selectedZoneId === zone.id;
+      const style = getStatusColor(zone.health_status, isSelected);
+      return {
+        type: 'Feature',
+        geometry: zone.boundary,
+        properties: {
+          id: zone.id,
+          zone_code: zone.zone_code,
+          fillColor: style.fill,
+          strokeColor: style.stroke,
+          isSelected
+        }
+      };
+    });
+
+    const source = map.current.getSource('zones') as maplibregl.GeoJSONSource;
+    if (source) {
+      source.setData({
+        type: 'FeatureCollection',
+        features: features as any
+      });
+    }
+  }, [zones, selectedZoneId]);
+
   return (
-    <div className="relative w-full h-96 rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-xl select-none">
-      {/* Background Topographic Matrix */}
-      <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
+    <div className="relative w-full h-[450px] rounded-2xl overflow-hidden border border-slate-800 bg-slate-950 shadow-xl select-none">
+      {/* Container for MapLibre */}
+      <div ref={mapContainer} className="absolute inset-0 w-full h-full" />
 
       {/* Top Left Farm Info Header */}
       <div className="absolute top-3 left-3 z-10 flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-agri-200 backdrop-blur shadow-md">
@@ -97,118 +249,33 @@ export const FarmMapViewer: React.FC<FarmMapViewerProps> = ({
       </div>
 
       {/* Status Color Legend */}
-      <div className="absolute top-3 right-3 z-10 hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-agri-300 backdrop-blur shadow-md">
-        <span className="text-agri-400/70 font-medium">Zone Health:</span>
-        <div className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-agri-500 inline-block" />
-          <span>Healthy</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block" />
-          <span>Moderate</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block" />
-          <span>High</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block" />
-          <span>Critical</span>
+      <div className="absolute top-3 right-3 z-10 hidden sm:flex flex-col gap-1 px-3 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] text-agri-300 backdrop-blur shadow-md">
+        <div className="text-agri-400/70 font-semibold mb-1">Disease Infection Map:</div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-emerald-500 opacity-60 inline-block border border-emerald-500" />
+            <span>Healthy</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-yellow-500 opacity-60 inline-block border border-yellow-500" />
+            <span>Early Stress</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-orange-500 opacity-60 inline-block border border-orange-500" />
+            <span>Infected (High)</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-3 h-3 rounded-full bg-rose-500 opacity-60 inline-block border border-rose-500" />
+            <span>Critical Spread</span>
+          </div>
         </div>
       </div>
 
       {/* Bottom Hint */}
-      <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-md bg-agri-900/60 border border-slate-800 text-[10px] font-mono text-agri-400/70 flex items-center gap-1.5">
+      <div className="absolute bottom-3 left-3 z-10 px-2.5 py-1 rounded-md bg-agri-900/80 border border-slate-800 text-[10px] font-mono text-agri-400/90 flex items-center gap-1.5 backdrop-blur">
         <Info className="w-3 h-3 text-agri-400" />
-        <span>Click any zone to inspect detailed telemetry & risk indicators</span>
+        <span>Click any colored zone (red/orange indicates disease) to inspect telemetry</span>
       </div>
-
-      {/* SVG Spatial Render Layer */}
-      <svg className="w-full h-full">
-        {/* Parent Farm Outer Boundary (Dashed Guide) */}
-        {farmCoords.length >= 3 && (
-          <polygon
-            points={farmCoords
-              .map(([lng, lat]) => {
-                const x = 350 + (lng - baseCenter.lng) / scale;
-                const y = 180 - (lat - baseCenter.lat) / scale;
-                return `${x},${y}`;
-              })
-              .join(' ')}
-            fill="none"
-            stroke="#64748b"
-            strokeWidth="2"
-            strokeDasharray="4 4"
-          />
-        )}
-
-        {/* Subdivided Farm Zones */}
-        {zones.map((zone) => {
-          let coords: [number, number][] = [];
-          if (zone.boundary && zone.boundary.coordinates) {
-            if (zone.boundary.type === 'Polygon' && zone.boundary.coordinates.length > 0) {
-              coords = zone.boundary.coordinates[0];
-            } else if (zone.boundary.type === 'MultiPolygon' && zone.boundary.coordinates.length > 0) {
-              coords = zone.boundary.coordinates[0][0];
-            }
-          }
-
-          if (coords.length < 3) return null;
-
-          const isSelected = selectedZoneId === zone.id;
-          const style = getStatusColor(zone.health_status, isSelected);
-
-          // Centroid calculation for text label
-          const centroidLng = zone.centroid?.coordinates?.[0] || coords[0][0];
-          const centroidLat = zone.centroid?.coordinates?.[1] || coords[0][1];
-          const labelX = 350 + (centroidLng - baseCenter.lng) / scale;
-          const labelY = 180 - (centroidLat - baseCenter.lat) / scale;
-
-          return (
-            <g
-              key={zone.id}
-              onClick={() => onZoneSelect && onZoneSelect(zone)}
-              className="cursor-pointer transition hover:opacity-90"
-            >
-              <polygon
-                points={coords
-                  .map(([lng, lat]) => {
-                    const x = 350 + (lng - baseCenter.lng) / scale;
-                    const y = 180 - (lat - baseCenter.lat) / scale;
-                    return `${x},${y}`;
-                  })
-                  .join(' ')}
-                fill={style.fill}
-                stroke={style.stroke}
-                strokeWidth={style.strokeWidth}
-              />
-
-              {/* Zone Code Label Badge */}
-              <rect
-                x={labelX - 18}
-                y={labelY - 10}
-                width={36}
-                height={20}
-                rx={5}
-                fill="#0f172a"
-                stroke={style.stroke}
-                strokeWidth="1.5"
-              />
-              <text
-                x={labelX}
-                y={labelY + 4}
-                fill={isSelected ? '#38bdf8' : '#f8fafc'}
-                fontSize="10"
-                fontFamily="monospace"
-                fontWeight="bold"
-                textAnchor="middle"
-              >
-                {zone.zone_code}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
     </div>
   );
 };

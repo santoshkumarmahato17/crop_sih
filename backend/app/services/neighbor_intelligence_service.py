@@ -93,13 +93,21 @@ class NeighborIntelligenceService:
                         current_user is not None
                         and (current_user.id == f.owner_id or current_user.is_admin)
                     )
+                    stage = "Grain Filling"
+                    if hasattr(f, 'growth_stages') and f.growth_stages and isinstance(f.growth_stages, list) and len(f.growth_stages) > 0:
+                        stage = f.growth_stages[0].get("stage", "Grain Filling")
+                        
+                    crop_type = "Wheat"
+                    if getattr(f, 'crop_cycles', None) and len(f.crop_cycles) > 0 and getattr(f.crop_cycles[0], 'crop', None):
+                        crop_type = f.crop_cycles[0].crop.common_name
+
                     neighbors.append(
                         NeighborFarmDetail(
                             farm_id=f.id,
                             farm_name=self._mask_farm_name(f, is_auth),
                             distance_km=dist,
-                            crop_type=f.crop_type,
-                            growth_stage=f.growth_stage,
+                            crop_type=crop_type,
+                            growth_stage=stage,
                             latitude=f_lat,
                             longitude=f_lon,
                             is_downwind=is_downwind,
@@ -151,7 +159,7 @@ class NeighborIntelligenceService:
         """
         Constructs the Farm Risk Graph and calculates potential incoming spread risk edges.
         """
-        target_farm = await self.farm_repo.get_by_id(db, farm_id)
+        target_farm = await self.farm_repo.get_by_id_with_relations(db, farm_id)
         if not target_farm:
             target_lat, target_lon = 18.5225, 73.8525
             target_name = "Primary Farm Holding"
@@ -160,8 +168,16 @@ class NeighborIntelligenceService:
         else:
             target_lat, target_lon = self._extract_farm_centroid(target_farm)
             target_name = target_farm.name
-            target_crop = target_farm.crop_type
-            target_stage = target_farm.growth_stage
+            
+            # Fetch the primary crop's type or fallback
+            target_crop = "Wheat"
+            if target_farm.crop_cycles and len(target_farm.crop_cycles) > 0 and target_farm.crop_cycles[0].crop:
+                target_crop = target_farm.crop_cycles[0].crop.common_name
+            
+            # Fetch the primary crop's growth stage or fallback
+            target_stage = "Grain Filling"
+            if hasattr(target_farm, 'growth_stages') and target_farm.growth_stages and isinstance(target_farm.growth_stages, list) and len(target_farm.growth_stages) > 0:
+                target_stage = target_farm.growth_stages[0].get("stage", "Grain Filling")
 
         target_node = FarmNode(
             farm_id=farm_id,
